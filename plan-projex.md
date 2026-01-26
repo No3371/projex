@@ -248,6 +248,14 @@ Before marking Ready:
 2. **Update relationships** — Add links to/from related projex
 3. **Set status** — Mark as `Ready` when complete
 4. **Place correctly** — Ensure in appropriate projex folder
+5. **Commit the plan** — Plan must be committed to base branch before execution
+
+```bash
+git add projex/{yyyymmdd}-{plan-name}-plan.md
+git commit -m "projex: add plan - {plan-name}"
+```
+
+> **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
 
 **Folder placement by status:**
 | Status | Location |

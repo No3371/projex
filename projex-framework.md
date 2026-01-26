@@ -92,6 +92,52 @@ Workflow usages/invocations examples:
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of execute-project. 
 
+## Git Integration
+
+The **Execute → Walkthrough** cycle is wrapped in an ephemeral git branch to provide isolation, traceability, and clean rollback.
+
+### Ephemeral Branch Lifecycle
+
+```
+[base branch] ─── execute-projex ───> [ephemeral branch] ─── close-projex ───> [merge/squash back]
+                  (branch created)     (changes made here)    (branch finalized)
+```
+
+**Branch naming:** `projex/{yyyymmdd}-{plan-name}`
+
+### Workflow
+
+1. **`/execute-projex.md`** — Creates ephemeral branch from current HEAD before any changes
+2. **Execution** — All plan implementation happens in the ephemeral branch
+3. **`/close-projex.md`** — Finalizes the branch with user choice:
+   - **Squash merge** — Clean single commit to base branch (default)
+   - **Merge** — Preserve full commit history
+   - **Rebase** — Replay commits onto base
+   - **Abandon** — Delete branch without merging (failed execution)
+
+### Benefits
+
+- **Isolation** — Execution changes don't affect base branch until verified
+- **Rollback** — Easy to discard failed executions
+- **Traceability** — Branch name links directly to plan
+- **Review** — Changes can be reviewed before merge (PR optional)
+
+### Prerequisites
+
+- **Plan must be committed to base branch before execution** — The plan document must exist in git history on the base branch. This ensures:
+  - Plans are reviewable before execution
+  - Plans persist even if execution is abandoned
+  - Clean separation: base branch = plans, ephemeral branch = execution
+
+### Notes
+
+- Only Execute/Walkthrough workflows use ephemeral branches
+- Proposal, Plan, Eval, Review workflows operate on current branch and should be committed normally
+- If execution spans multiple sessions, branch persists until close
+- Walkthrough document is committed as final commit before merge
+
+---
+
 ## NOTES
 
 ### AVOID ABSOLUTE PATHS

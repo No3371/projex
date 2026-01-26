@@ -34,15 +34,20 @@ Before starting execution:
 
 ### 1. PLAN VALIDATION
 
+- [ ] **Plan is committed to base branch** — Plan document must exist in git history
 - [ ] Plan status is `Ready`
 - [ ] No unresolved open questions
 - [ ] All dependencies are met
 - [ ] No blockers present
 
+> **Why must the plan be committed?**
+> Plans are documentation that should exist independently of execution. If execution is abandoned, the plan remains for future attempts. This also enables plan review before execution.
+
 ### 2. ENVIRONMENT CHECK
 
-- [ ] Correct branch/workspace
-- [ ] Clean working state (no uncommitted changes that conflict)
+- [ ] On correct base branch (typically `main` or feature branch)
+- [ ] Clean working state (no uncommitted changes)
+- [ ] Git repository is in good state
 - [ ] Required tools/dependencies available
 - [ ] Access to all files listed in plan
 
@@ -64,8 +69,23 @@ Before starting execution:
 
 ### 1. INITIALIZE EXECUTION
 
-1. **Update plan status** — Change to `In Progress`
-2. **Create execution log** — Track progress mentally or in notes:
+1. **Create ephemeral branch** — Branch from current HEAD for isolated execution:
+
+```bash
+# Branch naming: projex/{yyyymmdd}-{plan-name}
+git checkout -b projex/20260126-database-refactor
+```
+
+2. **Update plan status** — Change to `In Progress`
+
+3. **Commit plan status change** — First commit in the ephemeral branch:
+
+```bash
+git add <plan-file>
+git commit -m "projex: start execution of {plan-name}"
+```
+
+4. **Create execution log** — Track progress mentally or in notes:
 
 ```markdown
 # Execution Log: [Plan Name]
@@ -152,9 +172,20 @@ Action: Stop, report to user, plan needs review/update
 After each step:
 
 1. Mark step complete in tracking
-2. Commit if appropriate (logical atomic units)
+2. **Commit changes** — Logical atomic units with descriptive messages:
+
+```bash
+git add <changed-files>
+git commit -m "projex: step N - [brief description]"
+```
+
 3. Verify overall progress
 4. Check if next step preconditions are met
+
+**Commit message convention:**
+- Prefix with `projex:` for traceability
+- Reference step number when applicable
+- Keep messages concise but descriptive
 
 ### 5. HANDLE FAILURES
 
@@ -245,9 +276,20 @@ Is the deviation from the plan?
 ## OUTPUT
 
 This workflow produces:
-- Implemented changes as specified in the plan
+- Implemented changes as specified in the plan (in ephemeral branch)
 - Execution log/notes for walkthrough creation
 - Updated plan status (`Complete` or `Blocked`)
+- Ephemeral git branch `projex/{yyyymmdd}-{plan-name}` with all changes
+
+**Git state after execution:**
+```
+main (or base branch)
+  └── projex/{yyyymmdd}-{plan-name}  ← you are here
+        ├── commit: start execution
+        ├── commit: step 1 - ...
+        ├── commit: step 2 - ...
+        └── commit: step N - ...
+```
 
 ---
 
@@ -259,6 +301,32 @@ After successful execution:
 
 ---
 
+## GIT BRANCH MANAGEMENT
+
+### Branch Naming
+```
+projex/{yyyymmdd}-{plan-name}
+```
+
+### Resuming Execution
+If execution spans multiple sessions:
+1. Branch persists — just checkout and continue
+2. Verify you're on the correct branch before making changes
+3. Review previous commits to understand progress
+
+### Failed Execution
+If execution fails and cannot continue:
+1. Document the failure in execution log
+2. Leave branch as-is (do not merge)
+3. Run `/close-projex.md` with abandon option
+
+### Branch Lifetime
+- Created at execution start
+- Exists throughout execution (may span sessions)
+- Finalized (merged/abandoned) during `/close-projex.md`
+
+---
+
 ## NOTES
 
 - Execution is about implementation, not design decisions
@@ -266,3 +334,4 @@ After successful execution:
 - Trust the plan but verify against reality
 - Document thoroughly — the walkthrough depends on good execution notes
 - Use relative paths when referencing repository files
+- All execution happens in ephemeral branch — base branch stays clean until close

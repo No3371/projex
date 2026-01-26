@@ -34,6 +34,8 @@ Before closing:
 - [ ] User has reviewed the changes
 - [ ] All success criteria are verifiable
 - [ ] Execution log/notes are available
+- [ ] Currently on ephemeral branch `projex/{yyyymmdd}-{plan-name}`
+- [ ] All execution changes are committed
 
 ---
 
@@ -312,7 +314,7 @@ If this plan were to be executed again:
 - [Links to relevant commits, PRs, or documents]
 ```
 
-### 6. FINALIZE AND LINK
+### 6. FINALIZE DOCUMENTS
 
 1. **Update the source plan:**
    - Change status to `Complete`
@@ -331,6 +333,79 @@ If this plan were to be executed again:
    - Move Plan document to `projex/closed/`
    - Place Walkthrough in `projex/closed/` alongside the Plan
    - If source Proposal exists and all derived Plans are closed, move Proposal to `projex/closed/` as well
+
+4. **Commit walkthrough and file moves:**
+
+```bash
+git add projex/closed/
+git commit -m "projex: close {plan-name} - add walkthrough"
+```
+
+---
+
+### 7. FINALIZE GIT BRANCH
+
+The ephemeral branch must be finalized. Present options to user:
+
+#### Option A: Squash Merge (Default/Recommended)
+Combines all execution commits into a single clean commit on base branch.
+
+```bash
+git checkout main  # or base branch
+git merge --squash projex/{yyyymmdd}-{plan-name}
+git commit -m "projex: {plan-name} - [summary of changes]"
+git branch -D projex/{yyyymmdd}-{plan-name}
+```
+
+**Best for:** Clean history, routine executions
+
+#### Option B: Merge with History
+Preserves full commit history from execution.
+
+```bash
+git checkout main
+git merge projex/{yyyymmdd}-{plan-name} --no-ff -m "projex: merge {plan-name}"
+git branch -d projex/{yyyymmdd}-{plan-name}
+```
+
+**Best for:** Complex executions where step-by-step history is valuable
+
+#### Option C: Rebase and Merge
+Replays commits onto base branch for linear history.
+
+```bash
+git checkout projex/{yyyymmdd}-{plan-name}
+git rebase main
+git checkout main
+git merge projex/{yyyymmdd}-{plan-name} --ff-only
+git branch -d projex/{yyyymmdd}-{plan-name}
+```
+
+**Best for:** Linear history preference, collaborative workflows
+
+#### Option D: Abandon (Failed Execution)
+Discards the branch without merging.
+
+```bash
+git checkout main
+git branch -D projex/{yyyymmdd}-{plan-name}
+```
+
+**Use when:** Execution failed, changes are not wanted
+
+---
+
+### Branch Finalization Decision Tree
+
+```
+Was execution successful?
+├── Yes → Do you need step-by-step history?
+│   ├── Yes → Option B (Merge with History)
+│   └── No → Option A (Squash Merge) ← default
+└── No → Are partial changes valuable?
+    ├── Yes → Cherry-pick valuable commits, then Option D
+    └── No → Option D (Abandon)
+```
 
 ---
 
@@ -365,6 +440,7 @@ This workflow produces:
 - Source plan moved to `projex/closed/` with completion status and walkthrough link
 - Source proposal moved to `projex/closed/` (if all derived plans are closed)
 - Updated relationships in related projex documents
+- **Ephemeral branch merged/deleted** — changes now on base branch
 
 **Folder structure after close:**
 ```
@@ -374,6 +450,12 @@ projex/
     ├── {yyyymmdd}-{name}-proposal.md   (if applicable)
     ├── {yyyymmdd}-{name}-plan.md
     └── {yyyymmdd}-{name}-walkthrough.md
+```
+
+**Git state after close:**
+```
+main (or base branch)  ← you are here, with all changes merged
+  └── (ephemeral branch deleted)
 ```
 
 ---
@@ -393,6 +475,8 @@ Before considering walkthrough complete:
 - [ ] Related projex linked
 - [ ] Plan and Walkthrough moved to `projex/closed/`
 - [ ] Source proposal moved to `projex/closed/` (if all derived plans closed)
+- [ ] **Ephemeral branch finalized** (merged or abandoned)
+- [ ] **Back on base branch** with clean state
 
 ---
 
@@ -403,3 +487,6 @@ Before considering walkthrough complete:
 - Use relative paths when referencing repository files
 - The value of projex compounds when walkthroughs are complete
 - If execution was complex, write the walkthrough immediately while fresh
+- **Squash merge is the default** — preserves clean history while capturing all changes
+- Branch finalization is the final step — don't forget to delete the ephemeral branch
+- The walkthrough commit should be the last commit before merge
