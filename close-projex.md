@@ -62,17 +62,34 @@ Collect all information from the execution:
 2. Verification outcomes
 3. User feedback
 
-### 2. DOCUMENT CHANGES
+### 2. DOCUMENT ACTUAL CHANGES
 
-Create detailed record of all changes:
+**IMPORTANT: Document what actually happened, not what was planned.** The walkthrough is a historical record of reality.
 
+1. **Query git for actual changes:**
+
+```bash
+# List all commits in ephemeral branch
+git log --oneline main..HEAD
+
+# See all files changed
+git diff --stat main..HEAD
+
+# Get detailed diff
+git diff main..HEAD
 ```
-For each file changed:
-- File path
-- Change type (created/modified/deleted)
-- Specific changes (line numbers, before/after)
-- Purpose of change
-```
+
+2. **For each file changed, record:**
+   - File path
+   - Change type (created/modified/deleted)  
+   - Specific changes (line numbers, actual before/after)
+   - Purpose of change
+   - **Whether this matches or deviates from plan**
+
+3. **Compare against plan:**
+   - Files in plan but not changed → Document why (already done? not needed? blocked?)
+   - Files changed but not in plan → Document why (discovered during execution? dependency?)
+   - Changes different from plan → Document what and why
 
 ### 3. VERIFY SUCCESS CRITERIA
 
@@ -126,21 +143,25 @@ Create a new file: `{yyyymmdd}-{plan-name}-walkthrough.md`
 
 ## Execution Detail
 
+> **NOTE:** This section documents what ACTUALLY happened, derived from git history and execution notes. 
+> Differences from the plan are explicitly called out.
+
 ### Step 1: [Step Title from Plan]
 
 **Planned:** [What the plan specified]
 
-**Actual:** [What was actually done]
+**Actual:** [What was actually done — be specific, cite actual code/files]
 
 **Deviation:** [None / Description of deviation and reasoning]
+- If different from plan: WHY? (discovered issue, better approach, prerequisite missing, etc.)
 
-**Files Changed:**
-| File | Change Type | Details |
-|------|-------------|---------|
-| `path/to/file.ext` | Modified | Lines 45-67: [description] |
-| `path/to/new.ext` | Created | [description] |
+**Files Changed (ACTUAL):**
+| File | Change Type | Planned? | Details |
+|------|-------------|----------|---------|
+| `path/to/file.ext` | Modified | Yes | Lines 45-67: [actual changes made] |
+| `path/to/new.ext` | Created | No | [why this was added] |
 
-**Verification:** [How this step was verified]
+**Verification:** [How this step was verified — actual results]
 
 **Issues:** [Any issues encountered and how resolved]
 
@@ -160,20 +181,27 @@ Create a new file: `{yyyymmdd}-{plan-name}-walkthrough.md`
 
 ## Complete Change Log
 
+> **Derived from:** `git diff --stat main..HEAD` — This is the authoritative record of what changed.
+
 ### Files Created
-| File | Purpose | Lines |
-|------|---------|-------|
-| `path/to/file.ext` | [What it does] | [line count] |
+| File | Purpose | Lines | In Plan? |
+|------|---------|-------|----------|
+| `path/to/file.ext` | [What it does] | [line count] | Yes/No |
 
 ### Files Modified
-| File | Changes | Lines Affected |
-|------|---------|----------------|
-| `path/to/file.ext` | [Summary of changes] | [line ranges] |
+| File | Changes | Lines Affected | In Plan? |
+|------|---------|----------------|----------|
+| `path/to/file.ext` | [Summary of changes] | [line ranges] | Yes/No |
 
 ### Files Deleted
-| File | Reason |
-|------|--------|
-| `path/to/file.ext` | [Why deleted] |
+| File | Reason | In Plan? |
+|------|--------|----------|
+| `path/to/file.ext` | [Why deleted] | Yes/No |
+
+### Planned But Not Changed
+| File | Planned Change | Why Not Done |
+|------|----------------|--------------|
+| `path/to/file.ext` | [What was planned] | [Reason: blocked, not needed, deferred, etc.] |
 
 ---
 
@@ -345,15 +373,24 @@ git commit -m "projex: close {plan-name} - add walkthrough"
 
 ### 7. FINALIZE GIT BRANCH
 
+**CRITICAL: Execute each git command one at a time. Wait for completion and verify success before proceeding to the next command.**
+
 The ephemeral branch must be finalized. Present options to user:
 
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
 
 ```bash
-git checkout main  # or base branch
+# Step 1 - WAIT for completion, verify "Switched to branch 'main'"
+git checkout main
+
+# Step 2 - WAIT for completion, verify squash summary
 git merge --squash projex/{yyyymmdd}-{plan-name}
+
+# Step 3 - WAIT for completion, verify commit created
 git commit -m "projex: {plan-name} - [summary of changes]"
+
+# Step 4 - WAIT for completion, verify branch deleted
 git branch -D projex/{yyyymmdd}-{plan-name}
 ```
 

@@ -85,7 +85,7 @@ git add <plan-file>
 git commit -m "projex: start execution of {plan-name}"
 ```
 
-4. **Create execution log** — Track progress mentally or in notes:
+4. **Create execution log** — Track progress and ACTUAL changes:
 
 ```markdown
 # Execution Log: [Plan Name]
@@ -96,12 +96,24 @@ Started: [timestamp]
 - [ ] Step 2: [title]
 ...
 
+## Actual Changes (vs Plan)
+[For each file/change, note if it matches plan or differs]
+- `file.ext`: [actual change] — matches plan / differs because [reason]
+
 ## Deviations
-[Track any changes from plan]
+[Track any changes from plan — WHAT and WHY]
+
+## Unplanned Changes
+[Files changed that weren't in the plan — WHY]
+
+## Planned But Skipped
+[Planned changes not made — WHY]
 
 ## Issues Encountered
 [Document problems and resolutions]
 ```
+
+> **Important:** This log feeds into the walkthrough. Track what ACTUALLY happens, not just what was planned.
 
 ### 2. EXECUTE STEPS SEQUENTIALLY
 
@@ -130,11 +142,14 @@ For each step in the plan:
 
 #### D. DOCUMENT
 
-Track for the walkthrough:
-- What was actually done
-- Any deviations from plan
+**Track ACTUAL changes for the walkthrough (not just what was planned):**
+- What was actually done — specific files, specific changes
+- How it differs from plan (if at all)
+- Why it differs (if applicable)
 - Issues encountered and resolutions
 - Verification results
+
+> The walkthrough will be derived from git history + these notes. Be specific about what actually changed.
 
 ### 3. HANDLE DEVIATIONS
 
@@ -302,6 +317,30 @@ After successful execution:
 ---
 
 ## GIT BRANCH MANAGEMENT
+
+### Git Operation Discipline
+
+**CRITICAL: Execute git commands one at a time. Wait for each command to complete and verify success before proceeding.**
+
+```bash
+# Step 1: Create branch - WAIT for completion
+git checkout -b projex/20260126-plan-name
+# Verify: Should see "Switched to a new branch 'projex/...'"
+
+# Step 2: Stage files - WAIT for completion
+git add <files>
+# Verify: No error output
+
+# Step 3: Commit - WAIT for completion
+git commit -m "projex: ..."
+# Verify: Should see commit summary with files changed
+```
+
+**Never:**
+- Run multiple git commands in parallel
+- Assume a git command succeeded without checking
+- Proceed to the next git operation before the previous one completes
+- Chain git commands with `&` or `&&` without verification between them
 
 ### Branch Naming
 ```

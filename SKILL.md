@@ -1,4 +1,7 @@
-# Projex
+---
+name: projex-framework
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Use this skill and read the bundled `projex-framework.md` when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`
+---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
 
@@ -128,6 +131,25 @@ The **Execute → Walkthrough** cycle is wrapped in an ephemeral git branch to p
   - Plans are reviewable before execution
   - Plans persist even if execution is abandoned
   - Clean separation: base branch = plans, ephemeral branch = execution
+
+### Git Operation Discipline
+
+**CRITICAL: Git commands must be executed sequentially, one at a time, waiting for each to complete and verifying success before proceeding.**
+
+- **Never parallelize git operations** — Each git command must finish before the next begins
+- **Verify success** — Check exit code and output before proceeding
+- **No assumptions** — Don't assume a command succeeded; confirm it
+- **Handle failures** — If a git operation fails, stop and address it before continuing
+
+```bash
+# WRONG - parallel/batched
+git add file1.txt & git add file2.txt & git commit -m "msg"
+
+# CORRECT - sequential with verification
+git add file1.txt        # wait, verify success
+git add file2.txt        # wait, verify success
+git commit -m "msg"      # wait, verify commit created
+```
 
 ### Notes
 
