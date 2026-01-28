@@ -1,9 +1,5 @@
-# Execute Projex Workflow
-
-(This is part of @projex-framework skill. Is is a MUST to load the skill first.)
-
-This workflow guides the execution of **Plan** projex documents — implementing the specified changes following the plan's instructions.
-
+---
+description: This workflow guides the execution of **Plan** projex documents — implementing the specified changes following the plan's instructions. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE
