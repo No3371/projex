@@ -1,5 +1,5 @@
 ---
-description: This workflow guides the creation of **Exploration** projex documents — comprehensive investigation of status quo, subject domains, or specific questions to build deep understanding and inform decisions. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
+description: This workflow guides the creation of **Exploration** projex documents — comprehensive investigation of status quo, subject domains, or specific questions to build deep understanding and inform decisions. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE

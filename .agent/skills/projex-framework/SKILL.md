@@ -44,7 +44,7 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Additional key insights for future references, such as lessions learned, pattern discoveries, gotchas/pitfalls encounters
     - WORKFLOW SPECIFICATION -> @./close-projex.md 
 - Exploration
-    - Deep and thorough exploration & investigation against status quo for solely for answering questions
+    - Deep and thorough exploration & investigation against status quo solely for answering questions
     - WORKFLOW SPECIFICATION -> @./explore-projex.md 
 
 ## Authoring

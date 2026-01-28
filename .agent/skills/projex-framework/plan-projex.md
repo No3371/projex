@@ -1,5 +1,5 @@
 ---
-description: This workflow guides the creation of **Plan** projex documents — actionable task documents with clear objectives, rich context, and specific implementation details. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
+description: This workflow guides the creation of **Plan** projex documents — actionable task documents with clear objectives, rich context, and specific implementation details. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE

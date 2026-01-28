@@ -1,5 +1,5 @@
 ---
-description: This workflow guides the creation of **Walkthrough** projex documents — comprehensive records authored after every Plan execution. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
+description: This workflow guides the creation of **Walkthrough** projex documents — comprehensive records authored after every Plan execution. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE

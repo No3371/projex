@@ -1,5 +1,5 @@
 ---
-description: This workflow guides the creation of **Proposal** projex documents — exploratory documentation for new ideas, changes, or decisions. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
+description: This workflow guides the creation of **Proposal** projex documents — exploratory documentation for new ideas, changes, or decisions. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE
