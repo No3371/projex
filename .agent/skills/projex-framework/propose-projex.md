@@ -1,5 +1,7 @@
 # Propose Projex Workflow
 
+(This is part of @projex-framework skill. Is is a MUST to load the skill first.)
+
 This workflow guides the creation of **Proposal** projex documents — exploratory documentation for new ideas, changes, or decisions.
 
 ---
