@@ -1,9 +1,5 @@
-# Eval Projex Workflow
-
-(This is part of @projex-framework skill. Is is a MUST to load the skill first.)
-
-This workflow guides the creation of **Evaluation** projex documents — systematic analysis and scrutinization of status quo versus new ideas, changes, or proposals.
-
+---
+description: This workflow guides the creation of **Evaluation** projex documents — systematic analysis and scrutinization of status quo versus new ideas, changes, or proposals. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
 ---
 
 ## PURPOSE

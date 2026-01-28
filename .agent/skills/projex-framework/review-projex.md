@@ -1,9 +1,5 @@
-# Review Projex Workflow
-
-(This is part of @projex-framework skill. Is is a MUST to load the skill first.)
-
-This workflow guides the creation of **Review** projex documents — inspection reports that ensure existing projex documents remain valid, current, and valuable.
-
+---
+description: This workflow guides the creation of **Review** projex documents — inspection reports that ensure existing projex documents remain valid, current, and valuable. (This is part of @projex-framework skill. Is is a MUST to load the skill first.)
 ---
 
 ## PURPOSE

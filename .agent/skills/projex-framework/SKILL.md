@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`.
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`.
 ---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
@@ -43,6 +43,9 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Acceptance/Success criteria checklist and proof of verification measure taken
     - Additional key insights for future references, such as lessions learned, pattern discoveries, gotchas/pitfalls encounters
     - WORKFLOW SPECIFICATION -> @./close-projex.md 
+- Exploration
+    - Deep and thorough exploration & investigation against status quo for solely for answering questions
+    - WORKFLOW SPECIFICATION -> @./explore-projex.md 
 
 ## Authoring
 
