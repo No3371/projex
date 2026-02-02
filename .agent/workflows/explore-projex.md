@@ -1,5 +1,5 @@
 ---
-description: Explore the project
+description: Exploration
 ---
 
 This command is a shortcut to invoke the `projex-framework` SKILL, and the `explore-projex` workflow.
