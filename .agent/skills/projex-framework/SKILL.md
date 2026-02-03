@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`.
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`.
 ---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
@@ -51,6 +51,14 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Discovers undocumented issues, gaps, and technical debt through open exploration
     - Verifies stakeholder impact and produces evidence-based findings
     - WORKFLOW SPECIFICATION -> @./audit-projex.md
+- Interview
+    - Interactive Q&A session between LLM and user scoped to specific topics/subjects/files
+    - Conducted in rounds with 3-5 questions per round, asked sequentially one-by-one
+    - Full transcript logging: questions, raw answers, and agent interpretations
+    - Extracts requirements, clarifies designs, gathers knowledge, or validates understanding
+    - User controls continuation or conclusion after each round
+    - READ-ONLY: No actions taken during interview, only the interview document is written
+    - WORKFLOW SPECIFICATION -> @./interview-projex.md
 - Walkthrough
     - Followup projex authored after EVERY Plan execution
     - Complete list of whatever happened for each objectives of the Plan projex, each with extremely details down to file changes and line numbers
@@ -111,6 +119,7 @@ Workflow usages/invocations examples:
 - `/review-projex.md @20260731-language-macro-syntax-change-proposal.md` or `/review-projex.md the project we just made`
 - `/redteam-projex.md @20260731-auth-system-plan.md` or `/redteam-projex.md current API design`
 - `/audit-projex.md @20260731-auth-system-plan.md` or `/audit-projex.md the database migration we just finished`
+- `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of execute-project. 
 
