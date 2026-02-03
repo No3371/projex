@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`.
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`.
 ---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
@@ -36,7 +36,21 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
         - Should we expand the projex, for status quo now has additions that should be covered by the projex? Or should we modify the projex, for it's no longer correct, complete or accurate?
     - Examine the projex from high level, bigger picture without being misled by the original content/entities/subjects, explore status quo and ask open quesiton
     - Challenge the idea. Challenge the projex. Ask extra challenge questions against the projex in question.
-    - WORKFLOW SPECIFICATION -> @./review-projex.md 
+    - WORKFLOW SPECIFICATION -> @./review-projex.md
+- Red Team
+    - Adversarial analysis that challenges assumptions, finds weaknesses, exploits edge cases, and identifies imperfections
+    - Identifies all stakeholder roles and attacks from each role's perspective
+    - Assumes everything is wrong until proven otherwise through evidence
+    - Discovers failure modes, edge cases, and security vulnerabilities before production
+    - Provides actionable remediation for found issues
+    - WORKFLOW SPECIFICATION -> @./redteam-projex.md
+- Audit
+    - Suspicious, rigorous validation of completed work through inspection of docs/reports/logs/code
+    - Cross-references claims against actual artifacts and evidence
+    - Assesses completeness, correctness, quality, and value delivered beyond just completion status
+    - Discovers undocumented issues, gaps, and technical debt through open exploration
+    - Verifies stakeholder impact and produces evidence-based findings
+    - WORKFLOW SPECIFICATION -> @./audit-projex.md
 - Walkthrough
     - Followup projex authored after EVERY Plan execution
     - Complete list of whatever happened for each objectives of the Plan projex, each with extremely details down to file changes and line numbers
@@ -95,6 +109,8 @@ Workflow usages/invocations examples:
 - `/eval-projex.md Does current spec compatible with this proposal?` or `/eval-projex.md What can be improved in the current implementation?`
 - `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @20260731-database-service-refactor-proposal.md`
 - `/review-projex.md @20260731-language-macro-syntax-change-proposal.md` or `/review-projex.md the project we just made`
+- `/redteam-projex.md @20260731-auth-system-plan.md` or `/redteam-projex.md current API design`
+- `/audit-projex.md @20260731-auth-system-plan.md` or `/audit-projex.md the database migration we just finished`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of execute-project. 
 
@@ -167,4 +183,3 @@ git commit -m "msg"      # wait, verify commit created
 
 ### AVOID ABSOLUTE PATHS
 USE file paths RELATIVE to project root to reference files in the repo. REDACT paths to files external to the repo.
-
