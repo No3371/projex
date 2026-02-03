@@ -21,46 +21,72 @@ Red Teams break things before they break in production. Attack ideas, find explo
 
 ## WORKFLOW
 
-### 1. ESTABLISH ATTACK SURFACE
+### 1. IDENTIFY STAKEHOLDER ROLES
 
-What exactly are you attacking? What does it claim? What assumptions does it make? Who benefits/loses? What's the blast radius?
+Before attacking, identify whose perspective matters. List ALL roles involved in or affected by the subject:
 
-Map: claims to disprove, assumptions to challenge, edge cases to break, dependencies that can fail, promises that can't be kept.
+**Common roles to consider:**
+- **End Users** — Who uses this?
+- **Operators** — Who runs/maintains this?
+- **Developers** — Who builds/extends this?
+- **Security** — Who defends this?
+- **Business/Product** — Who measures success?
+- **Support** — Who handles issues?
+- **Compliance/Legal** — Who ensures conformance?
+- **Integrators** — Who connects to this?
+- **Competitors** — Who benefits from this failing?
+- **Attackers** — Who actively tries to break this?
 
-### 2. ATTACK VECTORS
+**For each role, note:**
+- What do they care about?
+- What would make them unhappy?
+- What assumptions do they make?
+- What edge cases hit them?
 
-**Assumption Attacks:**
-- Says who? (What evidence?)
-- Always? (What cases break this?)
-- What if opposite?
-- Hidden dependencies?
+### 2. ESTABLISH ATTACK SURFACE PER ROLE
 
-**Edge Cases:**
-Min/max values, null/empty data, concurrency, degraded dependencies, partial failures, resource exhaustion, race conditions, timing.
+For each identified role, map their specific attack surface:
 
-**Failure Modes:**
-What breaks when: dependencies fail, assumptions prove false, scale increases 10x/100x, network partitions, data corrupts, users misbehave, time passes.
+**Per-Role Questions:**
+- What does this role expect/require?
+- What promises are made to this role?
+- What assumptions does this role make?
+- What can go wrong from this role's perspective?
+- How does this role fail or get failed by the system?
 
-**Security:**
-What would an attacker target? Highest-value exploit? Trust boundaries? Missing validation? Missing rate limits?
+### 3. ROLE-BASED ATTACK VECTORS
 
-### 3. CHALLENGE FRAMEWORK
+**For each role, execute these attacks:**
 
-**Five Whys (Adversarial):**
-1. Why believe this? → assertion
-2. Why true? → evidence  
-3. Why valid? → source
-4. Why trust? → authority
-5. Why accept? → first principles or circular reasoning
+**Assumption Attacks (from role's view):**
+- Says who? (What evidence does this role have?)
+- Always? (What cases break for this role?)
+- What if opposite? (from this role's perspective)
+- Hidden dependencies? (What does this role need that's unstated?)
 
-**What Could Go Wrong Cascade:**
-Happy path → first failure → cascade → worst-case → recovery cost
+**Edge Cases (that hit this role):**
+What specific scenarios cause problems for this role? Min/max values, null/empty data, concurrency, degraded dependencies, partial failures, resource exhaustion.
 
-**Inversion Test:**
-"Should X" → "What if we don't X?"
-"Improves Y" → "What if worse Y?"
+**Failure Modes (experienced by this role):**
+What breaks when dependencies fail, assumptions prove false, scale increases, network partitions, data corrupts from this role's viewpoint?
 
-### 4. DRAFT RED TEAM REPORT
+**Security (from role's threat model):**
+What would this role's adversary target? What's valuable to attack from this role's perspective?
+
+### 4. CHALLENGE FRAMEWORK (ROLE-GROUNDED)
+
+Apply these across all roles:
+
+**Five Whys (per role):**
+From each role's perspective: Why believe → assertion → evidence → source → authority → first principles or circular reasoning
+
+**What Could Go Wrong Cascade (per role):**
+Each role's happy path → first failure → cascade → worst-case → recovery cost
+
+**Inversion Test (per role):**
+For each role: "Should X" → "What if we don't X from this role's view?"
+
+### 5. DRAFT RED TEAM REPORT
 
 Create file: `{yyyymmdd}-{subject}-redteam.md`
 
@@ -83,12 +109,29 @@ Create file: `{yyyymmdd}-{subject}-redteam.md`
 
 ---
 
-## Attack Surface
+## Stakeholder Roles
 
-**Claims:** What does it promise?
-**Stated Assumptions:** What does it assume?
-**Hidden Assumptions:** What's unstated?
-**Dependencies:** What must work for this to work?
+| Role | Cares About | Pain Points | Critical Assumptions |
+|------|-------------|-------------|---------------------|
+| End Users | [What matters] | [What hurts] | [What they assume] |
+| Operators | [What matters] | [What hurts] | [What they assume] |
+| Developers | [What matters] | [What hurts] | [What they assume] |
+| Security | [What matters] | [What hurts] | [What they assume] |
+| [Other Role] | [What matters] | [What hurts] | [What they assume] |
+
+---
+
+## Attack Surface (Per Role)
+
+**[Role 1]:**
+- Claims to this role: [What's promised]
+- Assumptions by/about role: [What's assumed]
+- Dependencies: [What must work]
+
+**[Role 2]:**
+- Claims to this role: [What's promised]
+- Assumptions by/about role: [What's assumed]
+- Dependencies: [What must work]
 
 ---
 
@@ -97,9 +140,13 @@ Create file: `{yyyymmdd}-{subject}-redteam.md`
 ### Finding 1: [Title]
 **Severity:** Critical/High/Medium/Low | **Likelihood:** High/Medium/Low
 
+**Affects Roles:** [Which roles experience this]
+
 **Attack Vector:** [How to exploit]
 
-**Impact:** [Technical/Business/Security consequences]
+**Role-Specific Impact:**
+- **[Role 1]:** [How this hurts them]
+- **[Role 2]:** [How this hurts them]
 
 **Blast Radius:** [Scope of damage]
 
@@ -107,52 +154,60 @@ Create file: `{yyyymmdd}-{subject}-redteam.md`
 
 ---
 
-## Assumption Challenges
+## Role-Based Assumption Challenges
 
-### [Assumption]
-**Challenge:** [Why might this be false]
-**Counter-Evidence:** [Evidence against]
-**If Wrong:** [Impact]
+### [Role]: [Assumption]
+**Challenge:** [Why might this be false from role's perspective]
+**Counter-Evidence:** [Evidence against from role's view]
+**If Wrong:** [Impact on this role]
 **Action:** Validate | Relax | Reject
 
 ---
 
-## Edge Cases & Failures
+## Role-Specific Edge Cases & Failures
 
-### [Edge Case/Failure Mode]
-**Trigger:** [What causes this]
-**Behavior:** [What actually happens]
+### [Role]: [Edge Case/Failure Mode]
+**Trigger:** [What causes this for this role]
+**Role Experience:** [What this role sees/feels]
 **Recovery:** Possible/Difficult/Impossible
-**Mitigation:** [How to prevent]
+**Mitigation:** [How to prevent from role's perspective]
 
 ---
 
-## What's Hidden
+## What's Hidden (Per Role)
 
-**Omissions:** What wasn't mentioned?
-**Tradeoffs:** What was sacrificed?
-**Alternative:** What else could work?
+**Omissions per role:**
+- **[Role 1]:** What wasn't told to them?
+- **[Role 2]:** What wasn't told to them?
+
+**Tradeoffs per role:**
+- **[Role 1]:** What did they sacrifice?
+- **[Role 2]:** What did they sacrifice?
 
 ---
 
-## Scale & Stress
+## Scale & Stress (Role Impact)
 
-**At 10x:** [What breaks]
-**At 100x:** [What's impossible]
-**Under Stress:** [Failure modes]
+**At 10x:**
+- **[Role 1]:** [What breaks for them]
+- **[Role 2]:** [What breaks for them]
+
+**At 100x:**
+- **[Role 1]:** [What's impossible for them]
+- **[Role 2]:** [What's impossible for them]
 
 ---
 
 ## Remediation
 
 ### Must Fix (Before Proceeding)
-- [Issue] → [Fix] → [Verify]
+- **[Issue]** (affects: [roles]) → [Fix] → [Verify with roles]
 
 ### Should Fix (Before Production)
-- [Issue] → [Fix]
+- **[Issue]** (affects: [roles]) → [Fix]
 
 ### Monitor
-- [Issue] → [When to revisit]
+- **[Issue]** (affects: [roles]) → [When to revisit]
 
 ---
 
@@ -162,22 +217,29 @@ Create file: `{yyyymmdd}-{subject}-redteam.md`
 **Risk:** Unacceptable | High | Medium | Low
 **Readiness:** Not Ready | Needs Work | Ready with Fixes | Ready
 
+**Per-Role Readiness:**
+- **[Role 1]:** Ready/Not Ready — [Why]
+- **[Role 2]:** Ready/Not Ready — [Why]
+
 **Conditions for Approval:**
-- [ ] [Must be met]
+- [ ] [Must be met] (for [roles])
 
 **No-Go If:**
-- [ ] [This is true]
+- [ ] [This is true] (impacts [roles])
 ```
 
-### 5. VALIDATION
+### 6. VALIDATION
 
 **Checks:**
-- [ ] Every claim challenged, multiple attack vectors explored
-- [ ] Edge cases tested (not just imagined)
-- [ ] Acknowledged what's actually solid
-- [ ] Severity ratings justified, recommendations actionable
+- [ ] All relevant stakeholder roles identified
+- [ ] Each role's perspective analyzed independently
+- [ ] Claims/assumptions challenged from each role's viewpoint
+- [ ] Edge cases tested for each role's experience
+- [ ] Acknowledged what's solid for each role
+- [ ] Severity ratings justified per role impact
+- [ ] Remediation addresses role-specific concerns
 
-### 6. FINALIZE
+### 7. FINALIZE
 
 Save to appropriate `projex/` folder. Link to subject being analyzed.
 
@@ -185,11 +247,12 @@ Save to appropriate `projex/` folder. Link to subject being analyzed.
 
 ## PRINCIPLES
 
-- **Assume nothing** — Every assumption is guilty until proven innocent
-- **Break it first** — Find failure modes in safety, not production
+- **Role-first thinking** — Every finding must be grounded in a stakeholder role's reality
+- **Assume nothing** — Every assumption is guilty until proven innocent per role
+- **Break it first** — Find failure modes in safety from each role's perspective
 - **No sacred cows** — Authority ≠ evidence, popularity ≠ correctness
 - **Honest adversary** — Attack ideas not people, provide solutions not just criticism
-- **Productive paranoia** — Build better systems through skepticism
+- **Productive paranoia** — Build better systems through role-grounded skepticism
 
 ---
 
@@ -206,4 +269,3 @@ Save to appropriate `projex/` folder. Link to subject being analyzed.
 Produces `projex/{yyyymmdd}-{name}-redteam.md` with severity-prioritized findings and remediation.
 
 **Folder placement:** Active → `projex/` | Addressed → `projex/closed/` | Superseded → `projex/archived/`
-
