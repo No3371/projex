@@ -192,3 +192,6 @@ git commit -m "msg"      # wait, verify commit created
 
 ### AVOID ABSOLUTE PATHS
 USE file paths RELATIVE to project root to reference files in the repo. REDACT paths to files external to the repo.
+
+### PARALLELIZATION DISCIPLINE
+If subsequent actions/commmands/toolcalls depends on prior ones, DO NOT parallel/burst them, split them up instead.  
