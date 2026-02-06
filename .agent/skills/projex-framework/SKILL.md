@@ -130,7 +130,7 @@ Workflow usages/invocations examples:
 - `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
-- `/close-projex.md` after the user reviewed the result of execute-project.
+- `/close-projex.md` after the user reviewed the result of /execute-projex.
 
 ## Git Integration
 
