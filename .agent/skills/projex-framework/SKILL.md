@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`.
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`.
 ---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
@@ -73,6 +73,14 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Can execute specific objectives from existing plans without running the full plan
     - Related projex and documents are still updated to match post-patch status
     - WORKFLOW SPECIFICATION -> @./patch-projex.md
+- Simulation
+    - Disposable execution that freely makes file changes, observes outcomes and side-effects, then rolls back everything
+    - Only the simulation document survives — all code changes are discarded
+    - Uses ephemeral git branch for isolation and guaranteed clean rollback
+    - Strictly forbidden from performing any irreversible actions (no push, no external API mutations, no publishing, no deploys)
+    - Produces a feasibility assessment, side-effect analysis, and actionable recommendations
+    - Can trial-run existing plans or explore "what if" scenarios with real changes
+    - WORKFLOW SPECIFICATION -> @./simulate-projex.md
 - Exploration
     - Deep and thorough exploration & investigation against status quo solely for answering questions
     - WORKFLOW SPECIFICATION -> @./explore-projex.md
@@ -129,6 +137,7 @@ Workflow usages/invocations examples:
 - `/audit-projex.md @20260731-auth-system-plan.md` or `/audit-projex.md the database migration we just finished`
 - `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
+- `/simulate-projex.md What happens if we remove the legacy compatibility layer?` or `/simulate-projex.md Trial-run @20260201-api-migration-plan.md`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of /execute-projex.
 
@@ -190,7 +199,8 @@ git commit -m "msg"      # wait, verify commit created
 
 ### Notes
 
-- Only Execute/Walkthrough workflows use ephemeral branches
+- Execute/Walkthrough and Simulation workflows use ephemeral branches
+- Simulation branches (`projex/sim/`) are always discarded — only the report is committed to base branch
 - Proposal, Plan, Eval, Review workflows operate on current branch and should be committed normally
 - If execution spans multiple sessions, branch persists until close
 - Walkthrough document is committed as final commit before merge
