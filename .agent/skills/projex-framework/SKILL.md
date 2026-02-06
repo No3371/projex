@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`.
+description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`.
 ---
 
 "Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
@@ -65,9 +65,17 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Acceptance/Success criteria checklist and proof of verification measure taken
     - Additional key insights for future references, such as lessions learned, pattern discoveries, gotchas/pitfalls encounters
     - WORKFLOW SPECIFICATION -> @./close-projex.md 
+- Patch
+    - Quick-action projex that skips the full Plan → Execute → Close cycle for small, well-understood changes
+    - Immediately takes action, commits directly to current branch (no ephemeral branch)
+    - Single output document serves as both record and walkthrough — patches are born closed
+    - Scope-guarded: escalates to full plan-execute if complexity exceeds patch threshold
+    - Can execute specific objectives from existing plans without running the full plan
+    - Related projex and documents are still updated to match post-patch status
+    - WORKFLOW SPECIFICATION -> @./patch-projex.md
 - Exploration
     - Deep and thorough exploration & investigation against status quo solely for answering questions
-    - WORKFLOW SPECIFICATION -> @./explore-projex.md 
+    - WORKFLOW SPECIFICATION -> @./explore-projex.md
 
 ## Authoring
 
@@ -120,8 +128,9 @@ Workflow usages/invocations examples:
 - `/redteam-projex.md @20260731-auth-system-plan.md` or `/redteam-projex.md current API design`
 - `/audit-projex.md @20260731-auth-system-plan.md` or `/audit-projex.md the database migration we just finished`
 - `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
+- `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
-- `/close-projex.md` after the user reviewed the result of execute-project. 
+- `/close-projex.md` after the user reviewed the result of /execute-projex.
 
 ## Git Integration
 
