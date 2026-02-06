@@ -360,10 +360,15 @@ If this plan were to be executed again:
    - Place Walkthrough in `projex/closed/` alongside the Plan
    - If source Proposal exists and all derived Plans are closed, move Proposal to `projex/closed/` as well
 
-4. **Commit walkthrough and file moves:**
+4. **Commit walkthrough and file moves** — stage each moved/created file by explicit path:
 
 ```bash
-git add projex/closed/
+git add projex/closed/{yyyymmdd}-{name}-walkthrough.md
+git add projex/closed/{yyyymmdd}-{name}-plan.md
+# If proposal also moved:
+git add projex/closed/{yyyymmdd}-{name}-proposal.md
+# Stage deletions from original locations (git tracks the move):
+git add projex/{yyyymmdd}-{name}-plan.md
 git commit -m "projex: close {plan-name} - add walkthrough"
 ```
 

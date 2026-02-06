@@ -96,7 +96,9 @@ Act directly:
 **Commit convention:**
 
 ```bash
-git add <changed-files>
+# Stage each changed file by explicit path — never use `git add .` or directories
+git add path/to/changed-file1.ext
+git add path/to/changed-file2.ext
 git commit -m "projex(patch): [concise description of change]"
 ```
 
@@ -199,8 +201,10 @@ After the patch is written:
 4. **Commit document updates:**
 
 ```bash
+# Stage each file by explicit path
 git add projex/closed/{yyyymmdd}-{patch-name}-patch.md
-git add [any updated related documents]
+git add projex/{yyyymmdd}-{related-plan-name}-plan.md
+git add path/to/any-other-updated-doc.md
 git commit -m "projex(patch): add patch doc - {patch-name}"
 ```
 
@@ -262,13 +266,14 @@ Patches commit directly to the current branch. This is intentional — the overh
 ### Commit Sequence
 
 ```bash
-# Step 1: Make changes and commit them
-git add <changed-files>
+# Step 1: Make changes and commit — stage each file by explicit path
+git add path/to/changed-file1.ext
+git add path/to/changed-file2.ext
 git commit -m "projex(patch): [description]"
 
-# Step 2: Write patch doc, update related documents, commit
+# Step 2: Write patch doc, update related documents, commit — stage each by explicit path
 git add projex/closed/{yyyymmdd}-{patch-name}-patch.md
-git add [updated related documents]
+git add projex/{yyyymmdd}-{related-plan-name}-plan.md
 git commit -m "projex(patch): add patch doc - {patch-name}"
 ```
 

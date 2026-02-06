@@ -83,7 +83,7 @@ git checkout -b projex/20260126-database-refactor
 3. **Commit plan status change** — First commit in the ephemeral branch:
 
 ```bash
-git add <plan-file>
+git add projex/{yyyymmdd}-{plan-name}-plan.md
 git commit -m "projex: start execution of {plan-name}"
 ```
 
@@ -228,7 +228,9 @@ After each step:
 2. **Commit changes if any were made** — Logical atomic units with descriptive messages:
 
 ```bash
-git add <changed-files>
+# Stage each changed file by explicit path — never use `git add .` or directories
+git add path/to/changed-file1.ext
+git add path/to/changed-file2.ext
 git commit -m "projex: step N - [brief description]"
 ```
 
@@ -412,8 +414,8 @@ After successful execution:
 git checkout -b projex/20260126-plan-name
 # Verify: Should see "Switched to a new branch 'projex/...'"
 
-# Step 2: Stage files - WAIT for completion
-git add <files>
+# Step 2: Stage files by explicit path - WAIT for completion
+git add path/to/specific-file.ext
 # Verify: No error output
 
 # Step 3: Commit - WAIT for completion

@@ -186,12 +186,19 @@ The **Execute → Walkthrough** cycle is wrapped in an ephemeral git branch to p
 - **Verify success** — Check exit code and output before proceeding
 - **No assumptions** — Don't assume a command succeeded; confirm it
 - **Handle failures** — If a git operation fails, stop and address it before continuing
+- **Stage files by explicit path** — Always `git add` each file by its exact path. Never use `git add .`, `git add -A`, directory paths, or wildcards. This prevents accidentally staging unintended files (secrets, build artifacts, unrelated changes).
 
 ```bash
 # WRONG - parallel/batched
 git add file1.txt & git add file2.txt & git commit -m "msg"
 
-# CORRECT - sequential with verification
+# WRONG - imprecise staging
+git add .
+git add -A
+git add projex/closed/
+git add src/
+
+# CORRECT - sequential with explicit file paths
 git add file1.txt        # wait, verify success
 git add file2.txt        # wait, verify success
 git commit -m "msg"      # wait, verify commit created

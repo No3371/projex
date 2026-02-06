@@ -107,7 +107,8 @@ Make changes aggressively. The branch will be discarded — there is no cost to 
 
 ```bash
 # Commit convention within simulation (these commits will be discarded)
-git add <files>
+# Still stage by explicit path — good habits even in throwaway branches
+git add path/to/changed-file.ext
 git commit -m "sim: [description of what was tried]"
 ```
 
@@ -336,7 +337,9 @@ If the simulation was against an existing plan or proposal:
 - If blockers were found, update the source document's risks/open questions
 
 ```bash
-git add [updated related documents]
+# Stage each updated file by explicit path
+git add projex/{yyyymmdd}-{related-plan-name}-plan.md
+git add path/to/any-other-updated-doc.md
 git commit -m "projex(sim): update related projex - {simulation-name}"
 ```
 
