@@ -80,7 +80,13 @@ Frame the simulation as:
 ```
 
 ### 2. CREATE EPHEMERAL BRANCH
+ 
+Before creating the simulation branch, note your current branch:
+```bash
+git branch --show-current  # Remember as {base-branch}
+```
 
+Then create the simulation branch:
 ```bash
 git checkout -b projex/sim/{yyyymmdd}-{simulation-name}
 ```
@@ -116,8 +122,8 @@ Log each iteration separately — even failed attempts are valuable data.
 
 **Useful diff commands:**
 ```bash
-git diff main..HEAD                    # All changes vs baseline
-git diff main -- path/to/file.ext     # Specific file vs baseline
+git diff {base-branch}..HEAD                    # All changes vs baseline
+git diff {base-branch} -- path/to/file.ext     # Specific file vs baseline
 git diff <earlier-commit>..HEAD        # Between simulation steps
 ```
 
@@ -126,14 +132,14 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 **This is your last chance to extract data.** Once the branch is deleted, the changes are gone.
 
 1. Run full test suite, build, linter — capture all output
-2. Capture final diffs: `git diff --stat main..HEAD` and `git diff main..HEAD`
+2. Capture final diffs: `git diff --stat {base-branch}..HEAD` and `git diff {base-branch}..HEAD`
 3. Note any runtime observations (behavior differences, performance changes)
 
 **Then rollback:**
 
 ```bash
 # Step 1: Return to base branch — WAIT, verify "Switched to branch '...'"
-git checkout main
+git checkout {base-branch}
 
 # Step 2: Delete the ephemeral branch — WAIT, verify deletion
 git branch -D projex/sim/{yyyymmdd}-{simulation-name}
