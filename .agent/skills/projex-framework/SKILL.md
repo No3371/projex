@@ -1,9 +1,7 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem. Load this skill when the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`.
+description: A workflow framework to organize objectives all by file management in filesystem. When the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`. Load this skill and another document with the called name.
 ---
-
-"Projex" is a workflow framework to organize objectives any type of tasks of any sizes, all by file/folder management in filesystem.
 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
 
@@ -177,6 +175,14 @@ The **Execute → Walkthrough** cycle is wrapped in an ephemeral git branch to p
   - Plans are reviewable before execution
   - Plans persist even if execution is abandoned
   - Clean separation: base branch = plans, ephemeral branch = execution
+
+### Multi-Repo Awareness
+
+Workspaces may contain multiple related repositories side by side. Before any git operation or projex file manipulation:
+
+- **Confirm which repo you are in** — Run `git rev-parse --show-toplevel` if uncertain. Never assume the working directory matches the intended repo.
+- **Match projex to repo** — Each `projex/` folder belongs to the repo whose root contains it. Do not create, move, or reference projex documents across repo boundaries.
+- **Scope git commands to the correct repo** — A `git add`, `git commit`, or `git checkout` in the wrong repo is silently destructive. When the workspace root is not itself a repo, always verify your cwd or use `-C <repo-path>` before running git commands.
 
 ### Git Operation Discipline
 
