@@ -24,6 +24,8 @@ Example:
 
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
 
+Note: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mentioning the name of the workflows should work without making them commands in Claude Code.
+
 -- The following is authored by Opus --
 
 ## Why Not Just Prompt?
