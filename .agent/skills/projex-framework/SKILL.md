@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives all by file management in filesystem. Load this skill and another document with the called name when the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`. 
+description: A workflow framework to organize objectives all by file management in filesystem. Load this skill and another document with the called name when the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`.
 ---
 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
@@ -79,6 +79,14 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Produces a feasibility assessment, side-effect analysis, and actionable recommendations
     - Can trial-run existing plans or explore "what if" scenarios with real changes
     - WORKFLOW SPECIFICATION -> @./simulate-projex.md
+- Navigation
+    - Living roadmap that evolves throughout development and steers work forward at any scale — from entire project down to a single module or feature area
+    - Milestones and phases at the appropriate abstraction for the scope, not implementation details one level below — the document that answers "what should we work on next?" for its scope
+    - Continuously revised — each invocation researches status quo, assesses progress, discusses with user, and revises direction
+    - References child projex (plans, proposals, evals) as they are spawned from the roadmap
+    - Nestable — project-level navigations can reference module-level ones, and vice versa
+    - Never closed — stays active in its scope's `projex/` folder until superseded
+    - WORKFLOW SPECIFICATION -> @./navigate-projex.md
 - Exploration
     - Investigation grounded in the status quo — map what exists, how it works, and why, to inform decisions and answer questions
     - Unlike Eval (open-ended, any framing) or Proposal (directional), Exploration is anchored to current reality
@@ -137,6 +145,7 @@ Workflow usages/invocations examples:
 - `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?` or `/simulate-projex.md Trial-run @20260201-api-migration-plan.md`
+- `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of /execute-projex.
 
@@ -215,7 +224,7 @@ git commit -m "msg"      # wait, verify commit created
 
 - Execute/Walkthrough and Simulation workflows use ephemeral branches
 - Simulation branches (`projex/sim/`) are always discarded — only the report is committed to base branch
-- Proposal, Plan, Eval, Review workflows operate on current branch and should be committed normally
+- Proposal, Plan, Eval, Review, Navigation workflows operate on current branch and should be committed normally
 - If execution spans multiple sessions, branch persists until close
 - Walkthrough document is committed as final commit before merge
 
@@ -227,4 +236,4 @@ git commit -m "msg"      # wait, verify commit created
 USE file paths RELATIVE to project root to reference files in the repo. REDACT paths to files external to the repo.
 
 ### PARALLELIZATION DISCIPLINE
-If subsequent actions/commmands/toolcalls depends on prior ones, DO NOT parallel/burst them, split them up instead.  
+If subsequent actions/commmands/toolcalls depends on prior ones, DO NOT parallel/burst them, split them up instead.

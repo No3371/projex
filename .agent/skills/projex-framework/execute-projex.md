@@ -129,6 +129,16 @@ Started: [timestamp]
 
 ## Data Gathered
 [For investigative/testing plans - record findings, metrics, observations]
+
+## Post-Plan User-Directed Actions
+[Actions requested by user during review, after plan steps completed]
+
+### [Timestamp] - User Request: [Description]
+**Request:** [What the user asked for]
+**Action:** [Exactly what was done]
+**Output/Result:** [What happened]
+**Files Affected:** [List any files read/modified/created]
+**Verification:** [How verified]
 ```
 
 > **CRITICAL: Log EVERY action aggressively.** Not just code changes — commands executed, files inspected, tests run, data gathered, observations made. The walkthrough depends on knowing exactly what happened.
@@ -303,6 +313,7 @@ After all steps:
 - Log commands, outputs, observations, findings
 - Log immediately, not retrospectively
 - Detail matters — exact commands, exact files, exact results
+- Post-plan user-directed actions get the same logging treatment — they are execution actions, not afterthoughts
 
 ### Incremental Progress
 - Verify after each step
@@ -395,11 +406,35 @@ main (or base branch)
 
 ---
 
-## NEXT STEPS
+## CLOSING
 
-After successful execution:
-1. User reviews the results (changes/findings/data)
-2. Run `/close-projex.md` to create walkthrough document
+### Ready to Close
+
+A projex is **ready to close** when BOTH conditions are met:
+1. **All criteria satisfied** — success/acceptance criteria are met (or execution is conclusively blocked/failed)
+2. **Allowed to close** — user has explicitly instructed to close, OR the projex is marked as auto-close
+
+### Default: User-Initiated Close
+
+By default, closing requires explicit user instruction. After execution completes:
+
+1. Report execution results to the user
+2. User reviews the results (changes/findings/data)
+3. **User may request further actions** — adjustments, fixes, additional changes. These are still part of this execution and MUST be logged in the execution log with the same aggressive detail as plan steps. They are "post-plan user-directed actions" — they happened, they matter, they go in the walkthrough
+4. When the user is satisfied, they instruct to close
+5. Run `/close-projex.md` to create walkthrough document
+
+**Do not close without user instruction.** The agent reports readiness; the user decides when to close.
+
+### Auto-Close (Opt-In)
+
+If the user explicitly instructs the agent to auto-close upon completion, the agent must mark this in the plan document's header before proceeding:
+
+```markdown
+> **Auto-Close:** Yes
+```
+
+When auto-close is marked, the agent may proceed directly to `/close-projex.md` after all criteria are satisfied, without waiting for user instruction. **The only valid signal for auto-close is this mark in the projex document** — verbal instruction alone is not sufficient; it must be recorded in the document.
 
 ---
 
@@ -463,3 +498,4 @@ If execution fails and cannot continue:
 - The walkthrough depends on exhaustive execution logs
 - Use relative paths when referencing repository files
 - All execution happens in ephemeral branch — base branch stays clean until close
+- User-requested changes during review are execution actions — log them, commit them, include them in the walkthrough

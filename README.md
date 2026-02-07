@@ -36,6 +36,12 @@ Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs
 | **Evaluation** | `/eval-projex` | Open-ended analysis, assessment, or research into any question, idea, or solution |
 | **Exploration** | `/explore-projex` | Investigation grounded in the status quo — map what exists to inform decisions and answer questions |
 
+### Strategy & Direction
+
+| Type | Command | Purpose |
+|------|---------|---------|
+| **Navigation** | `/navigate-projex` | Living high-level roadmap — milestones, phases, and "what to work on next" |
+
 ### Planning & Execution
 
 | Type | Command | Purpose |
@@ -77,13 +83,15 @@ Not a pipeline. Building blocks that chain freely — any output can trigger any
   │   │                      ▼   ▼
   │   │    ┌─────────────────────────────────┐  ┌ ─ ─ ─ ─ ─ ─┐
   │   │    │  Proposal  /  Eval  /  Explore  │<·  User Input
-  │   │    └────────────────┬────────────────┘  └ ─ ─ ─ ─ ─ ─┘
-  │   │                     │                   ┌ ─ ─ ─ ─ ─ ─┐
-  │   │          decide what to do            <·  Interview
-  │   │                     │                   └ ─ ─ ─ ─ ─ ─┘
-  │   │          ┌──────────┴──────────┐      external inputs,
-  │   │          ▼                     ▼      can inform any
-  │   │    ┌───────────┐        ┌────────────┐   workflow
+  │   │    └──────┬─────────┬────────────────┘  └ ─ ─ ─ ─ ─ ─┘
+  │   │           │  ┌──────┴──────┐            ┌ ─ ─ ─ ─ ─ ─┐
+  │   │           │  │  Navigate   │◄ ─ ─ ─ ─ ·  Interview
+  │   │           │  │ (roadmap)   │            └ ─ ─ ─ ─ ─ ─┘
+  │   │           │  └──────┬──────┘            external inputs,
+  │   │           │    steers│direction          can inform any
+  │   │          ┌┴─────────┴──────────┐           workflow
+  │   │          ▼                     ▼
+  │   │    ┌───────────┐        ┌────────────┐
   │   │    │   Plan    │──────> │   Patch    │
   │   │    └─────┬─────┘        │ (act+doc)  │
   │   │          │              └────────────┘
@@ -112,14 +120,15 @@ Patterns, not rules.
 
 | From | To | When |
 |---|---|---|
-| Interview | Eval, Proposal, Plan | Gathered knowledge inspires analysis or action |
-| Exploration | Proposal, Eval, Plan | Investigation reveals a gap or opportunity |
+| Navigate | Explore, Eval, Proposal, Plan | Roadmap identifies what to investigate or build next |
+| Interview | Eval, Proposal, Plan, Navigate | Gathered knowledge inspires analysis, action, or roadmap revision |
+| Exploration | Proposal, Eval, Plan, Navigate | Investigation reveals a gap or opportunity |
 | Proposal | Eval, Plan, Simulation | Direction chosen — analyze, plan, or trial-run it |
 | Eval | Proposal, Plan, Explore | Findings raise questions, reveal directions, or clarify scope |
 | Simulation | Plan, Patch, Proposal | Trial results inform how to proceed for real |
 | Plan | Review, Red Team, Simulation | Inspect the plan before committing |
 | Plan | Execute, Patch | Plan vetted — run it or cherry-pick objectives |
-| Execute + Close | Review, Audit, new Plan | Completed work needs validation or follow-up |
+| Execute + Close | Review, Audit, Navigate | Completed work needs validation or roadmap update |
 | Review | Proposal, Plan, Patch | Stale or incomplete documents need updating |
 | Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
 | Audit | Plan, Patch, Proposal | Gaps in completed work — fix them |
@@ -132,6 +141,7 @@ Patterns, not rules.
 - **Simulation feeds planning** — trial results refine or replace the plan
 - **Patches chip away at plans** — execute individual objectives without the full cycle
 - **Walkthroughs seed future work** — lessons learned become new proposals or plans
+- **Navigation steers everything** — the roadmap decides what to explore, propose, or plan next; progress feeds back into revision
 - **Interview is standalone** — use any time; output can inspire evals, proposals, or plans
 
 ## Git Integration
@@ -139,6 +149,7 @@ Patterns, not rules.
 - **Execute/Close** — ephemeral branch (`projex/{yyyymmdd}-{name}`), merged or abandoned at close
 - **Simulate** — throwaway branch (`projex/sim/{yyyymmdd}-{name}`), always discarded
 - **Patch** — commits directly to current branch
+- **Navigate** — operates on current branch, revised in-place
 - **Everything else** — operates on current branch
 
 ### Discipline
@@ -165,4 +176,5 @@ All workflow specs live in `.agent/skills/projex-framework/`.
 | `review-projex.md` | Document reviews |
 | `redteam-projex.md` | Adversarial analysis |
 | `audit-projex.md` | Work audits |
+| `navigate-projex.md` | Living roadmaps |
 | `interview-projex.md` | Interactive Q&A |

@@ -20,7 +20,7 @@ Walkthroughs capture what actually happened during execution. They provide compl
 /close-projex.md
 ```
 
-**Timing:** Invoke after the user has reviewed the results of `/execute-projex.md` and confirmed execution is complete.
+**Timing:** Invoke when the projex is ready to close — all criteria satisfied AND closing is allowed (user instructed to close, or projex is marked auto-close). See execute-projex.md § CLOSING for the full protocol.
 
 ---
 
@@ -28,12 +28,12 @@ Walkthroughs capture what actually happened during execution. They provide compl
 
 Before closing:
 
-- [ ] Plan execution is complete
-- [ ] User has reviewed the changes
+- [ ] Plan execution is complete (status is `Complete` or `Blocked`)
+- [ ] User has reviewed and is satisfied — OR projex is marked `Auto-Close: Yes`
 - [ ] All success criteria are verifiable
-- [ ] Execution log/notes are available
+- [ ] Execution log/notes are available (including any post-plan user-directed actions)
 - [ ] Currently on ephemeral branch `projex/{yyyymmdd}-{plan-name}`
-- [ ] All execution changes are committed
+- [ ] All execution changes are committed (including post-plan changes)
 
 ---
 
