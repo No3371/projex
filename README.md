@@ -4,10 +4,11 @@ Projex is a framework to prompt LLM to  efficient think, plan, execute in form o
 
 By prompting framework it means this is NOT for vibe-coding or autonomous agents, but to optimize collaborative agentic development.
 
-It's kinda like spec-driven development but you actively engage in the process and constantly pilot the LLM, this naturally brings some benefits:
+It's kinda like spec-driven development but you actively engage in the process and constantly pilot the LLM, this has some inherent advantages:
 - You understand the code/details better because you only delegate the execution part. You also observe agents' mistakes fairly early.
 - Because "everything is a projex document", there's always something to refer to, this greatly lowers the requirement of LLMs' memory/context retrieval capabilities.
-- This works well with git.
+- Becuase "every projex is a self-contained unit of work", development naturally progress in small, reasonable steps.
+- This works exceptionally with git.
 
 These are workflows (not skills) we constantly call and chain, and the workflows cover basically all types of instructions we give out. So in practice it will be like `/plan-projex` followed by `/execute-projex` and then if everything goes well you say `/close-projex`. Every call to the workflows is like a context adjustment to guide LLMs to keep up with the rules and best practices.
 
