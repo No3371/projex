@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: A workflow framework to organize objectives all by file management in filesystem. When the user calls any of `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`. Load this skill and another document with the called name.
+description: A workflow framework to organize objectives all by file management in filesystem. Load this skill and another document with the called name when the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`. 
 ---
 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
