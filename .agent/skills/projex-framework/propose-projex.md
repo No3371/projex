@@ -7,9 +7,14 @@ description: This workflow guides the creation of **Proposal** projex documents 
 Proposals capture early-stage thinking before committing to implementation. They explore possibilities, document trade-offs, and enable informed decision-making.
 
 **Key characteristics:**
-- Focuses on "what if" exploration vs "do this" instructions
+- Directional: explores a specific change or idea — "what if we go this way?"
 - Captures reasoning, trade-offs, potential approaches and impact analysis
 - Provides foundation for future Plan projex documents if accepted
+
+**Contrast with Evaluation and Exploration:**
+- **Proposal** — directional: proposes something specific, explores approaches and impact for that direction
+- **Evaluation** — open-ended: any question, idea, or solution; no fixed framing or direction
+- **Exploration** — anchored to the status quo: investigates what exists, how it works, and why
 
 ---
 

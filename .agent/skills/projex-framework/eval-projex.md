@@ -7,10 +7,16 @@ description: This workflow guides the creation of **Evaluation** projex document
 Evaluations provide rigorous, intellectually honest analysis. They research essence, explore principles, and assess whether and why ideas will succeed.
 
 **Key characteristics:**
+- The broadest analytical tool — can be systematic scrutiny, open exploration of an idea, comparative research, or deep-dive into a solution
 - Deep analysis of paradigms, values, and scope
 - Exploration of underlying principles and assumptions
 - Assessment of prior approaches and why they fell short
 - Intellectual rigor with adaptive depth
+
+**Contrast with Exploration and Proposal:**
+- **Evaluation** — open-ended: any question, idea, or solution; no fixed framing or direction
+- **Exploration** — anchored to the status quo: investigates what exists, how it works, and why
+- **Proposal** — directional: explores a specific change or idea with trade-offs and approaches
 
 ---
 

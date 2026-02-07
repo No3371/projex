@@ -6,9 +6,9 @@ description: A workflow framework to organize objectives all by file management 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
 
 - Proposal
-    - Exploratory documentation for new ideas, changes, decisions
-    - Captures reasoning, trade-offs, potential changes or approaches and impact analysis
-    - Focuses on "what if" exploration vs "do this" instructions
+    - Explores a specific direction — "what if we go this way?" — with trade-offs, approaches, and impact analysis
+    - Captures reasoning and options for a concrete change or idea before committing
+    - Directional: proposes something specific vs open-ended analysis (see Evaluation) or status quo investigation (see Exploration)
     - Progresses from Draft → Review → Accepted/Rejected
     - WORKFLOW SPECIFICATION -> @./propose-projex.md 
 - Plan
@@ -20,11 +20,11 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - WORKFLOW SPECIFICATION -> @./plan-projex.md
     - EXECUTION WORKFLOW -> @./execute-projex.md
 - Evaluation
-    - Systematic analysis and scrutinzation of status quo vs new ideas, changes or proposals
-    - Research the essense, paradigm, value and scope before and after the idea
-    - Explore the principles or theories of the idea, and assumptions or previous work it's built upon
-    - Evaluate what and why does the idea address, why prior appoaches did not the problem, and how/why the idea will address it now, and the potential challenges
+    - Open-ended analysis, assessment, or research into any question, idea, or solution
+    - The broadest analytical tool — can be systematic scrutiny, open exploration of an idea, comparative research, or deep-dive into a solution
+    - Research essence, paradigm, value and scope; explore underlying principles, assumptions, and prior work
     - Adapt depth and focus based on context. Emphasize rigor, clarity, and intellectual honesty
+    - Unlike Proposal (directional) or Exploration (status-quo-grounded), Eval has no fixed framing
     - WORKFLOW SPECIFICATION -> @./eval-projex.md 
 - Review
     - Inspection report against prior made projex documents, ensuring they are up-to-date, comaptible with status quo, still valid, complete, accurate and valuable
@@ -80,7 +80,8 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Can trial-run existing plans or explore "what if" scenarios with real changes
     - WORKFLOW SPECIFICATION -> @./simulate-projex.md
 - Exploration
-    - Deep and thorough exploration & investigation against status quo solely for answering questions
+    - Investigation grounded in the status quo — map what exists, how it works, and why, to inform decisions and answer questions
+    - Unlike Eval (open-ended, any framing) or Proposal (directional), Exploration is anchored to current reality
     - WORKFLOW SPECIFICATION -> @./explore-projex.md
 
 ## Authoring

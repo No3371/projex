@@ -12,9 +12,10 @@ Explorations provide thorough, grounded investigation into what exists, how it w
 - Discovery-oriented investigation
 - Foundation for informed decision-making
 
-**Contrast with Evaluation:**
-- **Exploration** investigates what is (status quo, domains, questions)
-- **Evaluation** compares what is versus what could be (proposals, changes)
+**Contrast with Evaluation and Proposal:**
+- **Exploration** — anchored to the status quo: investigates what exists, how it works, and why
+- **Evaluation** — open-ended: any question, idea, or solution; no fixed framing or direction
+- **Proposal** — directional: explores a specific change or idea with trade-offs and approaches
 
 ---
 
@@ -214,27 +215,30 @@ Use the template structure below, adapting sections based on exploration type an
 
 ---
 
-## EXPLORATION VS EVALUATION
+## EXPLORATION VS EVALUATION VS PROPOSAL
 
-| Aspect | Exploration | Evaluation |
-|--------|-------------|------------|
-| **Focus** | What is | What is vs what could be |
-| **Purpose** | Build understanding | Assess viability/merit |
-| **Stance** | Neutral investigation | Critical analysis |
-| **Output** | Knowledge and insights | Judgment and recommendation |
-| **When** | Need to understand | Need to decide/compare |
+| Aspect | Exploration | Evaluation | Proposal |
+|--------|-------------|------------|----------|
+| **Anchored to** | Status quo | Any question/idea | A specific direction |
+| **Focus** | What exists and why | Open-ended analysis | "What if we go this way?" |
+| **Stance** | Neutral investigation | Adaptive — critical, comparative, or exploratory | Advocacy with honest trade-offs |
+| **Output** | Knowledge map and insights | Findings and recommendations | Approach options and impact analysis |
+| **When** | Need to understand current reality | Need to think deeply about something | Have a concrete idea to flesh out |
 
 **Use Exploration when:**
 - You need to understand how something works
-- You're researching to inform a decision
-- You want to map existing territory
+- You're mapping existing territory to inform a decision
 - Knowledge gaps prevent progress
 
 **Use Evaluation when:**
-- You have a specific proposal to assess
-- You're comparing alternatives
-- You need to judge compatibility
-- You're analyzing gaps against goals
+- You want to deeply analyze a question, idea, or solution
+- You're comparing alternatives or assessing viability
+- You need open-ended research without a predetermined direction
+
+**Use Proposal when:**
+- You have a specific change or idea in mind
+- You want to explore approaches, trade-offs, and impact for that direction
+- You're building toward a decision to accept or reject
 
 ---
 

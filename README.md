@@ -1,19 +1,30 @@
 # Projex Framework
 
-A workflow framework for organizing objectives and tasks of any size, entirely through markdown files and folder structure in the filesystem. Designed for LLM agents and humans alike.
+Organize objectives and tasks of any size through markdown files and folder structure. Works with LLM agents and humans.
+
+## Why Not Just Prompt?
+
+Agents forget what they did, skip steps, lose context between sessions, and leave no trace. Projex gives them:
+
+- **Memory** — Decisions, rationale, and plans persist in files. Next session picks up where this one left off.
+- **Traceability** — Every change links to a plan, every plan links to a walkthrough. "Why was this done?" always has an answer.
+- **Guard rails** — Templates make agents think about scope, risks, and rollback before acting, not after.
+- **Safe undo** — Ephemeral branches and simulations let agents try things that can be cleanly discarded.
+- **Scalability** — Focused units chain together. One prompt can't manage a multi-step project; a folder of projex documents can.
+- **Learning** — Walkthroughs capture what worked, what broke, and what to avoid. The project accumulates knowledge.
 
 ## How It Works
 
-All project management happens through self-contained markdown documents stored in `projex/` folders. Each document follows a specific type with its own template, lifecycle, and workflow spec. Documents are named `{yyyymmdd}-{name}-{type}.md` and organized by state:
+Self-contained markdown documents in `projex/` folders. Each has a type, template, and lifecycle. Named `{yyyymmdd}-{name}-{type}.md`, organized by state:
 
 ```
-projex/                    # Active/pending documents
-projex/closed/             # Completed work
+projex/                    # Active/pending
+projex/closed/             # Completed
 projex/archived/           # Superseded or shelved
 projex/abandoned/          # Discarded (rare)
 ```
 
-A repository can have multiple `projex/` folders scoped to different areas (e.g., `docs/projex/`, `src/projex/`), each managed independently.
+Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs/projex/`, `src/projex/`), managed independently.
 
 ## Document Types
 
@@ -21,37 +32,37 @@ A repository can have multiple `projex/` folders scoped to different areas (e.g.
 
 | Type | Command | Purpose |
 |------|---------|---------|
-| **Proposal** | `/propose-projex` | Explore new ideas, capture trade-offs and approaches before committing to action |
-| **Evaluation** | `/eval-projex` | Systematic analysis of status quo vs new ideas — rigor, clarity, intellectual honesty |
-| **Exploration** | `/explore-projex` | Deep investigation against the codebase solely to answer questions |
+| **Proposal** | `/propose-projex` | Explore a specific direction — "what if we go this way?" with trade-offs, approaches, and impact |
+| **Evaluation** | `/eval-projex` | Open-ended analysis, assessment, or research into any question, idea, or solution |
+| **Exploration** | `/explore-projex` | Investigation grounded in the status quo — map what exists to inform decisions and answer questions |
 
 ### Planning & Execution
 
 | Type | Command | Purpose |
 |------|---------|---------|
-| **Plan** | `/plan-projex` | Actionable task document — what to do, how to do it, exact file changes |
-| **Execute** | `/execute-projex` | Carry out a plan in an isolated ephemeral git branch |
-| **Walkthrough** | `/close-projex` | Post-execution record — what happened, success criteria verification, lessons learned |
-| **Patch** | `/patch-projex` | Quick action for small changes — skips the full plan/execute/close cycle |
-| **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, then roll everything back |
+| **Plan** | `/plan-projex` | Actionable blueprint — what to change, in which files, in what order |
+| **Execute** | `/execute-projex` | Carry out a plan in an isolated ephemeral branch |
+| **Walkthrough** | `/close-projex` | Post-execution record — what actually happened, verification results, lessons learned |
+| **Patch** | `/patch-projex` | Quick action for small changes — skip the full plan/execute/close cycle |
+| **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, roll everything back |
 
 ### Quality & Validation
 
 | Type | Command | Purpose |
 |------|---------|---------|
-| **Review** | `/review-projex` | Inspect existing projex documents for staleness, correctness, and completeness |
+| **Review** | `/review-projex` | Check existing projex documents for staleness, correctness, completeness |
 | **Red Team** | `/redteam-projex` | Adversarial analysis — challenge assumptions, find weaknesses, exploit edge cases |
-| **Audit** | `/audit-projex` | Rigorous validation of completed work — cross-reference claims against actual artifacts |
+| **Audit** | `/audit-projex` | Validate completed work — cross-reference claims against actual artifacts |
 
 ### Knowledge Gathering
 
 | Type | Command | Purpose |
 |------|---------|---------|
-| **Interview** | `/interview-projex` | Interactive Q&A session with the user — rounds of questions, full transcript logging |
+| **Interview** | `/interview-projex` | Interactive Q&A with the user — rounds of questions, full transcript |
 
 ## How Workflows Connect
 
-Projex workflows are not a pipeline. They are building blocks that chain freely depending on what the situation calls for. Any workflow can lead to any other.
+Not a pipeline. Building blocks that chain freely — any output can trigger any workflow.
 
 ```
            ┌─────────────┐
@@ -97,59 +108,61 @@ Projex workflows are not a pipeline. They are building blocks that chain freely 
 
 ### Common Chains
 
-These are patterns, not rules. Mix and match as needed.
+Patterns, not rules.
 
-| Starting point | Leads to | When |
+| From | To | When |
 |---|---|---|
-| Interview | Eval, Proposal, Plan | Gathered knowledge can inspire analysis, ideas, or action |
+| Interview | Eval, Proposal, Plan | Gathered knowledge inspires analysis or action |
 | Exploration | Proposal, Eval, Plan | Investigation reveals a gap or opportunity |
-| Proposal | Eval, Plan, Simulation | Idea accepted — now analyze, plan, or trial-run it |
-| Eval | Proposal, Plan | Analysis reveals what should change |
-| Simulation | Plan, Patch, Proposal | Trial run informs whether/how to proceed for real |
-| Plan | Review, Red Team, Simulation | Plan drafted — inspect it before committing to execution |
-| Plan | Execute, Patch | Plan vetted — run it fully or cherry-pick objectives |
-| Execute + Close | Review, Audit, new Plan | Completed work may need validation or follow-up |
-| Review | Proposal, Plan, Patch | Stale or incomplete projex need updating |
-| Red Team | Plan, Patch, Proposal | Weaknesses found need to be addressed |
-| Audit | Plan, Patch, Proposal | Gaps or issues found in completed work |
-| Patch | Review, Audit | Quick fix may warrant retrospective validation |
+| Proposal | Eval, Plan, Simulation | Direction chosen — analyze, plan, or trial-run it |
+| Eval | Proposal, Plan, Explore | Findings raise questions, reveal directions, or clarify scope |
+| Simulation | Plan, Patch, Proposal | Trial results inform how to proceed for real |
+| Plan | Review, Red Team, Simulation | Inspect the plan before committing |
+| Plan | Execute, Patch | Plan vetted — run it or cherry-pick objectives |
+| Execute + Close | Review, Audit, new Plan | Completed work needs validation or follow-up |
+| Review | Proposal, Plan, Patch | Stale or incomplete documents need updating |
+| Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
+| Audit | Plan, Patch, Proposal | Gaps in completed work — fix them |
+| Patch | Review, Audit | Quick fix warrants retrospective validation |
 
 ### Key Interactions
 
-- **Plans are not just for execution** — a plan can be reviewed, red-teamed, or simulated before anyone commits to running it
-- **Any quality workflow (Review, Red Team, Audit) can trigger any action workflow** — finding a problem naturally leads to fixing it
-- **Simulation feeds back into planning** — trial results refine or replace the original plan
-- **Patches can chip away at plans** — individual objectives can be patched out without executing the full plan
-- **Walkthroughs inform future work** — lessons learned and follow-up recommendations seed new proposals or plans
-- **Interview is a standalone tool, not a prerequisite** — use it any time to gather knowledge; its output can inspire evals, proposals, or plans
+- **Plans aren't just for execution** — review, red-team, or simulate them first
+- **Quality workflows trigger action** — finding a problem leads to fixing it
+- **Simulation feeds planning** — trial results refine or replace the plan
+- **Patches chip away at plans** — execute individual objectives without the full cycle
+- **Walkthroughs seed future work** — lessons learned become new proposals or plans
+- **Interview is standalone** — use any time; output can inspire evals, proposals, or plans
 
 ## Git Integration
 
-- **Execute/Close** cycle uses an ephemeral branch (`projex/{yyyymmdd}-{name}`) for isolation. The branch is merged or abandoned at close.
-- **Simulate** uses a throwaway branch (`projex/sim/{yyyymmdd}-{name}`) that is always discarded. Only the report survives.
-- **Patch** commits directly to the current branch — no branch overhead for small changes.
-- **All other workflows** (propose, plan, eval, review, etc.) operate on the current branch.
+- **Execute/Close** — ephemeral branch (`projex/{yyyymmdd}-{name}`), merged or abandoned at close
+- **Simulate** — throwaway branch (`projex/sim/{yyyymmdd}-{name}`), always discarded
+- **Patch** — commits directly to current branch
+- **Everything else** — operates on current branch
 
 ### Discipline
 
-- Git commands run sequentially, one at a time, with verification between each
-- Files are staged by explicit path (`git add path/to/file.md`) — never `git add .` or directories
-- Multi-repo workspaces require confirming which repo you're operating in before any git command
+- Sequential git commands, verified one at a time
+- Stage files by explicit path — never `git add .` or directories
+- Multi-repo workspaces: confirm which repo before any git operation
 
 ## File Reference
 
+All workflow specs live in `.agent/skills/projex-framework/`.
+
 | File | Role |
 |------|------|
-| `SKILL.md` | Framework specification — document types, authoring rules, organizing rules, git integration |
-| `propose-projex.md` | Workflow spec for creating proposals |
-| `eval-projex.md` | Workflow spec for evaluations |
-| `explore-projex.md` | Workflow spec for explorations |
-| `plan-projex.md` | Workflow spec for creating plans |
-| `execute-projex.md` | Workflow spec for executing plans |
-| `close-projex.md` | Workflow spec for creating walkthroughs and finalizing branches |
-| `patch-projex.md` | Workflow spec for quick-action patches |
-| `simulate-projex.md` | Workflow spec for disposable simulations |
-| `review-projex.md` | Workflow spec for reviewing existing projex documents |
-| `redteam-projex.md` | Workflow spec for adversarial analysis |
-| `audit-projex.md` | Workflow spec for auditing completed work |
-| `interview-projex.md` | Workflow spec for interactive Q&A sessions |
+| `SKILL.md` | Framework spec — types, authoring, organizing, git rules |
+| `propose-projex.md` | Proposals |
+| `eval-projex.md` | Evaluations |
+| `explore-projex.md` | Explorations |
+| `plan-projex.md` | Plans |
+| `execute-projex.md` | Plan execution |
+| `close-projex.md` | Walkthroughs and branch finalization |
+| `patch-projex.md` | Quick-action patches |
+| `simulate-projex.md` | Disposable simulations |
+| `review-projex.md` | Document reviews |
+| `redteam-projex.md` | Adversarial analysis |
+| `audit-projex.md` | Work audits |
+| `interview-projex.md` | Interactive Q&A |
