@@ -3,251 +3,115 @@ name: projex-framework
 description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, load this skill and the document with the mentioned name.
 ---
 
-Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
+Projex are self-contained unit markdown documents in folders named "projex". Types:
 
-- Proposal
-    - Explores a specific direction — "what if we go this way?" — with trade-offs, approaches, and impact analysis
-    - Captures reasoning and options for a concrete change or idea before committing
-    - Directional: proposes something specific vs open-ended analysis (see Evaluation) or status quo investigation (see Exploration)
-    - Progresses from Draft → Review → Accepted/Rejected
-    - WORKFLOW SPECIFICATION -> @./propose-projex.md 
-- Plan
-    - Actionable task documents capturing a specifc problem/gap/need, with clear objectives backed by rich context and rationale
-    - WHAT needs to be done, and HOW to implement it, exact what changes to what files
-    - Easy to parse, understood, followed and executed by any LLM
-    - Granular split and derivation with clear scopes and boundaries
-    - Closed ended with clear acceptance/success criteria or actionable outcomes
-    - WORKFLOW SPECIFICATION -> @./plan-projex.md
-    - EXECUTION WORKFLOW -> @./execute-projex.md
-- Evaluation
-    - Open-ended analysis, assessment, or research into any question, idea, or solution
-    - The broadest analytical tool — can be systematic scrutiny, open exploration of an idea, comparative research, or deep-dive into a solution
-    - Research essence, paradigm, value and scope; explore underlying principles, assumptions, and prior work
-    - Adapt depth and focus based on context. Emphasize rigor, clarity, and intellectual honesty
-    - Unlike Proposal (directional) or Exploration (status-quo-grounded), Eval has no fixed framing
-    - WORKFLOW SPECIFICATION -> @./eval-projex.md 
-- Review
-    - Inspection report against prior made projex documents, ensuring they are up-to-date, comaptible with status quo, still valid, complete, accurate and valuable
-    - As projex unit documents can be created, read, or executed in any order and any time, they can become outdated or invalid over time or after new changes. Review projex answers these important questions:
-        - When was the projex authored? What happened after that? What is the status quo?
-        - Does the idea or the plan still stands? Is it still compliant to latest spec or design?
-        - Should we expand the projex, for status quo now has additions that should be covered by the projex? Or should we modify the projex, for it's no longer correct, complete or accurate?
-    - Examine the projex from high level, bigger picture without being misled by the original content/entities/subjects, explore status quo and ask open quesiton
-    - Challenge the idea. Challenge the projex. Ask extra challenge questions against the projex in question.
-    - WORKFLOW SPECIFICATION -> @./review-projex.md
-- Red Team
-    - Adversarial analysis that challenges assumptions, finds weaknesses, exploits edge cases, and identifies imperfections
-    - Identifies all stakeholder roles and attacks from each role's perspective
-    - Assumes everything is wrong until proven otherwise through evidence
-    - Discovers failure modes, edge cases, and security vulnerabilities before production
-    - Provides actionable remediation for found issues
-    - WORKFLOW SPECIFICATION -> @./redteam-projex.md
-- Audit
-    - Suspicious, rigorous validation of completed work through inspection of docs/reports/logs/code
-    - Cross-references claims against actual artifacts and evidence
-    - Assesses completeness, correctness, quality, and value delivered beyond just completion status
-    - Discovers undocumented issues, gaps, and technical debt through open exploration
-    - Verifies stakeholder impact and produces evidence-based findings
-    - WORKFLOW SPECIFICATION -> @./audit-projex.md
-- Interview
-    - Interactive Q&A session between LLM and user scoped to specific topics/subjects/files
-    - Conducted in rounds with 3-5 questions per round, asked sequentially one-by-one
-    - Full transcript logging: questions, raw answers, and agent interpretations
-    - Extracts requirements, clarifies designs, gathers knowledge, or validates understanding
-    - User controls continuation or conclusion after each round
-    - READ-ONLY: No actions taken during interview, only the interview document is written
-    - WORKFLOW SPECIFICATION -> @./interview-projex.md
-- Walkthrough
-    - Followup projex authored after EVERY Plan execution
-    - Complete list of whatever happened for each objectives of the Plan projex, each with extremely details down to file changes and line numbers
-    - Acceptance/Success criteria checklist and proof of verification measure taken
-    - Additional key insights for future references, such as lessions learned, pattern discoveries, gotchas/pitfalls encounters
-    - WORKFLOW SPECIFICATION -> @./close-projex.md 
-- Patch
-    - Quick-action projex that skips the full Plan → Execute → Close cycle for small, well-understood changes
-    - Immediately takes action, commits directly to current branch (no ephemeral branch)
-    - Single output document serves as both record and walkthrough — patches are born closed
-    - Scope-guarded: escalates to full plan-execute if complexity exceeds patch threshold
-    - Can execute specific objectives from existing plans without running the full plan
-    - Related projex and documents are still updated to match post-patch status
-    - WORKFLOW SPECIFICATION -> @./patch-projex.md
-- Simulation
-    - Disposable execution that freely makes file changes, observes outcomes and side-effects, then rolls back everything
-    - Only the simulation document survives — all code changes are discarded
-    - Uses ephemeral git branch for isolation and guaranteed clean rollback
-    - Strictly forbidden from performing any irreversible actions (no push, no external API mutations, no publishing, no deploys)
-    - Produces a feasibility assessment, side-effect analysis, and actionable recommendations
-    - Can trial-run existing plans or explore "what if" scenarios with real changes
-    - WORKFLOW SPECIFICATION -> @./simulate-projex.md
-- Navigation
-    - Living roadmap that evolves throughout development and steers work forward at any scale — from entire project down to a single module or feature area
-    - Milestones and phases at the appropriate abstraction for the scope, not implementation details one level below — the document that answers "what should we work on next?" for its scope
-    - Continuously revised — each invocation researches status quo, assesses progress, discusses with user, and revises direction
-    - References child projex (plans, proposals, evals) as they are spawned from the roadmap
-    - Nestable — project-level navigations can reference module-level ones, and vice versa
-    - Never closed — stays active in its scope's `projex/` folder until superseded
-    - WORKFLOW SPECIFICATION -> @./navigate-projex.md
-- Map
-    - Living structural index describing what each directory and key file is about — orientation tool so agents can skip the "explore everything" phase
-    - High-level descriptions of paths, not exhaustive file listings — enough to know where to look
-    - Incrementally built — does not need to be fully mapped at once; grows and revises as the project evolves
-    - Scope-flexible — can map an entire workspace, a single repo, or a specific module/area
-    - Never closed — stays active in its scope's `projex/` folder until superseded
-    - WORKFLOW SPECIFICATION -> @./map-projex.md
-- Exploration
-    - Investigation grounded in the status quo — map what exists, how it works, and why, to inform decisions and answer questions
-    - Unlike Eval (open-ended, any framing) or Proposal (directional), Exploration is anchored to current reality
-    - WORKFLOW SPECIFICATION -> @./explore-projex.md
-- Guide
-    - Curated, ordered reading path that enables a person to efficiently get up to speed on a topic, codebase area, document, or concept
-    - Agent does the exploration work; output is structured as human-facing study material with phased steps, focus cues, and takeaways
-    - Sources can span codebase, docs, articles, specs, and external pages
-    - Closed by default — point-in-time artifact; author a new guide if material changes significantly
-    - WORKFLOW SPECIFICATION -> @./guide-projex.md
+- **Proposal** — Directional: "what if we go this way?" with trade-offs, approaches, and impact. Draft → Review → Accepted/Rejected. WORKFLOW -> @./propose-projex.md
+- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md
+- **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
+- **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
+- **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
+- **Audit** — Rigorous validation of completed work: cross-references claims against actual artifacts/evidence. Discovers undocumented issues and gaps. WORKFLOW -> @./audit-projex.md
+- **Interview** — Interactive Q&A in rounds (3-5 questions each), asked one-by-one. Full transcript logging. READ-ONLY: only the interview document is written. WORKFLOW -> @./interview-projex.md
+- **Walkthrough** — Post-execution record authored after every Plan execution. Detailed changes (file-level), criteria checklist with proof. WORKFLOW -> @./close-projex.md
+- **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
+- **Simulation** — Disposable execution: makes changes, observes outcomes, rolls back everything. Only the report survives. No irreversible actions. Can trial-run plans or "what if" scenarios. WORKFLOW -> @./simulate-projex.md
+- **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Never closed. WORKFLOW -> @./navigate-projex.md
+- **Map** — Living structural index of directories/key files. Incrementally built, scope-flexible. Never closed. WORKFLOW -> @./map-projex.md
+- **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
+- **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
 
 ## Authoring
 
-Projex documents should be named in this format: `{yyyymmdd}-{projex-name}-{projex-type}.md`
+File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
 
-While each type of projex have different characteristics therefore need to be formatted differently, some common patterns are applied to most, if not all types:
-- Projexs often relates to other ones. A project may be directly or indirectly related to existing projects, or derive or split into multiple projects. These relationships must be added/maintained in all involve projex documents.
-- Once a projex is authored, it should be refined once to put the general important info (that helps quick assessment at a glance) to the beginning of the file.
+- Cross-reference related projex in all involved documents
+- Front-load key info for quick assessment at a glance
 
 ## Organizing
 
-Projex files are always nested inside folders named "projex", but actual file location depends on projex states.
+Files live in `projex/` folders in one or more paths (each dedicated to a individual domain/module/components/area/scope, etc.). Location in projex folders reflects state:
+- Active → `projex/`
+- Closed → `projex/closed/`
+- Archived → `projex/archived/`
+- Abandoned → `projex/abandoned/` (or deleted)
 
-A pending projex usually just resides in the parent "projex" folder, regardless the type; Closed projex and the walkthrough should be placed in "projex/closed" folder; If a projex is archived (unlikely to continue), it should be in "projex/archived". Abandoned projexs usually just get deleted by the user, but would be in "projex/abandoned" if any.
+A repo may have multiple `projex/` folders scoped to different areas (e.g., `docs/projex/`, `src/projex/`). Each is independently managed. New projex should not cross area boundaries or violate dependencies, for example a language spec update projex should not touch runtime implementation, and vice versa.
 
-Furthermore, a repo/project may have multiple "projex" folders in different path, each dedicated to individual module/component/domain/areas, etc. For example, a language design project, may have separate path to store language spec, implementation spec (general description and pseudo code for any implementing language, derived from langauge spec), poc runtime implementation (derived from and constantly reflects impl specs); These should be decoupled and their Projex files should be individually managed. New Projex files should not cover more than 1 area or violate dependencies.
-
-**Examples**
 ```
 your-repo/
-├── projex/           # Master projexs
+├── projex/              # Master projexs
 │   ├── closed/
-│   │   └── closed_project.md
-│   ├── project.md
 │   └── ...
-├── docs/              # Specifications and documentation
-│   ├── projex/ # doc projexs
-│   │   ├── abandoned/
-│   │   │   └── ... 
-│   │   ├── project.md
-│   │   └── ... 
-│   └── ...
-├── src/               # Source code
-│   └── projex/ # src projexs
-│       ├── project.md
-│       └── ... 
-└── projex-framework.md
-
+├── docs/projex/         # Doc-scoped projexs
+├── src/projex/          # Src-scoped projexs
+└── ...
 ```
 
 ## Workflow
 
-Workflow spec files are the "actions", containing clear instruction to work with projex files. They are referenced in verb sense.
+Workflow specs are actions invoked in verb sense:
 
-Workflow usages/invocations examples:
 - `/propose-projex.md I want to add XXX feature.`
 - `/eval-projex.md Does current spec compatible with this proposal?` or `/eval-projex.md What can be improved in the current implementation?`
 - `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @20260731-database-service-refactor-proposal.md`
-- `/review-projex.md @20260731-language-macro-syntax-change-proposal.md` or `/review-projex.md the project we just made`
-- `/redteam-projex.md @20260731-auth-system-plan.md` or `/redteam-projex.md current API design`
-- `/audit-projex.md @20260731-auth-system-plan.md` or `/audit-projex.md the database migration we just finished`
-- `/interview-projex.md authentication system design` or `/interview-projex.md user requirements for the new feature`
+- `/review-projex.md @20260731-language-macro-syntax-change-proposal.md`
+- `/redteam-projex.md @20260731-auth-system-plan.md`
+- `/audit-projex.md the database migration we just finished`
+- `/interview-projex.md authentication system design`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
-- `/simulate-projex.md What happens if we remove the legacy compatibility layer?` or `/simulate-projex.md Trial-run @20260201-api-migration-plan.md`
+- `/simulate-projex.md What happens if we remove the legacy compatibility layer?`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
-- `/map-projex.md Whole project structure` or `/map-projex.md @20260208-project-structure-map.md`
-- `/guide-projex.md Understand our authentication system end-to-end` or `/guide-projex.md Onboard a new contributor to the compiler pipeline`
+- `/map-projex.md Whole project structure`
+- `/guide-projex.md Understand our authentication system end-to-end`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
-- `/close-projex.md` after the user reviewed the result of /execute-projex.
+- `/close-projex.md` after user reviewed execution results
 
 ## Git Integration
 
-The **Execute → Walkthrough** cycle is wrapped in an ephemeral git branch to provide isolation, traceability, and clean rollback.
-
-### Ephemeral Branch Lifecycle
+The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.
 
 ```
-[base branch] ─── execute-projex ───> [ephemeral branch] ─── close-projex ───> [merge/squash back]
-                  (branch created)     (changes made here)    (branch finalized)
+[base branch] ── execute-projex ──> [projex/{yyyymmdd}-{plan-name}] ── close-projex ──> [merge back]
 ```
 
-**Branch naming:** `projex/{yyyymmdd}-{plan-name}`
+1. `/execute-projex.md` creates ephemeral branch from current HEAD
+2. All implementation happens in the ephemeral branch
+3. `/close-projex.md` finalizes: squash merge (default), merge, rebase, or abandon
 
-### Workflow
-
-1. **`/execute-projex.md`** — Creates ephemeral branch from current HEAD before any changes
-2. **Execution** — All plan implementation happens in the ephemeral branch
-3. **`/close-projex.md`** — Finalizes the branch with user choice:
-   - **Squash merge** — Clean single commit to base branch (default)
-   - **Merge** — Preserve full commit history
-   - **Rebase** — Replay commits onto base
-   - **Abandon** — Delete branch without merging (failed execution)
-
-### Benefits
-
-- **Isolation** — Execution changes don't affect base branch until verified
-- **Rollback** — Easy to discard failed executions
-- **Traceability** — Branch name links directly to plan
-- **Review** — Changes can be reviewed before merge (PR optional)
-
-### Prerequisites
-
-- **Plan must be committed to base branch before execution** — The plan document must exist in git history on the base branch. This ensures:
-  - Plans are reviewable before execution
-  - Plans persist even if execution is abandoned
-  - Clean separation: base branch = plans, ephemeral branch = execution
+**Prerequisite:** Plan must be committed to base branch before execution — ensures plans survive abandoned executions and are reviewable independently.
 
 ### Multi-Repo Awareness
 
-Workspaces may contain multiple related repositories side by side. Before any git operation or projex file manipulation:
-
-- **Confirm which repo you are in** — Run `git rev-parse --show-toplevel` if uncertain. Never assume the working directory matches the intended repo.
-- **Match projex to repo** — Each `projex/` folder belongs to the repo whose root contains it. Do not create, move, or reference projex documents across repo boundaries.
-- **Scope git commands to the correct repo** — A `git add`, `git commit`, or `git checkout` in the wrong repo is silently destructive. When the workspace root is not itself a repo, always verify your cwd or use `-C <repo-path>` before running git commands.
+Before any git operation, confirm which repo you are in (`git rev-parse --show-toplevel`). Match projex to the repo whose root contains them. Scope git commands accordingly — wrong-repo operations are silently destructive.
 
 ### Git Operation Discipline
 
-**CRITICAL: Git commands must be executed sequentially, one at a time, waiting for each to complete and verifying success before proceeding.**
+**CRITICAL: Execute git commands sequentially. Verify each succeeds before proceeding.**
 
-- **Never parallelize git operations** — Each git command must finish before the next begins
-- **Verify success** — Check exit code and output before proceeding
-- **No assumptions** — Don't assume a command succeeded; confirm it
-- **Handle failures** — If a git operation fails, stop and address it before continuing
-- **Stage files by explicit path** — Always `git add` each file by its exact path. Never use `git add .`, `git add -A`, directory paths, or wildcards. This prevents accidentally staging unintended files (secrets, build artifacts, unrelated changes).
+Stage files by explicit path only — never `git add .`, `git add -A`, directories, or wildcards.
 
 ```bash
-# WRONG - parallel/batched
-git add file1.txt & git add file2.txt & git commit -m "msg"
+# WRONG
+git add . && git commit -m "msg"
 
-# WRONG - imprecise staging
-git add .
-git add -A
-git add projex/closed/
-git add src/
-
-# CORRECT - sequential with explicit file paths
-git add file1.txt file2.txt       # wait, verify all success
-git commit -m "msg"      # wait, verify commit created
+# CORRECT
+git add file1.txt file2.txt    # verify success
+git commit -m "msg"            # verify commit
 ```
 
 ### Notes
 
-- Execute/Walkthrough and Simulation workflows use ephemeral branches
-- Simulation branches (`projex/sim/`) are always discarded — only the report is committed to base branch
-- Proposal, Plan, Eval, Review, Navigation workflows operate on current branch and should be committed normally
-- If execution spans multiple sessions, branch persists until close
-- Walkthrough document is committed as final commit before merge
+- Execute/Walkthrough and Simulation use ephemeral branches
+- Simulation branches (`projex/sim/`) always discarded — only report committed to base
+- Other workflows operate on current branch, committed normally
+- Walkthrough committed as final commit before merge
 
 ---
 
 ## NOTES
 
 ### AVOID ABSOLUTE PATHS
-USE file paths RELATIVE to project root to reference files in the repo. REDACT paths to files external to the repo.
+Use file paths RELATIVE to project root. REDACT external paths.
 
 ### PARALLELIZATION DISCIPLINE
-If subsequent actions/commmands/toolcalls depends on prior ones, DO NOT parallel/burst them, split them up instead.
+If subsequent actions depend on prior ones, DO NOT parallel them.
