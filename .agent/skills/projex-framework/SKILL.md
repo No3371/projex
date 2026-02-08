@@ -26,6 +26,7 @@ File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
 
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
+- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so relative paths break. Use the filename alone: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
 ## Organizing
 
@@ -86,17 +87,24 @@ Before any git operation, confirm which repo you are in (`git rev-parse --show-t
 
 ### Git Operation Discipline
 
-**CRITICAL: Execute git commands sequentially. Verify each succeeds before proceeding.**
+**CRITICAL: Each git operation must be its own sequential tool call. Never mix different git operation types (add, commit, checkout, branch, merge, rebase, stash) in parallel tool calls.**
 
-Stage files by explicit path only — never `git add .`, `git add -A`, directories, or wildcards.
+- **One operation type at a time** — A commit must not be issued until all staging is verified. A branch switch must not coincide with a commit. Never burst add + commit + checkout as parallel calls.
+- **Verify before proceeding** — Check output of each operation; do not assume success
+- **Stop on failure** — If any git operation fails, address it before continuing
+- **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, directories, or wildcards
 
 ```bash
-# WRONG
-git add . && git commit -m "msg"
+# WRONG — parallel burst of different operation types
+git add file.txt  |  git commit -m "msg"  |  git checkout -b new-branch
 
-# CORRECT
+# WRONG — imprecise staging
+git add .
+
+# CORRECT — sequential, one operation type per step
 git add file1.txt file2.txt    # verify success
-git commit -m "msg"            # verify commit
+git commit -m "msg"            # verify commit created
+git checkout -b new-branch     # verify branch switched
 ```
 
 ### Notes
