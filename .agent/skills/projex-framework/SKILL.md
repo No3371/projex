@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, load this skill and the document with the mentioned name.
+description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, load this skill and the document with the mentioned name.
 ---
 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
@@ -14,7 +14,7 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
 - Plan
     - Actionable task documents capturing a specifc problem/gap/need, with clear objectives backed by rich context and rationale
     - WHAT needs to be done, and HOW to implement it, exact what changes to what files
-    - Easy to parse, understood, followed and executed by any LLM or human
+    - Easy to parse, understood, followed and executed by any LLM
     - Granular split and derivation with clear scopes and boundaries
     - Closed ended with clear acceptance/success criteria or actionable outcomes
     - WORKFLOW SPECIFICATION -> @./plan-projex.md
@@ -87,6 +87,13 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Nestable — project-level navigations can reference module-level ones, and vice versa
     - Never closed — stays active in its scope's `projex/` folder until superseded
     - WORKFLOW SPECIFICATION -> @./navigate-projex.md
+- Map
+    - Living structural index describing what each directory and key file is about — orientation tool so agents can skip the "explore everything" phase
+    - High-level descriptions of paths, not exhaustive file listings — enough to know where to look
+    - Incrementally built — does not need to be fully mapped at once; grows and revises as the project evolves
+    - Scope-flexible — can map an entire workspace, a single repo, or a specific module/area
+    - Never closed — stays active in its scope's `projex/` folder until superseded
+    - WORKFLOW SPECIFICATION -> @./map-projex.md
 - Exploration
     - Investigation grounded in the status quo — map what exists, how it works, and why, to inform decisions and answer questions
     - Unlike Eval (open-ended, any framing) or Proposal (directional), Exploration is anchored to current reality
@@ -146,6 +153,7 @@ Workflow usages/invocations examples:
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?` or `/simulate-projex.md Trial-run @20260201-api-migration-plan.md`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
+- `/map-projex.md Whole project structure` or `/map-projex.md @20260208-project-structure-map.md`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of /execute-projex.
 
