@@ -39,6 +39,12 @@ Before closing:
 
 ## WORKFLOW STEPS
 
+### 0. RESOLVE BASE BRANCH
+
+Read the `Base Branch:` field from the execution log (`{yyyymmdd}-{plan-name}-log.md`). All git commands below use `{base-branch}` — **never assume `main`**.
+
+If the execution log is missing or lacks the field, determine the base branch by asking the user.
+
 ### 1. GATHER EXECUTION DATA
 
 Collect all information from the execution:
@@ -68,13 +74,13 @@ Collect all information from the execution:
 
 ```bash
 # List all commits in ephemeral branch
-git log --oneline main..HEAD
+git log --oneline {base-branch}..HEAD
 
 # See all files changed
-git diff --stat main..HEAD
+git diff --stat {base-branch}..HEAD
 
 # Get detailed diff
-git diff main..HEAD
+git diff {base-branch}..HEAD
 ```
 
 2. **For each file changed, record:**
@@ -179,7 +185,7 @@ Create a new file: `{yyyymmdd}-{plan-name}-walkthrough.md`
 
 ## Complete Change Log
 
-> **Derived from:** `git diff --stat main..HEAD` — This is the authoritative record of what changed.
+> **Derived from:** `git diff --stat {base-branch}..HEAD` — This is the authoritative record of what changed.
 
 ### Files Created
 | File | Purpose | Lines | In Plan? |
@@ -384,8 +390,8 @@ The ephemeral branch must be finalized. Present options to user:
 Combines all execution commits into a single clean commit on base branch.
 
 ```bash
-# Step 1 - WAIT for completion, verify "Switched to branch 'main'"
-git checkout main
+# Step 1 - WAIT for completion, verify branch switched
+git checkout {base-branch}
 
 # Step 2 - WAIT for completion, verify squash summary
 git merge --squash projex/{yyyymmdd}-{plan-name}
@@ -403,7 +409,7 @@ git branch -D projex/{yyyymmdd}-{plan-name}
 Preserves full commit history from execution.
 
 ```bash
-git checkout main
+git checkout {base-branch}
 git merge projex/{yyyymmdd}-{plan-name} --no-ff -m "projex: merge {plan-name}"
 git branch -d projex/{yyyymmdd}-{plan-name}
 ```
@@ -415,8 +421,8 @@ Replays commits onto base branch for linear history.
 
 ```bash
 git checkout projex/{yyyymmdd}-{plan-name}
-git rebase main
-git checkout main
+git rebase {base-branch}
+git checkout {base-branch}
 git merge projex/{yyyymmdd}-{plan-name} --ff-only
 git branch -d projex/{yyyymmdd}-{plan-name}
 ```
@@ -427,7 +433,7 @@ git branch -d projex/{yyyymmdd}-{plan-name}
 Discards the branch without merging.
 
 ```bash
-git checkout main
+git checkout {base-branch}
 git branch -D projex/{yyyymmdd}-{plan-name}
 ```
 
@@ -494,7 +500,7 @@ projex/
 
 **Git state after close:**
 ```
-main (or base branch)  ← you are here, with all changes merged
+{base-branch}  ← you are here, with all changes merged
   └── (ephemeral branch deleted)
 ```
 

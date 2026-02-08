@@ -70,23 +70,30 @@ Before starting execution:
 
 ### 1. INITIALIZE EXECUTION
 
-1. **Create ephemeral branch** — Branch from current HEAD for isolated execution:
+1. **Record the base branch** — Before branching, record the current branch name. Close-projex needs this to merge back to the correct target.
+
+```bash
+git branch --show-current
+# e.g. "main", "develop", "feature/auth" — this is the base branch
+```
+
+2. **Create ephemeral branch** — Branch from current HEAD for isolated execution:
 
 ```bash
 # Branch naming: projex/{yyyymmdd}-{plan-name}
 git checkout -b projex/20260126-database-refactor
 ```
 
-2. **Update plan status** — Change to `In Progress`
+3. **Update plan status** — Change to `In Progress`
 
-3. **Commit plan status change** — First commit in the ephemeral branch:
+4. **Commit plan status change** — First commit in the ephemeral branch:
 
 ```bash
 git add projex/{yyyymmdd}-{plan-name}-plan.md
 git commit -m "projex: start execution of {plan-name}"
 ```
 
-4. **Create execution log** — File named `{yyyymmdd}-{plan-name}-log.md`, placed next to the plan file in the same `projex/` folder. See [Execution Log Template](#execution-log-template) for the format.
+5. **Create execution log** — File named `{yyyymmdd}-{plan-name}-log.md`, placed next to the plan file in the same `projex/` folder. See [Execution Log Template](#execution-log-template) for the format.
 
 ### 2. EXECUTE STEPS SEQUENTIALLY
 
@@ -288,7 +295,7 @@ This workflow produces:
 
 **Git state after execution:**
 ```
-main (or base branch)
+{base-branch}
   └── projex/{yyyymmdd}-{plan-name}  ← you are here
         ├── commit: start execution
         ├── commit: step 1 - ...
@@ -315,6 +322,7 @@ main (or base branch)
 ```markdown
 # Execution Log: [Plan Name]
 Started: [timestamp]
+Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/auth]
 
 ## Progress
 - [ ] Step 1: [title]
