@@ -47,6 +47,7 @@ Before starting execution:
 
 ### 2. ENVIRONMENT CHECK
 
+- [ ] **In the correct repository** — Run `git rev-parse --show-toplevel` to see which repo root git is currently operating against (it returns the nearest repo root to cwd, not the outermost). Confirm the result matches the repo that owns the plan's `projex/` folder. In nested repo setups (submodules, subtrees, repos-inside-repos), git silently operates on whichever `.git` is closest to the cwd — always verify before creating branches or committing.
 - [ ] On correct base branch (typically `main` or feature branch)
 - [ ] Clean working state (no uncommitted changes)
 - [ ] Git repository is in good state
@@ -87,7 +88,7 @@ git add projex/{yyyymmdd}-{plan-name}-plan.md
 git commit -m "projex: start execution of {plan-name}"
 ```
 
-4. **Create execution log** — Track EVERY action taken:
+4. **Create execution log** — File named `{yyyymmdd}-{plan-name}-log.md`, placed next to the plan file in the same `projex/` folder. Track EVERY action taken:
 
 ```markdown
 # Execution Log: [Plan Name]

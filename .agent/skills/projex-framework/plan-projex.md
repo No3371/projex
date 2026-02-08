@@ -56,15 +56,20 @@ Answer these questions:
 - What is explicitly OUT of scope?
 - What are the dependencies (must happen before)?
 - What are the blockers (must be resolved first)?
+- Which projex folder does this plan belong to?
+- Does this objective touch files governed by a different projex folder or repo?
 ```
+
+> **Boundary Rule:** A plan must target exactly ONE projex scope. If the objective involves changes across multiple projex folders or repositories, split it into separate plans — one per scope. Use the `Dependencies` section to link them. See [Splitting Plans](#splitting-plans) for details.
 
 **Scope validation:**
 - [ ] Can be completed in a focused session
-- [ ] Doesn't cross projex folder boundaries inappropriately
+- [ ] All target files belong to a single projex folder's scope
+- [ ] Does not modify files governed by a different projex folder or repo
 - [ ] Has clear start and end points
 - [ ] Success is objectively measurable
 
-If scope is too large, split into multiple plans with clear dependencies.
+If scope is too large or crosses boundaries, split into multiple plans with clear dependencies.
 
 ### 3. CONTEXT RESEARCH
 
@@ -238,6 +243,8 @@ Before marking Ready:
 **Scope Check:**
 - [ ] Plan stays within declared scope
 - [ ] No scope creep into out-of-scope areas
+- [ ] All files in Key Files table belong to ONE projex scope — if not, split the plan
+- [ ] Downstream/cascading changes are deferred to their own plans in their own scope
 - [ ] Appropriately granular (not too broad, not too narrow)
 
 ### 6. FINALIZE
@@ -281,16 +288,49 @@ Draft → Ready → In Progress → Complete
 
 ## SPLITTING PLANS
 
-When scope is too large, split by:
+### When to split
 
+Split is **required** when any of these apply:
+- Plan touches files in more than one `projex/` scope (different projex folders)
+- Plan touches files in more than one repository
+- Plan mixes upstream changes (e.g. spec, schema, API contract) with downstream consumers (e.g. implementation, client code)
+
+Split is **recommended** when:
+- Scope is too large for a focused session
+- Steps have no mutual dependency and can be executed independently
+
+### How to split
+
+**By projex boundary (mandatory):**
+Each `projex/` folder represents an independent scope. A plan that would modify files across two scopes becomes two plans, each filed in its own scope's `projex/` folder.
+
+> **Example — spec revision with downstream implementation:**
+> A language spec change requires updating the C# runtime that implements it.
+>
+> - **Wrong:** One plan covering both the spec markdown files and the C# source files.
+> - **Right:** Two plans:
+>   1. `docs/projex/20260208-macro-syntax-revision-plan.md` — Changes to the spec only. Lists "Blocks: downstream implementation plan" in Dependencies.
+>   2. `src/projex/20260208-macro-syntax-impl-plan.md` — Changes to C# source only. Lists "Requires: spec revision plan" in Dependencies.
+
+> **Example — multi-repo workspace:**
+> An API schema change in repo-a requires client updates in repo-b.
+>
+> - **Wrong:** One plan referencing files from both repos.
+> - **Right:** Two plans, one per repo. The repo-a plan notes it blocks repo-b. The repo-b plan notes it requires repo-a.
+
+**By slice (recommended when scope is large within one boundary):**
 1. **Vertical slices** — End-to-end for one feature
 2. **Horizontal layers** — One layer across features
 3. **Dependencies** — Group by what must happen first
 
+### Split plan rules
+
 Each split plan must:
 - Be independently executable
-- Have clear relationship to sibling plans
+- Target exactly one projex scope (one `projex/` folder, one repo)
+- Have clear relationship to sibling plans via `Dependencies` (Requires / Blocks)
 - Not create circular dependencies
+- Be filed in the correct `projex/` folder for its scope
 
 ---
 
