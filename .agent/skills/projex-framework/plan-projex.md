@@ -4,7 +4,7 @@ description: This workflow guides the creation of **Plan** projex documents — 
 
 ## PURPOSE
 
-Plans are the bridge between ideas and execution. They capture WHAT needs to be done and HOW to implement it, with enough detail that any LLM or human can follow and execute them.
+Plans are the bridge between ideas and execution. They capture WHAT needs to be done and HOW to implement it, with enough detail that any LLM can follow and execute them.
 
 **Key characteristics:**
 - Specific problem/gap/need with clear objectives
