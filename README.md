@@ -1,8 +1,8 @@
 # Projex Framework
 
-Projex is a framework to prompt LLM to  efficient think, plan, execute in form of self-contained unit files.
+Projex is a framework for efficiently prompting LLMs to think, plan, execute in form of self-contained unit files.
 
-By prompting framework it means this is NOT for vibe-coding or autonomous agents, but to optimize collaborative agentic development.
+By prompting framework it means this is NOT for vibe-coding or autonomous agents, but to optimize collaborative agentic development, allow you to focus even more on supervising and making decisions.
 
 It's kinda like spec-driven development but you actively engage in the process and constantly pilot the LLM, this has some inherent advantages:
 - You understand the code/details better because you only delegate the execution part. You also observe agents' mistakes fairly early.
@@ -24,7 +24,9 @@ Example:
 
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
 
-Note: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mentioning the name of the workflows should work without making them commands in Claude Code.
+Note1: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mentioning the name of the workflows should work even without making them commands in Claude Code.
+
+Note2: I proposed and designed the core principles for the workflows, Sonnet/Opus filled the details and revise them based on my requirements and feedback.
 
 -- The following is authored by Opus --
 
@@ -159,16 +161,6 @@ Patterns, not rules.
 | Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
 | Audit | Plan, Patch, Proposal | Gaps in completed work — fix them |
 | Patch | Review, Audit | Quick fix warrants retrospective validation |
-
-### Key Interactions
-
-- **Plans aren't just for execution** — review, red-team, or simulate them first
-- **Quality workflows trigger action** — finding a problem leads to fixing it
-- **Simulation feeds planning** — trial results refine or replace the plan
-- **Patches chip away at plans** — execute individual objectives without the full cycle
-- **Walkthroughs seed future work** — lessons learned become new proposals or plans
-- **Navigation steers everything** — the roadmap decides what to explore, propose, or plan next; progress feeds back into revision
-- **Interview is standalone** — use any time; output can inspire evals, proposals, or plans
 
 ## Git Integration
 
