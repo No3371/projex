@@ -31,9 +31,9 @@ Before closing:
 - [ ] Plan execution is complete (status is `Complete` or `Blocked`)
 - [ ] User has reviewed and is satisfied — OR projex is marked `Auto-Close: Yes`
 - [ ] All success criteria are verifiable
-- [ ] Execution log/notes are available (including any post-plan user-directed actions)
+- [ ] Execution log/notes are available (including any user interventions — mid-execution and post-plan)
 - [ ] Currently on ephemeral branch `projex/{yyyymmdd}-{plan-name}`
-- [ ] All execution changes are committed (including post-plan changes)
+- [ ] All execution changes are committed (including changes from user interventions)
 
 ---
 
