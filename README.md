@@ -1,5 +1,7 @@
 # Projex Framework
 
+<img width="467" height="659" alt="image" src="https://github.com/user-attachments/assets/607e5f4e-295c-4d0e-8d94-b3963f1dca9d" />
+
 Projex is a framework for efficiently prompting LLMs to think, plan, execute in form of self-contained unit files.
 
 By prompting framework it means this is NOT for vibe-coding or autonomous agents, but to optimize collaborative agentic development, allow you to focus even more on supervising and making decisions.
@@ -13,14 +15,13 @@ It's kinda like spec-driven development but you actively engage in the process a
 
 These are workflows (not skills) we constantly call and chain, and the workflows cover basically all types of instructions we give out. So in practice it will be like `/plan-projex` followed by `/execute-projex` and then if everything goes well you say `/close-projex`. Every call to the workflows is like a context adjustment to guide LLMs to keep up with the rules and best practices.
 
-Example: 
-> /eval-projex potential solutions to optimize the lookup
-
-> /plan-projex plan for the option A
-
-> /execute-projex
-
-> /close-projex
+Example1: 
+```
+/eval-projex potential solutions to optimize the lookup
+/plan-projex plan for the option A
+/execute-projex
+/close-projex
+```
 
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
 
