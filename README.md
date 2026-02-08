@@ -1,6 +1,6 @@
 # Projex Framework
 
-<img width="467" height="659" alt="image" src="https://github.com/user-attachments/assets/607e5f4e-295c-4d0e-8d94-b3963f1dca9d" />
+<img width="518" height="241" alt="image" src="https://github.com/user-attachments/assets/a94e9c6d-ba70-4aa5-be5d-180c1e8ef908" />
 
 Projex is a framework for efficiently prompting LLMs to think, plan, execute in form of self-contained unit files.
 
