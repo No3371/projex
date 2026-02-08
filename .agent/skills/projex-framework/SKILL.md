@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, load this skill and the document with the mentioned name.
+description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, load this skill and the document with the mentioned name.
 ---
 
 Implementing Projex revolves around authoring/maintenance/executing self-contained unit markdown documents in folders named "projex". There are several types of unit documents: 
@@ -98,6 +98,12 @@ Implementing Projex revolves around authoring/maintenance/executing self-contain
     - Investigation grounded in the status quo — map what exists, how it works, and why, to inform decisions and answer questions
     - Unlike Eval (open-ended, any framing) or Proposal (directional), Exploration is anchored to current reality
     - WORKFLOW SPECIFICATION -> @./explore-projex.md
+- Guide
+    - Curated, ordered reading path that enables a person to efficiently get up to speed on a topic, codebase area, document, or concept
+    - Agent does the exploration work; output is structured as human-facing study material with phased steps, focus cues, and takeaways
+    - Sources can span codebase, docs, articles, specs, and external pages
+    - Closed by default — point-in-time artifact; author a new guide if material changes significantly
+    - WORKFLOW SPECIFICATION -> @./guide-projex.md
 
 ## Authoring
 
@@ -154,6 +160,7 @@ Workflow usages/invocations examples:
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?` or `/simulate-projex.md Trial-run @20260201-api-migration-plan.md`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
 - `/map-projex.md Whole project structure` or `/map-projex.md @20260208-project-structure-map.md`
+- `/guide-projex.md Understand our authentication system end-to-end` or `/guide-projex.md Onboard a new contributor to the compiler pipeline`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after the user reviewed the result of /execute-projex.
 
@@ -223,8 +230,7 @@ git add projex/closed/
 git add src/
 
 # CORRECT - sequential with explicit file paths
-git add file1.txt        # wait, verify success
-git add file2.txt        # wait, verify success
+git add file1.txt file2.txt       # wait, verify all success
 git commit -m "msg"      # wait, verify commit created
 ```
 
