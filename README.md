@@ -17,10 +17,23 @@ These are workflows (not skills) we constantly call and chain, and the workflows
 
 Example1: 
 ```
-/eval-projex potential solutions to optimize the lookup
-/plan-projex plan for the option A
-/execute-projex
-/close-projex
+> /eval-projex potential solutions to optimize the lookup (this gives a evaluation projex document
+> /plan-projex plan for the option A (I don't need to reference the projex for the agent to understand
+> /execute-projex (It starts to execute on a ephemeral git branch
+> /close-projex (It concludes the task and cleans up everything
+```
+
+Example2:
+```
+> /navigate-projex  (this creates a navigation projex document
+> /plan-projex 20260131-v1-foundation-roadmap-nav.md#L108 (Ask the agent to plan for a objective
+```
+
+Example3:
+```
+> 20260207-v1-foundation-roadmap-eval-review.md 20260131-v1-foundation-roadmap-eval.md
+plan-projex.md phase3
+(asking the agent to make plan for phase 3 based on the eval and the review to the eval)
 ```
 
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
