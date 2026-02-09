@@ -83,7 +83,9 @@ Gather comprehensive context:
 
 ### 4. DRAFT THE PLAN
 
-Create a new file: `{yyyymmdd}-{plan-name}-plan.md`
+Create the file **in the target projex folder** identified in step 2: `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md`
+
+> **The file must be created directly in the projex folder.** Do not place it in agent artifacts directories, temp paths, or any location outside the repo's `projex/` folders. The projex folder was determined in step 2 — use it.
 
 **Template Structure:**
 
@@ -252,7 +254,7 @@ Before marking Ready:
 1. **Refine document** — Front-load key info (summary, scope, criteria)
 2. **Update relationships** — Add links to/from related projex
 3. **Set status** — Mark as `Ready` when complete
-4. **Place correctly** — Ensure in appropriate projex folder
+4. **Verify placement** — Confirm the file is in the correct `projex/` folder (it should already be there from step 4)
 5. **Commit the plan** — Plan must be committed to base branch before execution
 
 ```bash

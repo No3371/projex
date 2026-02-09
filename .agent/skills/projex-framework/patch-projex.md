@@ -96,7 +96,7 @@ Act directly:
 **Commit convention:**
 
 ```bash
-# Stage each changed file by explicit path — never use `git add .` or directories
+# Stage each changed file by explicit path — never use `git add .`, `git add -A`, `git add -u`, or directories
 git add path/to/changed-file1.ext
 git add path/to/changed-file2.ext
 git commit -m "projex(patch): [concise description of change]"

@@ -90,9 +90,9 @@ Before any git operation, confirm which repo you are in (`git rev-parse --show-t
 **CRITICAL: Each git operation must be its own sequential tool call. Never mix different git operation types (add, commit, checkout, branch, merge, rebase, stash) in parallel tool calls.**
 
 - **One operation type at a time** — A commit must not be issued until all staging is verified. A branch switch must not coincide with a commit. Never burst add + commit + checkout as parallel calls.
-- **Verify before proceeding** — Check output of each operation; do not assume success
+- **Read output before proceeding** — After each git command, actually read its output and confirm it succeeded. Do not fire-and-forget — if `git add` errors or warns, you must catch it before committing.
 - **Stop on failure** — If any git operation fails, address it before continuing
-- **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, directories, or wildcards
+- **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
 
 ```bash
 # WRONG — parallel burst of different operation types
