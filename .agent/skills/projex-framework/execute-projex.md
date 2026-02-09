@@ -68,6 +68,8 @@ Before starting execution:
 
 ## WORKFLOW STEPS
 
+**GATE: No file changes, no edits, no code modifications until the ephemeral branch is created and verified (step 1.2). Any change made on the base branch contaminates it and defeats isolation.**
+
 ### 1. INITIALIZE EXECUTION
 
 1. **Record the base branch** — Before branching, record the current branch name. Close-projex needs this to merge back to the correct target.
@@ -77,11 +79,13 @@ git branch --show-current
 # e.g. "main", "develop", "feature/auth" — this is the base branch
 ```
 
-2. **Create ephemeral branch** — Branch from current HEAD for isolated execution:
+2. **Create ephemeral branch and verify** — Branch from current HEAD. Confirm the switch before proceeding.
 
 ```bash
-# Branch naming: projex/{yyyymmdd}-{plan-name}
-git checkout -b projex/20260126-database-refactor
+git checkout -b projex/{yyyymmdd}-{plan-name}
+# verify output: "Switched to a new branch 'projex/...'"
+git branch --show-current
+# verify output matches the ephemeral branch name — ONLY THEN proceed
 ```
 
 3. **Update plan status** — Change to `In Progress`
