@@ -187,7 +187,7 @@ Patterns, not rules.
 ### Discipline
 
 - Sequential git commands, verified one at a time
-- Stage files by explicit path — never `git add .` or directories
+- Stage files by explicit path — never `git add .`, `git add -A`, `git add -u`, or directories
 - Multi-repo workspaces: confirm which repo before any git operation
 
 ## File Reference
