@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When the user mentions `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, load this skill and the document with the mentioned name.
+description: When the user mentions these workflow names `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, load both this skill and the workflow file with that exact name (located right next to this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
