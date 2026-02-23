@@ -128,11 +128,13 @@ For each step in the plan:
 2. Gather the specified data/metrics
 3. Document findings as they occur
 
-#### C. VERIFY
+#### C. VERIFY (produce reviewable evidence)
 
-1. Run the step's verification method
-2. Confirm the step objective is achieved
+1. Run the step's verification method — use tool calls that produce concrete output (e.g., `git diff`, read modified files, run tests, check command output)
+2. Confirm the step objective is achieved based on that output
 3. Check for unintended side effects
+
+The output from this step feeds directly into the log's **Output/Result** and **Verification** fields. Without concrete output here, those fields will be empty guesses.
 
 #### D. COMMIT (if applicable)
 
@@ -147,9 +149,15 @@ git commit -m "projex: step N - [brief description]"
 
 Steps that are purely investigative (running tests, gathering data) need no commits — just log the actions and findings.
 
-#### E. LOG
+#### E. LOG (two-phase)
 
-Update the execution log with what was done, what happened, any deviations from the plan, and verification results. Do this for every step — implementation or investigative.
+Logging happens in two phases to ensure accuracy. Do this for every step — implementation or investigative.
+
+**Phase 1 — Record the action (immediately after B):**
+Write the step header, **Action**, and **Files Affected** fields while the action is fresh.
+
+**Phase 2 — Record the results (after C, based on actual review):**
+Go back and fill in **Output/Result**, **Verification**, and **Status** by reading the tool outputs, diffs, or test results you just produced. Do NOT fill these from memory — reference the actual command output, `git diff`, or file contents from the verify step. If the verify step produced no concrete output, state what was checked and what was observed.
 
 #### F. USER INTERVENTION (when applicable)
 
