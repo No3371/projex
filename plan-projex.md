@@ -225,7 +225,33 @@ If implementation fails or causes issues:
 - [ ] [Any unresolved questions — should be empty before execution]
 ```
 
-### 5. VALIDATION
+### 5. SECOND PASS — CHALLENGE THE PLAN
+
+**Mandatory re-examination.** By the time the draft is complete, the agent understands the problem better than when it started step 1. Early steps were written with incomplete understanding — this pass catches what they got wrong.
+
+**Re-read the relevant code.** Do not rely on memory from Step 3. Open the actual files referenced in the plan and verify:
+
+1. **Assumptions** — What does the plan take for granted?
+   - Does the "Current State" section match what the files actually show right now?
+   - Are there implicit ordering assumptions (e.g., "X exists before Y runs") that aren't guaranteed?
+   - Does the plan assume a function signature, return type, or data shape without verifying?
+
+2. **Discrepancies** — Does the plan contradict itself?
+   - Do different steps describe the same file differently?
+   - Does a later step depend on something an earlier step doesn't actually produce?
+   - Do the success criteria test something the implementation steps don't actually deliver?
+
+3. **Misunderstandings** — Did the agent get the code wrong?
+   - Trace the actual call path / data flow through the referenced files — does it work the way the plan says?
+   - Are there side effects, validations, or intermediate transformations the plan doesn't account for?
+   - Is the plan modifying the right layer? (e.g., changing a caller when the callee is the actual problem)
+
+**After this pass:**
+- Fix anything caught — update steps, file references, before/after code, assumptions
+- If the pass reveals the plan's approach is fundamentally wrong, stop and discuss with the user rather than patching a broken plan
+- Document surviving assumptions in the Notes → Assumptions section — making them visible so execution can verify them early
+
+### 6. VALIDATION
 
 Before marking Ready:
 
@@ -249,7 +275,7 @@ Before marking Ready:
 - [ ] Downstream/cascading changes are deferred to their own plans in their own scope
 - [ ] Appropriately granular (not too broad, not too narrow)
 
-### 6. FINALIZE
+### 7. FINALIZE
 
 1. **Refine document** — Front-load key info (summary, scope, criteria)
 2. **Update relationships** — Add links to/from related projex
@@ -349,9 +375,14 @@ After execution and walkthrough creation, both Plan and Walkthrough move to `pro
 
 ## NEXT STEPS
 
-After plan is `Ready`:
-1. Execute using `/execute-projex.md @{plan-file}`
-2. After execution, close using `/close-projex.md`
+**The plan workflow ends here.** Present the plan to the user. Do not suggest or initiate execution — the user decides what happens next.
+
+The user may:
+- **Execute** — `/execute-projex.md @{plan-file}`
+- **Review or Red Team first** — `/review-projex.md` or `/redteam-projex.md` against the plan
+- **Revise** — request changes to the plan before execution
+- **Shelve** — leave the plan for later
+- **Reject** — abandon the plan entirely
 
 ---
 

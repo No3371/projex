@@ -45,10 +45,16 @@ Before starting execution:
 
 ### 2. ENVIRONMENT CHECK
 
-- [ ] **In the correct repository** — Run `git rev-parse --show-toplevel` to see which repo root git is currently operating against (it returns the nearest repo root to cwd, not the outermost). Confirm the result matches the repo that owns the plan's `projex/` folder. In nested repo setups (submodules, subtrees, repos-inside-repos), git silently operates on whichever `.git` is closest to the cwd — always verify before creating branches or committing.
-- [ ] On correct base branch (typically `main` or feature branch)
-- [ ] Clean working state (no uncommitted changes)
-- [ ] Git repository is in good state
+Run all three git checks in a **single parallel call** — they are independent reads with no dependencies:
+
+```bash
+git rev-parse --show-toplevel && git branch --show-current && git status
+```
+
+Then verify:
+- [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `projex/` folder. In nested repo setups (submodules, subtrees, repos-inside-repos), git silently operates on whichever `.git` is closest to the cwd — always verify before creating branches or committing.
+- [ ] **Correct base branch** — `branch --show-current` shows the expected branch (typically `main` or a feature branch)
+- [ ] **Clean working state** — `git status` shows no uncommitted changes
 - [ ] Required tools/dependencies available
 - [ ] Access to all files listed in plan
 
@@ -334,7 +340,7 @@ This workflow produces:
 
 ```markdown
 # Execution Log: [Plan Name]
-Started: [timestamp]
+Started: [yyyymmdd hh:mm]
 Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/auth]
 
 ## Progress
@@ -344,14 +350,14 @@ Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/a
 
 ## Actions Taken
 
-### [Timestamp] - Step 1: [Step Title]
+### [yyyymmdd hh:mm] - Step 1: [Step Title]
 **Action:** [Exactly what was done - command run, file edited, test executed, etc.]
 **Output/Result:** [What happened - output, errors, observations]
 **Files Affected:** [List any files read/modified/created]
 **Verification:** [How verified - what was checked]
 **Status:** Success/Failed/Partial
 
-### [Timestamp] - Step 2: [Step Title]
+### [yyyymmdd hh:mm] - Step 2: [Step Title]
 [Same structure]
 
 ## Actual Changes (vs Plan)
@@ -375,7 +381,7 @@ Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/a
 ## User Interventions
 [User interruptions, corrections, redirections, and requests — at any point during execution]
 
-### [Timestamp] - [During Step N / Between Steps / Post-Plan]: [Description]
+### [yyyymmdd hh:mm] - [During Step N / Between Steps / Post-Plan]: [Description]
 **Context:** [What was happening when the user intervened]
 **User Direction:** [What the user said/requested]
 **Action:** [Exactly what was done in response]

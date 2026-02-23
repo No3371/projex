@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When the user mentions these workflow names `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, load both this skill and the workflow file with that exact name (located right next to this SKILL.md).
+description: When the user mentions these workflow names `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, `imagine-projex`, `log-projex`, `define-projex`, load both this skill and the workflow file with that exact name (located right next to this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -13,12 +13,17 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Audit** — Rigorous validation of completed work: cross-references claims against actual artifacts/evidence. Discovers undocumented issues and gaps. WORKFLOW -> @./audit-projex.md
 - **Interview** — Interactive Q&A in rounds (3-5 questions each), asked one-by-one. Full transcript logging. READ-ONLY: only the interview document is written. WORKFLOW -> @./interview-projex.md
 - **Walkthrough** — Post-execution record authored after every Plan execution. Detailed changes (file-level), criteria checklist with proof. WORKFLOW -> @./close-projex.md
+- **Log** — Standalone change record: observes staged changes or commits, documents what changed and why. Born closed. No plan or branch lifecycle required. WORKFLOW -> @./log-projex.md
+- **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Born closed. WORKFLOW -> @./memo-projex.md
 - **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
 - **Simulation** — Disposable execution: makes changes, observes outcomes, rolls back everything. Only the report survives. No irreversible actions. Can trial-run plans or "what if" scenarios. WORKFLOW -> @./simulate-projex.md
+- **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md
 - **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Never closed. WORKFLOW -> @./navigate-projex.md
 - **Map** — Living structural index of directories/key files. Incrementally built, scope-flexible. Never closed. WORKFLOW -> @./map-projex.md
+- **Scan** — Exhaustive inventory of everything connected to a subject — precise `file:ln` lists with full coverage. No analysis, no recommendations. Born closed. WORKFLOW -> @./scan-projex.md
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
 - **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
+- **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
 
 ## Authoring
 
@@ -62,8 +67,11 @@ Workflow specs are actions invoked in verb sense:
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
+- `/define-projex.md The authentication subsystem` or `/define-projex.md @20260215-auth-subsystem-def.md expand session lifecycle`
+- `/log-projex.md HEAD~3..HEAD` or `/log-projex.md` (staged changes)
 - `/map-projex.md Whole project structure`
 - `/guide-projex.md Understand our authentication system end-to-end`
+- `/imagine-projex.md What would a plugin system for this framework look like?`
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after user reviewed execution results
 
@@ -87,24 +95,25 @@ Before any git operation, confirm which repo you are in (`git rev-parse --show-t
 
 ### Git Operation Discipline
 
-**CRITICAL: Each git operation must be its own sequential tool call. Never mix different git operation types (add, commit, checkout, branch, merge, rebase, stash) in parallel tool calls.**
+**CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
-- **One operation type at a time** — A commit must not be issued until all staging is verified. A branch switch must not coincide with a commit. Never burst add + commit + checkout as parallel calls.
-- **Read output before proceeding** — After each git command, actually read its output and confirm it succeeded. Do not fire-and-forget — if `git add` errors or warns, you must catch it before committing.
+- **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine — that's one operation. But add and commit must never share a call.
+- **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget — if `git add` errors or warns, you must catch it before committing.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
+- **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
 
 ```bash
-# WRONG — parallel burst of different operation types
-git add file.txt  |  git commit -m "msg"  |  git checkout -b new-branch
+# WRONG — two operation types in one call
+git add file.txt && git commit -m "msg"
 
 # WRONG — imprecise staging
 git add .
 
-# CORRECT — sequential, one operation type per step
-git add file1.txt file2.txt    # verify success
-git commit -m "msg"            # verify commit created
-git checkout -b new-branch     # verify branch switched
+# CORRECT — one operation type per call, output read between them
+git add file1.txt file2.txt    # call 1 — verify success
+git commit -m "msg"            # call 2 — verify commit created
+git checkout -b new-branch     # call 3 — verify branch switched
 ```
 
 ### Notes

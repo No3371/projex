@@ -65,28 +65,13 @@ Define scope and questions:
 - How deep should we go?
 - Who needs this understanding?
 
-### 2. INVESTIGATE
+### 2. SCAFFOLD THE DOCUMENT
 
-**Map the Territory:**
-- What exists? (components, concepts, entities)
-- How do they interact? (relationships, dependencies)
-- What patterns emerge? (conventions, abstractions)
+Create file: `{yyyymmdd}-{exploration-name}-explore.md` **before investigating anything**.
 
-**Trace the History:**
-- How did this come to be?
-- What key decisions shaped it?
-- What was learned along the way?
+Fill in what you know so far — the header, guiding questions, scope, context — then identify **investigation targets**: the specific areas, components, files, or concepts you intend to dive into. Each target becomes a section under Investigation with a brief rationale for why it matters. The rest of the document (findings, patterns, answers) stays empty — it gets filled during the dives.
 
-**Understand the Why:**
-- Why does this exist? (purpose, problems solved)
-- Why designed this way? (rationale, trade-offs)
-- What factors influenced this? (context, constraints)
-
-### 3. DRAFT THE EXPLORATION
-
-Create file: `{yyyymmdd}-{exploration-name}-explore.md`
-
-Use the template structure below, adapting sections based on exploration type and depth needed.
+This scaffold is the working artifact. Everything learned goes into it, not into your context alone.
 
 **Template Structure:**
 
@@ -101,7 +86,7 @@ Use the template structure below, adapting sections based on exploration type an
 
 ## Summary
 
-[what was explored, key discoveries, main insights]
+[Left blank — written after all targets are investigated]
 
 **Guiding Questions:**
 1. [Primary question]
@@ -121,21 +106,24 @@ Use the template structure below, adapting sections based on exploration type an
 
 ---
 
-## Investigation
+## Investigation Targets
 
-### [Area 1: Component/Concept Name]
+> Targets are identified upfront and revised during exploration.
+> After each dive, reassess: add targets surfaced by new findings, reprioritize, or drop targets that proved irrelevant.
 
-[Description: what it is, how it works, why it exists]
-
-**Key Points:**
-- [Important characteristic or finding]
-- [Dependencies or relationships]
+### Target: [Component/Concept/File/Area Name]
+**Rationale:** [Why this target matters to the guiding questions]
+**Status:** Pending | In Progress | Done | Dropped
+**Findings:**
+[Filled during dive — what it is, how it works, why it exists, key observations]
 
 ---
 
-### [Area 2]
-
-[Same structure]
+### Target: [Next target]
+**Rationale:** ...
+**Status:** Pending
+**Findings:**
+...
 
 ---
 
@@ -185,14 +173,55 @@ Use the template structure below, adapting sections based on exploration type an
 **Limitations:** [Gaps in investigation or understanding]
 ```
 
-### 4. VALIDATE & FINALIZE
+### 3. DIVE INTO TARGETS
+
+Work through investigation targets one at a time. For each target:
+
+1. **Set status** to `In Progress` in the document
+2. **Investigate deeply** — read code, trace flows, examine artifacts, follow references
+3. **Write findings directly into the target's section** — not in your head, in the document. Include what you found, key observations, dependencies, surprises.
+4. **Set status** to `Done`
+5. **Reassess the target list:**
+   - Did this dive reveal new areas worth investigating? → Add new targets
+   - Did findings change what matters? → Reprioritize remaining targets
+   - Did a pending target turn out irrelevant? → Mark `Dropped` with brief reason
+6. **Repeat** for the next target
+
+The document grows incrementally. If the user interrupts or the session ends, the exploration is partially complete but still useful — every finished target's findings are already captured.
+
+**Do NOT synthesize or write final sections yet.** Complete all targets first.
+
+### 4. REVISIT
+
+**Mandatory second pass.** Only after every target from step 3 is `Done` or `Dropped`, revisit the exploration as a whole:
+
+1. **Re-read the full document** from top to bottom — you now have context you lacked at the start
+2. **Identify gaps** — are there areas that were shallow, connections that weren't traced, or questions the dives raised but didn't answer?
+3. **Add new targets** for anything that warrants deeper investigation, mark them `Pending`
+4. **Deepen existing targets** — if a completed target's findings feel thin now that you have the bigger picture, reopen it (`In Progress`) and expand
+5. **Dive into all new/reopened targets** following the same procedure as step 3
+6. Once all revisit targets are `Done`, proceed to synthesis
+
+This pass exists because early dives happen with incomplete understanding. The agent sees the full picture only after finishing all initial targets — that is the right time to judge what's missing.
+
+### 5. SYNTHESIZE
+
+Once all targets (including revisit targets) are done:
+
+1. Fill in **Patterns & History** — cross-cutting themes across targets
+2. Fill in **Findings** — distill discoveries, build mental model, note implications
+3. Fill in **Answers** — address each guiding question with evidence from the dives
+4. Write the **Summary** — now that you have the full picture
+5. Capture remaining unknowns in **Open Questions**
+
+### 6. VALIDATE & FINALIZE
 
 **Check:**
+- [ ] All non-dropped targets have findings written
 - [ ] Core questions answered with evidence
 - [ ] Major components and relationships mapped
 - [ ] Facts verified, assumptions marked
 - [ ] Mental model is coherent
-- [ ] Useful for stakeholders
 
 **Finalize:**
 1. Front-load summary and key discoveries

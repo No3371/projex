@@ -506,6 +506,19 @@ projex/
 
 ---
 
+### 8. RESTORE STASHED CHANGES
+
+If changes were stashed at the start of execution (check the execution log for stash entries):
+
+```bash
+git stash list          # verify stash exists
+git stash pop           # restore stashed changes
+```
+
+If no stash was made, skip this step.
+
+---
+
 ## WALKTHROUGH QUALITY CHECKLIST
 
 Before considering walkthrough complete:
@@ -522,6 +535,7 @@ Before considering walkthrough complete:
 - [ ] Plan and Walkthrough moved to `projex/closed/`
 - [ ] Source proposal moved to `projex/closed/` (if all derived plans closed)
 - [ ] **Ephemeral branch finalized** (merged or abandoned)
+- [ ] **Stashed changes restored** (if any were stashed at execution start)
 - [ ] **Back on base branch** with clean state
 
 ---

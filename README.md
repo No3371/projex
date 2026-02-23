@@ -77,12 +77,15 @@ Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs
 | **Proposal** | `/propose-projex` | Explore a specific direction — "what if we go this way?" with trade-offs, approaches, and impact |
 | **Evaluation** | `/eval-projex` | Open-ended analysis, assessment, or research into any question, idea, or solution |
 | **Exploration** | `/explore-projex` | Investigation grounded in the status quo — map what exists to inform decisions and answer questions |
+| **Imagination** | `/imagine-projex` | Generative — takes a seed idea and grows it into rich, detailed vision with creative challenges |
 
-### Strategy & Direction
+### Specification & Orientation
 
 | Type | Command | Purpose |
 |------|---------|---------|
+| **Definition** | `/define-projex` | Living declarative spec — exhaustively defines WHAT an entity is: identity, boundaries, properties, constraints |
 | **Navigation** | `/navigate-projex` | Living high-level roadmap — milestones, phases, and "what to work on next" |
+| **Map** | `/map-projex` | Living structural index of directories — orientation for where things live and why |
 
 ### Planning & Execution
 
@@ -92,6 +95,7 @@ Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs
 | **Execute** | `/execute-projex` | Carry out a plan in an isolated ephemeral branch |
 | **Walkthrough** | `/close-projex` | Post-execution record — what actually happened, verification results, lessons learned |
 | **Patch** | `/patch-projex` | Quick action for small changes — skip the full plan/execute/close cycle |
+| **Log** | `/log-projex` | Standalone change record — observe staged changes or commits and document what happened |
 | **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, roll everything back |
 
 ### Quality & Validation
@@ -107,6 +111,7 @@ Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs
 | Type | Command | Purpose |
 |------|---------|---------|
 | **Interview** | `/interview-projex` | Interactive Q&A with the user — rounds of questions, full transcript |
+| **Guide** | `/guide-projex` | Curated reading path for human learners — phased steps with focus cues and takeaways |
 
 ## How Workflows Connect
 
@@ -123,20 +128,16 @@ Not a pipeline. Building blocks that chain freely — any output can trigger any
   │   ├───>│   Audit     │───┤   │
   │   │    └─────────────┘   │   │
   │   │                      ▼   ▼
-  │   │    ┌─────────────────────────────────┐  ┌ ─ ─ ─ ─ ─ ─┐
-  │   │    │  Proposal  /  Eval  /  Explore  │<·  User Input
-  │   │    └──────┬─────────┬────────────────┘  └ ─ ─ ─ ─ ─ ─┘
-  │   │           │  ┌──────┴──────┐            ┌ ─ ─ ─ ─ ─ ─┐
-  │   │           │  │  Navigate   │◄ ─ ─ ─ ─ ·  Interview
-  │   │           │  │ (roadmap)   │            └ ─ ─ ─ ─ ─ ─┘
-  │   │           │  └──────┬──────┘            external inputs,
-  │   │           │    steers│direction          can inform any
-  │   │          ┌┴─────────┴──────────┐           workflow
-  │   │          ▼                     ▼
-  │   │    ┌───────────┐        ┌────────────┐
-  │   │    │   Plan    │──────> │   Patch    │
-  │   │    └─────┬─────┘        │ (act+doc)  │
-  │   │          │              └────────────┘
+  │   │    ┌──────────────────────────────────────────┐
+  │   │    │ Proposal / Eval / Explore / Imagination  │
+  │   │    └──────┬───────────────────────────────────┘
+  │   │           │                              ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  │   │          ┌┴──────────────────┐            Define · Navigate · Map
+  │   │          ▼                   ▼           │ Guide · Interview · Imagine │
+  │   │    ┌───────────┐      ┌────────────┐       auxiliary — can inform
+  │   │    │   Plan    │─────>│   Patch    │     │  or be informed by any    │
+  │   │    └─────┬─────┘      │ (act+doc)  │           workflow above
+  │   │          │            └────────────┘     └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
   │   │          │ ◄── review/redteam plan
   │   │          │     before execution
   │   │    ┌─────┴──────┐
@@ -164,7 +165,8 @@ Patterns, not rules.
 |---|---|---|
 | Navigate | Explore, Eval, Proposal, Plan | Roadmap identifies what to investigate or build next |
 | Interview | Eval, Proposal, Plan, Navigate | Gathered knowledge inspires analysis, action, or roadmap revision |
-| Exploration | Proposal, Eval, Plan, Navigate | Investigation reveals a gap or opportunity |
+| Definition | Plan, Explore, Review | Entity pinned down — plan implementation, explore deeper, or review the definition |
+| Exploration | Proposal, Eval, Plan, Navigate, Definition | Investigation reveals a gap or opportunity, or an entity worth defining |
 | Proposal | Eval, Plan, Simulation | Direction chosen — analyze, plan, or trial-run it |
 | Eval | Proposal, Plan, Explore | Findings raise questions, reveal directions, or clarify scope |
 | Simulation | Plan, Patch, Proposal | Trial results inform how to proceed for real |
@@ -174,14 +176,19 @@ Patterns, not rules.
 | Review | Proposal, Plan, Patch | Stale or incomplete documents need updating |
 | Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
 | Audit | Plan, Patch, Proposal | Gaps in completed work — fix them |
-| Patch | Review, Audit | Quick fix warrants retrospective validation |
+| Patch | Review, Audit, Log | Quick fix warrants retrospective validation or richer record |
+| Log | — | Standalone — documents changes already made; doesn't chain forward |
+| Imagination | Proposal, Eval, Plan | Vision crystallized — evaluate feasibility or plan it |
+| Map | Explore, Plan | Structure surveyed — investigate areas or plan changes |
+| Guide | Explore, Eval | Learning path reveals gaps worth investigating |
 
 ## Git Integration
 
 - **Execute/Close** — ephemeral branch (`projex/{yyyymmdd}-{name}`), merged or abandoned at close
 - **Simulate** — throwaway branch (`projex/sim/{yyyymmdd}-{name}`), always discarded
 - **Patch** — commits directly to current branch
-- **Navigate** — operates on current branch, revised in-place
+- **Log** — observes existing changes (staged or committed); commits only the log document itself
+- **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)
 - **Everything else** — operates on current branch
 
 ### Discipline
@@ -203,10 +210,15 @@ All workflow specs live in `.agent/skills/projex-framework/`.
 | `plan-projex.md` | Plans |
 | `execute-projex.md` | Plan execution |
 | `close-projex.md` | Walkthroughs and branch finalization |
+| `log-projex.md` | Standalone change logs |
 | `patch-projex.md` | Quick-action patches |
 | `simulate-projex.md` | Disposable simulations |
 | `review-projex.md` | Document reviews |
 | `redteam-projex.md` | Adversarial analysis |
 | `audit-projex.md` | Work audits |
+| `define-projex.md` | Entity definitions |
 | `navigate-projex.md` | Living roadmaps |
+| `map-projex.md` | Structural maps |
 | `interview-projex.md` | Interactive Q&A |
+| `guide-projex.md` | Learning guides |
+| `imagine-projex.md` | Generative imagination |

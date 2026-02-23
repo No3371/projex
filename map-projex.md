@@ -8,7 +8,7 @@ Map documents are orientation tools. They maintain a high-level description of a
 
 **Key characteristics:**
 - Living document — continuously revised and appended, never "closed"
-- High-level descriptions, not exhaustive file listings — enough to know where to look, not a substitute for reading the code
+- **Directory-level orientation** — shows directories and their purposes, not file listings. Agents should expect unlisted files in every directory
 - Incrementally built — does not need to be fully mapped in one pass; grows as the project grows
 - Scope-flexible — can map an entire workspace, a single repo, or a specific module/area
 - Structural, not directional — describes what IS, not what SHOULD BE (contrast with Navigation)
@@ -98,10 +98,12 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 
 ## Structure
 
+> Directories only — files are intentionally omitted. Explore a directory to discover its contents.
+
 ### `src/`
 [1-2 sentence description of what this directory contains overall]
 
-- `parser/` — [What the parser module does and contains] · 📍 [detail map](src/parser/projex/20260208-parser-layout-map.md)
+- `parser/` — [What the parser module does] · 📍 [detail map](src/parser/projex/20260208-parser-layout-map.md)
 - `runtime/` — [Runtime engine purpose]
 - `cli/` — [CLI entry point, argument handling]
 
@@ -117,13 +119,12 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 - `unit/` — [Unit test organization]
 - `integration/` — [Integration test setup]
 
-### Key Root Files
+### Landmarks
 
-| File | Purpose |
-|------|---------|
-| `README.md` | [What it covers] |
-| `Cargo.toml` / `package.json` / etc. | [Build config, dependencies] |
-| `.env.example` | [Environment variable template] |
+> A few critical entry points — not an exhaustive listing.
+
+- `Cargo.toml` / `package.json` / etc. — build config and dependency manifest
+- `.env.example` — environment variable template
 
 ---
 
@@ -149,20 +150,21 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 ```
 
 **Formatting guidelines:**
-- Use nested lists for the directory tree — scannable and easy to diff
+- **List directories, not files** — the Structure section contains only directories (trailing `/`). Individual files belong in Landmarks only if they are critical entry points or configs, and even then sparingly (aim for ≤5)
 - Descriptions should be **what it is and why**, not how it works internally
-- Mark directories with trailing `/` to distinguish from files
 - Keep descriptions to one line where possible; use two lines for genuinely complex areas
 - Include the `Unmapped Areas` section honestly — partial maps are expected and useful
 - When a directory has its own child map, annotate the entry with `· 📍 [detail map](relative/path)` and keep the entry shallow — the child map owns the detail for that subtree
+- The Structure section's blockquote reminder ("Directories only — files are intentionally omitted") signals to consuming agents that the map is not a complete file listing
 
 #### 4. VALIDATE AND COMMIT
 
 **Check:**
 - [ ] Top-level structure accurately reflects the scope
 - [ ] Descriptions are high-level and orientation-focused (not implementation details)
+- [ ] Structure section contains only directories — individual files are in Landmarks only
 - [ ] No paths are fabricated — every listed path actually exists
-- [ ] Key entry points and config files are called out
+- [ ] Landmarks section is minimal (≤5 entries) — only true entry points and configs
 - [ ] Unmapped areas are acknowledged, not silently omitted
 - [ ] Placed in the correct `projex/` folder for its scope
 
@@ -235,7 +237,7 @@ git commit -m "projex(map): revise structure map - {map-name}"
 - **Living, not archived** — Map documents stay in their `projex/` folder for their entire active lifetime. They are never moved to `closed/`
 - **One per scope** — Each scope should have at most one active map in its `projex/` folder. If a scope grows too large, split into separate maps at the appropriate level with cross-references
 - **Nestable** — A project-level map can reference module-level maps for detail (via inline `📍` links on structure entries). A module-level map can reference its parent via its `Parent Map` header. Avoid duplicating descriptions across levels — the parent keeps a one-line description and links down; the child map owns the detail. See [Reference Maintenance](#reference-maintenance)
-- **Structure over content** — Describe what a directory *is about*, not what every file in it does. Agents can read the files themselves once they know where to look
+- **Directories over files** — The Structure section lists directories only. Individual files appear only in Landmarks, and only when they are genuine entry points or configs. Agents should always expect unlisted files — the map tells you where to look, then you explore
 - **Verifiable** — Every path listed in the map must actually exist. Stale entries erode trust in the whole document
 
 ---
@@ -303,6 +305,6 @@ Map documents are **never** placed in `projex/closed/` — they are living docum
 
 - Maps are the fastest way to onboard a new agent or resume work after a long break
 - A map revision can be triggered naturally during any other workflow — if an agent notices structural drift while planning or executing, suggest a map revision
-- Do not list every file — focus on directories and only call out individual files when they are key entry points, configs, or otherwise non-obvious
+- Structure section is directory-only. Landmarks section holds the few (≤5) critical files. Agents must explore directories themselves to discover files
 - Use relative paths from the scope root when referencing repository files
 - When a map grows unwieldy, split by domain into separate maps at the appropriate folder level
