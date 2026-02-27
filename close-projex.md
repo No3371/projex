@@ -382,26 +382,30 @@ git commit -m "projex: close {plan-name} - add walkthrough"
 
 ### 7. FINALIZE GIT BRANCH
 
-**CRITICAL: Execute each git command one at a time. Wait for completion and verify success before proceeding to the next command.**
-
 The ephemeral branch must be finalized. Present options to user:
 
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
 
 ```bash
-# Step 1 - WAIT for completion, verify branch switched
 git checkout {base-branch}
+```
+Verify: branch switched successfully.
 
-# Step 2 - WAIT for completion, verify squash summary
+```bash
 git merge --squash projex/{yyyymmdd}-{plan-name}
+```
+Verify: squash summary shows expected changes.
 
-# Step 3 - WAIT for completion, verify commit created
+```bash
 git commit -m "projex: {plan-name} - [summary of changes]"
+```
+Verify: commit created.
 
-# Step 4 - WAIT for completion, verify branch deleted
+```bash
 git branch -D projex/{yyyymmdd}-{plan-name}
 ```
+Verify: branch deleted.
 
 **Best for:** Clean history, routine executions
 
@@ -410,9 +414,18 @@ Preserves full commit history from execution.
 
 ```bash
 git checkout {base-branch}
+```
+Verify: branch switched.
+
+```bash
 git merge projex/{yyyymmdd}-{plan-name} --no-ff -m "projex: merge {plan-name}"
+```
+Verify: merge commit created.
+
+```bash
 git branch -d projex/{yyyymmdd}-{plan-name}
 ```
+Verify: branch deleted.
 
 **Best for:** Complex executions where step-by-step history is valuable
 
@@ -421,11 +434,28 @@ Replays commits onto base branch for linear history.
 
 ```bash
 git checkout projex/{yyyymmdd}-{plan-name}
+```
+Verify: on ephemeral branch.
+
+```bash
 git rebase {base-branch}
+```
+Verify: rebase completed cleanly.
+
+```bash
 git checkout {base-branch}
+```
+Verify: branch switched.
+
+```bash
 git merge projex/{yyyymmdd}-{plan-name} --ff-only
+```
+Verify: fast-forward merge succeeded.
+
+```bash
 git branch -d projex/{yyyymmdd}-{plan-name}
 ```
+Verify: branch deleted.
 
 **Best for:** Linear history preference, collaborative workflows
 
@@ -434,8 +464,13 @@ Discards the branch without merging.
 
 ```bash
 git checkout {base-branch}
+```
+Verify: branch switched.
+
+```bash
 git branch -D projex/{yyyymmdd}-{plan-name}
 ```
+Verify: branch deleted.
 
 **Use when:** Execution failed, changes are not wanted
 

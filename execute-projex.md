@@ -74,101 +74,64 @@ Then verify:
 
 ## WORKFLOW STEPS
 
-**GATE: No file changes, no edits, no code modifications until the ephemeral branch is created and verified (step 1.2). Any change made on the base branch contaminates it and defeats isolation.**
+**GATE: No implementation changes until the ephemeral branch is created and verified (step 1.2).**
 
 ### 1. INITIALIZE EXECUTION
 
-1. **Record the base branch** — Before branching, record the current branch name. Close-projex needs this to merge back to the correct target.
+1. **Record the base branch and update plan status** to `In Progress`:
 
 ```bash
 git branch --show-current
-# e.g. "main", "develop", "feature/auth" — this is the base branch
 ```
 
-2. **Create ephemeral branch and verify** — Branch from current HEAD. Confirm the switch before proceeding.
-
-```bash
-git checkout -b projex/{yyyymmdd}-{plan-name}
-# verify output: "Switched to a new branch 'projex/...'"
-git branch --show-current
-# verify output matches the ephemeral branch name — ONLY THEN proceed
-```
-
-3. **Update plan status** — Change to `In Progress`
-
-4. **Commit plan status change** — First commit in the ephemeral branch:
+Edit the plan file, then commit the status change on the base branch:
 
 ```bash
 git add projex/{yyyymmdd}-{plan-name}-plan.md
 git commit -m "projex: start execution of {plan-name}"
 ```
 
-5. **Create execution log** — File named `{yyyymmdd}-{plan-name}-log.md`, placed next to the plan file in the same `projex/` folder. See [Execution Log Template](#execution-log-template) for the format.
+2. **Create ephemeral branch and verify**
+
+```bash
+git checkout -b projex/{yyyymmdd}-{plan-name}
+git branch --show-current
+```
+
+3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `projex/` folder. See [Execution Log Template](#execution-log-template).
 
 ### 2. EXECUTE STEPS SEQUENTIALLY
 
 For each step in the plan:
 
-#### A. PRE-STEP
+#### A. PREPARE
 
-1. Read the step completely
-2. Understand the objective and rationale
-3. Locate all referenced files/resources
-4. Verify preconditions are met
+1. Read the step completely — objective, rationale, referenced files
+2. Verify preconditions are met
 
-#### B. EXECUTE
+#### B. EXECUTE AND LOG ACTION
 
-**For implementation steps (code changes):**
-1. Make the specified changes
-2. Follow the plan's before/after code exactly
-3. Match existing code style and conventions
+1. Carry out the step (make changes / run commands / gather data)
+2. **Log immediately** — write the step header, **Action**, and **Files Affected** fields while the action is fresh
 
-**For investigative steps (testing/analysis/documentation):**
-1. Run the specified commands/tests
-2. Gather the specified data/metrics
-3. Document findings as they occur
+#### C. VERIFY AND LOG RESULTS
 
-#### C. VERIFY (produce reviewable evidence)
-
-1. Run the step's verification method — use tool calls that produce concrete output (e.g., `git diff`, read modified files, run tests, check command output)
-2. Confirm the step objective is achieved based on that output
-3. Check for unintended side effects
-
-The output from this step feeds directly into the log's **Output/Result** and **Verification** fields. Without concrete output here, those fields will be empty guesses.
+1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
+2. Confirm the step objective is achieved; check for side effects
+3. **Log from actual output** — fill **Output/Result**, **Verification**, and **Status** by referencing the tool outputs just produced, not from memory
+4. **Mark the objective complete** — update `- [ ] Step N: [title]` to `- [x] Step N: [title]` in the log's `## Progress` section. This must happen before moving to the next step.
 
 #### D. COMMIT (if applicable)
 
-After each step that produces file changes, commit in logical atomic units:
+Commit file changes in logical atomic units. Investigative steps (running tests, gathering data) need no commits — just log findings.
 
 ```bash
-# Stage each changed file by explicit path — never use `git add .`, `git add -A`, `git add -u`, or directories
 git add path/to/changed-file1.ext
 git add path/to/changed-file2.ext
 git commit -m "projex: step N - [brief description]"
 ```
 
-Steps that are purely investigative (running tests, gathering data) need no commits — just log the actions and findings.
-
-#### E. LOG (two-phase)
-
-Logging happens in two phases to ensure accuracy. Do this for every step — implementation or investigative.
-
-**Phase 1 — Record the action (immediately after B):**
-Write the step header, **Action**, and **Files Affected** fields while the action is fresh.
-
-**Phase 2 — Record the results (after C, based on actual review):**
-Go back and fill in **Output/Result**, **Verification**, and **Status** by reading the tool outputs, diffs, or test results you just produced. Do NOT fill these from memory — reference the actual command output, `git diff`, or file contents from the verify step. If the verify step produced no concrete output, state what was checked and what was observed.
-
-#### F. USER INTERVENTION (when applicable)
-
-If the user interrupts, corrects, or redirects during step execution:
-
-1. **Log the intervention immediately** — Record what the user said, which step was active, and the context
-2. **Adjust execution accordingly** — Follow the user's direction
-3. **Log the adjusted action and outcome** — Document what changed vs. the original step plan
-4. **Note the deviation** — If the intervention changes the plan's approach, record it as a deviation
-
-User interventions are first-class execution events. They are decisions that shaped the outcome and must appear in the walkthrough.
+**User interventions:** If the user interrupts, corrects, or redirects — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 
 ### 3. HANDLE DEVIATIONS
 
@@ -178,41 +141,30 @@ When the plan doesn't match reality:
 Is the action different from the plan?
 ├── No → Continue as planned
 └── Yes → Does it affect outcomes?
-    ├── No (line numbers shifted, minor naming differences, output format differences)
+    ├── No (line numbers shifted, minor naming differences)
     │   → Document the deviation, continue
-    ├── Yes, but fixable within scope (file structure changed, dependencies missing, approach needs adjustment)
+    ├── Yes, but fixable within scope
     │   → Assess impact, adjust approach, document reasoning, continue
-    └── Yes, and outside scope (plan assumptions fundamentally wrong, significant architectural changes, unanticipated blockers)
-        → Stop, report to user, plan needs review/update
+    └── Yes, and outside scope
+        → Stop, report to user, plan needs review
 ```
 
 ### 4. HANDLE FAILURES
 
-If a step fails:
-
-1. **Diagnose** — What specifically failed? Plan issue or execution issue? Fixable within scope?
-2. **Decide:**
-   - **Fixable within scope:** Fix and document
-   - **Requires scope change:** Stop, consult user
-   - **Plan is wrong:** Stop, mark plan for review
-3. **Clean up resources** — Before stopping or consulting the user, tear down any services/processes started during execution (Docker containers, dev servers, etc.). Don't leave resources running while waiting for decisions.
+1. **Diagnose** — What failed? Plan issue or execution issue? Fixable within scope?
+2. **Decide** — Fix within scope, consult user on scope change, or mark plan for review
+3. **Clean up** — Tear down any resources started during execution before stopping
 4. **Document** — What failed, root cause, resolution or blocker
 
 ### 5. COMPLETE EXECUTION
 
-After all steps:
+1. **Run full verification** — all automated checks and acceptance criteria from the plan
+2. **Validate success criteria** — check each criterion, document proof
+3. **Final review** — check for anything left incomplete
+4. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
+5. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
 
-1. **Run full verification plan** — All automated checks, manual verifications, and acceptance criteria from the plan
-
-2. **Validate success criteria** — Check each criterion, document proof of satisfaction
-
-3. **Final review** — Review all actions taken, check for anything left incomplete
-
-4. **Clean up resources** — Tear down anything started during execution: stop Docker containers/compose stacks, kill dev servers, close database connections, remove temporary files/directories, etc. If a resource was running before execution began (pre-existing), leave it alone. Log what was cleaned up.
-
-5. **Update plan status** — Mark as `Complete` if successful, `Blocked` if issues remain
-
-**Note:** Do not move the plan file yet — file relocation to `projex/closed/` happens during `/close-projex.md`
+Do not move the plan file — relocation to `projex/closed/` happens during `/close-projex.md`
 
 ---
 
@@ -226,6 +178,7 @@ After all steps:
 ### Aggressive Logging
 - Log every action to the execution log — not just code changes, but commands executed, files inspected, tests run, data gathered, observations made
 - Log immediately after each step, not retrospectively — delayed logging loses detail
+- **Mark each objective complete** — after verifying a step succeeded, update its `## Progress` checkbox to `[x]` before starting the next step. An unchecked box means the step is not done.
 - **Log all user interventions** — interruptions, corrections, redirections, and post-plan requests are execution events, not afterthoughts. Whether the user intervenes mid-step, between steps, or after all steps are done, log it with the same rigor as any planned action
 - The walkthrough will be derived from git history + these logs; gaps in the log become gaps in the walkthrough
 

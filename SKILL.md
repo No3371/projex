@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When the user mentions these workflow names `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, `imagine-projex`, `log-projex`, `define-projex`, load both this skill and the workflow file with that exact name (located right next to this SKILL.md).
+description: When the user mentions these workflow names `close-projex`, `eval-projex`, `execute-projex`, `plan-projex`, `propose-projex`, `review-projex`, `explore-projex`, `redteam-projex`, `audit-projex`, `interview-projex`, `patch-projex`, `simulate-projex`, `navigate-projex`, `map-projex`, `guide-projex`, `imagine-projex`, `log-projex`, `define-projex`, `archive-projex`, load both this skill and the workflow file with that exact name (located right next to this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -24,6 +24,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
 - **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
+- **Archive** — Compresses all files in `projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
 
 ## Authoring
 
@@ -93,28 +94,28 @@ The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and
 
 Before any git operation, confirm which repo you are in (`git rev-parse --show-toplevel`). Match projex to the repo whose root contains them. Scope git commands accordingly — wrong-repo operations are silently destructive.
 
+### Utility Scripts
+
+Utility scripts (next to this file and the workflow specs) handle compound git operations atomically with rollback:
+
+| Script | Description | Usage |
+|--------|-------------|-------|
+| `projex-commit.{sh\|ps1}` | Stage explicit files and commit atomically | `projex-commit <repo-root> "msg" file1 [file2 ...]` |
+| `projex-squash-close.{sh\|ps1}` | Squash-merge ephemeral → base, delete ephemeral | `projex-squash-close <repo-root> <base> <ephemeral> "msg"` |
+| `projex-merge-close.{sh\|ps1}` | Merge with full history → base, delete ephemeral | `projex-merge-close <repo-root> <base> <ephemeral> "msg"` |
+| `projex-abandon.{sh\|ps1}` | Checkout base and force-delete ephemeral | `projex-abandon <repo-root> <base> <ephemeral>` |
+
+Use these scripts for compound operations instead of chaining manual calls. Each script validates its inputs, reports failure with state context, and rolls back on error.
+
 ### Git Operation Discipline
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
 - **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine — that's one operation. But add and commit must never share a call.
-- **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget — if `git add` errors or warns, you must catch it before committing.
+- **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
-
-```bash
-# WRONG — two operation types in one call
-git add file.txt && git commit -m "msg"
-
-# WRONG — imprecise staging
-git add .
-
-# CORRECT — one operation type per call, output read between them
-git add file1.txt file2.txt    # call 1 — verify success
-git commit -m "msg"            # call 2 — verify commit created
-git checkout -b new-branch     # call 3 — verify branch switched
-```
 
 ### Notes
 
