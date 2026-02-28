@@ -183,8 +183,7 @@ Create file in the appropriate `projex/` folder for the scope: `{yyyymmdd}-{road
 - [ ] Priorities reflect user's stated goals
 
 ```bash
-git add projex/{yyyymmdd}-{roadmap-name}-nav.md
-git commit -m "projex(nav): create roadmap - {roadmap-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" projex/{yyyymmdd}-{roadmap-name}-nav.md
 ```
 
 ---
@@ -256,14 +255,12 @@ The navigation document itself doesn't execute — it informs what to execute ne
 #### 6. COMMIT REVISION
 
 ```bash
-git add projex/{yyyymmdd}-{roadmap-name}-nav.md
-git commit -m "projex(nav): revise roadmap - {roadmap-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" projex/{yyyymmdd}-{roadmap-name}-nav.md
 ```
 
 If other projex documents were updated with references back to this navigation:
 ```bash
-git add projex/{other-projex-file}.md    # each file explicitly
-git commit -m "projex: update references to {roadmap-name} nav"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" projex/{other-projex-file}.md
 ```
 
 ---

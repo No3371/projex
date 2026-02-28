@@ -87,8 +87,7 @@ git branch --show-current
 Edit the plan file, then commit the status change on the base branch:
 
 ```bash
-git add projex/{yyyymmdd}-{plan-name}-plan.md
-git commit -m "projex: start execution of {plan-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" projex/{yyyymmdd}-{plan-name}-plan.md
 ```
 
 2. **Create ephemeral branch and verify**
@@ -109,26 +108,26 @@ For each step in the plan:
 1. Read the step completely — objective, rationale, referenced files
 2. Verify preconditions are met
 
-#### B. EXECUTE AND LOG ACTION
+#### B. EXECUTE
 
 1. Carry out the step (make changes / run commands / gather data)
-2. **Log immediately** — write the step header, **Action**, and **Files Affected** fields while the action is fresh
 
-#### C. VERIFY AND LOG RESULTS
+#### C. LOG AND VERIFY
 
-1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
-2. Confirm the step objective is achieved; check for side effects
-3. **Log from actual output** — fill **Output/Result**, **Verification**, and **Status** by referencing the tool outputs just produced, not from memory
-4. **Mark the objective complete** — update `- [ ] Step N: [title]` to `- [x] Step N: [title]` in the log's `## Progress` section. This must happen before moving to the next step.
+**GATE: The log entry for this step must be written before starting the next step. The execution log is a live record, not a retrospective summary.**
+
+1. **Log the action** — write the step header, **Action**, and **Files Affected** fields by referencing the tool outputs just produced
+2. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
+3. Confirm the step objective is achieved; check for side effects
+4. **Log the results** — fill **Output/Result**, **Verification**, and **Status** by referencing the tool outputs just produced, not from memory
+5. **Mark the objective complete** — update `- [ ] Step N: [title]` to `- [x] Step N: [title]` in the log's `## Progress` section
 
 #### D. COMMIT (if applicable)
 
 Commit file changes in logical atomic units. Investigative steps (running tests, gathering data) need no commits — just log findings.
 
 ```bash
-git add path/to/changed-file1.ext
-git add path/to/changed-file2.ext
-git commit -m "projex: step N - [brief description]"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext path/to/changed-file2.ext
 ```
 
 **User interventions:** If the user interrupts, corrects, or redirects — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
@@ -176,8 +175,8 @@ Do not move the plan file — relocation to `projex/closed/` happens during `/cl
 - Save enhancement ideas for future proposals/plans
 
 ### Aggressive Logging
-- Log every action to the execution log — not just code changes, but commands executed, files inspected, tests run, data gathered, observations made
-- Log immediately after each step, not retrospectively — delayed logging loses detail
+- **The execution log is a live document, not a post-hoc summary.** Write each step's log entry immediately after performing that step — before starting the next one. Do not batch log entries or write them all at the end.
+- Log every action — not just code changes, but commands executed, files inspected, tests run, data gathered, observations made
 - **Mark each objective complete** — after verifying a step succeeded, update its `## Progress` checkbox to `[x]` before starting the next step. An unchecked box means the step is not done.
 - **Log all user interventions** — interruptions, corrections, redirections, and post-plan requests are execution events, not afterthoughts. Whether the user intervenes mid-step, between steps, or after all steps are done, log it with the same rigor as any planned action
 - The walkthrough will be derived from git history + these logs; gaps in the log become gaps in the walkthrough

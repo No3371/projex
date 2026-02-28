@@ -176,10 +176,10 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
-git add projex/{yyyymmdd}-{map-name}-map.md
-git add path/to/parent-map.md        # if parent was updated
-git add path/to/child-map.md         # if any child was updated
-git commit -m "projex(map): create structure map - {map-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): create structure map - {map-name}" \
+  projex/{yyyymmdd}-{map-name}-map.md \
+  path/to/parent-map.md \
+  path/to/child-map.md
 ```
 
 ---
@@ -222,10 +222,10 @@ Update the document in-place:
 
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
-git add projex/{yyyymmdd}-{map-name}-map.md
-git add path/to/parent-map.md        # if parent was updated
-git add path/to/child-map.md         # if any child was updated
-git commit -m "projex(map): revise structure map - {map-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): revise structure map - {map-name}" \
+  projex/{yyyymmdd}-{map-name}-map.md \
+  path/to/parent-map.md \
+  path/to/child-map.md
 ```
 
 ---

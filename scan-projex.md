@@ -127,8 +127,7 @@ The default is `file:ln — annotation`, but adapt to the subject:
 ### 4. COMMIT
 
 ```bash
-git add projex/closed/{yyyymmdd}-{scan-name}-scan.md
-git commit -m "projex(scan): {subject}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" projex/closed/{yyyymmdd}-{scan-name}-scan.md
 ```
 
 ---

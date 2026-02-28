@@ -176,8 +176,7 @@ Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `projex/closed/` 
 ### 5. COMMIT THE LOG
 
 ```bash
-git add projex/closed/{yyyymmdd}-{log-name}-log.md
-git commit -m "projex(log): {log-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" projex/closed/{yyyymmdd}-{log-name}-log.md
 ```
 
 ---

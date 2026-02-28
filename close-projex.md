@@ -369,13 +369,12 @@ If this plan were to be executed again:
 4. **Commit walkthrough and file moves** — stage each moved/created file by explicit path:
 
 ```bash
-git add projex/closed/{yyyymmdd}-{name}-walkthrough.md
-git add projex/closed/{yyyymmdd}-{name}-plan.md
-# If proposal also moved:
-git add projex/closed/{yyyymmdd}-{name}-proposal.md
-# Stage deletions from original locations (git tracks the move):
-git add projex/{yyyymmdd}-{name}-plan.md
-git commit -m "projex: close {plan-name} - add walkthrough"
+# Stage all moved/created files — include proposal and deletion tracking only if applicable:
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
+  projex/closed/{yyyymmdd}-{name}-walkthrough.md \
+  projex/closed/{yyyymmdd}-{name}-plan.md \
+  projex/closed/{yyyymmdd}-{name}-proposal.md \
+  projex/{yyyymmdd}-{name}-plan.md
 ```
 
 ---
@@ -388,24 +387,8 @@ The ephemeral branch must be finalized. Present options to user:
 Combines all execution commits into a single clean commit on base branch.
 
 ```bash
-git checkout {base-branch}
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]"
 ```
-Verify: branch switched successfully.
-
-```bash
-git merge --squash projex/{yyyymmdd}-{plan-name}
-```
-Verify: squash summary shows expected changes.
-
-```bash
-git commit -m "projex: {plan-name} - [summary of changes]"
-```
-Verify: commit created.
-
-```bash
-git branch -D projex/{yyyymmdd}-{plan-name}
-```
-Verify: branch deleted.
 
 **Best for:** Clean history, routine executions
 
@@ -413,19 +396,8 @@ Verify: branch deleted.
 Preserves full commit history from execution.
 
 ```bash
-git checkout {base-branch}
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}"
 ```
-Verify: branch switched.
-
-```bash
-git merge projex/{yyyymmdd}-{plan-name} --no-ff -m "projex: merge {plan-name}"
-```
-Verify: merge commit created.
-
-```bash
-git branch -d projex/{yyyymmdd}-{plan-name}
-```
-Verify: branch deleted.
 
 **Best for:** Complex executions where step-by-step history is valuable
 
@@ -463,14 +435,8 @@ Verify: branch deleted.
 Discards the branch without merging.
 
 ```bash
-git checkout {base-branch}
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name}
 ```
-Verify: branch switched.
-
-```bash
-git branch -D projex/{yyyymmdd}-{plan-name}
-```
-Verify: branch deleted.
 
 **Use when:** Execution failed, changes are not wanted
 

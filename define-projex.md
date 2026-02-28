@@ -188,8 +188,7 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{entity-name}-def.m
 - [ ] Status field reflects actual state (Draft if open questions remain)
 
 ```bash
-git add projex/{yyyymmdd}-{entity-name}-def.md
-git commit -m "projex(def): create definition - {entity-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md
 ```
 
 ---
@@ -230,8 +229,7 @@ Update the document in-place:
 #### 4. COMMIT REVISION
 
 ```bash
-git add projex/{yyyymmdd}-{entity-name}-def.md
-git commit -m "projex(def): revise definition - {entity-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md
 ```
 
 ---

@@ -107,8 +107,7 @@ Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.
 Stage and commit the archive document:
 
 ```bash
-git add projex/closed/{yyyymmdd}-{scope}-archive.md
-git commit -m "projex(archive): create archive index for {scope}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" projex/closed/{yyyymmdd}-{scope}-archive.md
 ```
 
 Verify the commit succeeded before proceeding.

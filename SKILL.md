@@ -96,18 +96,27 @@ Before any git operation, confirm which repo you are in (`git rev-parse --show-t
 
 ### Utility Scripts
 
-Utility scripts (next to this file and the workflow specs) handle compound git operations atomically with rollback:
+Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{projex-scripts}/` as a placeholder — substitute the absolute path to the directory containing this `SKILL.md` (e.g., if loaded from `/home/user/projex/SKILL.md`, then `{projex-scripts}/projex-commit.{sh|ps1}`).
 
-| Script | Description | Usage |
-|--------|-------------|-------|
-| `projex-commit.{sh\|ps1}` | Stage explicit files and commit atomically | `projex-commit <repo-root> "msg" file1 [file2 ...]` |
-| `projex-squash-close.{sh\|ps1}` | Squash-merge ephemeral → base, delete ephemeral | `projex-squash-close <repo-root> <base> <ephemeral> "msg"` |
-| `projex-merge-close.{sh\|ps1}` | Merge with full history → base, delete ephemeral | `projex-merge-close <repo-root> <base> <ephemeral> "msg"` |
-| `projex-abandon.{sh\|ps1}` | Checkout base and force-delete ephemeral | `projex-abandon <repo-root> <base> <ephemeral>` |
+#### Committing
 
-Use these scripts for compound operations instead of chaining manual calls. Each script validates its inputs, reports failure with state context, and rolls back on error.
+`projex-commit` — stages explicit files and commits atomically with rollback on failure.
+
+```
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "commit message" file1 [file2 ...]
+```
+
+#### Branch Finalization
+
+- `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
+- `projex-merge-close` — Merge with full history → base, delete ephemeral. Usage: `{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
+- `projex-abandon` — Checkout base and force-delete ephemeral. Usage: `{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> <base> <ephemeral>`
+
+Each validates inputs, reports failure with state context, and rolls back on error.
 
 ### Git Operation Discipline
+
+For operations not covered by the scripts above (read-only queries, `git rm`, `git checkout -b`, `git stash`), use raw git commands with these rules:
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 

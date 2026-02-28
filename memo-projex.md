@@ -94,15 +94,13 @@ Do NOT research or explore to fill this section. Write only from current context
 ### 3. COMMIT
 
 ```bash
-git add projex/{yyyymmdd}-{memo-name}-memo.md
-git commit -m "projex(memo): {brief description}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" projex/{yyyymmdd}-{memo-name}-memo.md
 ```
 
 If a related projex should reference this memo (e.g., a plan whose objectives were deferred), update it:
 
 ```bash
-git add projex/{related-projex-file}.md
-git commit -m "projex(memo): link memo from {related-projex}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" projex/{related-projex-file}.md
 ```
 
 ---

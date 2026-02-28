@@ -96,10 +96,7 @@ Act directly:
 **Commit convention:**
 
 ```bash
-# Stage each changed file by explicit path — never use `git add .`, `git add -A`, `git add -u`, or directories
-git add path/to/changed-file1.ext
-git add path/to/changed-file2.ext
-git commit -m "projex(patch): [concise description of change]"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): [concise description of change]" path/to/changed-file1.ext path/to/changed-file2.ext
 ```
 
 - Prefix: `projex(patch):` for traceability
@@ -201,11 +198,10 @@ After the patch is written:
 4. **Commit document updates:**
 
 ```bash
-# Stage each file by explicit path
-git add projex/closed/{yyyymmdd}-{patch-name}-patch.md
-git add projex/{yyyymmdd}-{related-plan-name}-plan.md
-git add path/to/any-other-updated-doc.md
-git commit -m "projex(patch): add patch doc - {patch-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
+  projex/closed/{yyyymmdd}-{patch-name}-patch.md \
+  projex/{yyyymmdd}-{related-plan-name}-plan.md \
+  path/to/any-other-updated-doc.md
 ```
 
 ---
@@ -266,15 +262,13 @@ Patches commit directly to the current branch. This is intentional — the overh
 ### Commit Sequence
 
 ```bash
-# Step 1: Make changes and commit — stage each file by explicit path
-git add path/to/changed-file1.ext
-git add path/to/changed-file2.ext
-git commit -m "projex(patch): [description]"
+# Step 1: Make changes and commit
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): [description]" path/to/changed-file1.ext path/to/changed-file2.ext
 
-# Step 2: Write patch doc, update related documents, commit — stage each by explicit path
-git add projex/closed/{yyyymmdd}-{patch-name}-patch.md
-git add projex/{yyyymmdd}-{related-plan-name}-plan.md
-git commit -m "projex(patch): add patch doc - {patch-name}"
+# Step 2: Write patch doc, update related documents, commit
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
+  projex/closed/{yyyymmdd}-{patch-name}-patch.md \
+  projex/{yyyymmdd}-{related-plan-name}-plan.md
 ```
 
 ### Git Operation Discipline

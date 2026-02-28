@@ -107,9 +107,7 @@ Make changes aggressively. The branch will be discarded — there is no cost to 
 
 ```bash
 # Commit convention within simulation (these commits will be discarded)
-# Still stage by explicit path — good habits even in throwaway branches
-git add path/to/changed-file.ext
-git commit -m "sim: [description of what was tried]"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "sim: [description of what was tried]" path/to/changed-file.ext
 ```
 
 **Simulations are not linear.** You may try approach A then revert and try approach B, stack changes to see cumulative effects, or partially implement to find hidden obstacles. Use git within the branch to manage iterations:
@@ -139,11 +137,7 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 **Then rollback:**
 
 ```bash
-# Step 1: Return to base branch — WAIT, verify "Switched to branch '...'"
-git checkout {base-branch}
-
-# Step 2: Delete the ephemeral branch — WAIT, verify deletion
-git branch -D projex/sim/{yyyymmdd}-{simulation-name}
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/sim/{yyyymmdd}-{simulation-name}
 ```
 
 **Verify:** Confirm base branch, branch deleted, working directory clean via `git status`.
@@ -327,8 +321,7 @@ Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `projex/closed/` (simula
 ### 6. COMMIT AND UPDATE RELATED DOCUMENTS
 
 ```bash
-git add projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
-git commit -m "projex(sim): add simulation report - {simulation-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
 ```
 
 If the simulation was against an existing plan or proposal:
@@ -337,10 +330,9 @@ If the simulation was against an existing plan or proposal:
 - If blockers were found, update the source document's risks/open questions
 
 ```bash
-# Stage each updated file by explicit path
-git add projex/{yyyymmdd}-{related-plan-name}-plan.md
-git add path/to/any-other-updated-doc.md
-git commit -m "projex(sim): update related projex - {simulation-name}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): update related projex - {simulation-name}" \
+  projex/{yyyymmdd}-{related-plan-name}-plan.md \
+  path/to/any-other-updated-doc.md
 ```
 
 ---
