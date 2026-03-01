@@ -99,14 +99,32 @@ git branch --show-current
 
 3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `projex/` folder. See [Execution Log Template](#execution-log-template).
 
-### 2. EXECUTE STEPS SEQUENTIALLY
+### 2. BUILD TASK LIST FROM PLAN
+
+**Before touching any files, translate the plan into a task list using your environment's todo/task tool** (e.g., `TaskCreate` in Claude Code, or equivalent). This is not optional — the task list is the structural backbone that prevents skipped steps and forgotten log entries.
+
+For each plan step, create a task that captures:
+- The step's objective as the task subject
+- Key details (files, commands, preconditions) in the description
+- An active form for progress display (e.g., "Implementing auth middleware")
+
+Also create explicit tasks for **every gate and sequential dependency**:
+- Pre-execution gates (branch creation, log file creation)
+- Per-step log entries ("Log step N results to execution log")
+- Per-step commits ("Commit step N changes")
+- Post-execution tasks (verification, status update, cleanup)
+
+**Mark each task in-progress before starting it, and completed only after the work AND its log entry are both done.** The task list is the forcing function — if a task isn't marked complete, the step isn't done.
+
+### 3. EXECUTE STEPS SEQUENTIALLY
 
 For each step in the plan:
 
 #### A. PREPARE
 
-1. Read the step completely — objective, rationale, referenced files
-2. Verify preconditions are met
+1. Mark the step's task as in-progress in your task list
+2. Read the step completely — objective, rationale, referenced files
+3. Verify preconditions are met
 
 #### B. EXECUTE
 
@@ -121,6 +139,7 @@ For each step in the plan:
 3. Confirm the step objective is achieved; check for side effects
 4. **Log the results** — fill **Output/Result**, **Verification**, and **Status** by referencing the tool outputs just produced, not from memory
 5. **Mark the objective complete** — update `- [ ] Step N: [title]` to `- [x] Step N: [title]` in the log's `## Progress` section
+6. **Mark the task complete** in your task list — only after both the work and log entry are done
 
 #### D. COMMIT (if applicable)
 
@@ -132,7 +151,7 @@ Commit file changes in logical atomic units. Investigative steps (running tests,
 
 **User interventions:** If the user interrupts, corrects, or redirects — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 
-### 3. HANDLE DEVIATIONS
+### 4. HANDLE DEVIATIONS
 
 When the plan doesn't match reality:
 
@@ -148,14 +167,14 @@ Is the action different from the plan?
         → Stop, report to user, plan needs review
 ```
 
-### 4. HANDLE FAILURES
+### 5. HANDLE FAILURES
 
 1. **Diagnose** — What failed? Plan issue or execution issue? Fixable within scope?
 2. **Decide** — Fix within scope, consult user on scope change, or mark plan for review
 3. **Clean up** — Tear down any resources started during execution before stopping
 4. **Document** — What failed, root cause, resolution or blocker
 
-### 5. COMPLETE EXECUTION
+### 6. COMPLETE EXECUTION
 
 1. **Run full verification** — all automated checks and acceptance criteria from the plan
 2. **Validate success criteria** — check each criterion, document proof
@@ -173,6 +192,10 @@ Do not move the plan file — relocation to `projex/closed/` happens during `/cl
 - Follow the plan unless there's a clear reason not to
 - Don't "improve" beyond plan scope during execution
 - Save enhancement ideas for future proposals/plans
+
+### Task List as Structural Backbone
+- **Build a task list before executing anything** (step 2). The task list is not a convenience — it is the mechanism that prevents skipped log entries and forgotten gates. Every step, every log entry, every commit, every gate becomes a tracked item.
+- **Tie task completion to logging** — a task is not complete until both the work AND its log entry are written. This coupling is the forcing function that makes aggressive logging automatic rather than aspirational.
 
 ### Aggressive Logging
 - **The execution log is a live document, not a post-hoc summary.** Write each step's log entry immediately after performing that step — before starting the next one. Do not batch log entries or write them all at the end.
