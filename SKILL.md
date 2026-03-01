@@ -103,8 +103,10 @@ Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{proje
 `projex-commit` — stages explicit files and commits atomically with rollback on failure.
 
 ```
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "commit message" file1 [file2 ...]
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
 ```
+
+Any argument starting with `--` is passed to `git commit` as an extra flag. A flag+value pair can be supplied as one quoted string (e.g. `"--trailer Co-authored-by: Claude"`). File paths never start with `--`, so no separator is needed.
 
 #### Branch Finalization
 
