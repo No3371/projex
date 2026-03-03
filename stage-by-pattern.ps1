@@ -1,5 +1,5 @@
-# projex-stage-by-pattern.ps1 — Stage only diff lines whose content matches a regex
-# Usage: projex-stage-by-pattern.ps1 <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
+# stage-by-pattern.ps1 — Stage only diff lines whose content matches a regex
+# Usage: stage-by-pattern.ps1 <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
 #
 # Filters unstaged changes through a pattern and stages only matching +/- lines.
 # Useful for structured changes like renames or method signature updates where

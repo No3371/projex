@@ -110,10 +110,10 @@ Any argument starting with `--` is passed to `git commit` as an extra flag. A fl
 
 #### Selective Staging
 
-`projex-stage-by-pattern` — filters unstaged diff through a regex and stages only matching +/- lines. Useful for structured changes (renames, signature updates) where the diff is highly regular.
+`stage-by-pattern` — filters unstaged diff through a regex and stages only matching +/- lines. Useful for structured changes (renames, signature updates) where the diff is highly regular.
 
 ```
-{projex-scripts}/projex-stage-by-pattern.{sh|ps1} <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
+{projex-scripts}/stage-by-pattern.{sh|ps1} <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
 ```
 
 `-v` inverts (stage everything except matches). `-n` dry-runs (prints filtered diff). For replacement pairs (`-old`/`+new`), the pattern should match both sides — e.g. `'getFoo|getBar'` not just `'getBar'`.
@@ -146,7 +146,7 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
-- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `projex-stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
+- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
 
 ### Notes

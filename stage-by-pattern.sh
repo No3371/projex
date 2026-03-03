@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# projex-stage-by-pattern.sh — Stage only diff lines whose content matches a regex
-# Usage: projex-stage-by-pattern.sh <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
+# stage-by-pattern.sh — Stage only diff lines whose content matches a regex
+# Usage: stage-by-pattern.sh <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
 #
 # Filters unstaged changes through a pattern and stages only matching +/- lines.
 # Useful for structured changes like renames or method signature updates where
@@ -20,7 +20,7 @@
 set -euo pipefail
 
 if [ $# -lt 2 ]; then
-  echo "Usage: projex-stage-by-pattern.sh <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]" >&2
+  echo "Usage: stage-by-pattern.sh <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]" >&2
   exit 1
 fi
 
