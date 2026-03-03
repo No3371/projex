@@ -118,6 +118,16 @@ Any argument starting with `--` is passed to `git commit` as an extra flag. A fl
 
 `-v` inverts (stage everything except matches). `-n` dry-runs (prints filtered diff). For replacement pairs (`-old`/`+new`), the pattern should match both sides — e.g. `'getFoo|getBar'` not just `'getBar'`.
 
+#### Moving
+
+`move-n-stage` — batch `git mv` with rollback on failure. Stages the moves but does not commit.
+
+```
+{projex-scripts}/move-n-stage.{sh|ps1} <repo-root> src1 dst1 [src2 dst2 ...]
+```
+
+Arguments are src/dst pairs. On any failure, all completed moves are rolled back in reverse order.
+
 #### Branch Finalization
 
 - `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
