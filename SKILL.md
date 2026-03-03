@@ -146,6 +146,7 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
+- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `projex-stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
 
 ### Notes
