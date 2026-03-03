@@ -34,6 +34,20 @@ File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
 - Front-load key info for quick assessment at a glance
 - **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
+### De-slop (optional final pass)
+
+Before finalizing any generated projex document, re-read it as a reader — not as the agent that wrote it — and strip:
+
+- **Agent self-talk** — "I'll now...", "Let me analyze...", "As I mentioned...", "This step will..."
+- **Throat-clearing** — "Note that...", "It's worth mentioning...", "It's important to..."
+- **Redundant restatements** — content that repeats what the previous sentence or section already said
+- **Hollow hedging** — "may potentially", "could possibly", "in some cases might"
+- **Unfilled template artifacts** — leftover placeholder text, example labels, or structural scaffolding that wasn't replaced with real content
+
+The document is an artifact for humans and future agents to act on — not a transcript of the writing process. If a sentence adds no information a reader couldn't infer, cut it.
+
+This pass is **optional**: apply it when the draft reads like it was narrated rather than written, or when sections are padded. Skip it when the draft is already tight.
+
 ## Organizing
 
 Files live in `projex/` folders in one or more paths (each dedicated to a individual domain/module/components/area/scope, etc.). Location in projex folders reflects state:

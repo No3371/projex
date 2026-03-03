@@ -278,10 +278,11 @@ Before marking Ready:
 ### 7. FINALIZE
 
 1. **Refine document** — Front-load key info (summary, scope, criteria)
-2. **Update relationships** — Add links to/from related projex
-3. **Set status** — Mark as `Ready` when complete
-4. **Verify placement** — Confirm the file is in the correct `projex/` folder (it should already be there from step 4)
-5. **Commit the plan** — Plan must be committed to base branch before execution
+2. **De-slop** (optional) — Re-read as a reader and strip agent self-talk, filler, redundant restatements, and unfilled template artifacts. See *De-slop* in SKILL.md.
+3. **Update relationships** — Add links to/from related projex
+4. **Set status** — Mark as `Ready` when complete
+5. **Verify placement** — Confirm the file is in the correct `projex/` folder (it should already be there from step 4)
+6. **Commit the plan** — Plan must be committed to base branch before execution
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" projex/{yyyymmdd}-{plan-name}-plan.md
