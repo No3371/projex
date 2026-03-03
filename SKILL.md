@@ -32,7 +32,7 @@ File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
 
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
-- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so relative paths break. Use the filename alone: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
+- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
 ## Organizing
 
