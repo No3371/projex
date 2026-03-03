@@ -23,7 +23,6 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 **Examples:**
 - `/execute-projex.md @20260731-database-service-refactor-plan.md`
-- `/execute-projex.md @20260115-auth-session-timeout-plan.md`
 - `/execute-projex.md @20260120-load-testing-analysis-plan.md` (testing/analysis, no code changes)
 
 ---
@@ -132,7 +131,7 @@ For each step in the plan:
 
 #### C. LOG AND VERIFY
 
-**GATE: The log entry for this step must be written before starting the next step. The execution log is a live record, not a retrospective summary.**
+**GATE: The log entry for this step must be written before starting the next step. The execution log is a live record, not a retrospective summary. The walkthrough is derived from git history + these logs — gaps here become gaps there.**
 
 1. **Log the action** — write the step header, **Action**, and **Files Affected** fields by referencing the tool outputs just produced
 2. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
@@ -149,7 +148,7 @@ Commit file changes in logical atomic units. Investigative steps (running tests,
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext path/to/changed-file2.ext
 ```
 
-**User interventions:** If the user interrupts, corrects, or redirects — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
+**User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 
 ### 4. HANDLE DEVIATIONS
 
@@ -188,69 +187,22 @@ Do not move the plan file — relocation to `projex/closed/` happens during `/cl
 
 ## EXECUTION PRINCIPLES
 
-### Faithful Implementation
-- Follow the plan unless there's a clear reason not to
-- Don't "improve" beyond plan scope during execution
-- Save enhancement ideas for future proposals/plans
-
-### Task List as Structural Backbone
-- **Build a task list before executing anything** (step 2). The task list is not a convenience — it is the mechanism that prevents skipped log entries and forgotten gates. Every step, every log entry, every commit, every gate becomes a tracked item.
-- **Tie task completion to logging** — a task is not complete until both the work AND its log entry are written. This coupling is the forcing function that makes aggressive logging automatic rather than aspirational.
-
-### Aggressive Logging
-- **The execution log is a live document, not a post-hoc summary.** Write each step's log entry immediately after performing that step — before starting the next one. Do not batch log entries or write them all at the end.
-- Log every action — not just code changes, but commands executed, files inspected, tests run, data gathered, observations made
-- **Mark each objective complete** — after verifying a step succeeded, update its `## Progress` checkbox to `[x]` before starting the next step. An unchecked box means the step is not done.
-- **Log all user interventions** — interruptions, corrections, redirections, and post-plan requests are execution events, not afterthoughts. Whether the user intervenes mid-step, between steps, or after all steps are done, log it with the same rigor as any planned action
-- The walkthrough will be derived from git history + these logs; gaps in the log become gaps in the walkthrough
-
-### Incremental Progress
-- Verify after each step
-- Commit logical units for code changes
-- Maintain working state when possible
-
-### Fail Fast
-- Stop early if fundamental issues arise
-- Don't compound problems
-- Escalate blockers promptly
-
-### Clean Up After Yourself
-- Any process/service started during execution must be stopped before execution ends — whether it succeeds, fails, or is abandoned
-- Docker containers, compose stacks, dev servers, database instances, background processes, temporary files — all must be torn down
-- If unsure whether something was pre-existing, check before killing it
-- Log all cleanup actions in the execution log
+- **Faithful** — follow the plan; don't "improve" beyond scope; save enhancements for future proposals
+- **Task-driven** — task list is the structural backbone; a task is not complete until both the work AND its log entry are written
+- **Aggressively logged** — live document, not retrospective; log commands, inspections, tests, observations — not just code changes
+- **Incremental** — verify and commit after each step; maintain working state
+- **Fail-fast** — stop early on fundamental issues; don't compound problems; escalate blockers promptly
+- **Clean** — tear down everything you started (containers, servers, temp files, background processes); verify pre-existing before killing; log cleanup actions
 
 ---
 
 ## CLOSING
 
-### Ready to Close
+A projex is **ready to close** when all criteria are satisfied (or conclusively blocked/failed) AND either the user instructs closure or auto-close is marked.
 
-A projex is **ready to close** when BOTH conditions are met:
-1. **All criteria satisfied** — success/acceptance criteria are met (or execution is conclusively blocked/failed)
-2. **Allowed to close** — user has explicitly instructed to close, OR the projex is marked as auto-close
+**Default: user-initiated.** After execution, report results and wait. The user may request further actions — log these as user interventions. When satisfied, the user instructs `/close-projex.md`. Do not close without user instruction.
 
-### Default: User-Initiated Close
-
-By default, closing requires explicit user instruction. After execution completes:
-
-1. Report execution results to the user
-2. User reviews the results (changes/findings/data)
-3. **User may request further actions** — adjustments, fixes, additional changes. These are still part of this execution and must be logged in the execution log just like any mid-execution user intervention
-4. When the user is satisfied, they instruct to close
-5. Run `/close-projex.md` to create walkthrough document
-
-**Do not close without user instruction.** The agent reports readiness; the user decides when to close.
-
-### Auto-Close (Opt-In)
-
-If the user explicitly instructs the agent to auto-close upon completion, the agent must mark this in the plan document's header before proceeding:
-
-```markdown
-> **Auto-Close:** Yes
-```
-
-When auto-close is marked, the agent may proceed directly to `/close-projex.md` after all criteria are satisfied, without waiting for user instruction. **The only valid signal for auto-close is this mark in the projex document** — verbal instruction alone is not sufficient; it must be recorded in the document.
+**Auto-close (opt-in).** If the user requests auto-close, mark it in the plan header (`> **Auto-Close:** Yes`) before proceeding. The mark in the document — not verbal instruction alone — is the valid signal. With auto-close marked, proceed directly to `/close-projex.md` after all criteria are satisfied.
 
 ---
 
@@ -280,11 +232,6 @@ If execution fails and cannot continue:
 2. Leave branch as-is (do not merge)
 3. Run `/close-projex.md` with abandon option
 
-### Branch Lifetime
-- Created at execution start
-- Exists throughout execution (may span sessions)
-- Finalized (merged/abandoned) during `/close-projex.md`
-
 ---
 
 ## OUTPUT
@@ -294,26 +241,6 @@ This workflow produces:
 - Execution log (`{yyyymmdd}-{plan-name}-log.md`) documenting every action taken
 - Updated plan status (`Complete` or `Blocked`)
 - Ephemeral git branch `projex/{yyyymmdd}-{plan-name}` with all commits (if any)
-
-**Git state after execution:**
-```
-{base-branch}
-  └── projex/{yyyymmdd}-{plan-name}  ← you are here
-        ├── commit: start execution
-        ├── commit: step 1 - ...
-        ├── commit: step 2 - ...
-        └── commit: step N - ...
-```
-
----
-
-## NOTES
-
-- Execution is about following the plan, not making design decisions
-- If you find yourself making many deviations, the plan may need review
-- Trust the plan but verify against reality
-- Use relative paths when referencing repository files
-- All execution happens in ephemeral branch — base branch stays clean until close
 
 ---
 
