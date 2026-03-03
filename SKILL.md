@@ -108,6 +108,16 @@ Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{proje
 
 Any argument starting with `--` is passed to `git commit` as an extra flag. A flag+value pair can be supplied as one quoted string (e.g. `"--trailer Co-authored-by: Claude"`). File paths never start with `--`, so no separator is needed.
 
+#### Selective Staging
+
+`projex-stage-by-pattern` — filters unstaged diff through a regex and stages only matching +/- lines. Useful for structured changes (renames, signature updates) where the diff is highly regular.
+
+```
+{projex-scripts}/projex-stage-by-pattern.{sh|ps1} <repo-root> <pattern> [-v] [-n] [-- file1 file2 ...]
+```
+
+`-v` inverts (stage everything except matches). `-n` dry-runs (prints filtered diff). For replacement pairs (`-old`/`+new`), the pattern should match both sides — e.g. `'getFoo|getBar'` not just `'getBar'`.
+
 #### Branch Finalization
 
 - `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
@@ -141,6 +151,3 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 
 ### AVOID ABSOLUTE PATHS
 Use file paths RELATIVE to project root. REDACT external paths.
-
-### PARALLELIZATION DISCIPLINE
-If subsequent actions depend on prior ones, DO NOT parallel them.
