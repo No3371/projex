@@ -7,9 +7,8 @@ description: This workflow guides the creation of **Evaluation** projex document
 Evaluations provide rigorous, intellectually honest analysis. They research essence, explore principles, and assess whether and why ideas will succeed.
 
 **Key characteristics:**
-- The broadest analytical tool — can be systematic scrutiny, open exploration of an idea, comparative research, or deep-dive into a solution
-- Deep analysis of paradigms, values, and scope
-- Exploration of underlying principles and assumptions
+- The broadest analytical tool — systematic scrutiny, open exploration, comparative research, or deep-dive
+- Deep analysis of paradigms, values, scope, underlying principles and assumptions
 - Assessment of prior approaches and why they fell short
 - Intellectual rigor with adaptive depth
 
@@ -41,47 +40,23 @@ Evaluations provide rigorous, intellectually honest analysis. They research esse
 
 ## EVALUATION TYPES
 
-### Proposal Evaluation
-Assess a specific proposal's viability and alignment.
-
-### Status Quo Evaluation
-Analyze current state to identify improvements or issues.
-
-### Comparative Evaluation
-Compare multiple approaches, technologies, or designs.
-
-### Compatibility Evaluation
-Determine if changes align with existing specs/patterns.
-
-### Gap Analysis
-Identify what's missing between current and desired state.
+- **Proposal** — Assess a specific proposal's viability and alignment
+- **Status Quo** — Analyze current state to identify improvements or issues
+- **Comparative** — Compare multiple approaches, technologies, or designs
+- **Compatibility** — Determine if changes align with existing specs/patterns
+- **Gap Analysis** — Identify what's missing between current and desired state
 
 ---
 
 ## DEPTH TIERS
 
-Tier is selected during framing (step 1) based on stakes, uncertainty, complexity, and time constraints.
+Select during framing (step 1) based on stakes, uncertainty, complexity, and time.
 
-### Quick Take
-One-page assessment for low-stakes or time-sensitive questions.
-- 1-2 analytical lenses, minimal research from immediately available sources
-- **Skip:** Foundations, Comparative Analysis, Evidence Log, Appendix
-- **Output:** Executive Summary + one Analysis section + Recommendation
-- Can grow into Standard via iterative deepening
-
-### Standard
-Balanced depth for most evaluations — the default tier.
-- 2-3 analytical lenses, moderate research across primary and secondary sources
-- Full template
-- **Output:** Complete evaluation document
-
-### Deep Research
-Multi-source, potentially multi-phase investigation for high-stakes or high-uncertainty subjects.
-- All relevant analytical lenses applied
-- Composes with other projex workflows for structured evidence gathering
-- Extended evidence log, sensitivity analysis
-- May span multiple sessions via iterative deepening
-- **Output:** Comprehensive evaluation with evidence log and full appendix
+| Tier | When | Lenses | Research Scope | Sections |
+|------|------|--------|----------------|----------|
+| **Quick Take** | Low stakes, quick answer, well-understood domain | 1-2 | Primary sources, immediately available | Exec Summary + one Analysis + Recommendation. Skip Foundations, Evidence Log, Appendix. Can grow via deepening. |
+| **Standard** | Moderate stakes, some uncertainty — the default | 2-3 | Primary + secondary within project | Full document |
+| **Deep Research** | High stakes, significant uncertainty, broad scope | All relevant | All tiers + external + composed projex | Full document + extended evidence log + full appendix. May span multiple sessions. |
 
 ---
 
@@ -89,55 +64,21 @@ Multi-source, potentially multi-phase investigation for high-stakes or high-unce
 
 ### 1. FRAME THE EVALUATION
 
-Define what's being evaluated:
+Establish: What exactly is being evaluated? What is the evaluation trying to determine? What criteria matter? Who are the stakeholders? What decisions will this inform?
 
-```
-Questions to establish:
-- What exactly is being evaluated?
-- What is the evaluation trying to determine?
-- What criteria matter for this evaluation?
-- Who are the stakeholders/consumers of this evaluation?
-- What decisions will this evaluation inform?
-```
-
-**Select depth tier:**
-| Signal | Tier |
-|--------|------|
-| Low stakes, quick answer needed, well-understood domain | Quick Take |
-| Moderate stakes, some uncertainty, reasonable scope | Standard |
-| High stakes, significant uncertainty, broad scope, or complex dependencies | Deep Research |
-
-If deepening an existing eval, identify the deepening mode (expand, update, challenge, extend) and target sections.
+**Select depth tier** per the table above. If deepening an existing eval, identify mode (expand, update, challenge, extend) and target sections.
 
 ### 2. RESEARCH PHASE
 
 #### Source Hierarchy
 
-Research quality depends on source quality. Prefer higher tiers:
+Prefer higher tiers. Research scope scales with depth tier.
 
-**Primary sources** — Direct observation and measurement
-- Read actual code, configs, schemas, data
-- Run experiments, benchmarks, or tests
-- Examine real behavior (logs, metrics, outputs, error patterns)
-
-**Secondary sources** — Documentation and recorded decisions
-- Project docs, READMEs, specs, ADRs, changelogs
-- Commit history and PR discussions
-- Existing projex documents (explorations, definitions, maps, scans)
-
-**Tertiary sources** — External references
-- Industry standards, best practices, RFCs
-- Library/framework documentation
-- Research papers, technical blogs, conference talks
-
-**Research scope by tier:**
-- **Quick Take** — Primary sources from what's immediately accessible
-- **Standard** — Primary + secondary sources within the project
-- **Deep Research** — All tiers, including external research and composed projex
+- **Primary** — Direct observation: read code/configs/schemas, run experiments/benchmarks, examine real behavior (logs, metrics, outputs)
+- **Secondary** — Recorded decisions: project docs, specs, ADRs, changelogs, commit/PR history, existing projex
+- **Tertiary** — External: industry standards, RFCs, library docs, research papers, technical blogs
 
 #### Composing with Other Projex (Deep Research)
-
-For complex evaluations, other projex workflows serve as structured research tools:
 
 | Research need | Compose with |
 |---|---|
@@ -147,21 +88,12 @@ For complex evaluations, other projex workflows serve as structured research too
 | Map structural relationships | `/map-projex` |
 | Understand a component's identity and boundaries | `/define-projex` |
 
-Reference composed projex in the eval's Related Projex field and Evidence Log.
+Reference composed projex in the eval's Related Projex and Evidence Log.
 
 #### Understand the Subject
 
-**For Ideas/Proposals:**
-1. What is the essence of this idea?
-2. What paradigm does it represent?
-3. What value does it claim to provide?
-4. What scope does it cover?
-
-**For Status Quo:**
-1. What exists today and why?
-2. What patterns and conventions are established?
-3. What constraints shaped current design?
-4. What has worked well? What hasn't?
+**For Ideas/Proposals:** Essence, paradigm, claimed value, scope.
+**For Status Quo:** What exists and why, established patterns, shaping constraints, what works and what doesn't.
 
 #### Explore Foundations
 
@@ -172,284 +104,76 @@ Reference composed projex in the eval's Related Projex field and Evidence Log.
 
 #### Evidence Discipline
 
-For each major finding, track:
-- **What** was observed
-- **Where** it was observed (file, doc, conversation, measurement)
-- **Confidence** — High (directly observed/measured), Medium (inferred from strong evidence), Low (assumption or limited evidence)
-
-If a finding rests on inference rather than observation, say so. Never fabricate or overstate evidence.
+Per major finding, track: **what** was observed, **where** (file, doc, measurement), and **confidence** — High (directly observed), Medium (inferred from strong evidence), Low (assumption or limited evidence). Never fabricate or overstate.
 
 ### 3. CRITICAL ANALYSIS
 
 #### Analytical Lenses
 
-Select lenses appropriate to the evaluation type — not all apply to every eval.
+Select lenses appropriate to the evaluation. Lens count scales with tier.
 
-**First Principles Decomposition**
-Break the subject into its most fundamental components. What is irreducibly true? What follows from those truths? Strip away convention and ask what you would build from scratch.
-*Best for: novel approaches, challenging conventional wisdom, deep "why" questions.*
-
-**Inversion**
-Instead of "how will this succeed?", ask "what would make this fail?" List concrete failure modes and assess their likelihood.
-*Best for: proposals, major decisions, risk assessment.*
-
-**Steel-Manning**
-Construct the strongest possible version of the opposing view before arguing against it. If you can't articulate why someone would disagree, you haven't understood the subject.
-*Best for: any evaluation with a clear "other side" — controversial changes, contested trade-offs.*
-
-**Pre-Mortem**
-Assume the initiative has already failed (or the status quo has already collapsed). Work backwards: what went wrong? What was the earliest warning sign?
-*Best for: plans, proposals, major migrations, anything with execution risk.*
-
-**Sensitivity Analysis**
-Identify the key assumptions. For each: what changes if this assumption is wrong? Which assumptions, if invalidated, would change the recommendation?
-*Best for: evaluations with uncertain inputs, forecasts, dependency-heavy decisions.*
-
-**Constraint Mapping**
-Identify all constraints (technical, business, human, time). Which are hard vs soft? Which are self-imposed? Removing a constraint often reveals solutions invisible while it's assumed.
-*Best for: status quo evaluations, gap analysis, "why can't we just..." questions.*
-
-**Lens selection by tier:**
-- **Quick Take** — 1-2 lenses, whichever cut deepest for this subject
-- **Standard** — 2-3 lenses
-- **Deep Research** — All relevant lenses
+| Lens | Method | Best for |
+|------|--------|----------|
+| **First Principles** | Break to fundamental truths, rebuild from scratch | Novel approaches, deep "why" questions |
+| **Inversion** | Ask "what makes this fail?", list concrete failure modes | Proposals, major decisions, risk assessment |
+| **Steel-Manning** | Build strongest opposing argument before countering it | Contested trade-offs, controversial changes |
+| **Pre-Mortem** | Assume failure already happened, work backwards to causes | Plans, migrations, execution risk |
+| **Sensitivity** | Test each assumption — which ones flip the recommendation? | Uncertain inputs, forecasts, dependency-heavy decisions |
+| **Constraint Mapping** | Catalog constraints (hard/soft/self-imposed), try removing each | Status quo evals, gap analysis |
 
 #### Problem Assessment
 
-- What problem does this address?
-- Is this the right problem to solve?
-- How significant is this problem?
-- Who experiences this problem?
+- What problem does this address? Is it the right problem?
+- How significant? Who experiences it?
 
 #### Prior Approach Analysis
 
 - Why didn't previous approaches solve this?
-- What was missing or wrong?
-- Were they actually tried? What happened?
-- What has changed since?
+- What was missing? Were they actually tried? What changed since?
 
 #### Solution Assessment
 
 - How does this address the problem?
 - Why will this succeed where others failed?
-- What makes this approach different?
 - What are the potential challenges?
 
 ### 4. DRAFT THE EVALUATION
 
-Create a new file: `{yyyymmdd}-{eval-name}-eval.md`
-
-**Template Structure:**
-
-```markdown
-# [Evaluation Title]
-
-> **Created:** YYYY-MM-DD
-> **Author:** [name or agent]
-> **Subject:** [what is being evaluated]
-> **Type:** Proposal | Status Quo | Comparative | Compatibility | Gap Analysis
-> **Tier:** Quick Take | Standard | Deep Research
-> **Lenses Applied:** [which analytical lenses were used]
-> **Related Projex:** [links to related projex documents]
-
----
-
-## Executive Summary
-
-[3-5 sentences capturing: what was evaluated, key findings, and recommendation]
-
----
-
-## Evaluation Scope
-
-### Subject
-[Detailed description of what is being evaluated]
-
-### Questions Addressed
-1. [Primary question]
-2. [Secondary question]
-3. [Tertiary question]
-
-### Evaluation Criteria
-| Criterion | Weight | Description |
-|-----------|--------|-------------|
-| [Criterion 1] | High/Med/Low | [What it measures] |
-| [Criterion 2] | High/Med/Low | [What it measures] |
-
-### Out of Scope
-- [What this evaluation does not cover]
-
----
-
-## Context Analysis
-
-### Current State
-[Description of relevant status quo]
-
-### Historical Context
-[What led to current state, previous decisions, lessons learned]
-
-### Constraints
-[Technical, business, resource, timeline constraints]
-
-### Stakeholders
-[Who is affected by or interested in this evaluation]
-
----
-
-## Foundations
-
-### Underlying Principles
-[The principles or theories the subject is built upon]
-
-### Key Assumptions
-| Assumption | Validity | Risk if Wrong | Sensitivity |
-|------------|----------|---------------|-------------|
-| [Assumption 1] | Valid/Questionable/Invalid | [Impact] | [Would recommendation change?] |
-| [Assumption 2] | Valid/Questionable/Invalid | [Impact] | [Would recommendation change?] |
-
-### Prior Work
-[Previous approaches, attempts, related work]
-
----
-
-## Analysis
-
-### [Analysis Area 1]
-
-**Finding:** [Key finding]
-**Confidence:** High / Medium / Low
-**Lens:** [Which analytical lens produced this finding]
-
-**Evidence:**
-- [Evidence point 1 — source: file/doc/measurement]
-- [Evidence point 2 — source: file/doc/measurement]
-
-**Implications:**
-[What this means for the evaluation subject]
-
----
-
-### [Analysis Area 2]
-
-[Same structure]
-
----
-
-### Comparative Analysis (if applicable)
-
-| Aspect | Option A | Option B | Status Quo |
-|--------|----------|----------|------------|
-| [Aspect 1] | [Assessment] | [Assessment] | [Assessment] |
-| [Aspect 2] | [Assessment] | [Assessment] | [Assessment] |
-
----
-
-## Evidence Log
-
-| # | Finding | Source | Type | Confidence | Notes |
-|---|---------|--------|------|------------|-------|
-| 1 | [What was observed] | [file:line / doc / measurement] | Primary/Secondary/Tertiary | High/Med/Low | [context] |
-| 2 | ... | ... | ... | ... | ... |
-
----
-
-## Evaluation Against Criteria
-
-| Criterion | Score | Confidence | Rationale |
-|-----------|-------|------------|-----------|
-| [Criterion 1] | Strong/Adequate/Weak | High/Med/Low | [Reasoning] |
-| [Criterion 2] | Strong/Adequate/Weak | High/Med/Low | [Reasoning] |
-
-**Overall Assessment:** [Summary judgment]
-
----
-
-## Challenges and Risks
-
-### Identified Challenges
-1. [Challenge 1]: [Description and severity]
-2. [Challenge 2]: [Description and severity]
-
-### Risk Assessment
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| [Risk 1] | High/Med/Low | High/Med/Low | [Approach] |
-
----
-
-## Findings
-
-### Key Findings
-1. **[Finding 1]** (Confidence: High/Med/Low): [Explanation]
-2. **[Finding 2]** (Confidence: High/Med/Low): [Explanation]
-3. **[Finding 3]** (Confidence: High/Med/Low): [Explanation]
-
-### Gaps Identified
-- [Gap 1]
-- [Gap 2]
-
-### Opportunities
-- [Opportunity 1]
-- [Opportunity 2]
-
----
-
-## Recommendations
-
-### Primary Recommendation
-[Clear recommendation with reasoning]
-
-### Conditional Recommendations
-- **If [condition]:** [recommendation]
-- **If [different condition]:** [alternative recommendation]
-
-### Suggested Next Steps
-1. [Immediate action]
-2. [Short-term action]
-3. [Long-term consideration]
-
----
-
-## Open Questions
-
-- [ ] [Unresolved question that needs further investigation]
-- [ ] [Question outside this evaluation's scope]
-
----
-
-## Appendix
-
-### Methodology
-[How this evaluation was conducted — sources consulted, lenses applied, tier rationale]
-
-### Sources
-[Documents, code, conversations referenced]
-
-### Dissenting Views
-[Alternative perspectives considered — especially from steel-manning]
-
-### Iteration History (if deepened)
-| Date | Mode | Scope | Summary |
-|------|------|-------|---------|
-| [Date] | Expand/Update/Challenge/Extend | [What sections] | [What changed] |
-```
+Create: `{yyyymmdd}-{eval-name}-eval.md`
+
+#### Document Structure
+
+**Frontmatter:**
+> Created, Author, Subject, Type (Proposal | Status Quo | Comparative | Compatibility | Gap Analysis), Tier, Lenses Applied, Related Projex
+
+**Sections in order:**
+
+1. **Executive Summary** — 3-5 sentences: what was evaluated, key findings, recommendation
+2. **Evaluation Scope** — Subject description, questions addressed, evaluation criteria (table: criterion | weight | description), out of scope
+3. **Context Analysis** — Current state, historical context, constraints, stakeholders
+4. **Foundations** — Underlying principles. Key assumptions table: assumption | validity | risk if wrong | sensitivity (would recommendation change?). Prior work.
+5. **Analysis** — Per area: finding, confidence (H/M/L), lens used, evidence with source citations, implications. Include comparative table if applicable.
+6. **Evidence Log** (Standard+) — Table: # | finding | source | type (Primary/Secondary/Tertiary) | confidence | notes
+7. **Evaluation Against Criteria** — Table: criterion | score (Strong/Adequate/Weak) | confidence | rationale. Overall assessment.
+8. **Challenges and Risks** — Challenges with severity. Risk table: risk | likelihood | impact | mitigation.
+9. **Findings** — Key findings with confidence ratings. Gaps identified. Opportunities.
+10. **Recommendations** — Primary with reasoning. Conditional (if X → Y). Next steps: immediate, short-term, long-term.
+11. **Open Questions** — Checklist of unresolved questions.
+12. **Appendix** — Methodology (sources, lenses, tier rationale). Sources consulted. Dissenting views (especially from steel-manning). Iteration history if deepened (table: date | mode | scope | summary).
 
 ### 5. VALIDATION
-
-Before finalizing:
 
 **Rigor Check:**
 - [ ] All major assumptions identified and assessed
 - [ ] Evidence supports findings (check Evidence Log completeness)
 - [ ] Counter-arguments considered (steel-manning applied where relevant)
-- [ ] Reasoning is traceable from evidence to finding to recommendation
+- [ ] Reasoning traceable from evidence → finding → recommendation
 
 **Honesty Check:**
 - [ ] Uncomfortable truths not hidden
 - [ ] Limitations acknowledged
 - [ ] Uncertainty clearly stated (confidence levels assigned)
-- [ ] Bias checked and noted if present
+- [ ] Bias checked and noted
 
 **Utility Check:**
 - [ ] Answers the original questions
@@ -459,82 +183,46 @@ Before finalizing:
 
 ### 6. FINALIZE
 
-1. **Refine document** — Front-load executive summary
-2. **Calibrate depth** — Adjust detail to match tier (trim Quick Take, expand Deep Research)
+1. **Refine** — Front-load executive summary
+2. **Calibrate depth** — Trim Quick Take, expand Deep Research
 3. **Update relationships** — Link to related projex
-4. **Place correctly** — Save in appropriate projex folder
-
-**Folder placement:**
-- Active evaluations → `projex/`
-- Completed evaluations (when no longer actively referenced) → `projex/closed/`
-- Outdated/superseded evaluations → `projex/archived/`
+4. **Place correctly** — Active → `projex/`, completed → `projex/closed/`, outdated → `projex/archived/`
 
 ### 7. VISUALIZE (optional)
 
-If a visual would make findings or comparisons significantly clearer, add one. Skip if the text already communicates effectively.
+Add a visual only if it communicates something the text does not. Use **Mermaid diagrams** or **ASCII tables**.
 
 | Evaluation type | Useful visuals |
 |---|---|
-| Comparative | Decision matrix, weighted scoring table, radar chart (as ASCII/table) |
+| Comparative | Decision matrix, weighted scoring table |
 | Gap Analysis | Current vs desired state diagram, coverage heatmap |
 | Proposal | Before/after architecture diagram, data flow changes |
 | Status Quo | Dependency graph, component map, bottleneck diagram |
-| Risk-heavy | Risk quadrant (likelihood x impact), failure cascade diagram |
-
-Produce visuals as **Mermaid diagrams** or **ASCII tables** within the document. A visual earns its space only if it communicates something the surrounding text does not.
+| Risk-heavy | Risk quadrant (likelihood x impact), failure cascade |
 
 ---
 
 ## ITERATIVE DEEPENING
 
-Evaluations are not one-shot. Re-invoke on an existing eval to deepen, update, or challenge it:
+Re-invoke on an existing eval: `/eval-projex @{existing-eval}.md [mode] [target]`
 
-```
-/eval-projex @{existing-eval}.md [mode] [target]
-```
+| Mode | When | What happens |
+|------|------|--------------|
+| **Expand** | Section needs more depth | Add research, evidence, or analysis to targeted sections |
+| **Update** | New information available | Incorporate new context, re-assess affected findings |
+| **Challenge** | Conclusions feel too comfortable | Adversarially re-examine — apply inversion and steel-manning |
+| **Extend** | New questions emerged | Add analysis areas or criteria not originally covered |
 
-### Deepening Modes
-
-| Mode | When to use | What happens |
-|------|-------------|--------------|
-| **Expand** | A section needs more depth | Add research, evidence, or analysis to targeted sections |
-| **Update** | New information is available | Incorporate new context, re-assess affected findings |
-| **Challenge** | Conclusions feel too comfortable | Adversarially re-examine with fresh eyes, apply inversion and steel-manning |
-| **Extend** | New questions have emerged | Add analysis areas or evaluation criteria not originally covered |
-
-### How it works
-
-1. Load the existing eval
-2. Identify the deepening mode and target sections
-3. Re-enter the workflow at the appropriate step (usually Research or Critical Analysis)
-4. Update findings, confidence levels, and recommendations as warranted
-5. Log the iteration in the Appendix → Iteration History table
-
-A **Quick Take** can grow into **Standard** by expanding across multiple iterations. A **Standard** eval can become **Deep Research** by composing with other projex and adding evidence. The tier field in the frontmatter updates to reflect current depth.
+**Process:** Load existing eval → identify mode and targets → re-enter at Research or Critical Analysis → update findings, confidence, recommendations → log in Appendix → Iteration History. Tier field updates to reflect accumulated depth.
 
 ---
 
 ## EVALUATION PRINCIPLES
 
-### Intellectual Honesty
-- Follow evidence, not preferences
-- Acknowledge when you don't know
-- Represent all relevant perspectives
-
-### Adaptive Depth
-- Match rigor to stakes
-- Quick questions get quick analysis
-- Major decisions get thorough treatment
-
-### Clarity
-- State findings directly
-- Separate facts from opinions
-- Make reasoning explicit
-
-### Actionability
-- Connect analysis to decisions
-- Provide clear recommendations
-- Identify concrete next steps
+- **Intellectual Honesty** — Follow evidence, not preferences. Acknowledge unknowns. Represent all perspectives.
+- **Adaptive Depth** — Match rigor to stakes. Quick questions get quick analysis. Major decisions get thorough treatment.
+- **Clarity** — State findings directly. Separate facts from opinions. Make reasoning explicit.
+- **Actionability** — Connect analysis to decisions. Provide clear recommendations. Identify concrete next steps.
 
 ---
 
