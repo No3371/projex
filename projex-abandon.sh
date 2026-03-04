@@ -30,6 +30,11 @@ if ! git -C "$REPO_ROOT" rev-parse --verify "$EPHEMERAL" > /dev/null 2>&1; then
   exit 1
 fi
 
+if [ "$BASE" = "$EPHEMERAL" ]; then
+  echo "Error: base and ephemeral branch cannot be the same ('$BASE')" >&2
+  exit 1
+fi
+
 # Checkout base
 if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
   echo "Error: could not checkout '$BASE' — still on '$EPHEMERAL', nothing lost" >&2

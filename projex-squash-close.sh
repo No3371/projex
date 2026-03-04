@@ -31,6 +31,11 @@ if ! git -C "$REPO_ROOT" rev-parse --verify "$EPHEMERAL" > /dev/null 2>&1; then
   exit 1
 fi
 
+if [ "$BASE" = "$EPHEMERAL" ]; then
+  echo "Error: base and ephemeral branch cannot be the same ('$BASE')" >&2
+  exit 1
+fi
+
 # Require clean working tree — reset --hard is used on squash failure and must not destroy other changes
 if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
   echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
@@ -46,16 +51,22 @@ fi
 # Squash merge
 if ! git -C "$REPO_ROOT" merge --squash "$EPHEMERAL" 2>&1; then
   git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
-  git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null || true
-  echo "Error: merge --squash failed — rolled back to '$EPHEMERAL'" >&2
+  if git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
+    echo "Error: merge --squash failed — rolled back to '$EPHEMERAL'" >&2
+  else
+    echo "Error: merge --squash failed — reset to clean state on '$BASE'" >&2
+  fi
   exit 1
 fi
 
 # Commit squash
 if ! git -C "$REPO_ROOT" commit -m "$COMMIT_MSG" 2>&1; then
   git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
-  git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null || true
-  echo "Error: commit failed — reset to clean state, rolled back to '$EPHEMERAL'" >&2
+  if git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
+    echo "Error: commit failed — reset to clean state, rolled back to '$EPHEMERAL'" >&2
+  else
+    echo "Error: commit failed — reset to clean state on '$BASE'" >&2
+  fi
   exit 1
 fi
 

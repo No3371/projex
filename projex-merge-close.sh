@@ -31,6 +31,11 @@ if ! git -C "$REPO_ROOT" rev-parse --verify "$EPHEMERAL" > /dev/null 2>&1; then
   exit 1
 fi
 
+if [ "$BASE" = "$EPHEMERAL" ]; then
+  echo "Error: base and ephemeral branch cannot be the same ('$BASE')" >&2
+  exit 1
+fi
+
 # Require clean working tree — merge with dirty tree contaminates the merge commit
 if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
   echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
@@ -46,8 +51,11 @@ fi
 # Merge with full history
 if ! git -C "$REPO_ROOT" merge "$EPHEMERAL" --no-ff -m "$MERGE_MSG" 2>&1; then
   git -C "$REPO_ROOT" merge --abort 2>/dev/null || true
-  git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null || true
-  echo "Error: merge failed — aborted, rolled back to '$EPHEMERAL'" >&2
+  if git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
+    echo "Error: merge failed — aborted, rolled back to '$EPHEMERAL'" >&2
+  else
+    echo "Error: merge failed — aborted, still on '$BASE'" >&2
+  fi
   exit 1
 fi
 

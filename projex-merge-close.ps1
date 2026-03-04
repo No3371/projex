@@ -28,6 +28,11 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+if ($Base -eq $Ephemeral) {
+    Write-Error "Base and ephemeral branch cannot be the same ('$Base')"
+    exit 1
+}
+
 # Require clean working tree — merge with dirty tree contaminates the merge commit
 git -C $RepoRoot diff --quiet 2>$null
 $diffClean = $LASTEXITCODE -eq 0
@@ -50,7 +55,11 @@ git -C $RepoRoot merge $Ephemeral --no-ff -m $MergeMsg
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot merge --abort 2>$null
     git -C $RepoRoot checkout $Ephemeral 2>$null
-    Write-Error "Merge failed — aborted, rolled back to '$Ephemeral'"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Error "Merge failed — aborted, rolled back to '$Ephemeral'"
+    } else {
+        Write-Error "Merge failed — aborted, still on '$Base'"
+    }
     exit 1
 }
 

@@ -215,6 +215,7 @@ function clear_hunk() {
 
 function emit_file() {
   file_buf = ""
+  adj = 0
 }
 ')
 

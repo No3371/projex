@@ -28,6 +28,11 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+if ($Base -eq $Ephemeral) {
+    Write-Error "Base and ephemeral branch cannot be the same ('$Base')"
+    exit 1
+}
+
 # Require clean working tree — reset --hard is used on squash failure and must not destroy other changes
 git -C $RepoRoot diff --quiet 2>$null
 $diffClean = $LASTEXITCODE -eq 0
@@ -50,7 +55,11 @@ git -C $RepoRoot merge --squash $Ephemeral
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot reset --hard HEAD 2>$null
     git -C $RepoRoot checkout $Ephemeral 2>$null
-    Write-Error "merge --squash failed — rolled back to '$Ephemeral'"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Error "merge --squash failed — rolled back to '$Ephemeral'"
+    } else {
+        Write-Error "merge --squash failed — reset to clean state on '$Base'"
+    }
     exit 1
 }
 
@@ -59,7 +68,11 @@ git -C $RepoRoot commit -m $CommitMsg
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot reset --hard HEAD 2>$null
     git -C $RepoRoot checkout $Ephemeral 2>$null
-    Write-Error "Commit failed — reset to clean state, rolled back to '$Ephemeral'"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Error "Commit failed — reset to clean state, rolled back to '$Ephemeral'"
+    } else {
+        Write-Error "Commit failed — reset to clean state on '$Base'"
+    }
     exit 1
 }
 

@@ -27,6 +27,11 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+if ($Base -eq $Ephemeral) {
+    Write-Error "Base and ephemeral branch cannot be the same ('$Base')"
+    exit 1
+}
+
 # Checkout base
 git -C $RepoRoot checkout $Base
 if ($LASTEXITCODE -ne 0) {
