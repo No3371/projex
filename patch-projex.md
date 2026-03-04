@@ -49,14 +49,12 @@ The directive can be:
 
 ### Qualifies as Patch
 - [ ] Change is well-understood — no exploration or design needed
-- [ ] Scope is bounded — 1-3 files, focused modifications
+- [ ] Scope is bounded and focused (file count is a signal, not a rule — a 4-file rename can be a patch, a 1-file architectural change shouldn't be)
 - [ ] No branching decisions — single clear approach
 - [ ] Verifiable immediately — can confirm correctness on the spot
-- [ ] Low risk — unlikely to break unrelated functionality
 
 ### Escalate to Plan-Execute If
 - Change requires exploring multiple approaches
-- More than ~3 files need modification
 - Architectural or design decisions are involved
 - Change has wide blast radius or cross-cutting concerns
 - Multiple stakeholders need to review the approach first
@@ -181,11 +179,11 @@ The patch document IS the walkthrough. It is a single, self-contained record.
 
 After the patch is written:
 
-1. **If patching a plan objective:**
-   - Update the plan: mark the patched objective as complete
-   - Add a reference to the patch document
-   - Note which objectives remain open
-   - If ALL objectives are now complete (via patches or execution), update plan status to `Complete`
+1. **If patching a plan:**
+   - Mark the patched work with `[PATCHED]` and link to the patch document
+   - Note what remains open, if anything
+   - Add to the plan's Related Projex section: `> Partial Execution: [description] completed via [patch doc link]`
+   - If the patch leaves nothing more to do within the plan, update plan status to `Complete` and move the plan to `projex/closed/`
 
 2. **If related to a proposal:**
    - Add a reference to the patch in the proposal's related projex
@@ -206,49 +204,13 @@ After the patch is written:
 
 ---
 
-## HANDLING PARTIAL PLAN EXECUTION
-
-When using patch to execute specific objectives from an existing plan:
-
-### Referencing the Plan
-
-The patch document MUST clearly state:
-- Which plan it derives from
-- Which specific objective(s) / step(s) were executed
-- Which objectives remain pending
-
-### Updating the Plan
-
-In the source plan document:
-- Mark completed objectives/steps with `[PATCHED]` and link to patch doc
-- Do NOT change plan status unless all objectives are resolved
-- Add to the plan's Related Projex section:
-
-```markdown
-> **Partial Execution:** Objective N completed via [patch doc link]
-```
-
-### Multiple Patches Against One Plan
-
-If a plan is being completed piecemeal via patches:
-- Each patch is an independent document in `projex/closed/`
-- The plan tracks which objectives are patched vs pending
-- When the last objective is patched, update plan status to `Complete` and move it to `projex/closed/`
-
----
-
 ## PATCH vs OTHER WORKFLOWS — DECISION AID
 
 ```
-Is the task small, obvious, and bounded?
-├── No → /plan-projex (needs planning)
-└── Yes → Is it part of an existing plan?
-    ├── Yes → Is it a single, isolated objective?
-    │   ├── Yes → /patch-projex @plan objective N
-    │   └── No → /execute-projex @plan (execute the full plan)
-    └── No → Does it need exploration or evaluation first?
-        ├── Yes → /eval-projex or /explore-projex first, then decide
-        └── No → /patch-projex [directive]
+Small, obvious, and bounded? ─── No → /plan-projex
+ └─ Yes → Needs exploration first? ─── Yes → /eval-projex or /explore-projex
+     └─ No → Part of an existing plan needing full execution? ─── Yes → /execute-projex
+         └─ No → /patch-projex
 ```
 
 ---
