@@ -44,16 +44,17 @@ Before starting execution:
 
 ### 2. ENVIRONMENT CHECK
 
-Run all three git checks in a **single parallel call** — they are independent reads with no dependencies:
+**Resolve the target repo from the plan file's path** (see SKILL.md § Repo Resolution), then verify:
 
 ```bash
-git rev-parse --show-toplevel && git branch --show-current && git status
+git branch --show-current
+```
+```bash
+git status
 ```
 
-Then verify:
-- [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `projex/` folder. In nested repo setups (submodules, subtrees, repos-inside-repos), git silently operates on whichever `.git` is closest to the cwd — always verify before creating branches or committing.
-- [ ] **Correct base branch** — `branch --show-current` shows the expected branch (typically `main` or a feature branch)
-- [ ] **Clean working state** — `git status` shows no uncommitted changes
+- [ ] **Correct base branch** — shows the expected branch (typically `main` or a feature branch)
+- [ ] **Clean working state** — no uncommitted changes
 - [ ] Required tools/dependencies available
 - [ ] Access to all files listed in plan
 

@@ -45,6 +45,8 @@ When to review projex documents:
 
 ### 1. IDENTIFY REVIEW TARGET
 
+**Resolve the target repo** — if a projex file is referenced, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
+
 Determine what to review:
 
 **Specific document:**

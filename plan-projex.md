@@ -31,6 +31,8 @@ Plans are the bridge between ideas and execution. They capture WHAT needs to be 
 
 ### 1. SOURCE ANALYSIS
 
+**Resolve the target repo** — if a projex file is referenced, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
+
 Determine the source of the plan:
 
 **From Proposal:**

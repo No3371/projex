@@ -104,9 +104,11 @@ The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and
 
 **Prerequisite:** Plan must be committed to base branch before execution — ensures plans survive abandoned executions and are reviewable independently.
 
-### Multi-Repo Awareness
+### Repo Resolution
 
-Before any git operation, confirm which repo you are in (`git rev-parse --show-toplevel`). Match projex to the repo whose root contains them. Scope git commands accordingly — wrong-repo operations are silently destructive.
+When a projex file is referenced (`@<file>`), **derive the target repo from that file's path** — `cd` to its directory and `git rev-parse --show-toplevel` from there. This is the first action, before any other git commands or file reads. The projex file's location is the source of truth; never rely on the session's initial cwd.
+
+When no file reference is given, infer the target repo from context (cwd, recent mentions, project structure).
 
 ### Utility Scripts
 

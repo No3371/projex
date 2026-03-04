@@ -39,7 +39,9 @@ Before closing:
 
 ## WORKFLOW STEPS
 
-### 0. RESOLVE BASE BRANCH
+### 0. RESOLVE REPO AND BASE BRANCH
+
+**Resolve the target repo from the execution log's path** (see SKILL.md § Repo Resolution).
 
 Read the `Base Branch:` field from the execution log (`{yyyymmdd}-{plan-name}-log.md`). All git commands below use `{base-branch}` — **never assume `main`**.
 

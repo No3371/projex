@@ -70,11 +70,12 @@ The directive can be:
 
 Before acting:
 
-1. **Understand the directive** — What exactly needs to happen?
-2. **Locate relevant files** — Read them, understand current state
-3. **Check for related projex** — Is this part of an existing plan or proposal?
-4. **Verify scope** — Run the scope guard checklist above
-5. **Identify what else needs updating** — Related docs, specs, projex files
+1. **Resolve the target repo** — If the directive references a projex file, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
+2. **Understand the directive** — What exactly needs to happen?
+3. **Locate relevant files** — Read them, understand current state
+4. **Check for related projex** — Is this part of an existing plan or proposal?
+5. **Verify scope** — Run the scope guard checklist above
+6. **Identify what else needs updating** — Related docs, specs, projex files
 
 If the directive references an existing plan:
 - Read the plan
