@@ -12,6 +12,8 @@ Plans are the bridge between ideas and execution. They capture WHAT needs to be 
 - Closed-ended with clear acceptance/success criteria
 - Granular scope with clear boundaries
 
+**Guiding principle:** A finished plan should be followable by any LLM or developer without asking clarifying questions. If a reader must guess intent, the plan isn't ready.
+
 ---
 
 ## INVOCATION
@@ -47,9 +49,9 @@ Determine the source of the plan:
 3. Identify scope and boundaries
 4. Check for related existing projex
 
-### 2. SCOPE DEFINITION
+### 2. PRELIMINARY SCOPE
 
-Before writing the plan:
+Define initial boundaries — these may shift after research in Step 3:
 
 ```
 Answer these questions:
@@ -77,11 +79,17 @@ If scope is too large or crosses boundaries, split into multiple plans with clea
 
 Gather comprehensive context:
 
-1. **Read relevant files** — Understand current implementation
-2. **Trace dependencies** — Map what depends on what
-3. **Check patterns** — Identify existing conventions to follow
-4. **Find edge cases** — Consider error handling, boundaries
-5. **Review history** — Check related walkthroughs for lessons learned
+Answer these questions by reading the actual code:
+
+1. **Current behavior** — What does the code do today? Trace the actual call path, not what you assume it does
+2. **Dependencies** — What calls into this code? What does it call? What breaks if it changes?
+3. **Conventions** — What patterns does the surrounding code follow? (naming, error handling, structure)
+4. **Edge cases** — What inputs, states, or timing conditions could cause problems?
+5. **Prior art** — Have related changes been attempted before? Check walkthroughs and git history for lessons learned
+
+**Refine scope.** Revisit the boundaries from Step 2 — research often reveals the scope was too broad, too narrow, or aimed at the wrong layer. Adjust before drafting.
+
+**Checkpoint (complex plans).** Before drafting, briefly present to the user: key findings, the intended approach and why, any scope adjustments. This catches misalignment before effort is sunk into a full draft. Skip when the path is obvious.
 
 ### 4. DRAFT THE PLAN
 
@@ -133,10 +141,13 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 [Description of relevant current implementation]
 
 ### Key Files
-| File | Purpose | Changes Needed |
-|------|---------|----------------|
-| `path/to/file1.ext` | [What it does] | [What changes] |
-| `path/to/file2.ext` | [What it does] | [What changes] |
+
+> Quick reference — detailed changes are in Implementation steps below.
+
+| File | Role | Change Summary |
+|------|------|----------------|
+| `path/to/file1.ext` | [What it does in the context of this plan] | [One-line summary] |
+| `path/to/file2.ext` | [What it does in the context of this plan] | [One-line summary] |
 
 ### Dependencies
 - **Requires:** [What must exist/happen before this]
@@ -145,6 +156,15 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 ### Constraints
 - [Technical constraint 1]
 - [Business rule constraint 2]
+
+### Assumptions
+- [What the plan takes for granted — verify these early during execution]
+- [Assumption 2]
+
+### Impact Analysis
+- **Direct:** [Files/components being changed]
+- **Adjacent:** [What interacts with changed code — could be affected indirectly]
+- **Downstream:** [Consumers, dependents, or integrations that may need updates]
 
 ---
 
@@ -156,6 +176,8 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 ### Step 1: [Step Title]
 
 **Objective:** [What this step accomplishes]
+**Confidence:** [High | Medium | Low — how certain is this approach?]
+**Depends on:** [Previous step(s), or "None"]
 
 **Files:**
 - `path/to/file.ext`
@@ -170,9 +192,11 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 [new code or state]
 ```
 
-**Rationale:** [Why this change is made this way]
+**Rationale:** [Why this change, and why this way over alternatives]
 
 **Verification:** [How to verify this step succeeded]
+
+**If this fails:** [What to revert or how to recover — specific to this step]
 
 ---
 
@@ -189,6 +213,8 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 ---
 
 ## Verification Plan
+
+> Per-step verification (above) confirms each change in isolation. This section confirms the changes work together end-to-end.
 
 ### Automated Checks
 - [ ] [Test/lint/build check 1]
@@ -207,18 +233,14 @@ Create the file **in the target projex folder** identified in step 2: `<projex-f
 
 ## Rollback Plan
 
-If implementation fails or causes issues:
+Per-step rollback is noted in each implementation step above. If the overall implementation must be abandoned:
 
-1. [Rollback step 1]
-2. [Rollback step 2]
+1. [Full rollback step 1]
+2. [Full rollback step 2]
 
 ---
 
 ## Notes
-
-### Assumptions
-- [Assumption 1]
-- [Assumption 2]
 
 ### Risks
 - [Risk 1]: [Mitigation]
@@ -248,10 +270,15 @@ If implementation fails or causes issues:
    - Are there side effects, validations, or intermediate transformations the plan doesn't account for?
    - Is the plan modifying the right layer? (e.g., changing a caller when the callee is the actual problem)
 
+4. **Overengineering** — Is there a simpler way?
+   - Could fewer steps achieve the same result?
+   - Is the plan introducing abstractions, helpers, or indirection that aren't needed yet?
+   - Would a more direct approach work just as well, even if it's less "elegant"?
+
 **After this pass:**
 - Fix anything caught — update steps, file references, before/after code, assumptions
 - If the pass reveals the plan's approach is fundamentally wrong, stop and discuss with the user rather than patching a broken plan
-- Document surviving assumptions in the Notes → Assumptions section — making them visible so execution can verify them early
+- Document surviving assumptions in the Context → Assumptions section — making them visible so execution can verify them early
 
 ### 6. VALIDATION
 
