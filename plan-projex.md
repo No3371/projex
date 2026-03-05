@@ -4,15 +4,12 @@ description: This workflow guides the creation of **Plan** projex documents — 
 
 ## PURPOSE
 
-Plans are the bridge between ideas and execution. They capture WHAT needs to be done and HOW to implement it, with enough detail that any LLM can follow and execute them.
+Plans capture WHAT needs doing and HOW — specific enough that any LLM or developer can follow without clarifying questions.
 
-**Key characteristics:**
 - Specific problem/gap/need with clear objectives
 - Exact changes to exact files
-- Closed-ended with clear acceptance/success criteria
+- Closed-ended with measurable success criteria
 - Granular scope with clear boundaries
-
-**Guiding principle:** A finished plan should be followable by any LLM or developer without asking clarifying questions. If a reader must guess intent, the plan isn't ready.
 
 ---
 
@@ -35,19 +32,9 @@ Plans are the bridge between ideas and execution. They capture WHAT needs to be 
 
 **Resolve the target repo** — if a projex file is referenced, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
 
-Determine the source of the plan:
+**From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
 
-**From Proposal:**
-1. Read the referenced proposal document
-2. Verify status is `Accepted`
-3. Extract recommended approach and scope
-4. Note any constraints or decisions made
-
-**From Direct Request:**
-1. Clarify the objective with the user
-2. Research current state and context
-3. Identify scope and boundaries
-4. Check for related existing projex
+**From Direct Request:** Clarify objective with user → research current state → identify scope → check for related projex.
 
 ### 2. PRELIMINARY SCOPE
 
@@ -64,20 +51,15 @@ Answer these questions:
 - Does this objective touch files governed by a different projex folder or repo?
 ```
 
-> **Boundary Rule:** A plan must target exactly ONE projex scope. If the objective involves changes across multiple projex folders or repositories, split it into separate plans — one per scope. Use the `Dependencies` section to link them. See [Splitting Plans](#splitting-plans) for details.
+> **Boundary Rule:** A plan targets exactly ONE projex scope. Changes across multiple scopes or repos → split into separate plans linked via `Dependencies`. See [Splitting Plans](#splitting-plans).
 
 **Scope validation:**
-- [ ] Can be completed in a focused session
-- [ ] All target files belong to a single projex folder's scope
-- [ ] Does not modify files governed by a different projex folder or repo
+- [ ] Completable in a focused session
+- [ ] All target files belong to a single projex scope
 - [ ] Has clear start and end points
 - [ ] Success is objectively measurable
 
-If scope is too large or crosses boundaries, split into multiple plans with clear dependencies.
-
 ### 3. CONTEXT RESEARCH
-
-Gather comprehensive context:
 
 Answer these questions by reading the actual code:
 
@@ -93,9 +75,7 @@ Answer these questions by reading the actual code:
 
 ### 4. DRAFT THE PLAN
 
-Create the file **in the target projex folder** identified in step 2: `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md`
-
-> **The file must be created directly in the projex folder.** Do not place it in agent artifacts directories, temp paths, or any location outside the repo's `projex/` folders. The projex folder was determined in step 2 — use it.
+Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `projex/` folders.
 
 **Template Structure:**
 
@@ -251,9 +231,9 @@ Per-step rollback is noted in each implementation step above. If the overall imp
 
 ### 5. SECOND PASS — CHALLENGE THE PLAN
 
-**Mandatory re-examination.** By the time the draft is complete, the agent understands the problem better than when it started step 1. Early steps were written with incomplete understanding — this pass catches what they got wrong.
+**Mandatory re-examination.** Early steps were written with incomplete understanding — this pass catches what they got wrong.
 
-**Re-read the relevant code.** Do not rely on memory from Step 3. Open the actual files referenced in the plan and verify:
+**Re-read the relevant code** — do not rely on memory from Step 3:
 
 1. **Assumptions** — What does the plan take for granted?
    - Does the "Current State" section match what the files actually show right now?
@@ -284,24 +264,19 @@ Per-step rollback is noted in each implementation step above. If the overall imp
 
 Before marking Ready:
 
-**Completeness Check:**
-- [ ] Every step has specific file paths
-- [ ] Code changes show before/after or exact additions
+**Completeness:**
+- [ ] Every step has specific file paths and before/after changes
 - [ ] Each step has verification method
 - [ ] Success criteria are measurable and testable
-- [ ] No open questions remain unresolved
+- [ ] No open questions remain
 
-**Executability Check:**
-- [ ] Any LLM could follow this without asking questions
-- [ ] Any developer could implement without clarification
-- [ ] Dependencies are clearly stated
-- [ ] Order of operations is unambiguous
+**Executability:**
+- [ ] Any LLM or developer could follow without clarifying questions
+- [ ] Dependencies and order of operations are unambiguous
 
-**Scope Check:**
+**Scope:**
 - [ ] Plan stays within declared scope
-- [ ] No scope creep into out-of-scope areas
-- [ ] All files in Key Files table belong to ONE projex scope — if not, split the plan
-- [ ] Downstream/cascading changes are deferred to their own plans in their own scope
+- [ ] All files belong to ONE projex scope — if not, split
 - [ ] Appropriately granular (not too broad, not too narrow)
 
 ### 7. FINALIZE
@@ -359,21 +334,13 @@ Split is **recommended** when:
 ### How to split
 
 **By projex boundary (mandatory):**
-Each `projex/` folder represents an independent scope. A plan that would modify files across two scopes becomes two plans, each filed in its own scope's `projex/` folder.
 
-> **Example — spec revision with downstream implementation:**
-> A language spec change requires updating the C# runtime that implements it.
->
-> - **Wrong:** One plan covering both the spec markdown files and the C# source files.
+> **Example — spec + implementation:**
+> A language spec change requires updating the C# runtime.
+> - **Wrong:** One plan covering both spec markdown and C# source.
 > - **Right:** Two plans:
->   1. `docs/projex/20260208-macro-syntax-revision-plan.md` — Changes to the spec only. Lists "Blocks: downstream implementation plan" in Dependencies.
->   2. `src/projex/20260208-macro-syntax-impl-plan.md` — Changes to C# source only. Lists "Requires: spec revision plan" in Dependencies.
-
-> **Example — multi-repo workspace:**
-> An API schema change in repo-a requires client updates in repo-b.
->
-> - **Wrong:** One plan referencing files from both repos.
-> - **Right:** Two plans, one per repo. The repo-a plan notes it blocks repo-b. The repo-b plan notes it requires repo-a.
+>   1. `docs/projex/20260208-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
+>   2. `src/projex/20260208-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
 
 **By slice (recommended when scope is large within one boundary):**
 1. **Vertical slices** — End-to-end for one feature
@@ -384,10 +351,9 @@ Each `projex/` folder represents an independent scope. A plan that would modify 
 
 Each split plan must:
 - Be independently executable
-- Target exactly one projex scope (one `projex/` folder, one repo)
-- Have clear relationship to sibling plans via `Dependencies` (Requires / Blocks)
+- Target exactly one projex scope
+- Link to sibling plans via `Dependencies` (Requires / Blocks)
 - Not create circular dependencies
-- Be filed in the correct `projex/` folder for its scope
 
 ---
 
@@ -404,20 +370,15 @@ After execution and walkthrough creation, both Plan and Walkthrough move to `pro
 
 ## NEXT STEPS
 
-**The plan workflow ends here.** Present the plan to the user. Do not suggest or initiate execution — the user decides what happens next.
+**The plan workflow ends here.** Present the plan — do not suggest or initiate execution.
 
-The user may:
-- **Execute** — `/execute-projex.md @{plan-file}`
-- **Review or Red Team first** — `/review-projex.md` or `/redteam-projex.md` against the plan
-- **Revise** — request changes to the plan before execution
-- **Shelve** — leave the plan for later
-- **Reject** — abandon the plan entirely
+- `/execute-projex.md @{plan-file}` — execute
+- `/review-projex.md` or `/redteam-projex.md` — challenge first
+- Revise, shelve, or reject
 
 ---
 
 ## NOTES
 
-- Plans should be specific enough to execute without clarification
-- Use relative paths when referencing repository files
 - When in doubt, be more detailed rather than less
 - If execution reveals the plan was wrong, update the plan for future reference
