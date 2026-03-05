@@ -144,6 +144,19 @@ Any argument starting with `--` is passed to `git commit` as an extra flag. A fl
 
 Arguments are src/dst pairs. On any failure, all completed moves are rolled back in reverse order.
 
+#### Reading Files
+
+`read_file` — line-numbered file reader util, ONLY use this when you don't have any tool to read file besides raw shell commands.
+
+```
+{projex-scripts}/read_file.ps1 -Path <file> [-From <n>] [-To <n>] [-Pattern <p1>,<p2>,...] [-Context <n>]
+```
+
+- **No flags**: dumps entire file with zero-padded line numbers (`01  using System;`)
+- **`-From` / `-To`**: restricts output (and search) to a line range. Only reads up to `-To` lines from disk — safe for large files
+- **`-Pattern`**: searches for regex patterns within the range (or whole file). Outputs matching lines plus `-Context` surrounding lines (default 3). Non-contiguous groups separated by `---`
+- **Combined**: `-From 50 -To 200 -Pattern "TODO","FIXME" -Context 5` searches lines 50–200, shows matches with 5 lines of context
+
 #### Branch Finalization
 
 - `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
