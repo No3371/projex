@@ -1,10 +1,14 @@
 # projex-abandon.ps1 — Checkout base and force-delete ephemeral branch without merging
-# Usage: projex-abandon.ps1 <repo-root> <base-branch> <ephemeral-branch>
+# Usage: projex-abandon.ps1 <repo-root> <base-branch> <ephemeral-branch> [-Worktree]
+#
+# -Worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+#            The main working directory must already be on the base branch.
 
 param(
     [Parameter(Mandatory)][string]$RepoRoot,
     [Parameter(Mandatory)][string]$Base,
-    [Parameter(Mandatory)][string]$Ephemeral
+    [Parameter(Mandatory)][string]$Ephemeral,
+    [switch]$Worktree
 )
 
 # Validate repo
@@ -32,11 +36,21 @@ if ($Base -eq $Ephemeral) {
     exit 1
 }
 
-# Checkout base
-git -C $RepoRoot checkout $Base
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Could not checkout '$Base' — still on '$Ephemeral', nothing lost"
-    exit 1
+if ($Worktree) {
+    # Worktree mode: remove worktree (already on base branch)
+    $WtSuffix = ($Ephemeral -split '/')[-1]
+    $WtPath = Join-Path $RepoRoot ".projexwt" $WtSuffix
+    git -C $RepoRoot worktree remove $WtPath --force
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Could not remove worktree '$WtPath' — remove manually: git worktree remove $WtPath --force"
+    }
+} else {
+    # Checkout mode: switch to base
+    git -C $RepoRoot checkout $Base
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Could not checkout '$Base' — still on '$Ephemeral', nothing lost"
+        exit 1
+    }
 }
 
 # Force-delete ephemeral (non-fatal)

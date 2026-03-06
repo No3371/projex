@@ -1,18 +1,32 @@
 #!/usr/bin/env bash
 # projex-merge-close.sh — Merge with full history into base, then delete ephemeral
-# Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> "merge message"
+# Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> "merge message" [--worktree]
+#
+# --worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+#             The main working directory must already be on the base branch.
 
 set -euo pipefail
 
-if [ $# -ne 4 ]; then
-  echo "Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> \"merge message\"" >&2
+# Parse --worktree flag
+WORKTREE_MODE=false
+POSITIONAL=()
+for arg in "$@"; do
+  if [ "$arg" = "--worktree" ]; then
+    WORKTREE_MODE=true
+  else
+    POSITIONAL+=("$arg")
+  fi
+done
+
+if [ ${#POSITIONAL[@]} -ne 4 ]; then
+  echo "Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> \"merge message\" [--worktree]" >&2
   exit 1
 fi
 
-REPO_ROOT="$1"
-BASE="$2"
-EPHEMERAL="$3"
-MERGE_MSG="$4"
+REPO_ROOT="${POSITIONAL[0]}"
+BASE="${POSITIONAL[1]}"
+EPHEMERAL="${POSITIONAL[2]}"
+MERGE_MSG="${POSITIONAL[3]}"
 
 # Validate repo
 if ! git -C "$REPO_ROOT" rev-parse --git-dir > /dev/null 2>&1; then
@@ -36,22 +50,32 @@ if [ "$BASE" = "$EPHEMERAL" ]; then
   exit 1
 fi
 
-# Require clean working tree — merge with dirty tree contaminates the merge commit
-if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
-  echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
-  exit 1
-fi
+if [ "$WORKTREE_MODE" = true ]; then
+  # Worktree mode: remove worktree, then merge (already on base branch)
+  WT_PATH="$REPO_ROOT/.projexwt/${EPHEMERAL##*/}"
+  if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
+    echo "Error: could not remove worktree '$WT_PATH' — branch '$EPHEMERAL' still exists for manual recovery" >&2
+    exit 1
+  fi
+else
+  # Checkout mode: require clean tree, switch to base
+  if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
+    echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
+    exit 1
+  fi
 
-# Checkout base
-if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
-  echo "Error: could not checkout '$BASE' — still on ephemeral, no state changed" >&2
-  exit 1
+  if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
+    echo "Error: could not checkout '$BASE' — still on ephemeral, no state changed" >&2
+    exit 1
+  fi
 fi
 
 # Merge with full history
 if ! git -C "$REPO_ROOT" merge "$EPHEMERAL" --no-ff -m "$MERGE_MSG" 2>&1; then
   git -C "$REPO_ROOT" merge --abort 2>/dev/null || true
-  if git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
+  if [ "$WORKTREE_MODE" = true ]; then
+    echo "Error: merge failed — aborted on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add .projexwt/${EPHEMERAL##*/} $EPHEMERAL" >&2
+  elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
     echo "Error: merge failed — aborted, rolled back to '$EPHEMERAL'" >&2
   else
     echo "Error: merge failed — aborted, still on '$BASE'" >&2

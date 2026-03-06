@@ -1,17 +1,31 @@
 #!/usr/bin/env bash
 # projex-abandon.sh — Checkout base and force-delete ephemeral branch without merging
-# Usage: projex-abandon.sh <repo-root> <base-branch> <ephemeral-branch>
+# Usage: projex-abandon.sh <repo-root> <base-branch> <ephemeral-branch> [--worktree]
+#
+# --worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+#             The main working directory must already be on the base branch.
 
 set -euo pipefail
 
-if [ $# -ne 3 ]; then
-  echo "Usage: projex-abandon.sh <repo-root> <base-branch> <ephemeral-branch>" >&2
+# Parse --worktree flag
+WORKTREE_MODE=false
+POSITIONAL=()
+for arg in "$@"; do
+  if [ "$arg" = "--worktree" ]; then
+    WORKTREE_MODE=true
+  else
+    POSITIONAL+=("$arg")
+  fi
+done
+
+if [ ${#POSITIONAL[@]} -ne 3 ]; then
+  echo "Usage: projex-abandon.sh <repo-root> <base-branch> <ephemeral-branch> [--worktree]" >&2
   exit 1
 fi
 
-REPO_ROOT="$1"
-BASE="$2"
-EPHEMERAL="$3"
+REPO_ROOT="${POSITIONAL[0]}"
+BASE="${POSITIONAL[1]}"
+EPHEMERAL="${POSITIONAL[2]}"
 
 # Validate repo
 if ! git -C "$REPO_ROOT" rev-parse --git-dir > /dev/null 2>&1; then
@@ -35,10 +49,18 @@ if [ "$BASE" = "$EPHEMERAL" ]; then
   exit 1
 fi
 
-# Checkout base
-if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
-  echo "Error: could not checkout '$BASE' — still on '$EPHEMERAL', nothing lost" >&2
-  exit 1
+if [ "$WORKTREE_MODE" = true ]; then
+  # Worktree mode: remove worktree (already on base branch)
+  WT_PATH="$REPO_ROOT/.projexwt/${EPHEMERAL##*/}"
+  if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" --force 2>&1; then
+    echo "Warning: could not remove worktree '$WT_PATH' — remove manually: git worktree remove $WT_PATH --force"
+  fi
+else
+  # Checkout mode: switch to base
+  if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
+    echo "Error: could not checkout '$BASE' — still on '$EPHEMERAL', nothing lost" >&2
+    exit 1
+  fi
 fi
 
 # Force-delete ephemeral (non-fatal)
