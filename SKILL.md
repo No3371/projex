@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -14,7 +14,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Interview** — Interactive Q&A in rounds (3-5 questions each), asked one-by-one. Full transcript logging. READ-ONLY: only the interview document is written. WORKFLOW -> @./interview-projex.md
 - **Walkthrough** — Post-execution record authored after every Plan execution. Detailed changes (file-level), criteria checklist with proof. WORKFLOW -> @./close-projex.md
 - **Log** — Standalone change record: observes staged changes or commits, documents what changed and why. Born closed. No plan or branch lifecycle required. WORKFLOW -> @./log-projex.md
-- **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Born closed. WORKFLOW -> @./memo-projex.md
+- **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Active until consumed. WORKFLOW -> @./memo-projex.md
 - **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
 - **Simulation** — Disposable execution: makes changes, observes outcomes, rolls back everything. Only the report survives. No irreversible actions. Can trial-run plans or "what if" scenarios. WORKFLOW -> @./simulate-projex.md
 - **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md

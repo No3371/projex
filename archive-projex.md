@@ -127,8 +127,10 @@ git rm projex/closed/{filename2}.md
 Commit the deletions:
 
 ```bash
-git commit -m "projex(archive): remove archived files from {scope}"
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" projex/closed/{filename1}.md projex/closed/{filename2}.md
 ```
+
+> **Note:** `projex-commit` stages the listed files before committing. Since the files were already `git rm`'d (removed from working tree and staged for deletion), `projex-commit`'s `git add` on them is a no-op — the deletions are already staged. The script provides atomic rollback if the commit fails.
 
 Verify the commit. The folder should now contain only the archive index file.
 

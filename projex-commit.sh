@@ -45,17 +45,32 @@ if ! git -C "$REPO_ROOT" rev-parse --git-dir > /dev/null 2>&1; then
   exit 1
 fi
 
-# Stage files
-if ! git -C "$REPO_ROOT" add "${FILES[@]}"; then
-  git -C "$REPO_ROOT" restore --staged "${FILES[@]}" 2>/dev/null || true
-  echo "Error: git add failed — partial staging rolled back" >&2
+# Validate all file paths are known to git (tracked or untracked) and have changes
+BAD=()
+for f in "${FILES[@]}"; do
+  if [ -z "$(git -C "$REPO_ROOT" status --porcelain -- "$f")" ]; then
+    BAD+=("$f")
+  fi
+done
+if [ ${#BAD[@]} -gt 0 ]; then
+  echo "Error: files not found or unchanged: ${BAD[*]}" >&2
   exit 1
 fi
 
-# Commit — rollback staging on failure
+# Snapshot index for rollback
+INDEX_TREE=$(git -C "$REPO_ROOT" write-tree)
+
+# Stage files
+if ! git -C "$REPO_ROOT" add "${FILES[@]}"; then
+  git -C "$REPO_ROOT" read-tree "$INDEX_TREE" 2>/dev/null || true
+  echo "Error: git add failed — index rolled back" >&2
+  exit 1
+fi
+
+# Commit — rollback index on failure
 if ! COMMIT_OUT=$(git -C "$REPO_ROOT" commit "${EXTRA_FLAGS[@]}" -m "$COMMIT_MSG" 2>&1); then
-  git -C "$REPO_ROOT" restore --staged "${FILES[@]}" 2>/dev/null || true
-  echo "Error: git commit failed — staging rolled back" >&2
+  git -C "$REPO_ROOT" read-tree "$INDEX_TREE" 2>/dev/null || true
+  echo "Error: git commit failed — index rolled back" >&2
   echo "$COMMIT_OUT" >&2
   exit 1
 fi

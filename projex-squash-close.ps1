@@ -85,16 +85,11 @@ if ($LASTEXITCODE -ne 0) {
 # Commit squash
 git -C $RepoRoot commit -m $CommitMsg
 if ($LASTEXITCODE -ne 0) {
-    git -C $RepoRoot reset --hard HEAD 2>$null
+    git -C $RepoRoot reset HEAD 2>$null
     if ($Worktree) {
-        Write-Error "Commit failed — reset to clean state on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add .projexwt/$WtSuffix $Ephemeral"
+        Write-Error "Commit failed — squashed changes unstaged but preserved in working tree on '$Base'. Retry: git commit -m '...'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add .projexwt/$WtSuffix $Ephemeral"
     } else {
-        git -C $RepoRoot checkout $Ephemeral 2>$null
-        if ($LASTEXITCODE -eq 0) {
-            Write-Error "Commit failed — reset to clean state, rolled back to '$Ephemeral'"
-        } else {
-            Write-Error "Commit failed — reset to clean state on '$Base'"
-        }
+        Write-Error "Commit failed — squashed changes unstaged but preserved in working tree on '$Base'. Retry: git commit -m '...'. Or rollback: git checkout -- ."
     }
     exit 1
 }

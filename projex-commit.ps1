@@ -42,19 +42,39 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Stage files
-git -C $RepoRoot add @Files
-if ($LASTEXITCODE -ne 0) {
-    git -C $RepoRoot restore --staged @Files 2>$null
-    Write-Error "git add failed — partial staging rolled back"
+# Validate all file paths are known to git (tracked or untracked) and have changes
+$bad = @()
+foreach ($f in $Files) {
+    $st = git -C $RepoRoot status --porcelain -- $f
+    if (-not $st) {
+        $bad += $f
+    }
+}
+if ($bad.Count -gt 0) {
+    Write-Error "Files not found or unchanged: $($bad -join ', ')"
     exit 1
 }
 
-# Commit — rollback staging on failure
+# Snapshot index for rollback
+$indexTree = git -C $RepoRoot write-tree
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "git write-tree failed — cannot snapshot index"
+    exit 1
+}
+
+# Stage files
+git -C $RepoRoot add @Files
+if ($LASTEXITCODE -ne 0) {
+    git -C $RepoRoot read-tree $indexTree 2>$null
+    Write-Error "git add failed — index rolled back"
+    exit 1
+}
+
+# Commit — rollback index on failure
 $commitOutput = git -C $RepoRoot commit @ExtraFlags -m $CommitMsg 2>&1
 if ($LASTEXITCODE -ne 0) {
-    git -C $RepoRoot restore --staged @Files 2>$null
-    Write-Error "git commit failed — staging rolled back`n$commitOutput"
+    git -C $RepoRoot read-tree $indexTree 2>$null
+    Write-Error "git commit failed — index rolled back`n$commitOutput"
     exit 1
 }
 

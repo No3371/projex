@@ -35,7 +35,7 @@ if ($LASTEXITCODE -ne 0) {
     } else {
         Set-Content -Path $GitignorePath -Value ".projexwt/"
     }
-    git -C $RepoRoot add .gitignore
+    git -C $RepoRoot add -- .gitignore
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Error: could not stage .gitignore"
         exit 1
