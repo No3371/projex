@@ -383,13 +383,21 @@ If this plan were to be executed again:
 
 ### 7. FINALIZE GIT BRANCH
 
-The ephemeral branch must be finalized. Present options to user:
+The ephemeral branch must be finalized. Present options to user.
+
+**Worktree mode:** If execution used a worktree (`.projexwt/`), pass `--worktree` to the finalization script. The script removes the worktree before merging/abandoning. The main working directory is already on the base branch — no checkout needed.
 
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
 
+**Checkout mode:**
 ```bash
 {projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]"
+```
+
+**Worktree mode:**
+```bash
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
 ```
 
 **Best for:** Clean history, routine executions
@@ -397,8 +405,14 @@ Combines all execution commits into a single clean commit on base branch.
 #### Option B: Merge with History
 Preserves full commit history from execution.
 
+**Checkout mode:**
 ```bash
 {projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}"
+```
+
+**Worktree mode:**
+```bash
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}" --worktree
 ```
 
 **Best for:** Complex executions where step-by-step history is valuable
@@ -433,11 +447,19 @@ Verify: branch deleted.
 
 **Best for:** Linear history preference, collaborative workflows
 
+> **Note:** Option C uses raw git commands and does not support `--worktree`. If worktree mode is active, use Option A or B instead, or manually remove the worktree first with `git worktree remove .projexwt/<name>`.
+
 #### Option D: Abandon (Failed Execution)
 Discards the branch without merging.
 
+**Checkout mode:**
 ```bash
 {projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name}
+```
+
+**Worktree mode:**
+```bash
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} --worktree
 ```
 
 **Use when:** Execution failed, changes are not wanted

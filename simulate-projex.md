@@ -80,17 +80,22 @@ Frame the simulation as:
 ```
 
 ### 2. CREATE EPHEMERAL BRANCH
- 
-Before creating the simulation branch, note your current branch:
+
+Note your current branch:
 ```bash
 git branch --show-current  # Remember as {base-branch}
 ```
 
-Then create the simulation branch:
+**Worktree mode (default for simulations):**
+```bash
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/sim/{yyyymmdd}-{simulation-name}
+```
+All subsequent commands use `.projexwt/{yyyymmdd}-{simulation-name}` as the working directory. The main directory stays on the base branch.
+
+**Checkout mode (fallback — when worktree is unavailable):**
 ```bash
 git checkout -b projex/sim/{yyyymmdd}-{simulation-name}
 ```
-
 Verify you are on the new branch before proceeding.
 
 ### 3. EXECUTE AND EXPLORE
@@ -136,6 +141,12 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 
 **Then rollback:**
 
+**Worktree mode:**
+```bash
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/sim/{yyyymmdd}-{simulation-name} --worktree
+```
+
+**Checkout mode:**
 ```bash
 {projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/sim/{yyyymmdd}-{simulation-name}
 ```

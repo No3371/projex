@@ -157,13 +157,25 @@ Arguments are src/dst pairs. On any failure, all completed moves are rolled back
 - **`-Pattern`**: searches for regex patterns within the range (or whole file). Outputs matching lines plus `-Context` surrounding lines (default 3). Non-contiguous groups separated by `---`
 - **Combined**: `-From 50 -To 200 -Pattern "TODO","FIXME" -Context 5` searches lines 50–200, shows matches with 5 lines of context
 
+#### Worktree Creation
+
+`projex-worktree` — creates a worktree in `.projexwt/` with gitignore enforcement as a hard gate.
+
+```
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> <branch-name> [<base-ref>]
+```
+
+Before creating the worktree, the script verifies `.projexwt/` is in `.gitignore`. If not, it adds the entry and commits it. The worktree is created at `.projexwt/<branch-suffix>/` where `<branch-suffix>` is the last path segment of `<branch-name>`.
+
 #### Branch Finalization
 
-- `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
-- `projex-merge-close` — Merge with full history → base, delete ephemeral. Usage: `{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg"`
-- `projex-abandon` — Checkout base and force-delete ephemeral. Usage: `{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> <base> <ephemeral>`
+- `projex-squash-close` — Squash-merge ephemeral → base, delete ephemeral. Usage: `{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg" [--worktree]`
+- `projex-merge-close` — Merge with full history → base, delete ephemeral. Usage: `{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> <base> <ephemeral> "msg" [--worktree]`
+- `projex-abandon` — Checkout base and force-delete ephemeral. Usage: `{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> <base> <ephemeral> [--worktree]`
 
 Each validates inputs, reports failure with state context, and rolls back on error.
+
+When `--worktree` is passed, the script removes the worktree at `.projexwt/<branch-suffix>` instead of checking out base. The main working directory must already be on the base branch (which it is — worktree mode never leaves it).
 
 ### Git Operation Discipline
 
@@ -177,6 +189,27 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
 - **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
+
+### Worktree Mode (Optional)
+
+Worktree mode creates ephemeral branches as separate working directories in `.projexwt/` instead of switching the main working directory via `git checkout`. The main directory stays on the base branch throughout.
+
+**Opt-in:** Add `> **Worktree:** Yes` to the plan header. Simulations default to worktree mode.
+
+**How it works:**
+- `projex-worktree` creates the worktree with gitignore enforcement
+- All execution happens in the worktree directory (`.projexwt/<name>/`)
+- `projex-commit` works unchanged (`-C` accepts worktree paths)
+- Finalization scripts receive `--worktree` flag to remove the worktree instead of checking out base
+- No stashing needed — the base branch working directory is never touched
+
+**Benefits over checkout mode:**
+- No clean-state requirement at execution start
+- No working directory disruption (editors/IDEs unaffected)
+- Parallel executions possible (multiple worktrees)
+- Crash-safe — main directory always on base branch
+
+**`.projexwt/` is always gitignored.** The `projex-worktree` script enforces this as a hard gate before creating any worktree.
 
 ### Notes
 
