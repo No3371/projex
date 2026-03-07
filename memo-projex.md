@@ -117,13 +117,7 @@ If a related projex should reference this memo (e.g., a plan whose objectives we
 
 ## FOLDER PLACEMENT
 
-| State | Location |
-|-------|----------|
-| Active (default) | `projex/` — visible alongside other pending work |
-| Consumed | `projex/closed/` — when acted on, resolved, or dismissed |
-| Stale | `projex/archived/` or deleted |
-
-Memos stay active until something is done about them. A Navigation revision or Review pass is a natural time to sweep memos — consume them into plans, evaluations, or dismiss them.
+See SKILL.md § Organizing. Memos stay active until consumed into plans, evaluations, or dismissed. A Navigation revision or Review pass is a natural time to sweep them.
 
 ---
 

@@ -233,12 +233,7 @@ This workflow produces:
 - Updated relationships in evaluated projex documents
 - Clear findings and recommendations
 
-**Folder placement by lifecycle:**
-| Stage | Location |
-|-------|----------|
-| Active / Referenced | `projex/` |
-| Completed / Historical | `projex/closed/` |
-| Outdated / Superseded | `projex/archived/` |
+**Folder placement:** See SKILL.md § Organizing.
 
 ---
 

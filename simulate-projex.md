@@ -112,7 +112,7 @@ Make changes aggressively. The branch will be discarded — there is no cost to 
 
 ```bash
 # Commit convention within simulation (these commits will be discarded)
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "sim: [description of what was tried]" path/to/changed-file.ext
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): [description of what was tried]" path/to/changed-file.ext
 ```
 
 **Simulations are not linear.** You may try approach A then revert and try approach B, stack changes to see cumulative effects, or partially implement to find hidden obstacles. Use git within the branch to manage iterations:

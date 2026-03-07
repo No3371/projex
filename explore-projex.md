@@ -246,22 +246,16 @@ Once all targets (including revisit targets) are done:
 
 ## EXPLORATION VS EVALUATION VS PROPOSAL
 
-| Aspect | Exploration | Evaluation | Proposal |
-|--------|-------------|------------|----------|
-| **Anchored to** | Status quo | Any question/idea | A specific direction |
-| **Focus** | What exists and why | Open-ended analysis | "What if we go this way?" |
-| **Stance** | Neutral investigation | Adaptive — critical, comparative, or exploratory | Advocacy with honest trade-offs |
-| **Output** | Knowledge map and insights | Findings and recommendations | Approach options and impact analysis |
-| **When** | Need to understand current reality | Need to think deeply about something | Have a concrete idea to flesh out |
+See SKILL.md § Document Types for the full type comparison. In brief:
+
+- **Exploration** — Anchored to status quo. "What is?" Neutral investigation producing a knowledge map.
+- **Evaluation** — Anchored to any question/idea. Open-ended analysis producing findings and recommendations.
+- **Proposal** — Anchored to a specific direction. "What if we go this way?" with approaches and trade-offs.
 
 **Use Exploration when:**
 - You need to understand how something works
 - You're mapping existing territory to inform a decision
 - Knowledge gaps prevent progress
-
-**Use Evaluation when:**
-- You want to deeply analyze a question, idea, or solution
-- You're comparing alternatives or assessing viability
 - You need open-ended research without a predetermined direction
 
 **Use Proposal when:**

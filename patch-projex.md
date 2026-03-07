@@ -236,10 +236,7 @@ Patches commit directly to the current branch. This is intentional — the overh
 
 ### Git Operation Discipline
 
-Same discipline applies as all projex workflows:
-- Execute git commands one at a time
-- Wait for completion and verify success before proceeding
-- Never parallelize git operations
+See SKILL.md § Git Operation Discipline.
 
 ---
 

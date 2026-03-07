@@ -205,12 +205,7 @@ This workflow produces:
 - A proposal projex document at `projex/{yyyymmdd}-{name}-proposal.md`
 - Updated relationships in any related projex documents
 
-**Folder placement by status:**
-| Status | Location |
-|--------|----------|
-| Draft / Review | `projex/` |
-| Accepted | `projex/` (until Plan closed, then `projex/closed/`) |
-| Rejected | `projex/archived/` or deleted |
+**Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `projex/` until their Plan is closed.
 
 ---
 

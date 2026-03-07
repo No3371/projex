@@ -131,13 +131,13 @@ Not a pipeline. Building blocks that chain freely — any output can trigger any
   │   │    ┌──────────────────────────────────────────┐
   │   │    │ Proposal / Eval / Explore / Imagination  │
   │   │    └──────┬───────────────────────────────────┘
-  │   │           │                              ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
-  │   │          ┌┴──────────────────┐            Define · Navigate · Map
-  │   │          ▼                   ▼           │ Guide · Interview · Imagine │
-  │   │    ┌───────────┐      ┌────────────┐       auxiliary — can inform
-  │   │    │   Plan    │─────>│   Patch    │     │  or be informed by any    │
-  │   │    └─────┬─────┘      │ (act+doc)  │           workflow above
-  │   │          │            └────────────┘     └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+  │   │           │                              ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  │   │          ┌┴──────────────────┐            Define · Navigate · Map · Scan
+  │   │          ▼                   ▼           │ Guide · Interview · Imagine · Memo │
+  │   │    ┌───────────┐      ┌────────────┐       auxiliary — can inform or be
+  │   │    │   Plan    │─────>│   Patch    │     │  informed by any workflow above  │
+  │   │    └─────┬─────┘      │ (act+doc)  │
+  │   │          │            └────────────┘     └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
   │   │          │ ◄── review/redteam plan
   │   │          │     before execution
   │   │    ┌─────┴──────┐
@@ -165,7 +165,9 @@ Patterns, not rules.
 |---|---|---|
 | Navigate | Explore, Eval, Proposal, Plan | Roadmap identifies what to investigate or build next |
 | Interview | Eval, Proposal, Plan, Navigate | Gathered knowledge inspires analysis, action, or roadmap revision |
-| Definition | Plan, Explore, Review | Entity pinned down — plan implementation, explore deeper, or review the definition |
+| Scan | Plan, Red Team, Review, Eval | Inventory reveals issues, informs planning or validation |
+| Memo | Eval, Plan | Captured idea feeds into analysis or planning |
+| Definition | Proposal, Plan, Explore, Review | Entity pinned down — propose a direction, plan implementation, explore deeper, or review the definition |
 | Exploration | Proposal, Eval, Plan, Navigate, Definition | Investigation reveals a gap or opportunity, or an entity worth defining |
 | Proposal | Eval, Plan, Simulation | Direction chosen — analyze, plan, or trial-run it |
 | Eval | Proposal, Plan, Explore | Findings raise questions, reveal directions, or clarify scope |
@@ -199,7 +201,7 @@ Patterns, not rules.
 
 ## File Reference
 
-All workflow specs live in `.agent/skills/projex-framework/`.
+All workflow specs live in the repository root.
 
 | File | Role |
 |------|------|

@@ -87,6 +87,7 @@ Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target p
 > **Author:** [name or agent]
 > **Source:** [link to proposal or "Direct request"]
 > **Related Projex:** [links to related projex documents]
+> **Worktree:** Yes | No
 
 ---
 
@@ -294,12 +295,7 @@ Before marking Ready:
 
 > **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
 
-**Folder placement by status:**
-| Status | Location |
-|--------|----------|
-| Draft / Ready / In Progress / Blocked | `projex/` |
-| Complete (with Walkthrough) | `projex/closed/` |
-| Abandoned | `projex/abandoned/` or deleted |
+**Folder placement:** See SKILL.md § Organizing. Plans move to `projex/closed/` only after Walkthrough is authored.
 
 ---
 

@@ -211,10 +211,7 @@ Create file: `{yyyymmdd}-{imagination-name}-imagine.md`
 3. Link to related projex
 4. Place in appropriate folder
 
-**Folder placement:**
-- Active imaginations → `projex/`
-- Completed / spawned downstream work → `projex/closed/`
-- Superseded or outgrown → `projex/archived/`
+**Folder placement:** See SKILL.md § Organizing.
 
 ---
 
@@ -239,29 +236,18 @@ Some questions can't be answered by imagination alone. Flag them clearly rather 
 
 ## IMAGINATION VS EVALUATION VS PROPOSAL VS EXPLORATION
 
-| Aspect | Imagination | Evaluation | Proposal | Exploration |
-|--------|-------------|------------|----------|-------------|
-| **Anchored to** | A seed | Any question/idea | A specific direction | Status quo |
-| **Stance** | "What could this become?" | Open-ended analysis | "What if we go this way?" | "What is?" |
-| **Focus** | Generative expansion | Analytical assessment | Approaches and trade-offs | What exists and why |
-| **Output** | Rich vision with texture | Findings and recommendations | Options and impact analysis | Knowledge map and insights |
-| **When** | Have a seed to grow | Need to think deeply about something | Have a direction to explore | Need to understand current reality |
+See SKILL.md § Document Types for the full type comparison. In brief:
+
+- **Imagination** — Anchored to a seed. "What could this become?" Generative expansion producing rich vision.
+- **Evaluation** — Anchored to any question/idea. Open-ended analysis producing findings and recommendations.
+- **Proposal** — Anchored to a specific direction. "What if we go this way?" with approaches and trade-offs.
+- **Exploration** — Anchored to status quo. "What is?" Neutral investigation producing a knowledge map.
 
 **Use Imagination when:**
 - You have a raw idea, principle, or vision fragment to expand
 - You want to explore what something *could become* before deciding what it *should become*
 - You need rich, textured vision to inspire or inform downstream work
 - Analytical tools would kill the creative energy prematurely
-
-**Use Evaluation when:**
-- You want to deeply analyze an existing question, idea, or solution
-- You're comparing alternatives or assessing viability
-
-**Use Proposal when:**
-- You have a specific change in mind and want to explore approaches and impact
-
-**Use Exploration when:**
-- You need to understand how something works today
 
 ---
 
@@ -272,12 +258,7 @@ This workflow produces:
 - Updated relationships in related projex documents
 - Seeds for further imagination, proposals, or plans
 
-**Folder placement by lifecycle:**
-| Stage | Location |
-|-------|----------|
-| Active / Being developed | `projex/` |
-| Completed / Spawned downstream work | `projex/closed/` |
-| Superseded / Outgrown | `projex/archived/` |
+**Folder placement:** See SKILL.md § Organizing.
 
 ---
 
