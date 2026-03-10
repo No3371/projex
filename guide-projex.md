@@ -71,6 +71,8 @@ The agent explores the ground truths — this is where the real work happens:
 - Note common pitfalls and easy-to-miss details
 - Identify what's essential vs. supplementary
 
+> **Do NOT invent conceptual abstractions.** Every step must point to a concrete, readable source. If a concept has no citable source, flag it as a gap in Open Questions — don't write an explanation in its place.
+
 ### 3. DESIGN THE READING PATH
 
 Order material into progressive phases:
@@ -80,6 +82,8 @@ Order material into progressive phases:
 - **Focus cues:** For each step, identify what the reader should pay attention to
 - **Takeaways:** For each step, state what the reader should come away understanding
 - **Pruning:** Omit material that doesn't serve the learning objective — less is more
+
+> **Do NOT include steps the reader won't act on.** If a step exists only for completeness, cut it. Every step must earn its place by advancing the learning objective.
 
 ### 4. DRAFT THE GUIDE
 
@@ -104,6 +108,12 @@ Use the template structure below, adapting sections based on guide type and dept
 ## Objective
 
 [What the reader will understand after completing this guide — concrete and specific]
+
+---
+
+## Quick Introduction
+
+[2–4 sentences giving the reader immediate orientation: what this thing is, why it exists, and one grounding detail. A reader who stops here should still walk away with a usable mental anchor.]
 
 ---
 
@@ -157,27 +167,45 @@ Use the template structure below, adapting sections based on guide type and dept
 
 ---
 
+## Open Questions
+
+- [Things the author couldn't resolve — missing docs, unclear behavior, unverified assumptions, source gaps]
+
+---
+
 ## Further Reading
 
 - [Optional deeper material, tangential topics, advanced references]
 ```
 
-### 5. VALIDATE AND COMMIT
+### 5. SECOND PASS (MANDATORY)
 
-**Check:**
+Re-read the full guide as a reader — not as the agent that wrote it. This is a separate pass, not a continuation of drafting.
+
+**Check each step:**
+- Does this step point to a real, readable source — or did I fabricate an abstraction?
+- Would the reader actually do this step, or is it filler?
+- Does the Focus on give specific enough guidance, or is it vague?
+- Does the Key takeaway state something concrete the reader didn't know before?
+
+**Check the whole path:**
+- [ ] Quick Introduction gives usable orientation without requiring the reading path
 - [ ] Learning objective is concrete and the reading path delivers on it
 - [ ] Phases build progressively — no forward references to unread material
 - [ ] Every step has Read, Focus on, and Key takeaway
 - [ ] Key Concepts Index covers the essential terms and ideas
 - [ ] Common Pitfalls addresses genuine misunderstanding risks
+- [ ] Open Questions captures anything unresolved — no gaps silently ignored
 - [ ] Sources are accurate (file paths exist, URLs are reachable)
 - [ ] Appropriate for the stated target audience
 
-**Finalize:**
+**Cut ruthlessly:** If a step survived drafting but fails the second pass, remove it. A shorter guide that earns every step beats a thorough one padded with filler.
+
+### 6. FINALIZE AND COMMIT
+
 1. Front-load the objective and key concepts
-2. Trim steps that don't serve the learning objective
-3. Link to related projex
-4. Place in `projex/closed/` — guides are point-in-time artifacts
+2. Link to related projex
+3. Place in `projex/closed/` — guides are point-in-time artifacts
 
 ---
 
@@ -188,28 +216,6 @@ Use the template structure below, adapting sections based on guide type and dept
 - **Curated** — Include only what matters; density over exhaustiveness
 - **Actionable** — Each step tells the reader exactly what to do and what to look for
 - **Honest** — Flag what's confusing, warn about pitfalls, acknowledge gaps
-
----
-
-## GUIDE VS EXPLORATION
-
-| Aspect | Exploration | Guide |
-|--------|-------------|-------|
-| **Audience** | Project/agent knowledge | Human reader |
-| **Output** | Findings, mental models, answers | Ordered reading path with focus cues |
-| **Structure** | Investigation areas → discoveries | Phases → steps → "read X, focus on Y, takeaway Z" |
-| **Scope** | Typically codebase-anchored | Codebase, docs, articles, specs, external pages |
-| **Lifecycle** | May stay active or close | Closed — point-in-time artifact |
-
-**Use Guide when:**
-- A person needs to learn or get up to speed on something
-- You want to turn investigation into a reusable reading path
-- The goal is human comprehension, not project documentation
-
-**Use Exploration when:**
-- You need agent/project knowledge about what exists and how it works
-- The output will inform decisions or other projex
-- No specific human reader is the audience
 
 ---
 
