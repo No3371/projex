@@ -137,24 +137,28 @@ For each step in the plan:
 
 1. Carry out the step (make changes / run commands / gather data)
 
-#### C. LOG AND VERIFY
+#### C. LOG, VERIFY, AND COMMIT
 
 **GATE: The log entry for this step must be written before starting the next step. The execution log is a live record, not a retrospective summary. The walkthrough is derived from git history + these logs — gaps here become gaps there.**
 
-1. **Log the action** — write the step header, **Action**, and **Files Affected** fields by referencing the tool outputs just produced
-2. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
-3. Confirm the step objective is achieved; check for side effects
-4. **Log the results** — fill **Output/Result**, **Verification**, and **Status** by referencing the tool outputs just produced, not from memory
-5. **Mark the objective complete** — update `- [ ] Step N: [title]` to `- [x] Step N: [title]` in the log's `## Progress` section
-6. **Mark the task complete** in your task list — only after both the work and log entry are done
+1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
+2. Confirm the step objective is achieved; check for side effects
+3. **Write the log entry** for this step using the inline template below, referencing tool outputs just produced — not from memory:
 
-#### D. COMMIT (if applicable)
+```
+### [yyyymmdd hh:mm] - Step N: [Step Title]
+**Action:** [What was done — command run, file edited, test executed, etc.]
+**Result:** [What happened — output, errors, observations, verification evidence]
+**Status:** Success / Failed / Partial
+```
 
-Commit file changes in logical atomic units. Investigative steps (running tests, gathering data) need no commits — just log findings.
+4. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext path/to/changed-file2.ext
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext projex/{yyyymmdd}-{plan-name}-log.md
 ```
+
+5. **Mark the task complete** in your task list — only after both the work and log entry are committed
 
 **User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 
@@ -196,8 +200,8 @@ Do not move the plan file — relocation to `projex/closed/` happens during `/cl
 ## EXECUTION PRINCIPLES
 
 - **Faithful** — follow the plan; don't "improve" beyond scope; save enhancements for future proposals
-- **Task-driven** — task list is the structural backbone; a task is not complete until both the work AND its log entry are written
-- **Aggressively logged** — live document, not retrospective; log commands, inspections, tests, observations — not just code changes
+- **Task-driven** — task list is the structural backbone; a task is not complete until both the work AND its log entry are committed
+- **Log-committed** — every step's log entry is committed atomically with its file changes; if the log wasn't committed, the step isn't done
 - **Incremental** — verify and commit after each step; maintain working state
 - **Fail-fast** — stop early on fundamental issues; don't compound problems; escalate blockers promptly
 - **Clean** — tear down everything you started (containers, servers, temp files, background processes); verify pre-existing before killing; log cleanup actions
@@ -262,49 +266,31 @@ Started: [yyyymmdd hh:mm]
 Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/auth]
 Worktree Path: [.projexwt/{name} — omit line if checkout mode]
 
-## Progress
-- [ ] Step 1: [title]
-- [ ] Step 2: [title]
-...
-
-## Actions Taken
+## Steps
 
 ### [yyyymmdd hh:mm] - Step 1: [Step Title]
-**Action:** [Exactly what was done - command run, file edited, test executed, etc.]
-**Output/Result:** [What happened - output, errors, observations]
-**Files Affected:** [List any files read/modified/created]
-**Verification:** [How verified - what was checked]
-**Status:** Success/Failed/Partial
+**Action:** [What was done — command run, file edited, test executed, etc.]
+**Result:** [What happened — output, errors, observations, verification evidence]
+**Status:** Success / Failed / Partial
 
 ### [yyyymmdd hh:mm] - Step 2: [Step Title]
-[Same structure]
-
-## Actual Changes (vs Plan)
-- `file.ext`: [actual change] — matches plan / differs because [reason]
+...
 
 ## Deviations
-[Track any changes from plan — WHAT and WHY]
-
-## Unplanned Actions
-[Actions taken that weren't in the plan — WHY]
-
-## Planned But Skipped
-[Planned actions not taken — WHY]
+[Changes from plan — WHAT and WHY]
 
 ## Issues Encountered
-[Document problems and resolutions]
+[Problems and resolutions]
 
 ## Data Gathered
-[For investigative/testing plans - record findings, metrics, observations]
+[For investigative/testing plans — findings, metrics, observations]
 
 ## User Interventions
-[User interruptions, corrections, redirections, and requests — at any point during execution]
 
 ### [yyyymmdd hh:mm] - [During Step N / Between Steps / Post-Plan]: [Description]
 **Context:** [What was happening when the user intervened]
 **User Direction:** [What the user said/requested]
-**Action:** [Exactly what was done in response]
-**Output/Result:** [What happened]
-**Files Affected:** [List any files read/modified/created]
+**Action:** [What was done in response]
+**Result:** [What happened]
 **Impact on Plan:** [None / Deviation from step N / New unplanned action / etc.]
 ```
