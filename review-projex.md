@@ -22,7 +22,7 @@ Reviews combat projex decay. As codebases evolve and time passes, projex documen
 ```
 
 **Examples:**
-- `/review-projex.md @20260731-language-macro-syntax-change-proposal.md`
+- `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
 - `/review-projex.md the project we just made`
 - `/review-projex.md all pending plans`
 
@@ -167,7 +167,7 @@ Based on analysis, decide:
 
 ### 7. DRAFT THE REVIEW
 
-Create a new file: `{yyyymmdd}-{original-projex-name}-review.md`
+Create a new file: `{yymmddhhmm}-{original-projex-name}-review.md`
 
 **Template Structure:**
 
@@ -363,7 +363,7 @@ Based on review findings:
 ## OUTPUT
 
 This workflow produces:
-- A review projex document at `.projex/{yyyymmdd}-{original-name}-review.md`
+- A review projex document at `.projex/{yymmddhhmm}-{original-name}-review.md`
 - Review notation added to the reviewed projex
 - Clear verdict and recommended actions
 - Potential file moves based on verdict:

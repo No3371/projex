@@ -67,7 +67,7 @@ Define scope and questions:
 
 ### 2. SCAFFOLD THE DOCUMENT
 
-Create file: `{yyyymmdd}-{exploration-name}-explore.md` **before investigating anything**.
+Create file: `{yymmddhhmm}-{exploration-name}-explore.md` **before investigating anything**.
 
 Fill in what you know so far — the header, guiding questions, scope, context — then identify **investigation targets**: the specific areas, components, files, or concepts you intend to dive into. Each target becomes a section under Investigation with a brief rationale for why it matters. The rest of the document (findings, patterns, answers) stays empty — it gets filled during the dives.
 
@@ -267,7 +267,7 @@ See SKILL.md § Document Types for the full type comparison. In brief:
 
 ## OUTPUT
 
-Produces exploration document at `.projex/{yyyymmdd}-{name}-explore.md` with:
+Produces exploration document at `.projex/{yymmddhhmm}-{name}-explore.md` with:
 - Comprehensive understanding of subject
 - Answers to guiding questions
 - Foundation for informed decisions

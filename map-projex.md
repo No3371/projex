@@ -36,8 +36,8 @@ Map documents are orientation tools. They maintain a high-level description of a
 - `/map-projex.md Documentation structure` — area-level, lives in `docs/.projex/`
 
 **Subsequent invocations** (revise and extend):
-- `/map-projex.md @20260208-engine-structure-map.md`
-- `/map-projex.md @20260208-engine-structure-map.md We added a new plugin system`
+- `/map-projex.md @2602081430-engine-structure-map.md`
+- `/map-projex.md @2602081430-engine-structure-map.md We added a new plugin system`
 
 ---
 
@@ -72,7 +72,7 @@ For straightforward structures, proceed directly to drafting.
 
 #### 3. DRAFT THE MAP
 
-Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{map-name}-map.md`
+Create file in the appropriate `.projex/` folder: `{yymmddhhmm}-{map-name}-map.md`
 
 - Project-level → root `.projex/`
 - Module-level → `src/{module}/.projex/`
@@ -103,7 +103,7 @@ Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 ### `src/`
 [1-2 sentence description of what this directory contains overall]
 
-- `parser/` — [What the parser module does] · 📍 [detail map](src/parser/.projex/20260208-parser-layout-map.md)
+- `parser/` — [What the parser module does] · 📍 [detail map](src/parser/.projex/2602081430-parser-layout-map.md)
 - `runtime/` — [Runtime engine purpose]
 - `cli/` — [CLI entry point, argument handling]
 
@@ -177,7 +177,7 @@ Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): create structure map - {map-name}" \
-  .projex/{yyyymmdd}-{map-name}-map.md \
+  .projex/{yymmddhhmm}-{map-name}-map.md \
   path/to/parent-map.md \
   path/to/child-map.md
 ```
@@ -223,7 +223,7 @@ Update the document in-place:
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): revise structure map - {map-name}" \
-  .projex/{yyyymmdd}-{map-name}-map.md \
+  .projex/{yymmddhhmm}-{map-name}-map.md \
   path/to/parent-map.md \
   path/to/child-map.md
 ```
@@ -262,7 +262,7 @@ Set the `Parent Map` header field to the relative path of the discovered parent 
 Annotate the parent map's structure entry for this scope's directory with an inline `📍` link:
 
 ```markdown
-- `parser/` — Tokenization and AST construction · 📍 [detail map](src/parser/.projex/20260208-parser-layout-map.md)
+- `parser/` — Tokenization and AST construction · 📍 [detail map](src/parser/.projex/2602081430-parser-layout-map.md)
 ```
 
 When a directory gains a child map, the parent map entry for that directory should stay shallow (one-line description + link). The child map owns the detail — avoid duplicating the subtree structure in the parent.
@@ -295,9 +295,9 @@ Always stage both sides of a reference change in the same commit. If updating a 
 Map documents are **never** placed in `.projex/closed/` — they are living documents that persist until their scope's structure stabilizes or a new map supersedes them.
 
 **Examples:**
-- Project-level: `.projex/20260208-project-structure-map.md`
-- Module-level: `src/parser/.projex/20260208-parser-layout-map.md`
-- Area-level: `docs/.projex/20260208-docs-structure-map.md`
+- Project-level: `.projex/2602081430-project-structure-map.md`
+- Module-level: `src/parser/.projex/2602081430-parser-layout-map.md`
+- Area-level: `docs/.projex/2602081430-docs-structure-map.md`
 
 ---
 

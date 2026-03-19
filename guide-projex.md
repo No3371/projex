@@ -87,7 +87,7 @@ Order material into progressive phases:
 
 ### 4. DRAFT THE GUIDE
 
-Create file: `{yyyymmdd}-{guide-name}-guide.md`
+Create file: `{yymmddhhmm}-{guide-name}-guide.md`
 
 Use the template structure below, adapting sections based on guide type and depth needed.
 
@@ -221,7 +221,7 @@ Re-read the full guide as a reader — not as the agent that wrote it. This is a
 
 ## OUTPUT
 
-Produces guide document at `.projex/closed/{yyyymmdd}-{name}-guide.md` with:
+Produces guide document at `.projex/closed/{yymmddhhmm}-{name}-guide.md` with:
 - Concrete learning objective
 - Phased reading path with focus cues and takeaways
 - Key concepts index for quick reference

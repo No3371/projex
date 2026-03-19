@@ -73,7 +73,7 @@ Search systematically. Use whatever combination of tools finds everything:
 
 ### 3. WRITE THE SCAN DOCUMENT
 
-Create file: `{yyyymmdd}-{scan-name}-scan.md` in `.projex/closed/`
+Create file: `{yymmddhhmm}-{scan-name}-scan.md` in `.projex/closed/`
 
 **Template:**
 
@@ -127,7 +127,7 @@ The default is `file:ln — annotation`, but adapt to the subject:
 ### 4. COMMIT
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" .projex/closed/{yyyymmdd}-{scan-name}-scan.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" .projex/closed/{yymmddhhmm}-{scan-name}-scan.md
 ```
 
 ---
@@ -155,7 +155,7 @@ Scans are born closed. They are point-in-time snapshots — if the codebase chan
 ## OUTPUT
 
 This workflow produces:
-- A scan document at `.projex/closed/{yyyymmdd}-{scan-name}-scan.md`
+- A scan document at `.projex/closed/{yymmddhhmm}-{scan-name}-scan.md`
 - A flat, precise inventory of everything matching the subject
 
 ---

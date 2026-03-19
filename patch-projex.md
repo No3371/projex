@@ -33,7 +33,7 @@ Patches are the fast path for small, well-understood changes. When the overhead 
 
 **Examples:**
 - `/patch-projex Fix the off-by-one error in the parser loop`
-- `/patch-projex Execute objective 2 of @20260201-api-cleanup-plan.md`
+- `/patch-projex Execute objective 2 of @2602011430-api-cleanup-plan.md`
 - `/patch-projex Update config to use new endpoint URL`
 - `/patch-projex Add missing null check in handleSubmit`
 
@@ -105,6 +105,7 @@ Act directly:
 ### 3. WRITE THE PATCH DOCUMENT
 
 Create: `{yyyymmdd}-{patch-name}-patch.md`
+Create: `{yymmddhhmm}-{patch-name}-patch.md`
 
 The patch document IS the walkthrough. It is a single, self-contained record.
 
@@ -200,6 +201,8 @@ After the patch is written:
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
   .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
   .projex/{yyyymmdd}-{related-plan-name}-plan.md \
+  .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
+  .projex/{yymmddhhmm}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
 ```
 
@@ -232,6 +235,8 @@ Patches commit directly to the current branch. This is intentional — the overh
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
   .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
   .projex/{yyyymmdd}-{related-plan-name}-plan.md
+  .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
+  .projex/{yymmddhhmm}-{related-plan-name}-plan.md
 ```
 
 ### Git Operation Discipline
@@ -245,6 +250,7 @@ See SKILL.md § Git Operation Discipline.
 This workflow produces:
 - The implemented change (committed to current branch)
 - A patch document at `.projex/closed/{yyyymmdd}-{patch-name}-patch.md`
+- A patch document at `.projex/closed/{yymmddhhmm}-{patch-name}-patch.md`
 - Updated related projex documents (if any)
 
 **Folder structure:**
@@ -254,6 +260,7 @@ This workflow produces:
 ├── [source plan with patched objectives marked, if applicable]
 └── closed/
     └── {yyyymmdd}-{patch-name}-patch.md
+    └── {yymmddhhmm}-{patch-name}-patch.md
 ```
 
 ---

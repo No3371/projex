@@ -21,7 +21,7 @@ Plans capture WHAT needs doing and HOW — specific enough that any LLM or devel
 
 **Examples:**
 - `/plan-projex.md Update current impl to keep up with latest specs`
-- `/plan-projex.md @20260731-database-service-refactor-proposal.md`
+- `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
 - `/plan-projex.md Implement user session timeout feature`
 
 ---
@@ -76,6 +76,7 @@ Answer these questions by reading the actual code:
 ### 4. DRAFT THE PLAN
 
 Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
+Create `<projex-folder>/{yymmddhhmm}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
 
 **Template Structure:**
 
@@ -291,6 +292,7 @@ Before marking Ready:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
 > **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
@@ -337,6 +339,8 @@ Split is **recommended** when:
 > - **Right:** Two plans:
 >   1. `docs/.projex/20260208-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
 >   2. `src/.projex/20260208-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
+>   1. `docs/.projex/2602081430-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
+>   2. `src/.projex/2602081430-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
 
 **By slice (recommended when scope is large within one boundary):**
 1. **Vertical slices** — End-to-end for one feature
@@ -357,6 +361,7 @@ Each split plan must:
 
 This workflow produces:
 - A plan projex document at `.projex/{yyyymmdd}-{name}-plan.md` (pending in parent folder)
+- A plan projex document at `.projex/{yymmddhhmm}-{name}-plan.md` (pending in parent folder)
 - Updated relationships in source proposal (if applicable)
 - Updated relationships in any related projex documents
 

@@ -23,7 +23,7 @@ Interviews extract knowledge, clarify understanding, and explore topics through 
 ```
 /interview-projex.md <scope/topic>
 /interview-projex.md authentication system design
-/interview-projex.md @20260731-database-schema.md
+/interview-projex.md @2607311430-database-schema.md
 /interview-projex.md user requirements for the new feature
 ```
 
@@ -39,7 +39,7 @@ Interviews extract knowledge, clarify understanding, and explore topics through 
 - What depth is needed? (high-level overview vs deep technical details)
 - Any specific areas to focus on or avoid?
 
-**Create interview file:** `{yyyymmdd}-{topic}-interview.md`
+**Create interview file:** `{yymmddhhmm}-{topic}-interview.md`
 
 ### 2. ROUND STRUCTURE
 
@@ -100,7 +100,7 @@ For each answer, log three things:
 
 ### 6. INTERVIEW DOCUMENT TEMPLATE
 
-Create file: `{yyyymmdd}-{topic}-interview.md`
+Create file: `{yymmddhhmm}-{topic}-interview.md`
 
 ```markdown
 # Interview: [Topic]
@@ -363,7 +363,7 @@ Focus on confirming understanding, checking assumptions
 
 ## OUTPUT
 
-Produces `.projex/{yyyymmdd}-{topic}-interview.md` with full Q&A transcript, interpretations, and findings.
+Produces `.projex/{yymmddhhmm}-{topic}-interview.md` with full Q&A transcript, interpretations, and findings.
 
 **Folder placement:** Active → `.projex/` | Concluded → `.projex/closed/`
 

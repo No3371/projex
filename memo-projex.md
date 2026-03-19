@@ -35,7 +35,7 @@ Memos capture something worth remembering before it gets lost — a user's offha
 
 **Examples:**
 - `/memo-projex User said "we should eventually split the parser into a separate crate"`
-- `/memo-projex Deferred from @20260215-api-cleanup-plan.md: objectives 3 and 4 (auth token rotation)`
+- `/memo-projex Deferred from @2602151430-api-cleanup-plan.md: objectives 3 and 4 (auth token rotation)`
 - `/memo-projex Noticed during execution: the test harness silently swallows stderr`
 - `/memo-projex Idea: what if Maps auto-detected child maps instead of requiring manual linking?`
 
@@ -56,7 +56,7 @@ Classify what's being captured:
 
 ### 2. WRITE THE MEMO
 
-Create file: `{yyyymmdd}-{memo-name}-memo.md` in `.projex/`
+Create file: `{yymmddhhmm}-{memo-name}-memo.md` in `.projex/`
 
 **Template:**
 
@@ -94,7 +94,7 @@ Do NOT research or explore to fill this section. Write only from current context
 ### 3. COMMIT
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yyyymmdd}-{memo-name}-memo.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yymmddhhmm}-{memo-name}-memo.md
 ```
 
 If a related projex should reference this memo (e.g., a plan whose objectives were deferred), update it:
@@ -124,7 +124,7 @@ See SKILL.md § Organizing. Memos stay active until consumed into plans, evaluat
 ## OUTPUT
 
 This workflow produces:
-- A memo document at `.projex/{yyyymmdd}-{memo-name}-memo.md`
+- A memo document at `.projex/{yymmddhhmm}-{memo-name}-memo.md`
 - Optionally updated related projex documents
 
 ---

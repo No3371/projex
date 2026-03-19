@@ -14,7 +14,7 @@ Red Teams break things before they break in production. Attack ideas, find explo
 
 ```
 /redteam-projex.md <subject to attack>
-/redteam-projex.md @20260731-auth-system-plan.md
+/redteam-projex.md @2607311430-auth-system-plan.md
 ```
 
 ---
@@ -88,7 +88,7 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 
 ### 5. DRAFT RED TEAM REPORT
 
-Create file: `{yyyymmdd}-{subject}-redteam.md`
+Create file: `{yymmddhhmm}-{subject}-redteam.md`
 
 ```markdown
 # Red Team: [Subject]
@@ -266,6 +266,6 @@ Save to appropriate `.projex/` folder. Link to subject being analyzed.
 
 ## OUTPUT
 
-Produces `.projex/{yyyymmdd}-{name}-redteam.md` with severity-prioritized findings and remediation.
+Produces `.projex/{yymmddhhmm}-{name}-redteam.md` with severity-prioritized findings and remediation.
 
 **Folder placement:** Active → `.projex/` | Addressed → `.projex/closed/` | Superseded → `.projex/archived/`

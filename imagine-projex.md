@@ -31,7 +31,7 @@ Imaginations take a seed — an idea, an essence, a principle, a vision fragment
 - `/imagine-projex.md What would a plugin system for this framework look like?`
 - `/imagine-projex.md A language where errors are first-class values`
 - `/imagine-projex.md Evolve our CLI into a conversational interface`
-- `/imagine-projex.md @20260731-capability-model-proposal.md — take this further`
+- `/imagine-projex.md @2607311430-capability-model-proposal.md — take this further`
 
 ---
 
@@ -115,7 +115,7 @@ Frame challenges constructively: "This creates an interesting tension between X 
 
 ### 6. DRAFT THE IMAGINATION DOCUMENT
 
-Create file: `{yyyymmdd}-{imagination-name}-imagine.md`
+Create file: `{yymmddhhmm}-{imagination-name}-imagine.md`
 
 **Template Structure:**
 
@@ -254,7 +254,7 @@ See SKILL.md § Document Types for the full type comparison. In brief:
 ## OUTPUT
 
 This workflow produces:
-- An imagination projex document at `.projex/{yyyymmdd}-{name}-imagine.md`
+- An imagination projex document at `.projex/{yymmddhhmm}-{name}-imagine.md`
 - Updated relationships in related projex documents
 - Seeds for further imagination, proposals, or plans
 

@@ -28,11 +28,11 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 
 ## Authoring
 
-File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
+File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
 
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
-- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
+- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `2602081430-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/2602081430-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
 ### De-slop (optional final pass)
 
@@ -74,20 +74,20 @@ Workflow specs are actions invoked in verb sense:
 
 - `/propose-projex.md I want to add XXX feature.`
 - `/eval-projex.md Does current spec compatible with this proposal?` or `/eval-projex.md What can be improved in the current implementation?`
-- `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @20260731-database-service-refactor-proposal.md`
-- `/review-projex.md @20260731-language-macro-syntax-change-proposal.md`
-- `/redteam-projex.md @20260731-auth-system-plan.md`
+- `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
+- `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
+- `/redteam-projex.md @2607311430-auth-system-plan.md`
 - `/audit-projex.md the database migration we just finished`
 - `/interview-projex.md authentication system design`
-- `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @20260201-api-cleanup-plan.md`
+- `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?`
-- `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @20260201-engine-roadmap-nav.md`
-- `/define-projex.md The authentication subsystem` or `/define-projex.md @20260215-auth-subsystem-def.md expand session lifecycle`
+- `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
+- `/define-projex.md The authentication subsystem` or `/define-projex.md @2602151430-auth-subsystem-def.md expand session lifecycle`
 - `/log-projex.md HEAD~3..HEAD` or `/log-projex.md` (staged changes)
 - `/map-projex.md Whole project structure`
 - `/guide-projex.md Understand our authentication system end-to-end`
 - `/imagine-projex.md What would a plugin system for this framework look like?`
-- `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
+- `/execute-projex.md @2607311430-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after user reviewed execution results
 
 ## Git Integration
@@ -95,7 +95,7 @@ Workflow specs are actions invoked in verb sense:
 The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.
 
 ```
-[base branch] ── execute-projex ──> [.projex/{yyyymmdd}-{plan-name}] ── close-projex ──> [merge back]
+[base branch] ── execute-projex ──> [.projex/{yymmddhhmm}-{plan-name}] ── close-projex ──> [merge back]
 ```
 
 1. `/execute-projex.md` creates ephemeral branch from current HEAD

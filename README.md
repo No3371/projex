@@ -26,12 +26,12 @@ Example1:
 Example2:
 ```
 > /navigate-projex  (this creates a navigation projex document
-> /plan-projex 20260131-v1-foundation-roadmap-nav.md#L108 (Ask the agent to plan for a objective
+> /plan-projex 2601311430-v1-foundation-roadmap-nav.md#L108 (Ask the agent to plan for a objective
 ```
 
 Example3:
 ```
-> 20260207-v1-foundation-roadmap-eval-review.md 20260131-v1-foundation-roadmap-eval.md
+> 2602071430-v1-foundation-roadmap-eval-review.md 2601311430-v1-foundation-roadmap-eval.md
 plan-projex.md phase3
 (asking the agent to make plan for phase 3 based on the eval and the review to the eval)
 ```
@@ -57,7 +57,7 @@ Agents forget what they did, skip steps, lose context between sessions, and leav
 
 ## How It Works
 
-Self-contained markdown documents in `.projex/` folders. Each has a type, template, and lifecycle. Named `{yyyymmdd}-{name}-{type}.md`, organized by state:
+Self-contained markdown documents in `.projex/` folders. Each has a type, template, and lifecycle. Named `{yymmddhhmm}-{name}-{type}.md`, organized by state:
 
 ```
 .projex/                    # Active/pending
@@ -186,8 +186,8 @@ Patterns, not rules.
 
 ## Git Integration
 
-- **Execute/Close** — ephemeral branch (`.projex/{yyyymmdd}-{name}`), merged or abandoned at close
-- **Simulate** — throwaway branch (`.projex/sim/{yyyymmdd}-{name}`), always discarded
+- **Execute/Close** — ephemeral branch (`.projex/{yymmddhhmm}-{name}`), merged or abandoned at close
+- **Simulate** — throwaway branch (`.projex/sim/{yymmddhhmm}-{name}`), always discarded
 - **Patch** — commits directly to current branch
 - **Log** — observes existing changes (staged or committed); commits only the log document itself
 - **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)

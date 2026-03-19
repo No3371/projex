@@ -53,7 +53,7 @@ Collect the full list of non-archive files to process. Existing archive files ar
 
 For each file in the list, extract:
 
-- **Filename** — the file's name only (not path), e.g. `20260115-auth-session-timeout-walkthrough.md`
+- **Filename** — the file's name only (not path), e.g. `2601151430-auth-session-timeout-walkthrough.md`
 - **Summary** — 1–2 sentence description of what this document is about (inferred from its content)
 - **Keywords** — 5–10 comma-separated terms covering the subject, affected components, and key concepts
 
@@ -64,9 +64,9 @@ For each file in the list, extract:
 
 ### 4. DRAFT THE ARCHIVE DOCUMENT
 
-Create: `{yyyymmdd}-{scope}-archive.md` directly in the target `.projex/closed/` folder.
+Create: `{yymmddhhmm}-{scope}-archive.md` directly in the target `.projex/closed/` folder.
 
-Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).
+Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).
 
 **Template:**
 
@@ -107,7 +107,7 @@ Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.
 Stage and commit the archive document:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yyyymmdd}-{scope}-archive.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yymmddhhmm}-{scope}-archive.md
 ```
 
 Verify the commit succeeded before proceeding.
@@ -139,14 +139,14 @@ Verify the commit. The folder should now contain only the archive index file.
 ## OUTPUT
 
 This workflow produces:
-- A single archive index at `.projex/closed/{yyyymmdd}-{scope}-archive.md`
+- A single archive index at `.projex/closed/{yymmddhhmm}-{scope}-archive.md`
 - All previously individual closed files removed from `.projex/closed/`
 
 **Folder state after archiving:**
 ```
 .projex/
 └── closed/
-    └── {yyyymmdd}-{scope}-archive.md    ← only file remaining
+    └── {yymmddhhmm}-{scope}-archive.md    ← only file remaining
 ```
 
 ---

@@ -29,12 +29,12 @@ Evaluations provide rigorous, intellectually honest analysis. They research esse
 - `/eval-projex Does current spec support this proposal?`
 - `/eval-projex What can be improved in the current implementation?`
 - `/eval-projex Compare REST vs GraphQL for our use case`
-- `/eval-projex @20260731-caching-layer-proposal.md`
+- `/eval-projex @2607311430-caching-layer-proposal.md`
 
 **Deepening an existing evaluation:**
-- `/eval-projex @20260304-auth-rewrite-eval.md deepen assumptions section`
-- `/eval-projex @20260304-auth-rewrite-eval.md update with new benchmarks`
-- `/eval-projex @20260304-auth-rewrite-eval.md challenge conclusions`
+- `/eval-projex @2603041430-auth-rewrite-eval.md deepen assumptions section`
+- `/eval-projex @2603041430-auth-rewrite-eval.md update with new benchmarks`
+- `/eval-projex @2603041430-auth-rewrite-eval.md challenge conclusions`
 
 ---
 
@@ -139,7 +139,7 @@ Select lenses appropriate to the evaluation. Lens count scales with tier.
 
 ### 4. DRAFT THE EVALUATION
 
-Create: `{yyyymmdd}-{eval-name}-eval.md`
+Create: `{yymmddhhmm}-{eval-name}-eval.md`
 
 #### Document Structure
 
@@ -229,7 +229,7 @@ Re-invoke on an existing eval: `/eval-projex @{existing-eval}.md [mode] [target]
 ## OUTPUT
 
 This workflow produces:
-- An evaluation projex document at `.projex/{yyyymmdd}-{name}-eval.md`
+- An evaluation projex document at `.projex/{yymmddhhmm}-{name}-eval.md`
 - Updated relationships in evaluated projex documents
 - Clear findings and recommendations
 

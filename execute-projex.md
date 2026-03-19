@@ -22,8 +22,8 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 ```
 
 **Examples:**
-- `/execute-projex.md @20260731-database-service-refactor-plan.md`
-- `/execute-projex.md @20260120-load-testing-analysis-plan.md` (testing/analysis, no code changes)
+- `/execute-projex.md @2607311430-database-service-refactor-plan.md`
+- `/execute-projex.md @2601201430-load-testing-analysis-plan.md` (testing/analysis, no code changes)
 
 ---
 
@@ -88,6 +88,7 @@ Edit the plan file, then commit the status change on the base branch:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
 2. **Create ephemeral branch and verify**
@@ -95,16 +96,20 @@ Edit the plan file, then commit the status change on the base branch:
 **Checkout mode (default):**
 ```bash
 git checkout -b .projex/{yyyymmdd}-{plan-name}
+git checkout -b .projex/{yymmddhhmm}-{plan-name}
 git branch --show-current
 ```
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yyyymmdd}-{plan-name}
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yymmddhhmm}-{plan-name}
 ```
 All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{plan-name}` as the working directory. The main directory stays on the base branch.
+All subsequent commands use `{repo-name}.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
 3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
+3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
 
 ### 2. BUILD TASK LIST FROM PLAN
 
@@ -156,6 +161,7 @@ For each step in the plan:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yyyymmdd}-{plan-name}-log.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
 5. **Mark the task complete** in your task list — only after both the work and log entry are committed
@@ -225,6 +231,7 @@ Git operation discipline (sequential execution, explicit file staging, verificat
 ### Branch Naming
 ```
 .projex/{yyyymmdd}-{plan-name}
+.projex/{yymmddhhmm}-{plan-name}
 ```
 
 ### Commit Message Convention
@@ -251,8 +258,10 @@ If execution fails and cannot continue:
 This workflow produces:
 - Executed plan objectives (code changes, test results, gathered data, etc.)
 - Execution log (`{yyyymmdd}-{plan-name}-log.md`) documenting every action taken
+- Execution log (`{yymmddhhmm}-{plan-name}-log.md`) documenting every action taken
 - Updated plan status (`Complete` or `Blocked`)
 - Ephemeral git branch `.projex/{yyyymmdd}-{plan-name}` with all commits (if any)
+- Ephemeral git branch `.projex/{yymmddhhmm}-{plan-name}` with all commits (if any)
 
 ---
 

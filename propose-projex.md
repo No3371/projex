@@ -52,7 +52,7 @@ Questions to answer:
 
 ### 2. DRAFT THE PROPOSAL
 
-Create a new file following naming convention: `{yyyymmdd}-{proposal-name}-proposal.md`
+Create a new file following naming convention: `{yymmddhhmm}-{proposal-name}-proposal.md`
 
 **Template Structure:**
 
@@ -202,7 +202,7 @@ Draft → Review → Accepted
 ## OUTPUT
 
 This workflow produces:
-- A proposal projex document at `.projex/{yyyymmdd}-{name}-proposal.md`
+- A proposal projex document at `.projex/{yymmddhhmm}-{name}-proposal.md`
 - Updated relationships in any related projex documents
 
 **Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `.projex/` until their Plan is closed.

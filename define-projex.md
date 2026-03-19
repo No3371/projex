@@ -36,8 +36,8 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 - `/define-projex.md Our pricing model`
 
 **Subsequent invocations** (revisit and deepen):
-- `/define-projex.md @20260215-auth-subsystem-def.md`
-- `/define-projex.md @20260215-auth-subsystem-def.md session lifecycle edge cases`
+- `/define-projex.md @2602151430-auth-subsystem-def.md`
+- `/define-projex.md @2602151430-auth-subsystem-def.md session lifecycle edge cases`
 
 ---
 
@@ -73,7 +73,7 @@ Don't rush to document — keep discussing until you and the user feel the major
 
 #### 3. DRAFT THE DEFINITION
 
-Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{entity-name}-def.md`
+Create file in the appropriate `.projex/` folder: `{yymmddhhmm}-{entity-name}-def.md`
 
 **Template Structure:**
 
@@ -188,7 +188,7 @@ Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{entity-name}-def.
 - [ ] Status field reflects actual state (Draft if open questions remain)
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" .projex/{yyyymmdd}-{entity-name}-def.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
 ```
 
 ---
@@ -229,7 +229,7 @@ Update the document in-place:
 #### 4. COMMIT REVISION
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" .projex/{yyyymmdd}-{entity-name}-def.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
 ```
 
 ---

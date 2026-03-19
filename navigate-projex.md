@@ -38,8 +38,8 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 - `/navigate-projex.md API documentation coverage` — area-level, lives in `docs/api/.projex/`
 
 **Subsequent invocations** (revisit and revise):
-- `/navigate-projex.md @20260201-engine-roadmap-nav.md`
-- `/navigate-projex.md @20260201-engine-roadmap-nav.md We shipped the parser, what's next?`
+- `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
+- `/navigate-projex.md @2602011430-engine-roadmap-nav.md We shipped the parser, what's next?`
 
 ---
 
@@ -72,7 +72,7 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 #### 3. DRAFT THE ROADMAP
 
-Create file in the appropriate `.projex/` folder for the scope: `{yyyymmdd}-{roadmap-name}-nav.md`
+Create file in the appropriate `.projex/` folder for the scope: `{yymmddhhmm}-{roadmap-name}-nav.md`
 
 - Project-level → root `.projex/`
 - Module-level → `src/{module}/.projex/`
@@ -183,7 +183,7 @@ Create file in the appropriate `.projex/` folder for the scope: `{yyyymmdd}-{roa
 - [ ] Priorities reflect user's stated goals
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yyyymmdd}-{roadmap-name}-nav.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
 ```
 
 ---
@@ -255,7 +255,7 @@ The navigation document itself doesn't execute — it informs what to execute ne
 #### 6. COMMIT REVISION
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yyyymmdd}-{roadmap-name}-nav.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
 ```
 
 If other projex documents were updated with references back to this navigation:
@@ -287,9 +287,9 @@ If other projex documents were updated with references back to this navigation:
 Navigation documents are **never** placed in `.projex/closed/` — they are living documents that persist until their scope's active development concludes or a new roadmap supersedes them.
 
 **Examples:**
-- Project-level: `.projex/20260201-engine-roadmap-nav.md`
-- Module-level: `src/parser/.projex/20260201-parser-direction-nav.md`
-- Area-level: `docs/.projex/20260201-docs-coverage-nav.md`
+- Project-level: `.projex/2602011430-engine-roadmap-nav.md`
+- Module-level: `src/parser/.projex/2602011430-parser-direction-nav.md`
+- Area-level: `docs/.projex/2602011430-docs-coverage-nav.md`
 
 ---
 

@@ -2,7 +2,7 @@
 # Usage: projex-worktree.ps1 <repo-root> <branch-name> [<base-ref>]
 #
 # Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
-# of <branch-name> (e.g., .projex/20260307-foo → 20260307-foo).
+# of <branch-name> (e.g., .projex/2603071430-foo → 2603071430-foo).
 # The worktree directory sits next to the repo, not inside it.
 
 param(
