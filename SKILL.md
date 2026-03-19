@@ -106,7 +106,7 @@ The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and
 
 ### Repo Resolution
 
-When a projex file is referenced (`@<file>`), **derive the target repo from that file's path** — `cd` to its directory and `git rev-parse --show-toplevel` from there. This is the first action, before any other git commands or file reads. The projex file's location is the source of truth; never rely on the session's initial cwd.
+When a projex file is referenced (`@<file>`), **derive the target repo from that file's path** — `cd` to its directory and `git rev-parse --show-toplevel` from there. This is the first action, before any other git commands or file reads. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of the workflow must run from this repo root.**
 
 When no file reference is given, infer the target repo from context (cwd, recent mentions, project structure).
 

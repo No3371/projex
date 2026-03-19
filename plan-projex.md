@@ -30,7 +30,7 @@ Plans capture WHAT needs doing and HOW — specific enough that any LLM or devel
 
 ### 1. SOURCE ANALYSIS
 
-**Resolve the target repo** — if a projex file is referenced, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
+**Resolve the target repo** — if a projex file is referenced, `cd` to its directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.** If no file is referenced, infer from context.
 
 **From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
 
@@ -75,7 +75,6 @@ Answer these questions by reading the actual code:
 
 ### 4. DRAFT THE PLAN
 
-Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
 Create `<projex-folder>/{yymmddhhmm}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
 
 **Template Structure:**
@@ -291,7 +290,6 @@ Before marking Ready:
 6. **Commit the plan** — Plan must be committed to base branch before execution
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
@@ -337,8 +335,6 @@ Split is **recommended** when:
 > A language spec change requires updating the C# runtime.
 > - **Wrong:** One plan covering both spec markdown and C# source.
 > - **Right:** Two plans:
->   1. `docs/.projex/20260208-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
->   2. `src/.projex/20260208-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
 >   1. `docs/.projex/2602081430-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
 >   2. `src/.projex/2602081430-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
 
@@ -360,7 +356,6 @@ Each split plan must:
 ## OUTPUT
 
 This workflow produces:
-- A plan projex document at `.projex/{yyyymmdd}-{name}-plan.md` (pending in parent folder)
 - A plan projex document at `.projex/{yymmddhhmm}-{name}-plan.md` (pending in parent folder)
 - Updated relationships in source proposal (if applicable)
 - Updated relationships in any related projex documents

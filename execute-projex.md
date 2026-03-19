@@ -44,15 +44,13 @@ Before starting execution:
 
 ### 2. ENVIRONMENT CHECK
 
-**Resolve the target repo from the plan file's path** (see SKILL.md § Repo Resolution), then verify:
+**Resolve the target repo** — `cd` to the plan file's directory and run `git rev-parse --show-toplevel`. The plan file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.**
 
 ```bash
-git branch --show-current
-```
-```bash
-git status
+git rev-parse --show-toplevel && git branch --show-current && git status
 ```
 
+- [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
 - [ ] **Correct base branch** — shows the expected branch (typically `main` or a feature branch)
 - [ ] **Clean working state** — no uncommitted changes
 - [ ] Required tools/dependencies available
@@ -87,7 +85,6 @@ git branch --show-current
 Edit the plan file, then commit the status change on the base branch:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
@@ -95,20 +92,16 @@ Edit the plan file, then commit the status change on the base branch:
 
 **Checkout mode (default):**
 ```bash
-git checkout -b .projex/{yyyymmdd}-{plan-name}
 git checkout -b .projex/{yymmddhhmm}-{plan-name}
 git branch --show-current
 ```
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
-{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yyyymmdd}-{plan-name}
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yymmddhhmm}-{plan-name}
 ```
-All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{plan-name}` as the working directory. The main directory stays on the base branch.
 All subsequent commands use `{repo-name}.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
-3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
 3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
 
 ### 2. BUILD TASK LIST FROM PLAN
@@ -160,7 +153,6 @@ For each step in the plan:
 4. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yyyymmdd}-{plan-name}-log.md
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
@@ -230,7 +222,6 @@ Git operation discipline (sequential execution, explicit file staging, verificat
 
 ### Branch Naming
 ```
-.projex/{yyyymmdd}-{plan-name}
 .projex/{yymmddhhmm}-{plan-name}
 ```
 
@@ -257,10 +248,8 @@ If execution fails and cannot continue:
 
 This workflow produces:
 - Executed plan objectives (code changes, test results, gathered data, etc.)
-- Execution log (`{yyyymmdd}-{plan-name}-log.md`) documenting every action taken
 - Execution log (`{yymmddhhmm}-{plan-name}-log.md`) documenting every action taken
 - Updated plan status (`Complete` or `Blocked`)
-- Ephemeral git branch `.projex/{yyyymmdd}-{plan-name}` with all commits (if any)
 - Ephemeral git branch `.projex/{yymmddhhmm}-{plan-name}` with all commits (if any)
 
 ---

@@ -70,7 +70,7 @@ The directive can be:
 
 Before acting:
 
-1. **Resolve the target repo** — If the directive references a projex file, derive the repo from its path (see SKILL.md § Repo Resolution). Otherwise, infer from context.
+1. **Resolve the target repo** — If the directive references a projex file, `cd` to its directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.** If no file is referenced, infer from context.
 2. **Understand the directive** — What exactly needs to happen?
 3. **Locate relevant files** — Read them, understand current state
 4. **Check for related projex** — Is this part of an existing plan or proposal?
@@ -104,7 +104,6 @@ Act directly:
 
 ### 3. WRITE THE PATCH DOCUMENT
 
-Create: `{yyyymmdd}-{patch-name}-patch.md`
 Create: `{yymmddhhmm}-{patch-name}-patch.md`
 
 The patch document IS the walkthrough. It is a single, self-contained record.
@@ -199,8 +198,6 @@ After the patch is written:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
-  .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
-  .projex/{yyyymmdd}-{related-plan-name}-plan.md \
   .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
@@ -233,8 +230,6 @@ Patches commit directly to the current branch. This is intentional — the overh
 
 # Step 2: Write patch doc, update related documents, commit
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
-  .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
-  .projex/{yyyymmdd}-{related-plan-name}-plan.md
   .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md
 ```
@@ -249,7 +244,6 @@ See SKILL.md § Git Operation Discipline.
 
 This workflow produces:
 - The implemented change (committed to current branch)
-- A patch document at `.projex/closed/{yyyymmdd}-{patch-name}-patch.md`
 - A patch document at `.projex/closed/{yymmddhhmm}-{patch-name}-patch.md`
 - Updated related projex documents (if any)
 
@@ -259,7 +253,6 @@ This workflow produces:
 ├── [pending projex...]
 ├── [source plan with patched objectives marked, if applicable]
 └── closed/
-    └── {yyyymmdd}-{patch-name}-patch.md
     └── {yymmddhhmm}-{patch-name}-patch.md
 ```
 

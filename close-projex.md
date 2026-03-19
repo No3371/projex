@@ -41,9 +41,15 @@ Before closing:
 
 ### 0. RESOLVE REPO AND BASE BRANCH
 
-**Resolve the target repo from the execution log's path** (see SKILL.md § Repo Resolution).
+**Resolve the target repo** — `cd` to the execution log's directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.**
 
-Read the `Base Branch:` field from the execution log (`{yyyymmdd}-{plan-name}-log.md`). All git commands below use `{base-branch}` — **never assume `main`**.
+```bash
+git rev-parse --show-toplevel && git branch --show-current
+```
+
+- [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
+
+Read the `Base Branch:` field from the execution log (`{yymmddhhmm}-{plan-name}-log.md`). All git commands below use `{base-branch}` — **never assume `main`**.
 
 If the execution log is missing or lacks the field, determine the base branch by asking the user.
 
@@ -397,7 +403,6 @@ Combines all execution commits into a single clean commit on base branch.
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
 {projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} .projex/{yymmddhhmm}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
 ```
 
@@ -408,13 +413,11 @@ Preserves full commit history from execution.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}"
 {projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yymmddhhmm}-{plan-name} "projex: merge {plan-name}"
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}" --worktree
 {projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yymmddhhmm}-{plan-name} "projex: merge {plan-name}" --worktree
 ```
 
@@ -424,7 +427,6 @@ Preserves full commit history from execution.
 Replays commits onto base branch for linear history.
 
 ```bash
-git checkout .projex/{yyyymmdd}-{plan-name}
 git checkout .projex/{yymmddhhmm}-{plan-name}
 ```
 Verify: on ephemeral branch.
@@ -440,13 +442,11 @@ git checkout {base-branch}
 Verify: branch switched.
 
 ```bash
-git merge .projex/{yyyymmdd}-{plan-name} --ff-only
 git merge .projex/{yymmddhhmm}-{plan-name} --ff-only
 ```
 Verify: fast-forward merge succeeded.
 
 ```bash
-git branch -d .projex/{yyyymmdd}-{plan-name}
 git branch -d .projex/{yymmddhhmm}-{plan-name}
 ```
 Verify: branch deleted.
@@ -460,13 +460,11 @@ Discards the branch without merging.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name}
 {projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yymmddhhmm}-{plan-name}
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} --worktree
 {projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yymmddhhmm}-{plan-name} --worktree
 ```
 
@@ -528,7 +526,6 @@ If no stash was made, skip this step.
 ## OUTPUT
 
 This workflow produces:
-- A walkthrough projex document at `.projex/closed/{yyyymmdd}-{name}-walkthrough.md`
 - A walkthrough projex document at `.projex/closed/{yymmddhhmm}-{name}-walkthrough.md`
 - Source plan moved to `.projex/closed/` with completion status and walkthrough link
 - Source proposal moved to `.projex/closed/` (if all derived plans are closed)
@@ -540,9 +537,6 @@ This workflow produces:
 .projex/
 ├── [other pending projex...]
 └── closed/
-    ├── {yyyymmdd}-{name}-proposal.md   (if applicable)
-    ├── {yyyymmdd}-{name}-plan.md
-    └── {yyyymmdd}-{name}-walkthrough.md
     ├── {yymmddhhmm}-{name}-proposal.md   (if applicable)
     ├── {yymmddhhmm}-{name}-plan.md
     └── {yymmddhhmm}-{name}-walkthrough.md
