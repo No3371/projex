@@ -75,7 +75,7 @@ Answer these questions by reading the actual code:
 
 ### 4. DRAFT THE PLAN
 
-Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `projex/` folders.
+Create `<projex-folder>/{yyyymmdd}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
 
 **Template Structure:**
 
@@ -286,16 +286,16 @@ Before marking Ready:
 2. **De-slop** (optional) — Re-read as a reader and strip agent self-talk, filler, redundant restatements, and unfilled template artifacts. See *De-slop* in SKILL.md.
 3. **Update relationships** — Add links to/from related projex
 4. **Set status** — Mark as `Ready` when complete
-5. **Verify placement** — Confirm the file is in the correct `projex/` folder (it should already be there from step 4)
+5. **Verify placement** — Confirm the file is in the correct `.projex/` folder (it should already be there from step 4)
 6. **Commit the plan** — Plan must be committed to base branch before execution
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" projex/{yyyymmdd}-{plan-name}-plan.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
 ```
 
 > **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
 
-**Folder placement:** See SKILL.md § Organizing. Plans move to `projex/closed/` only after Walkthrough is authored.
+**Folder placement:** See SKILL.md § Organizing. Plans move to `.projex/closed/` only after Walkthrough is authored.
 
 ---
 
@@ -319,7 +319,7 @@ Draft → Ready → In Progress → Complete
 ### When to split
 
 Split is **required** when any of these apply:
-- Plan touches files in more than one `projex/` scope (different projex folders)
+- Plan touches files in more than one `.projex/` scope (different projex folders)
 - Plan touches files in more than one repository
 - Plan mixes upstream changes (e.g. spec, schema, API contract) with downstream consumers (e.g. implementation, client code)
 
@@ -335,8 +335,8 @@ Split is **recommended** when:
 > A language spec change requires updating the C# runtime.
 > - **Wrong:** One plan covering both spec markdown and C# source.
 > - **Right:** Two plans:
->   1. `docs/projex/20260208-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
->   2. `src/projex/20260208-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
+>   1. `docs/.projex/20260208-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
+>   2. `src/.projex/20260208-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
 
 **By slice (recommended when scope is large within one boundary):**
 1. **Vertical slices** — End-to-end for one feature
@@ -356,11 +356,11 @@ Each split plan must:
 ## OUTPUT
 
 This workflow produces:
-- A plan projex document at `projex/{yyyymmdd}-{name}-plan.md` (pending in parent folder)
+- A plan projex document at `.projex/{yyyymmdd}-{name}-plan.md` (pending in parent folder)
 - Updated relationships in source proposal (if applicable)
 - Updated relationships in any related projex documents
 
-After execution and walkthrough creation, both Plan and Walkthrough move to `projex/closed/`.
+After execution and walkthrough creation, both Plan and Walkthrough move to `.projex/closed/`.
 
 ---
 

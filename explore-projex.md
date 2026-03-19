@@ -228,9 +228,9 @@ Once all targets (including revisit targets) are done:
 2. Adjust detail to match scope
 3. Link to related projex
 4. Place in appropriate folder:
-   - Active/referenced → `projex/`
-   - Completed/reference → `projex/closed/`
-   - Outdated → `projex/archived/`
+   - Active/referenced → `.projex/`
+   - Completed/reference → `.projex/closed/`
+   - Outdated → `.projex/archived/`
 
 ---
 
@@ -267,7 +267,7 @@ See SKILL.md § Document Types for the full type comparison. In brief:
 
 ## OUTPUT
 
-Produces exploration document at `projex/{yyyymmdd}-{name}-explore.md` with:
+Produces exploration document at `.projex/{yyyymmdd}-{name}-explore.md` with:
 - Comprehensive understanding of subject
 - Answers to guiding questions
 - Foundation for informed decisions

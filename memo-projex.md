@@ -9,7 +9,7 @@ Memos capture something worth remembering before it gets lost — a user's offha
 **Key characteristics:**
 - **Capture, not analyze** — record the thing, not a study of the thing
 - **Zero research** — use only what's already in the agent's current context. Do not read additional files, explore code, or investigate. If context is thin, that's fine — the memo is honest about what was known
-- **Active until consumed** — memos live in `projex/` where they stay visible. Moved to `projex/closed/` only when acted on (became a plan, fed into an eval, resolved, or deliberately dismissed)
+- **Active until consumed** — memos live in `.projex/` where they stay visible. Moved to `.projex/closed/` only when acted on (became a plan, fed into an eval, resolved, or deliberately dismissed)
 - **Smallest projex type** — if a memo feels like it needs more than a few paragraphs, it's probably an Evaluation, Proposal, or Plan instead
 
 **When to use:**
@@ -56,7 +56,7 @@ Classify what's being captured:
 
 ### 2. WRITE THE MEMO
 
-Create file: `{yyyymmdd}-{memo-name}-memo.md` in `projex/`
+Create file: `{yyyymmdd}-{memo-name}-memo.md` in `.projex/`
 
 **Template:**
 
@@ -94,13 +94,13 @@ Do NOT research or explore to fill this section. Write only from current context
 ### 3. COMMIT
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" projex/{yyyymmdd}-{memo-name}-memo.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yyyymmdd}-{memo-name}-memo.md
 ```
 
 If a related projex should reference this memo (e.g., a plan whose objectives were deferred), update it:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" projex/{related-projex-file}.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" .projex/{related-projex-file}.md
 ```
 
 ---
@@ -124,7 +124,7 @@ See SKILL.md § Organizing. Memos stay active until consumed into plans, evaluat
 ## OUTPUT
 
 This workflow produces:
-- A memo document at `projex/{yyyymmdd}-{memo-name}-memo.md`
+- A memo document at `.projex/{yyyymmdd}-{memo-name}-memo.md`
 - Optionally updated related projex documents
 
 ---

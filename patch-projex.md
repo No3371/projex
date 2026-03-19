@@ -174,7 +174,7 @@ The patch document IS the walkthrough. It is a single, self-contained record.
 [Optional: Gotchas encountered, insights, follow-up needed, anything worth recording]
 ```
 
-**Placement:** `projex/closed/` — Patches are born closed. They document a completed action.
+**Placement:** `.projex/closed/` — Patches are born closed. They document a completed action.
 
 ### 4. UPDATE RELATED DOCUMENTS
 
@@ -184,7 +184,7 @@ After the patch is written:
    - Mark the patched work with `[PATCHED]` and link to the patch document
    - Note what remains open, if anything
    - Add to the plan's Related Projex section: `> Partial Execution: [description] completed via [patch doc link]`
-   - If the patch leaves nothing more to do within the plan, update plan status to `Complete` and move the plan to `projex/closed/`
+   - If the patch leaves nothing more to do within the plan, update plan status to `Complete` and move the plan to `.projex/closed/`
 
 2. **If related to a proposal:**
    - Add a reference to the patch in the proposal's related projex
@@ -198,8 +198,8 @@ After the patch is written:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
-  projex/closed/{yyyymmdd}-{patch-name}-patch.md \
-  projex/{yyyymmdd}-{related-plan-name}-plan.md \
+  .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
+  .projex/{yyyymmdd}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
 ```
 
@@ -230,8 +230,8 @@ Patches commit directly to the current branch. This is intentional — the overh
 
 # Step 2: Write patch doc, update related documents, commit
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
-  projex/closed/{yyyymmdd}-{patch-name}-patch.md \
-  projex/{yyyymmdd}-{related-plan-name}-plan.md
+  .projex/closed/{yyyymmdd}-{patch-name}-patch.md \
+  .projex/{yyyymmdd}-{related-plan-name}-plan.md
 ```
 
 ### Git Operation Discipline
@@ -244,12 +244,12 @@ See SKILL.md § Git Operation Discipline.
 
 This workflow produces:
 - The implemented change (committed to current branch)
-- A patch document at `projex/closed/{yyyymmdd}-{patch-name}-patch.md`
+- A patch document at `.projex/closed/{yyyymmdd}-{patch-name}-patch.md`
 - Updated related projex documents (if any)
 
 **Folder structure:**
 ```
-projex/
+.projex/
 ├── [pending projex...]
 ├── [source plan with patched objectives marked, if applicable]
 └── closed/
@@ -266,7 +266,7 @@ Before considering the patch complete:
 - [ ] Verification passed (tests, build, manual check)
 - [ ] Patch document written with all changes detailed
 - [ ] Related projex documents updated
-- [ ] Patch document placed in `projex/closed/`
+- [ ] Patch document placed in `.projex/closed/`
 - [ ] All document updates committed
 - [ ] No stale information left in related documents
 
@@ -274,7 +274,7 @@ Before considering the patch complete:
 
 ## NOTES
 
-- Patches are born closed — they go directly to `projex/closed/`
+- Patches are born closed — they go directly to `.projex/closed/`
 - The patch document is the walkthrough. There is no separate walkthrough
 - If a patch fails verification, fix it or abandon it — don't leave broken state
 - If you discover the patch is bigger than expected mid-execution, stop and escalate to `/plan-projex`

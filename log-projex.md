@@ -9,7 +9,7 @@ Log documents capture what changed and why, derived from actual diffs. Unlike Wa
 **Key characteristics:**
 - **Observation-first** — reads diffs to understand what happened, rather than narrating a plan's execution
 - Standalone — no source plan or ephemeral branch required
-- Born closed — the log is the final artifact, placed directly in `projex/closed/`
+- Born closed — the log is the final artifact, placed directly in `.projex/closed/`
 - Works on staged changes, commit ranges, or individual commits
 
 **Contrast with Walkthrough (close-projex):**
@@ -84,7 +84,7 @@ For clear change sets, proceed directly to drafting.
 
 ### 4. DRAFT THE LOG
 
-Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `projex/closed/` folder (born closed).
+Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `.projex/closed/` folder (born closed).
 
 **Template Structure:**
 
@@ -176,7 +176,7 @@ Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `projex/closed/` 
 ### 5. COMMIT THE LOG
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" projex/closed/{yyyymmdd}-{log-name}-log.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" .projex/closed/{yyyymmdd}-{log-name}-log.md
 ```
 
 ---
@@ -195,9 +195,9 @@ Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `projex/closed/` 
 
 | State | Location |
 |-------|----------|
-| Complete (always) | `projex/closed/` matching the change set's scope |
+| Complete (always) | `.projex/closed/` matching the change set's scope |
 
-Logs are born closed — they go directly to `projex/closed/`. They are never active or pending.
+Logs are born closed — they go directly to `.projex/closed/`. They are never active or pending.
 
 ---
 

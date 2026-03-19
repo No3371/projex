@@ -14,9 +14,9 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 - Drives or pivots development — the document that answers "what should we work on next?" for its scope
 
 **Scale flexibility:**
-- A **project-level** navigation in `projex/` steers the overall initiative — phases are major capability areas
-- A **module-level** navigation in `src/parser/projex/` steers parser development — phases might be syntax coverage milestones
-- A **feature-area** navigation in `docs/projex/` steers documentation — phases might be coverage or quality targets
+- A **project-level** navigation in `.projex/` steers the overall initiative — phases are major capability areas
+- A **module-level** navigation in `src/parser/.projex/` steers parser development — phases might be syntax coverage milestones
+- A **feature-area** navigation in `docs/.projex/` steers documentation — phases might be coverage or quality targets
 - The abstraction level is always relative: a module navigation's milestones may be as concrete as a project navigation's phases, and that's correct
 
 **Contrast with Plan:**
@@ -33,9 +33,9 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 ```
 
 **First invocation** (create new roadmap):
-- `/navigate-projex.md Game engine project roadmap` — project-level, lives in root `projex/`
-- `/navigate-projex.md Parser module direction` — module-level, lives in `src/parser/projex/`
-- `/navigate-projex.md API documentation coverage` — area-level, lives in `docs/api/projex/`
+- `/navigate-projex.md Game engine project roadmap` — project-level, lives in root `.projex/`
+- `/navigate-projex.md Parser module direction` — module-level, lives in `src/parser/.projex/`
+- `/navigate-projex.md API documentation coverage` — area-level, lives in `docs/api/.projex/`
 
 **Subsequent invocations** (revisit and revise):
 - `/navigate-projex.md @20260201-engine-roadmap-nav.md`
@@ -52,7 +52,7 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 Before drafting any roadmap, build comprehensive understanding of the target scope:
 
 1. **Survey the scope** — What exists within this area? What state is it in? What's working, what's not?
-2. **Collect existing projex** — Scan the relevant `projex/` folder(s) for active proposals, plans, evals, explorations. For a module-level navigation, focus on that module's projex folder; for project-level, scan broadly
+2. **Collect existing projex** — Scan the relevant `.projex/` folder(s) for active proposals, plans, evals, explorations. For a module-level navigation, focus on that module's projex folder; for project-level, scan broadly
 3. **Identify momentum** — What has been worked on recently? What's stalled? What's blocking progress?
 4. **Understand goals** — What is this scope trying to achieve? What does success look like?
 5. **Spot gaps** — What areas within this scope have no projex activity? What's neglected?
@@ -72,11 +72,11 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 #### 3. DRAFT THE ROADMAP
 
-Create file in the appropriate `projex/` folder for the scope: `{yyyymmdd}-{roadmap-name}-nav.md`
+Create file in the appropriate `.projex/` folder for the scope: `{yyyymmdd}-{roadmap-name}-nav.md`
 
-- Project-level → root `projex/`
-- Module-level → `src/{module}/projex/`
-- Area-level → `{area}/projex/`
+- Project-level → root `.projex/`
+- Module-level → `src/{module}/.projex/`
+- Area-level → `{area}/.projex/`
 
 **Template Structure:**
 
@@ -183,7 +183,7 @@ Create file in the appropriate `projex/` folder for the scope: `{yyyymmdd}-{road
 - [ ] Priorities reflect user's stated goals
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" projex/{yyyymmdd}-{roadmap-name}-nav.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yyyymmdd}-{roadmap-name}-nav.md
 ```
 
 ---
@@ -197,8 +197,8 @@ This is the primary mode — navigation documents are revisited repeatedly.
 1. **Read the navigation document** — Understand the existing roadmap
 2. **Check referenced projex** — What's been completed, abandoned, or changed since last revision?
 3. **Scan for new projex** — Were any plans, proposals, evals, walkthroughs, or patches created since the last revision that aren't referenced? Specifically:
-   - Check `projex/` for new active documents
-   - Check `projex/closed/` for completed walkthroughs and patches that may correspond to roadmap milestones
+   - Check `.projex/` for new active documents
+   - Check `.projex/closed/` for completed walkthroughs and patches that may correspond to roadmap milestones
    - Match discovered execution artifacts (walkthroughs, patches, completed plans) to existing milestones
 4. **Assess the codebase** — Has the project changed in ways the roadmap doesn't reflect?
 5. **Check revision log** — When was this last updated? What's happened since?
@@ -255,12 +255,12 @@ The navigation document itself doesn't execute — it informs what to execute ne
 #### 6. COMMIT REVISION
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" projex/{yyyymmdd}-{roadmap-name}-nav.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yyyymmdd}-{roadmap-name}-nav.md
 ```
 
 If other projex documents were updated with references back to this navigation:
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" projex/{other-projex-file}.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" .projex/{other-projex-file}.md
 ```
 
 ---
@@ -268,11 +268,11 @@ If other projex documents were updated with references back to this navigation:
 ## NAVIGATION PRINCIPLES
 
 - **Relatively abstract** — Milestones describe outcomes at one level above the navigation's scope. A project nav says "Parser handles all expression types"; a parser module nav says "Binary, unary, and ternary expressions supported" — but neither says "Add binary expression parsing to parser.rs line 142"
-- **Living, not archived** — Navigation documents stay in their `projex/` folder for their entire active lifetime. They are never moved to `closed/`
+- **Living, not archived** — Navigation documents stay in their `.projex/` folder for their entire active lifetime. They are never moved to `closed/`
 - **User-aligned** — Every revision involves the user. The agent researches and proposes; the user confirms direction
 - **Honest assessment** — Don't paper over stalled milestones or ignored phases. If something isn't progressing, say so
 - **Reference-rich** — The roadmap should be a map of maps — linking to the detailed projex that flesh out each milestone
-- **One per scope** — Each scope (project, module, area) should have at most one active navigation document in its `projex/` folder. If scope grows too large, split into separate navigations at the appropriate level with cross-references
+- **One per scope** — Each scope (project, module, area) should have at most one active navigation document in its `.projex/` folder. If scope grows too large, split into separate navigations at the appropriate level with cross-references
 - **Nestable** — A project-level navigation may reference module-level navigations as its "detail layer", and a module-level navigation may reference its parent project navigation for broader context. This nesting follows the same folder structure as all other projex types
 
 ---
@@ -281,15 +281,15 @@ If other projex documents were updated with references back to this navigation:
 
 | State | Location |
 |-------|----------|
-| Active (always) | The `projex/` folder matching the navigation's scope |
-| Superseded by new roadmap | `projex/archived/` within the same scope |
+| Active (always) | The `.projex/` folder matching the navigation's scope |
+| Superseded by new roadmap | `.projex/archived/` within the same scope |
 
-Navigation documents are **never** placed in `projex/closed/` — they are living documents that persist until their scope's active development concludes or a new roadmap supersedes them.
+Navigation documents are **never** placed in `.projex/closed/` — they are living documents that persist until their scope's active development concludes or a new roadmap supersedes them.
 
 **Examples:**
-- Project-level: `projex/20260201-engine-roadmap-nav.md`
-- Module-level: `src/parser/projex/20260201-parser-direction-nav.md`
-- Area-level: `docs/projex/20260201-docs-coverage-nav.md`
+- Project-level: `.projex/20260201-engine-roadmap-nav.md`
+- Module-level: `src/parser/.projex/20260201-parser-direction-nav.md`
+- Area-level: `docs/.projex/20260201-docs-coverage-nav.md`
 
 ---
 

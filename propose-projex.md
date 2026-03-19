@@ -152,16 +152,16 @@ If accepted:
 
 ### 3. INITIAL PLACEMENT
 
-Save the proposal in the appropriate `projex/` folder based on scope:
+Save the proposal in the appropriate `.projex/` folder based on scope:
 
-- **Repo-wide changes** → Root `projex/` folder
-- **Module-specific changes** → That module's `projex/` folder
-- **Cross-cutting concerns** → Root `projex/` with references in affected modules
+- **Repo-wide changes** → Root `.projex/` folder
+- **Module-specific changes** → That module's `.projex/` folder
+- **Cross-cutting concerns** → Root `.projex/` with references in affected modules
 
 **Folder by status:**
-- **Pending** (Draft/Review) → `projex/` (parent folder)
-- **Accepted** → Remains in `projex/` until derived Plan is closed
-- **Rejected** → Move to `projex/archived/` or delete
+- **Pending** (Draft/Review) → `.projex/` (parent folder)
+- **Accepted** → Remains in `.projex/` until derived Plan is closed
+- **Rejected** → Move to `.projex/archived/` or delete
 
 ### 4. REFINEMENT
 
@@ -202,10 +202,10 @@ Draft → Review → Accepted
 ## OUTPUT
 
 This workflow produces:
-- A proposal projex document at `projex/{yyyymmdd}-{name}-proposal.md`
+- A proposal projex document at `.projex/{yyyymmdd}-{name}-proposal.md`
 - Updated relationships in any related projex documents
 
-**Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `projex/` until their Plan is closed.
+**Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `.projex/` until their Plan is closed.
 
 ---
 

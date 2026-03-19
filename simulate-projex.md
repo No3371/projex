@@ -9,7 +9,7 @@ Simulations are disposable executions. Make real changes, run real builds, obser
 **Key characteristics:**
 - Freely and aggressively make file changes to observe outcomes
 - All changes are rolled back — only the simulation document survives
-- Ephemeral git branch (`projex/sim/{yyyymmdd}-{name}`) provides isolation and guaranteed clean rollback
+- Ephemeral git branch (`.projex/sim/{yyyymmdd}-{name}`) provides isolation and guaranteed clean rollback
 - The branch is ALWAYS discarded. There is no merge option.
 - Aggressive logging — the changes themselves vanish; only your notes survive. **If you don't write it down, it never happened.**
 - **NEVER perform actions that cannot be rolled back**
@@ -88,13 +88,13 @@ git branch --show-current  # Remember as {base-branch}
 
 **Worktree mode (default for simulations):**
 ```bash
-{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/sim/{yyyymmdd}-{simulation-name}
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/sim/{yyyymmdd}-{simulation-name}
 ```
 All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{simulation-name}` as the working directory. The main directory stays on the base branch.
 
 **Checkout mode (fallback — when worktree is unavailable):**
 ```bash
-git checkout -b projex/sim/{yyyymmdd}-{simulation-name}
+git checkout -b .projex/sim/{yyyymmdd}-{simulation-name}
 ```
 Verify you are on the new branch before proceeding.
 
@@ -143,12 +143,12 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/sim/{yyyymmdd}-{simulation-name} --worktree
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/sim/{yyyymmdd}-{simulation-name} --worktree
 ```
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/sim/{yyyymmdd}-{simulation-name}
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/sim/{yyyymmdd}-{simulation-name}
 ```
 
 **Verify:** Confirm base branch, branch deleted, working directory clean via `git status`.
@@ -159,7 +159,7 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 
 Now on the base branch with all changes rolled back, write the simulation report from gathered logs and observations.
 
-Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `projex/closed/` (simulations are born closed).
+Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `.projex/closed/` (simulations are born closed).
 
 **Template:**
 
@@ -332,7 +332,7 @@ Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `projex/closed/` (simula
 ### 6. COMMIT AND UPDATE RELATED DOCUMENTS
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" .projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
 ```
 
 If the simulation was against an existing plan or proposal:
@@ -342,7 +342,7 @@ If the simulation was against an existing plan or proposal:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): update related projex - {simulation-name}" \
-  projex/{yyyymmdd}-{related-plan-name}-plan.md \
+  .projex/{yyyymmdd}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
 ```
 
@@ -356,7 +356,7 @@ If the simulation was against an existing plan or proposal:
 - [ ] Side-effects documented
 - [ ] Feasibility verdict provided with supporting evidence
 - [ ] No forbidden irreversible actions were taken
-- [ ] Simulation document placed in `projex/closed/`
+- [ ] Simulation document placed in `.projex/closed/`
 - [ ] Related projex documents updated (if applicable)
 - [ ] All commits on base branch are documentation only
 

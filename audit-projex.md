@@ -285,7 +285,7 @@ Create file: `{yyyymmdd}-{subject}-audit.md`
 
 ### 8. FINALIZE
 
-Save to `projex/`. Link to audited work. Update related projex if issues found.
+Save to `.projex/`. Link to audited work. Update related projex if issues found.
 
 ---
 
@@ -309,6 +309,6 @@ Save to `projex/`. Link to audited work. Update related projex if issues found.
 
 ## OUTPUT
 
-Produces `projex/{yyyymmdd}-{name}-audit.md` with verification status, quality scores, and findings.
+Produces `.projex/{yyyymmdd}-{name}-audit.md` with verification status, quality scores, and findings.
 
-**Placement:** Active → `projex/` | Completed → `projex/closed/` | Reference → `projex/archived/`
+**Placement:** Active → `.projex/` | Completed → `.projex/closed/` | Reference → `.projex/archived/`

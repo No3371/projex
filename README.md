@@ -57,16 +57,16 @@ Agents forget what they did, skip steps, lose context between sessions, and leav
 
 ## How It Works
 
-Self-contained markdown documents in `projex/` folders. Each has a type, template, and lifecycle. Named `{yyyymmdd}-{name}-{type}.md`, organized by state:
+Self-contained markdown documents in `.projex/` folders. Each has a type, template, and lifecycle. Named `{yyyymmdd}-{name}-{type}.md`, organized by state:
 
 ```
-projex/                    # Active/pending
-projex/closed/             # Completed
-projex/archived/           # Superseded or shelved
-projex/abandoned/          # Discarded (rare)
+.projex/                    # Active/pending
+.projex/closed/             # Completed
+.projex/archived/           # Superseded or shelved
+.projex/abandoned/          # Discarded (rare)
 ```
 
-Repos can have multiple `projex/` folders scoped to different areas (e.g., `docs/projex/`, `src/projex/`), managed independently.
+Repos can have multiple `.projex/` folders scoped to different areas (e.g., `docs/.projex/`, `src/.projex/`), managed independently.
 
 ## Document Types
 
@@ -186,8 +186,8 @@ Patterns, not rules.
 
 ## Git Integration
 
-- **Execute/Close** — ephemeral branch (`projex/{yyyymmdd}-{name}`), merged or abandoned at close
-- **Simulate** — throwaway branch (`projex/sim/{yyyymmdd}-{name}`), always discarded
+- **Execute/Close** — ephemeral branch (`.projex/{yyyymmdd}-{name}`), merged or abandoned at close
+- **Simulate** — throwaway branch (`.projex/sim/{yyyymmdd}-{name}`), always discarded
 - **Patch** — commits directly to current branch
 - **Log** — observes existing changes (staged or committed); commits only the log document itself
 - **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)

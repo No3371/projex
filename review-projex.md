@@ -159,11 +159,11 @@ Based on analysis, decide:
 **Archival Recommended:**
 - Projex is obsolete or superseded
 - Document reasoning for archival
-- Move to `projex/archived/`
+- Move to `.projex/archived/`
 
 **Abandonment Recommended:**
 - Projex is no longer relevant and not worth preserving
-- Move to `projex/abandoned/` or delete
+- Move to `.projex/abandoned/` or delete
 
 ### 7. DRAFT THE REVIEW
 
@@ -363,12 +363,12 @@ Based on review findings:
 ## OUTPUT
 
 This workflow produces:
-- A review projex document at `projex/{yyyymmdd}-{original-name}-review.md`
+- A review projex document at `.projex/{yyyymmdd}-{original-name}-review.md`
 - Review notation added to the reviewed projex
 - Clear verdict and recommended actions
 - Potential file moves based on verdict:
-  - **Archival** → Move reviewed projex to `projex/archived/`
-  - **Abandonment** → Move to `projex/abandoned/` or delete
+  - **Archival** → Move reviewed projex to `.projex/archived/`
+  - **Abandonment** → Move to `.projex/abandoned/` or delete
 
 ---
 

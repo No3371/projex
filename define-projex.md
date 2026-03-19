@@ -73,7 +73,7 @@ Don't rush to document — keep discussing until you and the user feel the major
 
 #### 3. DRAFT THE DEFINITION
 
-Create file in the appropriate `projex/` folder: `{yyyymmdd}-{entity-name}-def.md`
+Create file in the appropriate `.projex/` folder: `{yyyymmdd}-{entity-name}-def.md`
 
 **Template Structure:**
 
@@ -188,7 +188,7 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{entity-name}-def.m
 - [ ] Status field reflects actual state (Draft if open questions remain)
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" .projex/{yyyymmdd}-{entity-name}-def.md
 ```
 
 ---
@@ -229,7 +229,7 @@ Update the document in-place:
 #### 4. COMMIT REVISION
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" .projex/{yyyymmdd}-{entity-name}-def.md
 ```
 
 ---
@@ -239,7 +239,7 @@ Update the document in-place:
 - **WHAT, not HOW** — the definition describes the entity's nature, not its implementation. "Sessions expire after the configured TTL" belongs here; "We use a Redis TTL to expire sessions" belongs in a plan or exploration
 - **Exhaust the vagueness** — the ultimate goal is zero unacknowledged unknowns. Every open question is tracked. Every "it depends" is followed up with "on what, exactly?"
 - **Honest about gaps** — a definition with explicit open questions is trustworthy. One that looks complete but hides assumptions is dangerous. Mark uncertainty visibly
-- **Living, not archived** — definitions stay in `projex/` for their active lifetime. They move to `projex/archived/` only when the entity itself is deprecated or superseded
+- **Living, not archived** — definitions stay in `.projex/` for their active lifetime. They move to `.projex/archived/` only when the entity itself is deprecated or superseded
 - **Precision over completeness** — ten precise statements beat twenty vague ones. If you can't be specific yet, write an open question instead
 - **Scope-appropriate** — a class definition captures fields, methods, invariants. A product definition captures value prop, user segments, capabilities. Use the sections that fit; omit the rest
 
@@ -249,10 +249,10 @@ Update the document in-place:
 
 | State | Location |
 |-------|----------|
-| Active (default) | `projex/` matching the entity's scope |
-| Superseded | `projex/archived/` within the same scope |
+| Active (default) | `.projex/` matching the entity's scope |
+| Superseded | `.projex/archived/` within the same scope |
 
-Definition documents are **never** placed in `projex/closed/` — they are living documents that persist until the entity they describe is deprecated or replaced.
+Definition documents are **never** placed in `.projex/closed/` — they are living documents that persist until the entity they describe is deprecated or replaced.
 
 ---
 

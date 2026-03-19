@@ -32,7 +32,7 @@ Before closing:
 - [ ] User has reviewed and is satisfied — OR projex is marked `Auto-Close: Yes`
 - [ ] All success criteria are verifiable
 - [ ] Execution log/notes are available (including any user interventions — mid-execution and post-plan)
-- [ ] Currently on ephemeral branch `projex/{yyyymmdd}-{plan-name}`
+- [ ] Currently on ephemeral branch `.projex/{yyyymmdd}-{plan-name}`
 - [ ] All execution changes are committed (including changes from user interventions)
 
 ---
@@ -364,19 +364,19 @@ If this plan were to be executed again:
    - Any dependent plans
 
 3. **Move to closed folder:**
-   - Move Plan document to `projex/closed/`
-   - Place Walkthrough in `projex/closed/` alongside the Plan
-   - If source Proposal exists and all derived Plans are closed, move Proposal to `projex/closed/` as well
+   - Move Plan document to `.projex/closed/`
+   - Place Walkthrough in `.projex/closed/` alongside the Plan
+   - If source Proposal exists and all derived Plans are closed, move Proposal to `.projex/closed/` as well
 
 4. **Commit walkthrough and file moves** — stage each moved/created file by explicit path:
 
 ```bash
 # Stage all moved/created files — include proposal and deletion tracking only if applicable:
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
-  projex/closed/{yyyymmdd}-{name}-walkthrough.md \
-  projex/closed/{yyyymmdd}-{name}-plan.md \
-  projex/closed/{yyyymmdd}-{name}-proposal.md \
-  projex/{yyyymmdd}-{name}-plan.md
+  .projex/closed/{yyyymmdd}-{name}-walkthrough.md \
+  .projex/closed/{yyyymmdd}-{name}-plan.md \
+  .projex/closed/{yyyymmdd}-{name}-proposal.md \
+  .projex/{yyyymmdd}-{name}-plan.md
 ```
 
 ---
@@ -392,12 +392,12 @@ Combines all execution commits into a single clean commit on base branch.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]"
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]"
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
 ```
 
 **Best for:** Clean history, routine executions
@@ -407,12 +407,12 @@ Preserves full commit history from execution.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}"
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}"
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}" --worktree
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} "projex: merge {plan-name}" --worktree
 ```
 
 **Best for:** Complex executions where step-by-step history is valuable
@@ -421,7 +421,7 @@ Preserves full commit history from execution.
 Replays commits onto base branch for linear history.
 
 ```bash
-git checkout projex/{yyyymmdd}-{plan-name}
+git checkout .projex/{yyyymmdd}-{plan-name}
 ```
 Verify: on ephemeral branch.
 
@@ -436,12 +436,12 @@ git checkout {base-branch}
 Verify: branch switched.
 
 ```bash
-git merge projex/{yyyymmdd}-{plan-name} --ff-only
+git merge .projex/{yyyymmdd}-{plan-name} --ff-only
 ```
 Verify: fast-forward merge succeeded.
 
 ```bash
-git branch -d projex/{yyyymmdd}-{plan-name}
+git branch -d .projex/{yyyymmdd}-{plan-name}
 ```
 Verify: branch deleted.
 
@@ -454,12 +454,12 @@ Discards the branch without merging.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name}
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name}
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} projex/{yyyymmdd}-{plan-name} --worktree
+{projex-scripts}/projex-abandon.{sh|ps1} <repo-root> {base-branch} .projex/{yyyymmdd}-{plan-name} --worktree
 ```
 
 **Use when:** Execution failed, changes are not wanted
@@ -520,15 +520,15 @@ If no stash was made, skip this step.
 ## OUTPUT
 
 This workflow produces:
-- A walkthrough projex document at `projex/closed/{yyyymmdd}-{name}-walkthrough.md`
-- Source plan moved to `projex/closed/` with completion status and walkthrough link
-- Source proposal moved to `projex/closed/` (if all derived plans are closed)
+- A walkthrough projex document at `.projex/closed/{yyyymmdd}-{name}-walkthrough.md`
+- Source plan moved to `.projex/closed/` with completion status and walkthrough link
+- Source proposal moved to `.projex/closed/` (if all derived plans are closed)
 - Updated relationships in related projex documents
 - **Ephemeral branch merged/deleted** — changes now on base branch
 
 **Folder structure after close:**
 ```
-projex/
+.projex/
 ├── [other pending projex...]
 └── closed/
     ├── {yyyymmdd}-{name}-proposal.md   (if applicable)
@@ -557,8 +557,8 @@ Before considering walkthrough complete:
 - [ ] Key insights captured
 - [ ] Source plan updated
 - [ ] Related projex linked
-- [ ] Plan and Walkthrough moved to `projex/closed/`
-- [ ] Source proposal moved to `projex/closed/` (if all derived plans closed)
+- [ ] Plan and Walkthrough moved to `.projex/closed/`
+- [ ] Source proposal moved to `.projex/closed/` (if all derived plans closed)
 - [ ] **Ephemeral branch finalized** (merged or abandoned)
 - [ ] **Stashed changes restored** (if any were stashed at execution start)
 - [ ] **Back on base branch** with clean state

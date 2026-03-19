@@ -244,7 +244,7 @@ Create file: `{yyyymmdd}-{topic}-interview.md`
 ## Artifacts
 
 **Related Documents:**
-- [Link to related projex/docs]
+- [Link to related .projex/docs]
 
 **Follow-up Projex:**
 - [Proposals to create based on this interview]
@@ -363,9 +363,9 @@ Focus on confirming understanding, checking assumptions
 
 ## OUTPUT
 
-Produces `projex/{yyyymmdd}-{topic}-interview.md` with full Q&A transcript, interpretations, and findings.
+Produces `.projex/{yyyymmdd}-{topic}-interview.md` with full Q&A transcript, interpretations, and findings.
 
-**Folder placement:** Active → `projex/` | Concluded → `projex/closed/`
+**Folder placement:** Active → `.projex/` | Concluded → `.projex/closed/`
 
 ---
 

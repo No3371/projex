@@ -241,7 +241,7 @@ Create file: `{yyyymmdd}-{subject}-redteam.md`
 
 ### 7. FINALIZE
 
-Save to appropriate `projex/` folder. Link to subject being analyzed.
+Save to appropriate `.projex/` folder. Link to subject being analyzed.
 
 ---
 
@@ -266,6 +266,6 @@ Save to appropriate `projex/` folder. Link to subject being analyzed.
 
 ## OUTPUT
 
-Produces `projex/{yyyymmdd}-{name}-redteam.md` with severity-prioritized findings and remediation.
+Produces `.projex/{yyyymmdd}-{name}-redteam.md` with severity-prioritized findings and remediation.
 
-**Folder placement:** Active → `projex/` | Addressed → `projex/closed/` | Superseded → `projex/archived/`
+**Folder placement:** Active → `.projex/` | Addressed → `.projex/closed/` | Superseded → `.projex/archived/`

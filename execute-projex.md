@@ -87,24 +87,24 @@ git branch --show-current
 Edit the plan file, then commit the status change on the base branch:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" projex/{yyyymmdd}-{plan-name}-plan.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yyyymmdd}-{plan-name}-plan.md
 ```
 
 2. **Create ephemeral branch and verify**
 
 **Checkout mode (default):**
 ```bash
-git checkout -b projex/{yyyymmdd}-{plan-name}
+git checkout -b .projex/{yyyymmdd}-{plan-name}
 git branch --show-current
 ```
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
-{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yyyymmdd}-{plan-name}
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yyyymmdd}-{plan-name}
 ```
 All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
-3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `projex/` folder. See [Execution Log Template](#execution-log-template).
+3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
 
 ### 2. BUILD TASK LIST FROM PLAN
 
@@ -155,7 +155,7 @@ For each step in the plan:
 4. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext projex/{yyyymmdd}-{plan-name}-log.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yyyymmdd}-{plan-name}-log.md
 ```
 
 5. **Mark the task complete** in your task list — only after both the work and log entry are committed
@@ -193,7 +193,7 @@ Is the action different from the plan?
 4. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
 5. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
 
-Do not move the plan file — relocation to `projex/closed/` happens during `/close-projex.md`
+Do not move the plan file — relocation to `.projex/closed/` happens during `/close-projex.md`
 
 ---
 
@@ -224,7 +224,7 @@ Git operation discipline (sequential execution, explicit file staging, verificat
 
 ### Branch Naming
 ```
-projex/{yyyymmdd}-{plan-name}
+.projex/{yyyymmdd}-{plan-name}
 ```
 
 ### Commit Message Convention
@@ -252,7 +252,7 @@ This workflow produces:
 - Executed plan objectives (code changes, test results, gathered data, etc.)
 - Execution log (`{yyyymmdd}-{plan-name}-log.md`) documenting every action taken
 - Updated plan status (`Complete` or `Blocked`)
-- Ephemeral git branch `projex/{yyyymmdd}-{plan-name}` with all commits (if any)
+- Ephemeral git branch `.projex/{yyyymmdd}-{plan-name}` with all commits (if any)
 
 ---
 

@@ -205,7 +205,7 @@ Re-read the full guide as a reader — not as the agent that wrote it. This is a
 
 1. Front-load the objective and key concepts
 2. Link to related projex
-3. Place in `projex/closed/` — guides are point-in-time artifacts
+3. Place in `.projex/closed/` — guides are point-in-time artifacts
 
 ---
 
@@ -221,7 +221,7 @@ Re-read the full guide as a reader — not as the agent that wrote it. This is a
 
 ## OUTPUT
 
-Produces guide document at `projex/closed/{yyyymmdd}-{name}-guide.md` with:
+Produces guide document at `.projex/closed/{yyyymmdd}-{name}-guide.md` with:
 - Concrete learning objective
 - Phased reading path with focus cues and takeaways
 - Key concepts index for quick reference

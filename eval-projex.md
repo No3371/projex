@@ -186,7 +186,7 @@ Create: `{yyyymmdd}-{eval-name}-eval.md`
 1. **Refine** — Front-load executive summary
 2. **Calibrate depth** — Trim Quick Take, expand Deep Research
 3. **Update relationships** — Link to related projex
-4. **Place correctly** — Active → `projex/`, completed → `projex/closed/`, outdated → `projex/archived/`
+4. **Place correctly** — Active → `.projex/`, completed → `.projex/closed/`, outdated → `.projex/archived/`
 
 ### 7. VISUALIZE (optional)
 
@@ -229,7 +229,7 @@ Re-invoke on an existing eval: `/eval-projex @{existing-eval}.md [mode] [target]
 ## OUTPUT
 
 This workflow produces:
-- An evaluation projex document at `projex/{yyyymmdd}-{name}-eval.md`
+- An evaluation projex document at `.projex/{yyyymmdd}-{name}-eval.md`
 - Updated relationships in evaluated projex documents
 - Clear findings and recommendations
 

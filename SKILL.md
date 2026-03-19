@@ -24,7 +24,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
 - **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
-- **Archive** — Compresses all files in `projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
+- **Archive** — Compresses all files in `.projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
 
 ## Authoring
 
@@ -32,7 +32,7 @@ File naming: `{yyyymmdd}-{projex-name}-{projex-type}.md`
 
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
-- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
+- **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `20260208-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/20260208-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
 ### De-slop (optional final pass)
 
@@ -50,21 +50,21 @@ This pass is **optional**: apply it when the draft reads like it was narrated ra
 
 ## Organizing
 
-Files live in `projex/` folders in one or more paths (each dedicated to a individual domain/module/components/area/scope, etc.). Location in projex folders reflects state:
-- Active → `projex/`
-- Closed → `projex/closed/`
-- Archived → `projex/archived/`
-- Abandoned → `projex/abandoned/` (or deleted)
+Files live in `.projex/` folders in one or more paths (each dedicated to a individual domain/module/components/area/scope, etc.). Location in projex folders reflects state:
+- Active → `.projex/`
+- Closed → `.projex/closed/`
+- Archived → `.projex/archived/`
+- Abandoned → `.projex/abandoned/` (or deleted)
 
-A repo may have multiple `projex/` folders scoped to different areas (e.g., `docs/projex/`, `src/projex/`). Each is independently managed. New projex should not cross area boundaries or violate dependencies, for example a language spec update projex should not touch runtime implementation, and vice versa.
+A repo may have multiple `.projex/` folders scoped to different areas (e.g., `docs/.projex/`, `src/.projex/`). Each is independently managed. New projex should not cross area boundaries or violate dependencies, for example a language spec update projex should not touch runtime implementation, and vice versa.
 
 ```
 your-repo/
-├── projex/              # Master projexs
+├── .projex/              # Master projexs
 │   ├── closed/
 │   └── ...
-├── docs/projex/         # Doc-scoped projexs
-├── src/projex/          # Src-scoped projexs
+├── docs/.projex/         # Doc-scoped projexs
+├── src/.projex/          # Src-scoped projexs
 └── ...
 ```
 
@@ -95,7 +95,7 @@ Workflow specs are actions invoked in verb sense:
 The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.
 
 ```
-[base branch] ── execute-projex ──> [projex/{yyyymmdd}-{plan-name}] ── close-projex ──> [merge back]
+[base branch] ── execute-projex ──> [.projex/{yyyymmdd}-{plan-name}] ── close-projex ──> [merge back]
 ```
 
 1. `/execute-projex.md` creates ephemeral branch from current HEAD
@@ -214,7 +214,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 ### Notes
 
 - Execute/Walkthrough and Simulation use ephemeral branches
-- Simulation branches (`projex/sim/`) always discarded — only report committed to base
+- Simulation branches (`.projex/sim/`) always discarded — only report committed to base
 - Other workflows operate on current branch, committed normally
 - Walkthrough committed as final commit before merge
 

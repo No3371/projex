@@ -254,7 +254,7 @@ See SKILL.md § Document Types for the full type comparison. In brief:
 ## OUTPUT
 
 This workflow produces:
-- An imagination projex document at `projex/{yyyymmdd}-{name}-imagine.md`
+- An imagination projex document at `.projex/{yyyymmdd}-{name}-imagine.md`
 - Updated relationships in related projex documents
 - Seeds for further imagination, proposals, or plans
 

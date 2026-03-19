@@ -1,19 +1,19 @@
 ---
-description: This workflow compresses all files in `projex/closed/` into a single **Archive** index document — summarizing each with a short description and keywords — then clears the folder and places the archive inside it. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
+description: This workflow compresses all files in `.projex/closed/` into a single **Archive** index document — summarizing each with a short description and keywords — then clears the folder and places the archive inside it. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE
 
-Archives shrink the `projex/closed/` folder from many files into one compact index. Each closed projex gets a one-line summary and a keyword set, making the history searchable without the clutter of full documents.
+Archives shrink the `.projex/closed/` folder from many files into one compact index. Each closed projex gets a one-line summary and a keyword set, making the history searchable without the clutter of full documents.
 
 **Key characteristics:**
-- Reads every file in `projex/closed/` and produces a short description + keywords per file
+- Reads every file in `.projex/closed/` and produces a short description + keywords per file
 - Summarization can be parallelized across files using sub-agents
 - Outputs a single archive index document
-- Clears the individual files from `projex/closed/` after archiving
-- Places the archive index into `projex/closed/` as its sole artifact
+- Clears the individual files from `.projex/closed/` after archiving
+- Places the archive index into `.projex/closed/` as its sole artifact
 
-**Born closed** — the archive index lands directly in `projex/closed/`.
+**Born closed** — the archive index lands directly in `.projex/closed/`.
 
 ---
 
@@ -21,7 +21,7 @@ Archives shrink the `projex/closed/` folder from many files into one compact ind
 
 ```
 /archive-projex
-/archive-projex projex/closed/          # explicit path (if multiple closed/ folders exist)
+/archive-projex .projex/closed/          # explicit path (if multiple closed/ folders exist)
 ```
 
 ---
@@ -30,9 +30,9 @@ Archives shrink the `projex/closed/` folder from many files into one compact ind
 
 ### 1. IDENTIFY TARGET FOLDER
 
-Determine which `projex/closed/` folder to archive:
+Determine which `.projex/closed/` folder to archive:
 
-- If invoked without arguments, default to `projex/closed/` relative to the current repo root
+- If invoked without arguments, default to `.projex/closed/` relative to the current repo root
 - If a path is given, use that folder
 - Confirm the repo root first: `git rev-parse --show-toplevel`
 
@@ -41,7 +41,7 @@ Determine which `projex/closed/` folder to archive:
 List all `.md` files in the target `closed/` folder, **excluding any that end in `-archive.md`**:
 
 ```bash
-ls projex/closed/*.md
+ls .projex/closed/*.md
 # then filter out *-archive.md files — these are never processed
 ```
 
@@ -64,9 +64,9 @@ For each file in the list, extract:
 
 ### 4. DRAFT THE ARCHIVE DOCUMENT
 
-Create: `{yyyymmdd}-{scope}-archive.md` directly in the target `projex/closed/` folder.
+Create: `{yyyymmdd}-{scope}-archive.md` directly in the target `.projex/closed/` folder.
 
-Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `projex/closed/`).
+Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).
 
 **Template:**
 
@@ -74,7 +74,7 @@ Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.
 # Archive: [Scope]
 
 > **Created:** YYYY-MM-DD
-> **Scope:** [which projex/closed/ this covers]
+> **Scope:** [which .projex/closed/ this covers]
 > **Files Archived:** [N]
 
 ---
@@ -107,7 +107,7 @@ Use today's date for `{yyyymmdd}`. Use the folder's scope name for `{scope}` (e.
 Stage and commit the archive document:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" projex/closed/{yyyymmdd}-{scope}-archive.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yyyymmdd}-{scope}-archive.md
 ```
 
 Verify the commit succeeded before proceeding.
@@ -117,17 +117,17 @@ Verify the commit succeeded before proceeding.
 Delete each individual file that was archived (every `.md` file in the folder **except** the newly created archive):
 
 ```bash
-git rm projex/closed/{filename1}.md
-git rm projex/closed/{filename2}.md
+git rm .projex/closed/{filename1}.md
+git rm .projex/closed/{filename2}.md
 # ... one per file
 ```
 
-> **Never use `git rm projex/closed/*.md`** — always list files explicitly. Only remove files from the list collected in step 2. Existing `-archive.md` files are never removed.
+> **Never use `git rm .projex/closed/*.md`** — always list files explicitly. Only remove files from the list collected in step 2. Existing `-archive.md` files are never removed.
 
 Commit the deletions:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" projex/closed/{filename1}.md projex/closed/{filename2}.md
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" .projex/closed/{filename1}.md .projex/closed/{filename2}.md
 ```
 
 > **Note:** `projex-commit` stages the listed files before committing. Since the files were already `git rm`'d (removed from working tree and staged for deletion), `projex-commit`'s `git add` on them is a no-op — the deletions are already staged. The script provides atomic rollback if the commit fails.
@@ -139,12 +139,12 @@ Verify the commit. The folder should now contain only the archive index file.
 ## OUTPUT
 
 This workflow produces:
-- A single archive index at `projex/closed/{yyyymmdd}-{scope}-archive.md`
-- All previously individual closed files removed from `projex/closed/`
+- A single archive index at `.projex/closed/{yyyymmdd}-{scope}-archive.md`
+- All previously individual closed files removed from `.projex/closed/`
 
 **Folder state after archiving:**
 ```
-projex/
+.projex/
 └── closed/
     └── {yyyymmdd}-{scope}-archive.md    ← only file remaining
 ```
@@ -164,7 +164,7 @@ projex/
 ## NOTES
 
 - Archive does not destroy information — it compresses it. The filename is preserved, so a full document can be recovered from git history if needed
-- If multiple `projex/closed/` folders exist (e.g. `docs/projex/closed/` and `src/projex/closed/`), archive each independently with its own invocation
+- If multiple `.projex/closed/` folders exist (e.g. `docs/.projex/closed/` and `src/.projex/closed/`), archive each independently with its own invocation
 - Parallelization is optional but recommended for large `closed/` folders (>10 files)
 - The archive itself is never archived — it stays as the permanent record for that `closed/` folder until manually superseded
 - Use relative paths when referencing files
