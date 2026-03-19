@@ -37,10 +37,17 @@ fi
 # Create sibling worktree directory if needed
 mkdir -p "$WT_BASE"
 
-# Create worktree
-if ! git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$BRANCH_NAME" "$BASE_REF" 2>&1; then
-  echo "Error: could not create worktree at '$WT_PATH'" >&2
+# Fail if branch already exists
+if git -C "$REPO_ROOT" rev-parse --verify "refs/heads/$BRANCH_NAME" > /dev/null 2>&1; then
+  echo "Error: branch '$BRANCH_NAME' already exists" >&2
   exit 1
 fi
+
+# Create worktree
+wt_out=$(git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$BRANCH_NAME" "$BASE_REF" 2>&1) || {
+  echo "Error: could not create worktree at '$WT_PATH'" >&2
+  echo "$wt_out" >&2
+  exit 1
+}
 
 echo "Worktree created: $WT_PATH (branch: $BRANCH_NAME, base: $BASE_REF)"

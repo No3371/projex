@@ -36,10 +36,17 @@ if (-not (Test-Path $WtBase)) {
     New-Item -ItemType Directory -Path $WtBase -Force | Out-Null
 }
 
+# Fail if branch already exists
+git -C $RepoRoot rev-parse --verify "refs/heads/$BranchName" 2>&1 | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    Write-Error "Error: branch '$BranchName' already exists"
+    exit 1
+}
+
 # Create worktree
 $wtOut = git -C $RepoRoot worktree add $WtPath -b $BranchName $BaseRef 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "Error: could not create worktree at '$WtPath'"
+    Write-Error "Error: could not create worktree at '$WtPath'`n$wtOut"
     exit 1
 }
 
