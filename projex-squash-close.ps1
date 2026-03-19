@@ -1,7 +1,7 @@
 # projex-squash-close.ps1 — Squash-merge ephemeral branch into base, then delete ephemeral
 # Usage: projex-squash-close.ps1 <repo-root> <base-branch> <ephemeral-branch> "commit message" [-Worktree]
 #
-# -Worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+# -Worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
 #            The main working directory must already be on the base branch.
 
 param(
@@ -38,7 +38,8 @@ if ($Base -eq $Ephemeral) {
 }
 
 $WtSuffix = ($Ephemeral -split '/')[-1]
-$WtPath = Join-Path $RepoRoot ".projexwt" $WtSuffix
+$WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
+$WtPath = Join-Path $WtBase $WtSuffix
 
 if ($Worktree) {
     # Worktree mode: remove worktree, then merge (already on base branch)
@@ -70,7 +71,7 @@ git -C $RepoRoot merge --squash $Ephemeral
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot reset --hard HEAD 2>$null
     if ($Worktree) {
-        Write-Error "merge --squash failed — reset to clean state on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add .projexwt/$WtSuffix $Ephemeral"
+        Write-Error "merge --squash failed — reset to clean state on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add $WtPath $Ephemeral"
     } else {
         git -C $RepoRoot checkout $Ephemeral 2>$null
         if ($LASTEXITCODE -eq 0) {
@@ -87,7 +88,7 @@ git -C $RepoRoot commit -m $CommitMsg
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot reset HEAD 2>$null
     if ($Worktree) {
-        Write-Error "Commit failed — squashed changes unstaged but preserved in working tree on '$Base'. Retry: git commit -m '...'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add .projexwt/$WtSuffix $Ephemeral"
+        Write-Error "Commit failed — squashed changes unstaged but preserved in working tree on '$Base'. Retry: git commit -m '...'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add $WtPath $Ephemeral"
     } else {
         Write-Error "Commit failed — squashed changes unstaged but preserved in working tree on '$Base'. Retry: git commit -m '...'. Or rollback: git checkout -- ."
     }

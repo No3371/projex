@@ -1,11 +1,9 @@
-# projex-worktree.ps1 — Create a worktree in .projexwt/ with gitignore enforcement
+# projex-worktree.ps1 — Create a worktree in <repo>.projexwt/ (sibling to repo)
 # Usage: projex-worktree.ps1 <repo-root> <branch-name> [<base-ref>]
 #
-# Creates .projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
+# Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
 # of <branch-name> (e.g., projex/20260307-foo → 20260307-foo).
-#
-# Gitignore gate: if .projexwt/ is not in .gitignore, the script adds it and commits
-# before creating the worktree. This is a hard prerequisite — never bypassed.
+# The worktree directory sits next to the repo, not inside it.
 
 param(
     [Parameter(Mandatory=$true)][string]$RepoRoot,
@@ -24,30 +22,8 @@ if ($LASTEXITCODE -ne 0) {
 
 # Derive worktree suffix from branch name (last path segment)
 $WtSuffix = ($BranchName -split '/')[-1]
-$WtPath = Join-Path $RepoRoot ".projexwt" $WtSuffix
-
-# --- Gitignore gate ---
-git -C $RepoRoot check-ignore -q .projexwt 2>$null
-if ($LASTEXITCODE -ne 0) {
-    $GitignorePath = Join-Path $RepoRoot ".gitignore"
-    if (Test-Path $GitignorePath) {
-        Add-Content -Path $GitignorePath -Value ".projexwt/"
-    } else {
-        Set-Content -Path $GitignorePath -Value ".projexwt/"
-    }
-    git -C $RepoRoot add -- .gitignore
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Error: could not stage .gitignore"
-        exit 1
-    }
-    $commitOut = git -C $RepoRoot commit -m "projex: gitignore .projexwt/" 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        git -C $RepoRoot restore --staged .gitignore 2>$null
-        Write-Error "Error: could not commit .gitignore update"
-        exit 1
-    }
-    Write-Host "Added .projexwt/ to .gitignore and committed."
-}
+$WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
+$WtPath = Join-Path $WtBase $WtSuffix
 
 # Check worktree doesn't already exist
 if (Test-Path $WtPath) {
@@ -55,10 +31,9 @@ if (Test-Path $WtPath) {
     exit 1
 }
 
-# Create .projexwt/ directory if needed
-$projexwtDir = Join-Path $RepoRoot ".projexwt"
-if (-not (Test-Path $projexwtDir)) {
-    New-Item -ItemType Directory -Path $projexwtDir -Force | Out-Null
+# Create sibling worktree directory if needed
+if (-not (Test-Path $WtBase)) {
+    New-Item -ItemType Directory -Path $WtBase -Force | Out-Null
 }
 
 # Create worktree

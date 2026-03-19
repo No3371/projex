@@ -2,7 +2,7 @@
 # projex-squash-close.sh — Squash-merge ephemeral branch into base, then delete ephemeral
 # Usage: projex-squash-close.sh <repo-root> <base-branch> <ephemeral-branch> "commit message" [--worktree]
 #
-# --worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+# --worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
 #             The main working directory must already be on the base branch.
 
 set -euo pipefail
@@ -52,7 +52,7 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: remove worktree, then merge (already on base branch)
-  WT_PATH="$REPO_ROOT/.projexwt/${EPHEMERAL##*/}"
+  WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
     echo "Error: could not remove worktree '$WT_PATH' — branch '$EPHEMERAL' still exists for manual recovery" >&2
     exit 1
@@ -74,7 +74,7 @@ fi
 if ! git -C "$REPO_ROOT" merge --squash "$EPHEMERAL" 2>&1; then
   git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
   if [ "$WORKTREE_MODE" = true ]; then
-    echo "Error: merge --squash failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add .projexwt/${EPHEMERAL##*/} $EPHEMERAL" >&2
+    echo "Error: merge --squash failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
   elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
     echo "Error: merge --squash failed — rolled back to '$EPHEMERAL'" >&2
   else
@@ -87,7 +87,7 @@ fi
 if ! git -C "$REPO_ROOT" commit -m "$COMMIT_MSG" 2>&1; then
   git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
   if [ "$WORKTREE_MODE" = true ]; then
-    echo "Error: commit failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add .projexwt/${EPHEMERAL##*/} $EPHEMERAL" >&2
+    echo "Error: commit failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
   elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
     echo "Error: commit failed — reset to clean state, rolled back to '$EPHEMERAL'" >&2
   else

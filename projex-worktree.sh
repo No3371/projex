@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
-# projex-worktree.sh — Create a worktree in .projexwt/ with gitignore enforcement
+# projex-worktree.sh — Create a worktree in <repo>.projexwt/ (sibling to repo)
 # Usage: projex-worktree.sh <repo-root> <branch-name> [<base-ref>]
 #
-# Creates .projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
+# Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
 # of <branch-name> (e.g., projex/20260307-foo → 20260307-foo).
-#
-# Gitignore gate: if .projexwt/ is not in .gitignore, the script adds it and commits
-# before creating the worktree. This is a hard prerequisite — never bypassed.
+# The worktree directory sits next to the repo, not inside it.
 
 set -euo pipefail
 
@@ -27,27 +25,8 @@ fi
 
 # Derive worktree suffix from branch name (last path segment)
 WT_SUFFIX="${BRANCH_NAME##*/}"
-WT_PATH="$REPO_ROOT/.projexwt/$WT_SUFFIX"
-
-# --- Gitignore gate ---
-if ! git -C "$REPO_ROOT" check-ignore -q .projexwt 2>/dev/null; then
-  GITIGNORE="$REPO_ROOT/.gitignore"
-  if [ -f "$GITIGNORE" ]; then
-    echo ".projexwt/" >> "$GITIGNORE"
-  else
-    echo ".projexwt/" > "$GITIGNORE"
-  fi
-  if ! git -C "$REPO_ROOT" add .gitignore; then
-    echo "Error: could not stage .gitignore" >&2
-    exit 1
-  fi
-  if ! git -C "$REPO_ROOT" commit -m "projex: gitignore .projexwt/" 2>&1; then
-    git -C "$REPO_ROOT" restore --staged .gitignore 2>/dev/null || true
-    echo "Error: could not commit .gitignore update" >&2
-    exit 1
-  fi
-  echo "Added .projexwt/ to .gitignore and committed."
-fi
+WT_BASE="${REPO_ROOT%/}.projexwt"
+WT_PATH="$WT_BASE/$WT_SUFFIX"
 
 # Check worktree doesn't already exist
 if [ -d "$WT_PATH" ]; then
@@ -55,8 +34,8 @@ if [ -d "$WT_PATH" ]; then
   exit 1
 fi
 
-# Create .projexwt/ directory if needed
-mkdir -p "$REPO_ROOT/.projexwt"
+# Create sibling worktree directory if needed
+mkdir -p "$WT_BASE"
 
 # Create worktree
 if ! git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$BRANCH_NAME" "$BASE_REF" 2>&1; then

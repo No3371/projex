@@ -102,7 +102,7 @@ git branch --show-current
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yyyymmdd}-{plan-name}
 ```
-All subsequent commands use `.projexwt/{yyyymmdd}-{plan-name}` as the working directory. The main directory stays on the base branch.
+All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
 3. **Create execution log** — `{yyyymmdd}-{plan-name}-log.md` in the same `projex/` folder. See [Execution Log Template](#execution-log-template).
 
@@ -264,7 +264,7 @@ This workflow produces:
 # Execution Log: [Plan Name]
 Started: [yyyymmdd hh:mm]
 Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/auth]
-Worktree Path: [.projexwt/{name} — omit line if checkout mode]
+Worktree Path: [{repo-name}.projexwt/{name} — omit line if checkout mode]
 
 ## Steps
 

@@ -2,7 +2,7 @@
 # projex-abandon.sh — Checkout base and force-delete ephemeral branch without merging
 # Usage: projex-abandon.sh <repo-root> <base-branch> <ephemeral-branch> [--worktree]
 #
-# --worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+# --worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
 #             The main working directory must already be on the base branch.
 
 set -euo pipefail
@@ -51,7 +51,7 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: remove worktree (already on base branch)
-  WT_PATH="$REPO_ROOT/.projexwt/${EPHEMERAL##*/}"
+  WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" --force 2>&1; then
     echo "Warning: could not remove worktree '$WT_PATH' — remove manually: git worktree remove $WT_PATH --force"
   fi

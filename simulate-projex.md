@@ -90,7 +90,7 @@ git branch --show-current  # Remember as {base-branch}
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/sim/{yyyymmdd}-{simulation-name}
 ```
-All subsequent commands use `.projexwt/{yyyymmdd}-{simulation-name}` as the working directory. The main directory stays on the base branch.
+All subsequent commands use `{repo-name}.projexwt/{yyyymmdd}-{simulation-name}` as the working directory. The main directory stays on the base branch.
 
 **Checkout mode (fallback — when worktree is unavailable):**
 ```bash

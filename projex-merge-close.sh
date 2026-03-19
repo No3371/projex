@@ -2,7 +2,7 @@
 # projex-merge-close.sh — Merge with full history into base, then delete ephemeral
 # Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> "merge message" [--worktree]
 #
-# --worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+# --worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
 #             The main working directory must already be on the base branch.
 
 set -euo pipefail
@@ -52,7 +52,7 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: remove worktree, then merge (already on base branch)
-  WT_PATH="$REPO_ROOT/.projexwt/${EPHEMERAL##*/}"
+  WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
     echo "Error: could not remove worktree '$WT_PATH' — branch '$EPHEMERAL' still exists for manual recovery" >&2
     exit 1
@@ -74,7 +74,7 @@ fi
 if ! git -C "$REPO_ROOT" merge "$EPHEMERAL" --no-ff -m "$MERGE_MSG" 2>&1; then
   git -C "$REPO_ROOT" merge --abort 2>/dev/null || true
   if [ "$WORKTREE_MODE" = true ]; then
-    echo "Error: merge failed — aborted on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add .projexwt/${EPHEMERAL##*/} $EPHEMERAL" >&2
+    echo "Error: merge failed — aborted on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
   elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
     echo "Error: merge failed — aborted, rolled back to '$EPHEMERAL'" >&2
   else

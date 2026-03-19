@@ -1,7 +1,7 @@
 # projex-merge-close.ps1 — Merge with full history into base, then delete ephemeral
 # Usage: projex-merge-close.ps1 <repo-root> <base-branch> <ephemeral-branch> "merge message" [-Worktree]
 #
-# -Worktree: remove the worktree at .projexwt/<branch-suffix> instead of checking out base.
+# -Worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
 #            The main working directory must already be on the base branch.
 
 param(
@@ -38,7 +38,8 @@ if ($Base -eq $Ephemeral) {
 }
 
 $WtSuffix = ($Ephemeral -split '/')[-1]
-$WtPath = Join-Path $RepoRoot ".projexwt" $WtSuffix
+$WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
+$WtPath = Join-Path $WtBase $WtSuffix
 
 if ($Worktree) {
     # Worktree mode: remove worktree, then merge (already on base branch)
@@ -70,7 +71,7 @@ git -C $RepoRoot merge $Ephemeral --no-ff -m $MergeMsg
 if ($LASTEXITCODE -ne 0) {
     git -C $RepoRoot merge --abort 2>$null
     if ($Worktree) {
-        Write-Error "Merge failed — aborted on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add .projexwt/$WtSuffix $Ephemeral"
+        Write-Error "Merge failed — aborted on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add $WtPath $Ephemeral"
     } else {
         git -C $RepoRoot checkout $Ephemeral 2>$null
         if ($LASTEXITCODE -eq 0) {
