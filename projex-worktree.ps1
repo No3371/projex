@@ -20,6 +20,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
+# Sanitize branch name — git disallows components starting with '.'
+$GitBranch = (($BranchName -split '/') | ForEach-Object { $_ -replace '^\.', '' }) -join '/'
+
 # Derive worktree suffix from branch name (last path segment)
 $WtSuffix = ($BranchName -split '/')[-1]
 $WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
@@ -37,17 +40,17 @@ if (-not (Test-Path $WtBase)) {
 }
 
 # Fail if branch already exists
-git -C $RepoRoot rev-parse --verify "refs/heads/$BranchName" 2>&1 | Out-Null
+git -C $RepoRoot rev-parse --verify "refs/heads/$GitBranch" 2>&1 | Out-Null
 if ($LASTEXITCODE -eq 0) {
-    Write-Error "Error: branch '$BranchName' already exists"
+    Write-Error "Error: branch '$GitBranch' already exists"
     exit 1
 }
 
 # Create worktree
-$wtOut = git -C $RepoRoot worktree add $WtPath -b $BranchName $BaseRef 2>&1
+$wtOut = git -C $RepoRoot worktree add $WtPath -b $GitBranch $BaseRef 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Error: could not create worktree at '$WtPath'`n$wtOut"
     exit 1
 }
 
-Write-Host "Worktree created: $WtPath (branch: $BranchName, base: $BaseRef)"
+Write-Host "Worktree created: $WtPath (branch: $GitBranch, base: $BaseRef)"
