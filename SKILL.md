@@ -95,7 +95,7 @@ Workflow specs are actions invoked in verb sense:
 The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.
 
 ```
-[base branch] ── execute-projex ──> [.projex/{yymmddhhmm}-{plan-name}] ── close-projex ──> [merge back]
+[base branch] ── execute-projex ──> [projex/{yymmddhhmm}-{plan-name}] ── close-projex ──> [merge back]
 ```
 
 1. `/execute-projex.md` creates ephemeral branch from current HEAD

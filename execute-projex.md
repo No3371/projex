@@ -94,13 +94,13 @@ Edit the plan file, then commit the status change on the base branch:
 
 **Checkout mode (default):**
 ```bash
-git checkout -b .projex/{yymmddhhmm}-{plan-name}
+git checkout -b projex/{yymmddhhmm}-{plan-name}
 git branch --show-current
 ```
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
-{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> .projex/{yymmddhhmm}-{plan-name}
+{projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yymmddhhmm}-{plan-name}
 ```
 All subsequent commands use `{repo-name}.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
@@ -224,7 +224,7 @@ Git operation discipline (sequential execution, explicit file staging, verificat
 
 ### Branch Naming
 ```
-.projex/{yymmddhhmm}-{plan-name}
+projex/{yymmddhhmm}-{plan-name}
 ```
 
 ### Commit Message Convention
@@ -252,7 +252,7 @@ This workflow produces:
 - Executed plan objectives (code changes, test results, gathered data, etc.)
 - Execution log (`{yymmddhhmm}-{plan-name}-log.md`) documenting every action taken
 - Updated plan status (`Complete` or `Blocked`)
-- Ephemeral git branch `.projex/{yymmddhhmm}-{plan-name}` with all commits (if any)
+- Ephemeral git branch `projex/{yymmddhhmm}-{plan-name}` with all commits (if any)
 
 ---
 

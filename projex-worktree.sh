@@ -3,7 +3,7 @@
 # Usage: projex-worktree.sh <repo-root> <branch-name> [<base-ref>]
 #
 # Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
-# of <branch-name> (e.g., .projex/2603071430-foo → 2603071430-foo).
+# of <branch-name> (e.g., projex/2603071430-foo → 2603071430-foo).
 # The worktree directory sits next to the repo, not inside it.
 
 set -euo pipefail
@@ -23,9 +23,6 @@ if ! git -C "$REPO_ROOT" rev-parse --git-dir > /dev/null 2>&1; then
   exit 1
 fi
 
-# Sanitize branch name — git disallows components starting with '.'
-GIT_BRANCH=$(echo "$BRANCH_NAME" | sed 's|/\.|/|g; s|^\./\?||')
-
 # Derive worktree suffix from branch name (last path segment)
 WT_SUFFIX="${BRANCH_NAME##*/}"
 WT_BASE="${REPO_ROOT%/}.projexwt"
@@ -41,16 +38,16 @@ fi
 mkdir -p "$WT_BASE"
 
 # Fail if branch already exists
-if git -C "$REPO_ROOT" rev-parse --verify "refs/heads/$GIT_BRANCH" > /dev/null 2>&1; then
-  echo "Error: branch '$GIT_BRANCH' already exists" >&2
+if git -C "$REPO_ROOT" rev-parse --verify "refs/heads/$BRANCH_NAME" > /dev/null 2>&1; then
+  echo "Error: branch '$BRANCH_NAME' already exists" >&2
   exit 1
 fi
 
 # Create worktree
-wt_out=$(git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$GIT_BRANCH" "$BASE_REF" 2>&1) || {
+wt_out=$(git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$BRANCH_NAME" "$BASE_REF" 2>&1) || {
   echo "Error: could not create worktree at '$WT_PATH'" >&2
   echo "$wt_out" >&2
   exit 1
 }
 
-echo "Worktree created: $WT_PATH (branch: $GIT_BRANCH, base: $BASE_REF)"
+echo "Worktree created: $WT_PATH (branch: $BRANCH_NAME, base: $BASE_REF)"

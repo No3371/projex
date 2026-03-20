@@ -186,8 +186,8 @@ Patterns, not rules.
 
 ## Git Integration
 
-- **Execute/Close** — ephemeral branch (`.projex/{yymmddhhmm}-{name}`), merged or abandoned at close
-- **Simulate** — throwaway branch (`.projex/sim/{yymmddhhmm}-{name}`), always discarded
+- **Execute/Close** — ephemeral branch (`projex/{yymmddhhmm}-{name}`), merged or abandoned at close
+- **Simulate** — throwaway branch (`projex/sim/{yymmddhhmm}-{name}`), always discarded
 - **Patch** — commits directly to current branch
 - **Log** — observes existing changes (staged or committed); commits only the log document itself
 - **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)
