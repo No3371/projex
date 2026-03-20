@@ -51,6 +51,8 @@ When to review projex documents:
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
 
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+
 Determine what to review:
 
 **Specific document:**

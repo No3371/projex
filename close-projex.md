@@ -47,6 +47,8 @@ Before closing:
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel && git branch --show-current
 ```
 
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+
 - [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
 
 Read the `Base Branch:` field from the execution log (`{yymmddhhmm}-{plan-name}-log.md`). All git commands below use `{base-branch}` — **never assume `main`**.

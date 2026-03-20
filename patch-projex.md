@@ -74,6 +74,7 @@ Before acting:
 ```bash
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
 2. **Understand the directive** — What exactly needs to happen?
 3. **Locate relevant files** — Read them, understand current state
 4. **Check for related projex** — Is this part of an existing plan or proposal?

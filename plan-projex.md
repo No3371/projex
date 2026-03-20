@@ -36,6 +36,8 @@ Plans capture WHAT needs doing and HOW — specific enough that any LLM or devel
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
 
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+
 **From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
 
 **From Direct Request:** Clarify objective with user → research current state → identify scope → check for related projex.

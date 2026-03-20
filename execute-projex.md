@@ -50,6 +50,8 @@ Before starting execution:
 cd <absolute-path-to-plan-file-directory> && git rev-parse --show-toplevel && git branch --show-current && git status
 ```
 
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+
 - [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
 - [ ] **Correct base branch** — shows the expected branch (typically `main` or a feature branch)
 - [ ] **Clean working state** — no uncommitted changes
