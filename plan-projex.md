@@ -30,7 +30,11 @@ Plans capture WHAT needs doing and HOW — specific enough that any LLM or devel
 
 ### 1. SOURCE ANALYSIS
 
-**Resolve the target repo** — if a projex file is referenced, `cd` to its directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.** If no file is referenced, infer from context.
+**Resolve the target repo**: if a projex file is referenced, we find the exact git repo the projex belongs to. If no file is referenced, infer from context.
+
+```bash
+cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+```
 
 **From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
 

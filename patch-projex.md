@@ -70,7 +70,10 @@ The directive can be:
 
 Before acting:
 
-1. **Resolve the target repo** — If the directive references a projex file, `cd` to its directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.** If no file is referenced, infer from context.
+1. **Resolve the target repo** — If the directive references a projex file, we find the exact git repo the projex belongs to. If no file is referenced, infer from context.
+```bash
+cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+```
 2. **Understand the directive** — What exactly needs to happen?
 3. **Locate relevant files** — Read them, understand current state
 4. **Check for related projex** — Is this part of an existing plan or proposal?

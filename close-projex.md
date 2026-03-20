@@ -41,10 +41,10 @@ Before closing:
 
 ### 0. RESOLVE REPO AND BASE BRANCH
 
-**Resolve the target repo** — `cd` to the execution log's directory and run `git rev-parse --show-toplevel`. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of this workflow must run from this repo root.**
+**Resolve the target repo**: we find the exact git repo the projex belongs to.
 
 ```bash
-git rev-parse --show-toplevel && git branch --show-current
+cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel && git branch --show-current
 ```
 
 - [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
