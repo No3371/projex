@@ -92,7 +92,7 @@ Workflow specs are actions invoked in verb sense:
 
 ## Auxiliary Artifact Commit Policy
 
-**Auxiliary workflows** (all workflows except execute, close, and patch) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
+**Auxiliary workflows** (all workflows except execute, close, patch, and simulate) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
 Auxiliary workflows: propose, plan, eval, review, redteam, audit, interview, guide, explore, imagine, scan, log, memo, map, navigate, define, archive.
 
