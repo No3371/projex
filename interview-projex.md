@@ -367,6 +367,8 @@ Produces `projex/{yyyymmdd}-{topic}-interview.md` with full Q&A transcript, inte
 
 **Folder placement:** Active → `projex/` | Concluded → `projex/closed/`
 
+**Committing:** Present the interview document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## INTEGRATION WITH OTHER WORKFLOWS

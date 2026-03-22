@@ -90,6 +90,23 @@ Workflow specs are actions invoked in verb sense:
 - `/execute-projex.md @20260731-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after user reviewed execution results
 
+## Auxiliary Artifact Commit Policy
+
+**Auxiliary workflows** (all workflows except execute, close, and patch) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
+
+Auxiliary workflows: propose, plan, eval, review, redteam, audit, interview, guide, explore, imagine, simulate, scan, log, memo, map, navigate, define, archive.
+
+Execute, close, and patch are exempt — they commit as a structural requirement of their lifecycle (ephemeral branches, step-by-step traceability, born-closed atomicity).
+
+**Pattern for auxiliary workflows:**
+1. Create the artifact file
+2. Present it to the user (surface path, summary, key content)
+3. Wait — commit only if the user explicitly requests it (e.g., "commit this", "save it", "push it")
+
+The commit commands shown in auxiliary workflow docs are **reference templates**, not automatic steps.
+
+---
+
 ## Git Integration
 
 The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.

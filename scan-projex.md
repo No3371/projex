@@ -124,7 +124,11 @@ The default is `file:ln — annotation`, but adapt to the subject:
 | Config keys | `key = value` — in `file:ln` |
 | Database references | `table.column` — queried in `file:ln` |
 
-### 4. COMMIT
+### 4. PRESENT THE SCAN
+
+Surface the scan file path and entry count summary to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" projex/closed/{yyyymmdd}-{scan-name}-scan.md

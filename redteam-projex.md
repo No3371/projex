@@ -269,3 +269,5 @@ Save to appropriate `projex/` folder. Link to subject being analyzed.
 Produces `projex/{yyyymmdd}-{name}-redteam.md` with severity-prioritized findings and remediation.
 
 **Folder placement:** Active → `projex/` | Addressed → `projex/closed/` | Superseded → `projex/archived/`
+
+**Committing:** Present the red team document to the user. Do not commit automatically — commit only when the user explicitly requests it.

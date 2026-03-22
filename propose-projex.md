@@ -207,6 +207,8 @@ This workflow produces:
 
 **Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `projex/` until their Plan is closed.
 
+**Committing:** Present the proposal document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## NOTES

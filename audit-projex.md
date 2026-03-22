@@ -312,3 +312,5 @@ Save to `projex/`. Link to audited work. Update related projex if issues found.
 Produces `projex/{yyyymmdd}-{name}-audit.md` with verification status, quality scores, and findings.
 
 **Placement:** Active → `projex/` | Completed → `projex/closed/` | Reference → `projex/archived/`
+
+**Committing:** Present the audit document to the user. Do not commit automatically — commit only when the user explicitly requests it.

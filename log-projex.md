@@ -173,7 +173,11 @@ Create file: `{yyyymmdd}-{log-name}-log.md` in the appropriate `projex/closed/` 
 - **Include line ranges** for modified files so readers can jump to the relevant code
 - **Keep Observations honest** — risks and open questions are valuable, not signs of failure
 
-### 5. COMMIT THE LOG
+### 5. PRESENT THE LOG
+
+Surface the log file path and summary to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" projex/closed/{yyyymmdd}-{log-name}-log.md
