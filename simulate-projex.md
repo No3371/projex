@@ -329,19 +329,18 @@ Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `projex/closed/` (simula
 | [action] | [what we think would happen] | [irreversibility reason] |
 ```
 
-### 6. PRESENT AND UPDATE RELATED DOCUMENTS
+### 6. COMMIT AND UPDATE RELATED DOCUMENTS
 
-Surface the simulation report path and key findings to the user. If the simulation was against an existing plan or proposal, update the source document's Related Projex section with the verdict and key findings; if blockers were found, note them in the source document's risks/open questions.
-
-**Do not commit.** Present the result and wait — commit only when the user explicitly requests it.
-
-When the user requests a commit, use:
+Committing the report is part of completing the simulation — the ephemeral branch is gone and the report is the only surviving record.
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
 ```
 
-If related projex were updated, commit those separately:
+If the simulation was against an existing plan or proposal:
+- Add a reference to the simulation in the source document's Related Projex section
+- Note the simulation's verdict and key findings
+- If blockers were found, update the source document's risks/open questions
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): update related projex - {simulation-name}" \
@@ -361,7 +360,7 @@ If related projex were updated, commit those separately:
 - [ ] No forbidden irreversible actions were taken
 - [ ] Simulation document placed in `projex/closed/`
 - [ ] Related projex documents updated (if applicable)
-- [ ] Result presented to user — commit deferred until user requests it
+- [ ] All commits on base branch are documentation only
 
 ---
 
