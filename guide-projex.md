@@ -228,6 +228,8 @@ Produces guide document at `projex/closed/{yyyymmdd}-{name}-guide.md` with:
 - Common pitfalls to avoid misunderstanding
 - Links to related projex
 
+**Committing:** Present the guide document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## NOTES

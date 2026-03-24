@@ -174,6 +174,10 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{map-name}-map.md`
 - [ ] Discovered child maps' `Parent Map` updated to point here
 - [ ] Structure entries for directories with child maps annotated with `📍` links
 
+Surface the map file path and scope summary to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
+
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): create structure map - {map-name}" \
@@ -218,7 +222,11 @@ Update the document in-place:
 8. **Update map references** — Fix stale `📍` links, add links for newly discovered child maps, update upstream map if this map was added/moved/removed (see [Reference Maintenance](#reference-maintenance))
 9. **Append to revision log** — Summarize what changed
 
-#### 3. COMMIT REVISION
+#### 3. PRESENT REVISION
+
+Surface the updated map file path and a summary of what changed to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated

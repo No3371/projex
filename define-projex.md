@@ -178,7 +178,7 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{entity-name}-def.m
 - **State confidence levels** — if a property is inferred rather than confirmed, mark it: *(inferred from usage in X — confirm with user)*
 - **Open Questions are first-class content** — a definition with 10 answered properties and 5 explicit open questions is more valuable than one with 15 properties where 5 are quietly guessed
 
-#### 4. VALIDATE AND COMMIT
+#### 4. VALIDATE AND PRESENT
 
 **Check:**
 - [ ] Identity section is clear enough for someone unfamiliar to understand the entity
@@ -186,6 +186,10 @@ Create file in the appropriate `projex/` folder: `{yyyymmdd}-{entity-name}-def.m
 - [ ] No properties are fabricated — everything stated is grounded in evidence or confirmed by user
 - [ ] Open Questions captures everything still unresolved (not silently omitted)
 - [ ] Status field reflects actual state (Draft if open questions remain)
+
+Surface the definition file path and a summary of the entity's identity and open questions to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md
@@ -226,7 +230,11 @@ Update the document in-place:
 6. **Update Status** — Draft → Stabilizing (when open questions are narrowing) → Stable (when open questions are resolved or purely hypothetical)
 7. **Append to revision log**
 
-#### 4. COMMIT REVISION
+#### 4. PRESENT REVISION
+
+Surface the updated definition file path and a summary of what changed (resolved questions, new content, status change) to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" projex/{yyyymmdd}-{entity-name}-def.md

@@ -235,6 +235,8 @@ This workflow produces:
 
 **Folder placement:** See SKILL.md § Organizing.
 
+**Committing:** Present the evaluation document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## NOTES

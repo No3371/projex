@@ -370,6 +370,8 @@ This workflow produces:
   - **Archival** → Move reviewed projex to `projex/archived/`
   - **Abandonment** → Move to `projex/abandoned/` or delete
 
+**Committing:** Present the review document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## NOTES

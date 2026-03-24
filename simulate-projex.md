@@ -331,6 +331,8 @@ Create: `{yyyymmdd}-{simulation-name}-simulation.md` in `projex/closed/` (simula
 
 ### 6. COMMIT AND UPDATE RELATED DOCUMENTS
 
+Committing the report is part of completing the simulation — the ephemeral branch is gone and the report is the only surviving record.
+
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" projex/closed/{yyyymmdd}-{simulation-name}-simulation.md
 ```
