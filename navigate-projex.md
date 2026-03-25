@@ -172,7 +172,7 @@ Create file in the appropriate `.projex/` folder for the scope: `{yymmddhhmm}-{r
 | YYYY-MM-DD | Initial roadmap created |
 ```
 
-#### 4. VALIDATE AND COMMIT
+#### 4. VALIDATE AND PRESENT
 
 **Check:**
 - [ ] Vision is clear and agreed upon with user
@@ -181,6 +181,10 @@ Create file in the appropriate `.projex/` folder for the scope: `{yymmddhhmm}-{r
 - [ ] Current position accurately reflects reality
 - [ ] References to existing projex are correct
 - [ ] Priorities reflect user's stated goals
+
+Surface the navigation file path and roadmap overview to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
@@ -252,13 +256,18 @@ If the revision reveals actionable next steps, suggest or create follow-up proje
 
 The navigation document itself doesn't execute — it informs what to execute next.
 
-#### 6. COMMIT REVISION
+#### 6. PRESENT REVISION
+
+Surface the updated navigation file path and a summary of what changed to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
 ```
 
-If other projex documents were updated with references back to this navigation:
+If other projex documents were updated with references back to this navigation, commit those separately when requested:
+
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" .projex/{other-projex-file}.md
 ```

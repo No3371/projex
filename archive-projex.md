@@ -102,17 +102,23 @@ Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (
 
 **Sorting:** Sort the index table by filename ascending (alphabetical, which is chronological by the date prefix).
 
-### 5. COMMIT THE ARCHIVE
+### 5. PRESENT THE ARCHIVE INDEX
 
-Stage and commit the archive document:
+Surface the archive index file path, the number of files summarized, and a brief summary to the user. **Do not commit or remove files yet.** Wait — proceed with committing and file removal only when the user explicitly requests it.
+
+**This step requires user confirmation before continuing** — file removal is irreversible outside of git.
+
+When the user requests to proceed:
+
+**Step 5a — commit the archive index:**
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yymmddhhmm}-{scope}-archive.md
 ```
 
-Verify the commit succeeded before proceeding.
+Verify the commit succeeded before proceeding to file removal.
 
-### 6. REMOVE ARCHIVED FILES
+**Step 5b — remove the archived files:**
 
 Delete each individual file that was archived (every `.md` file in the folder **except** the newly created archive):
 

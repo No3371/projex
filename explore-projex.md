@@ -273,6 +273,8 @@ Produces exploration document at `.projex/{yymmddhhmm}-{name}-explore.md` with:
 - Foundation for informed decisions
 - Links to related projex
 
+**Committing:** Present the exploration document to the user. Do not commit automatically — commit only when the user explicitly requests it.
+
 ---
 
 ## NOTES

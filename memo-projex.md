@@ -91,13 +91,19 @@ Do NOT research or explore to fill this section. Write only from current context
 
 **That's it.** No analysis, no recommendations, no criteria, no validation checklist.
 
-### 3. COMMIT
+### 3. PRESENT THE MEMO
+
+Surface the memo file path and captured content to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+
+If a related projex should reference this memo (e.g., a plan whose objectives were deferred), update it now — but still hold the commit until requested.
+
+When the user requests a commit:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yymmddhhmm}-{memo-name}-memo.md
 ```
 
-If a related projex should reference this memo (e.g., a plan whose objectives were deferred), update it:
+If a related projex was updated, include it in the same commit or commit separately:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" .projex/{related-projex-file}.md
