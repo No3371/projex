@@ -1,9 +1,7 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).  DO NOT read or do anything before projex framework files are fully read.
 ---
-
-GATE: Workflow files must be read before reading anything else. No parallel exploration.
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
 
