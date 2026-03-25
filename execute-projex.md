@@ -29,25 +29,17 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 ## PRE-EXECUTION CHECKLIST
 
-Before starting execution:
+**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. The script resolves the correct repo from the plan file's path — your CWD may be a parent repo, a sibling repo, or entirely unrelated. Any git command you run before the script may target the wrong repository and produce misleading results.**
 
 ### 1. AUTOMATED VALIDATION
 
-Run the pre-check script to validate mechanical requirements:
+Run the pre-check script — this is the **first action**, before anything else:
 
 ```bash
 {projex-scripts}/execute-precheck.{sh|ps1} <plan-file>
 ```
 
-The script validates and exits non-zero on failure:
-- Plan file is committed to current branch
-- Plan status is `Ready`
-- Working tree cleanliness (warns but does not fail)
-
-It outputs `REPO_ROOT`, `BRANCH`, and `PLAN_REL` — record `REPO_ROOT` for use in all subsequent script calls.
-
-> **Why must the plan be committed?**
-> Plans are documentation that should exist independently of execution. If execution is abandoned, the plan remains for future attempts. This also enables plan review before execution.
+The script makes sure you are starting execution in a right manner. It outputs `REPO_ROOT`, `BRANCH`, and `PLAN_REL` — record `REPO_ROOT` for use in **all** subsequent script calls and git commands. Do not use your CWD or any other path as the repo root.
 
 ### 2. MANUAL VALIDATION
 
