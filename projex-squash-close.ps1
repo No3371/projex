@@ -45,8 +45,17 @@ if ($Worktree) {
     # Worktree mode: remove worktree, then merge (already on base branch)
     git -C $RepoRoot worktree remove $WtPath
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "Could not remove worktree '$WtPath' — branch '$Ephemeral' still exists for manual recovery"
-        exit 1
+        Write-Warning "Normal worktree remove failed, retrying with --force..."
+        git -C $RepoRoot worktree remove --force $WtPath
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Could not remove worktree '$WtPath'"
+            Write-Error "  Common causes: editor or terminal still open in the worktree directory,"
+            Write-Error "  file watcher or antivirus holding locks, or shell CWD is inside the worktree."
+            Write-Error "  Fix: close programs using '$WtPath', then retry."
+            Write-Error "  Manual: Remove-Item -Recurse -Force '$WtPath'; git worktree prune"
+            Write-Error "  Branch '$Ephemeral' still exists for recovery."
+            exit 1
+        }
     }
 } else {
     # Checkout mode: require clean tree, switch to base
@@ -94,6 +103,9 @@ if ($LASTEXITCODE -ne 0) {
     }
     exit 1
 }
+
+# Clean stale worktree records before branch deletion
+git -C $RepoRoot worktree prune 2>$null
 
 # Delete ephemeral branch (non-fatal)
 git -C $RepoRoot branch -D $Ephemeral

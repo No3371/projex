@@ -54,8 +54,16 @@ if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: remove worktree, then merge (already on base branch)
   WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
-    echo "Error: could not remove worktree '$WT_PATH' — branch '$EPHEMERAL' still exists for manual recovery" >&2
-    exit 1
+    echo "Warning: normal worktree remove failed, retrying with --force..." >&2
+    if ! git -C "$REPO_ROOT" worktree remove --force "$WT_PATH" 2>&1; then
+      echo "Error: could not remove worktree '$WT_PATH'" >&2
+      echo "  Common causes: editor or terminal still open in the worktree directory," >&2
+      echo "  file watcher or antivirus holding locks, or shell CWD is inside the worktree." >&2
+      echo "  Fix: close programs using '$WT_PATH', then retry." >&2
+      echo "  Manual: rm -rf '$WT_PATH' && git worktree prune" >&2
+      echo "  Branch '$EPHEMERAL' still exists for recovery." >&2
+      exit 1
+    fi
   fi
 else
   # Checkout mode: require clean tree, switch to base
@@ -85,16 +93,17 @@ fi
 
 # Commit squash
 if ! git -C "$REPO_ROOT" commit -m "$COMMIT_MSG" 2>&1; then
-  git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
+  git -C "$REPO_ROOT" reset HEAD 2>/dev/null || true
   if [ "$WORKTREE_MODE" = true ]; then
-    echo "Error: commit failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
-  elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
-    echo "Error: commit failed — reset to clean state, rolled back to '$EPHEMERAL'" >&2
+    echo "Error: commit failed — squashed changes unstaged but preserved in working tree on '$BASE'. Retry: git commit -m '...'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
   else
-    echo "Error: commit failed — reset to clean state on '$BASE'" >&2
+    echo "Error: commit failed — squashed changes unstaged but preserved in working tree on '$BASE'. Retry: git commit -m '...'. Or rollback: git checkout -- ." >&2
   fi
   exit 1
 fi
+
+# Clean stale worktree records before branch deletion
+git -C "$REPO_ROOT" worktree prune 2>/dev/null || true
 
 # Delete ephemeral branch (non-fatal)
 if ! git -C "$REPO_ROOT" branch -D "$EPHEMERAL" 2>&1; then
