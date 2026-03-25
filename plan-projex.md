@@ -38,6 +38,20 @@ cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 
 Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
 
+**Determine worktree mode** for the plan's `Worktree` header field:
+
+```bash
+git -C <repo-root> status --porcelain
+git -C <repo-root> branch --list "projex/*"
+```
+
+Set **Worktree: Yes** if any of:
+- Working directory has uncommitted changes (dirty state — avoids stashing during execution)
+- An active `projex/*` execution branch already exists (worktree enables parallel execution)
+- The plan involves many files or large-scale changes (worktree isolates disruption from editors/IDEs)
+
+Otherwise set **Worktree: No**. This auto-fills the template's `Worktree` field. The user can override the result in the draft.
+
 **From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
 
 **From Direct Request:** Clarify objective with user → research current state → identify scope → check for related projex.

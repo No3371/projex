@@ -211,7 +211,7 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 
 Worktree mode creates ephemeral branches as separate working directories in `{repo-name}.projexwt/` (sibling to repo) instead of switching the main working directory via `git checkout`. The main directory stays on the base branch throughout.
 
-**Opt-in:** Add `> **Worktree:** Yes` to the plan header. Simulations default to worktree mode.
+**Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Simulations default to worktree mode.
 
 **How it works:**
 - `projex-worktree` creates the worktree in a sibling directory
