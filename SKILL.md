@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).  DO NOT read or do anything before projex framework files are fully read.
+description: When these mentioned:`close-projex``eval-projex``execute-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -200,7 +200,7 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
-- **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine — that's one operation. But add and commit must never share a call.
+- **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine, but add and commit must never share a call.
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
@@ -241,3 +241,6 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 
 ### AVOID ABSOLUTE PATHS
 Use file paths RELATIVE to project root. REDACT external paths.
+
+### NO PARALLEL EXPLORATION WITH WORKFLOWS
+Workflow files (ex: execute-projex) may have requirements before starting, fully comply before reading stuff into context.

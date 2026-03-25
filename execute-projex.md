@@ -29,7 +29,7 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 ## PRE-EXECUTION CHECKLIST
 
-**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. Any error (exit code non-zero) from the script means cancelling the execution. Warnings must be resolved before continuing — e.g., if the plan is not committed, commit it first, then resume.**
+**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script and completing workflow step1: INITIALIZE EXECUTION. Any error (exit code non-zero) from the script means cancelling the execution. Warnings must be resolved before continuing — e.g., if the plan is not committed, commit it first, then resume.**
 
 ### 1. AUTOMATED VALIDATION
 
@@ -67,8 +67,6 @@ Verify items requiring judgment (script output provides context for the first tw
 ---
 
 ## WORKFLOW STEPS
-
-**GATE: No implementation changes, codebase exploration, or research until step 1 (INITIALIZE EXECUTION) is fully complete.** The ephemeral branch, log file, and status update must all exist before any investigation of the codebase begins.
 
 ### 1. INITIALIZE EXECUTION
 
