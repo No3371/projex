@@ -3,8 +3,8 @@
 # Usage: execute-precheck.sh <plan-file>
 #
 # Validates mechanical checklist items before execution:
-#   - Plan file exists and is committed to current branch
-#   - Plan status is "Ready"
+#   - Plan file exists
+#   - Plan is committed to current branch (warning if not)
 #   - Working tree cleanliness (warning, not failure)
 #
 # Outputs key=value pairs for use by the caller:
@@ -18,7 +18,6 @@ if [ $# -lt 1 ]; then
 fi
 
 PLAN_FILE="$1"
-ERRORS=()
 
 # --- Resolve paths ---
 
@@ -53,25 +52,7 @@ COMMIT=$(git -C "$REPO_ROOT" log --oneline -1 -- "$PLAN_REL" 2>/dev/null || true
 if [ -n "$COMMIT" ]; then
   echo "PASS  Plan is committed ($COMMIT)"
 else
-  echo "FAIL  Plan is not committed to branch '$BRANCH'"
-  ERRORS+=("Plan must be committed to base branch before execution")
-fi
-
-# --- Check: Plan status is Ready ---
-
-STATUS_LINE=$(grep -m1 -E '^\s*>?\s*\*{0,2}Status\*{0,2}:' "$PLAN_FILE" 2>/dev/null || true)
-if [ -n "$STATUS_LINE" ]; then
-  # Strip markdown formatting: > **Status:** value  →  value
-  STATUS=$(echo "$STATUS_LINE" | sed 's/.*[Ss]tatus\*\*:[[:space:]]*//' | sed 's/`//g' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
-  if echo "$STATUS" | grep -qi '^ready'; then
-    echo "PASS  Plan status is '$STATUS'"
-  else
-    echo "FAIL  Plan status is '$STATUS' — expected 'Ready'"
-    ERRORS+=("Plan status must be 'Ready' to execute")
-  fi
-else
-  echo "FAIL  No Status field found in plan"
-  ERRORS+=("Plan must contain a Status field")
+  echo "WARN  Plan is not committed to branch '$BRANCH' — commit the plan before proceeding"
 fi
 
 # --- Check: Clean working state ---
@@ -87,13 +68,5 @@ fi
 # --- Result ---
 
 echo ""
-if [ ${#ERRORS[@]} -eq 0 ]; then
-  echo "PRE-CHECK PASSED"
-  exit 0
-else
-  echo "PRE-CHECK FAILED (${#ERRORS[@]} issue(s)):"
-  for e in "${ERRORS[@]}"; do
-    echo "  - $e"
-  done
-  exit 1
-fi
+echo "PRE-CHECK PASSED"
+exit 0

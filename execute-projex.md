@@ -29,7 +29,7 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 ## PRE-EXECUTION CHECKLIST
 
-**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. Any error comes from the script means cancelling the execution.**
+**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. Any error (exit code non-zero) from the script means cancelling the execution. Warnings must be resolved before continuing — e.g., if the plan is not committed, commit it first, then resume.**
 
 ### 1. AUTOMATED VALIDATION
 

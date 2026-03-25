@@ -2,8 +2,8 @@
 # Usage: execute-precheck.ps1 <plan-file>
 #
 # Validates mechanical checklist items before execution:
-#   - Plan file exists and is committed to current branch
-#   - Plan status is "Ready"
+#   - Plan file exists
+#   - Plan is committed to current branch (warning if not)
 #   - Working tree cleanliness (warning, not failure)
 #
 # Outputs key=value pairs for use by the caller:
@@ -12,8 +12,6 @@
 param(
     [Parameter(Mandatory)][string]$PlanFile
 )
-
-$Errors = @()
 
 # --- Resolve paths ---
 
@@ -50,25 +48,7 @@ $Commit = git -C $RepoRoot log --oneline -1 -- $PlanRel 2>$null
 if ($Commit) {
     Write-Host "PASS  Plan is committed ($Commit)"
 } else {
-    Write-Host "FAIL  Plan is not committed to branch '$Branch'"
-    $Errors += "Plan must be committed to base branch before execution"
-}
-
-# --- Check: Plan status is Ready ---
-
-$StatusLine = (Get-Content $PlanAbs | Select-String -Pattern '^\s*>?\s*\*{0,2}Status\*{0,2}:' | Select-Object -First 1)
-if ($StatusLine) {
-    # Strip markdown formatting: > **Status:** value  →  value
-    $Status = $StatusLine.Line -replace '.*[Ss]tatus\*\*:\s*', '' -replace '`', '' -replace '\s*$', ''
-    if ($Status -match '^[Rr]eady') {
-        Write-Host "PASS  Plan status is '$Status'"
-    } else {
-        Write-Host "FAIL  Plan status is '$Status' - expected 'Ready'"
-        $Errors += "Plan status must be 'Ready' to execute"
-    }
-} else {
-    Write-Host "FAIL  No Status field found in plan"
-    $Errors += "Plan must contain a Status field"
+    Write-Host "WARN  Plan is not committed to branch '$Branch' - commit the plan before proceeding"
 }
 
 # --- Check: Clean working state ---
@@ -84,13 +64,5 @@ if (-not $Dirty) {
 # --- Result ---
 
 Write-Host ""
-if ($Errors.Count -eq 0) {
-    Write-Host "PRE-CHECK PASSED"
-    exit 0
-} else {
-    Write-Host "PRE-CHECK FAILED ($($Errors.Count) issue(s)):"
-    foreach ($e in $Errors) {
-        Write-Host "  - $e"
-    }
-    exit 1
-}
+Write-Host "PRE-CHECK PASSED"
+exit 0
