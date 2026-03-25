@@ -29,7 +29,7 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 ## PRE-EXECUTION CHECKLIST
 
-**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. The script resolves the correct repo from the plan file's path — your CWD may be a parent repo, a sibling repo, or entirely unrelated. Any git command you run before the script may target the wrong repository and produce misleading results.**
+**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script. Any error comes from the script means cancelling the execution.**
 
 ### 1. AUTOMATED VALIDATION
 
