@@ -192,6 +192,11 @@ Is the action different from the plan?
 3. **Final review** — check for anything left incomplete
 4. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
 5. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
+6. **Commit the status update and final log entry** — the branch must be clean before close-projex runs:
+
+```bash
+{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
+```
 
 Do not move the plan file — relocation to `.projex/closed/` happens during `/close-projex.md`
 

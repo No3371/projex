@@ -391,6 +391,14 @@ If this plan were to be executed again:
 
 ### 7. FINALIZE GIT BRANCH
 
+**GATE: Verify clean working tree before proceeding.** The merge scripts will abort on uncommitted changes.
+
+```bash
+git -C <repo-root> status --porcelain
+```
+
+If output is non-empty, commit or discard the remaining changes before continuing. The most common offender is the plan file — if it was updated but not committed, stage and commit it now.
+
 The ephemeral branch must be finalized. Present options to user.
 
 **Worktree mode:** If execution used a worktree (`{repo-name}.projexwt/`), pass `--worktree` to the finalization script. The script removes the worktree before merging/abandoning. The main working directory is already on the base branch — no checkout needed.
