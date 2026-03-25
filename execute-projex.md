@@ -31,32 +31,34 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 Before starting execution:
 
-### 1. PLAN VALIDATION
+### 1. AUTOMATED VALIDATION
 
-- [ ] **Plan is committed to base branch** — Plan document must exist in git history
-- [ ] Plan status is `Ready`
-- [ ] No unresolved open questions
-- [ ] All dependencies are met
-- [ ] No blockers present
+Run the pre-check script to validate mechanical requirements:
+
+```bash
+{projex-scripts}/execute-precheck.{sh|ps1} <plan-file>
+```
+
+The script validates and exits non-zero on failure:
+- Plan file is committed to current branch
+- Plan status is `Ready`
+- Working tree cleanliness (warns but does not fail)
+
+It outputs `REPO_ROOT`, `BRANCH`, and `PLAN_REL` — record `REPO_ROOT` for use in all subsequent script calls.
 
 > **Why must the plan be committed?**
 > Plans are documentation that should exist independently of execution. If execution is abandoned, the plan remains for future attempts. This also enables plan review before execution.
 
-### 2. ENVIRONMENT CHECK
+### 2. MANUAL VALIDATION
 
-**Resolve the target repo**: we find the exact git repo the projex belongs to.
+Verify items requiring judgment (script output provides context for the first two):
 
-```bash
-cd <absolute-path-to-plan-file-directory> && git rev-parse --show-toplevel && git branch --show-current && git status
-```
-
-Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
-
-- [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
-- [ ] **Correct base branch** — shows the expected branch (typically `main` or a feature branch)
-- [ ] **Clean working state** — no uncommitted changes
+- [ ] **Correct repository** — `REPO_ROOT` matches the repo that owns the plan's `.projex/` folder
+- [ ] **Correct base branch** — `BRANCH` is the expected branch (typically `main` or a feature branch)
+- [ ] No unresolved open questions in the plan
+- [ ] All dependencies are met
+- [ ] No blockers present
 - [ ] Required tools/dependencies available
-- [ ] Access to all files listed in plan
 
 ### 3. CONTEXT REFRESH
 
@@ -74,7 +76,7 @@ Record the `--show-toplevel` output as `<repo-root>`. All script calls below use
 
 ## WORKFLOW STEPS
 
-**GATE: No implementation changes until the ephemeral branch is created and verified (step 1.2).**
+**GATE: No implementation changes, codebase exploration, or research until step 1 (INITIALIZE EXECUTION) is fully complete.** The ephemeral branch, log file, and status update must all exist before any investigation of the codebase begins.
 
 ### 1. INITIALIZE EXECUTION
 
@@ -122,6 +124,10 @@ Also create explicit tasks for **every gate and sequential dependency**:
 - Post-execution tasks (verification, status update, cleanup)
 
 **Mark each task in-progress before starting it, and completed only after the work AND its log entry are both done.** The task list is the forcing function — if a task isn't marked complete, the step isn't done.
+
+### RE-ANCHOR AFTER EXPLORATION
+
+> After any codebase exploration or research (reading code, understanding architecture, investigating dependencies), **re-read this workflow and the plan document** before proceeding. Exploration causes context drift — re-anchoring to the plan prevents it.
 
 ### 3. EXECUTE STEPS SEQUENTIALLY
 
