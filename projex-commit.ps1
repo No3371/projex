@@ -35,11 +35,42 @@ if ($Files.Count -eq 0) {
     exit 1
 }
 
-# Validate repo
-git -C $RepoRoot rev-parse --git-dir 2>$null | Out-Null
-if ($LASTEXITCODE -ne 0) {
+# Validate repo root
+$Toplevel = (git -C $RepoRoot rev-parse --show-toplevel 2>$null)
+if ($LASTEXITCODE -ne 0 -or -not $Toplevel) {
     Write-Error "'$RepoRoot' is not a git repository"
     exit 1
+}
+$RepoCanonical = (Resolve-Path $RepoRoot).Path.TrimEnd('\', '/')
+$TopCanonical  = (Resolve-Path $Toplevel).Path.TrimEnd('\', '/')
+if ($RepoCanonical -ne $TopCanonical) {
+    Write-Error "'$RepoRoot' is not a repo root — toplevel is '$Toplevel'.`n  The <repo-root> argument must be the repository's top-level directory."
+    exit 1
+}
+
+# Validate file paths belong to this repo
+foreach ($f in $Files) {
+    $checkDir = Join-Path $RepoRoot $f
+    while ($checkDir -and -not (Test-Path $checkDir -PathType Container)) {
+        $checkDir = Split-Path $checkDir -Parent
+    }
+    $fileToplevel = $null
+    $fileCanonical = $null
+    if ($checkDir) {
+        $fileToplevel = git -C $checkDir rev-parse --show-toplevel 2>$null
+        if ($fileToplevel) {
+            $resolved = Resolve-Path $fileToplevel -ErrorAction SilentlyContinue
+            if ($resolved) { $fileCanonical = $resolved.Path.TrimEnd('\', '/') }
+        }
+    }
+    if ($fileCanonical -ne $TopCanonical) {
+        $msg = "'$f' belongs to a different repo than '$RepoRoot'."
+        if ($fileToplevel) { $msg += "`n  File's repo root: $fileToplevel" }
+        $msg += "`n  Expected repo root: $Toplevel"
+        $msg += "`n  Verify the <repo-root> argument matches the repository containing these files."
+        Write-Error $msg
+        exit 1
+    }
 }
 
 # Validate all file paths are known to git (tracked or untracked) and have changes

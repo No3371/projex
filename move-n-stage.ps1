@@ -10,10 +10,16 @@ param(
     [Parameter(Mandatory, ValueFromRemainingArguments)][string[]]$Paths
 )
 
-# Validate repo
-git -C $RepoRoot rev-parse --git-dir 2>$null | Out-Null
-if ($LASTEXITCODE -ne 0) {
+# Validate repo root
+$Toplevel = (git -C $RepoRoot rev-parse --show-toplevel 2>$null)
+if ($LASTEXITCODE -ne 0 -or -not $Toplevel) {
     Write-Error "'$RepoRoot' is not a git repository"
+    exit 1
+}
+$RepoCanonical = (Resolve-Path $RepoRoot).Path.TrimEnd('\', '/')
+$TopCanonical  = (Resolve-Path $Toplevel).Path.TrimEnd('\', '/')
+if ($RepoCanonical -ne $TopCanonical) {
+    Write-Error "'$RepoRoot' is not a repo root — toplevel is '$Toplevel'.`n  The <repo-root> argument must be the repository's top-level directory."
     exit 1
 }
 
@@ -21,6 +27,31 @@ if ($LASTEXITCODE -ne 0) {
 if ($Paths.Count % 2 -ne 0) {
     Write-Error "Arguments must be src/dst pairs (got odd count: $($Paths.Count))"
     exit 1
+}
+
+# Validate all src/dst paths belong to this repo
+foreach ($p in $Paths) {
+    $checkDir = Join-Path $RepoRoot $p
+    while ($checkDir -and -not (Test-Path $checkDir -PathType Container)) {
+        $checkDir = Split-Path $checkDir -Parent
+    }
+    $fileToplevel = $null
+    $fileCanonical = $null
+    if ($checkDir) {
+        $fileToplevel = git -C $checkDir rev-parse --show-toplevel 2>$null
+        if ($fileToplevel) {
+            $resolved = Resolve-Path $fileToplevel -ErrorAction SilentlyContinue
+            if ($resolved) { $fileCanonical = $resolved.Path.TrimEnd('\', '/') }
+        }
+    }
+    if ($fileCanonical -ne $TopCanonical) {
+        $msg = "'$p' belongs to a different repo than '$RepoRoot'."
+        if ($fileToplevel) { $msg += "`n  File's repo root: $fileToplevel" }
+        $msg += "`n  Expected repo root: $Toplevel"
+        $msg += "`n  Verify the <repo-root> argument matches the repository containing these files."
+        Write-Error $msg
+        exit 1
+    }
 }
 
 # Track completed moves for rollback (actual resolved paths)

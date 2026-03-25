@@ -39,11 +39,38 @@ if [ ${#FILES[@]} -eq 0 ]; then
   exit 1
 fi
 
-# Validate repo
-if ! git -C "$REPO_ROOT" rev-parse --git-dir > /dev/null 2>&1; then
+# Validate repo root
+TOPLEVEL=$(git -C "$REPO_ROOT" rev-parse --show-toplevel 2>/dev/null) || {
   echo "Error: '$REPO_ROOT' is not a git repository" >&2
   exit 1
+}
+REPO_CANONICAL=$(cd "$REPO_ROOT" && pwd -P)
+TOP_CANONICAL=$(cd "$TOPLEVEL" && pwd -P)
+if [ "$REPO_CANONICAL" != "$TOP_CANONICAL" ]; then
+  echo "Error: '$REPO_ROOT' is not a repo root — toplevel is '$TOPLEVEL'" >&2
+  echo "  The <repo-root> argument must be the repository's top-level directory." >&2
+  exit 1
 fi
+
+# Validate file paths belong to this repo
+for f in "${FILES[@]}"; do
+  check_dir="$REPO_ROOT/$f"
+  while [ ! -d "$check_dir" ]; do check_dir=$(dirname "$check_dir"); done
+  FILE_TOP=$(cd "$check_dir" && git rev-parse --show-toplevel 2>/dev/null) || true
+  if [ -z "$FILE_TOP" ]; then
+    echo "Error: '$f' is not inside any git repository" >&2
+    echo "  Expected repo root: $TOPLEVEL" >&2
+    exit 1
+  fi
+  FILE_TOP_CANONICAL=$(cd "$FILE_TOP" && pwd -P)
+  if [ "$FILE_TOP_CANONICAL" != "$TOP_CANONICAL" ]; then
+    echo "Error: '$f' belongs to a different repo than '$REPO_ROOT'" >&2
+    echo "  File's repo root: $FILE_TOP" >&2
+    echo "  Expected repo root: $TOPLEVEL" >&2
+    echo "  Verify the <repo-root> argument matches the repository containing these files." >&2
+    exit 1
+  fi
+done
 
 # Validate all file paths are known to git (tracked or untracked) and have changes
 BAD=()
