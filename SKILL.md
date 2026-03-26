@@ -161,6 +161,16 @@ Any argument starting with `--` is passed to `git commit` as an extra flag. A fl
 
 Arguments are src/dst pairs. On any failure, all completed moves are rolled back in reverse order.
 
+#### Deleting
+
+`del-n-stage` — batch `git rm` with rollback on failure. Stages the deletions but does not commit.
+
+```
+{projex-scripts}/del-n-stage.{sh|ps1} <repo-root> file1 [file2 ...]
+```
+
+On any failure, all completed deletions are rolled back in reverse order from temp backups. Untracked files are removed from disk only (no staging effect).
+
 #### Reading Files
 
 `read_file` — line-numbered file reader util, ONLY use this when you don't have any tool to read file besides raw shell commands.
@@ -196,7 +206,7 @@ When `--worktree` is passed, the script removes the worktree at `{repo-name}.pro
 
 ### Git Operation Discipline
 
-For operations not covered by the scripts above (read-only queries, `git rm`, `git checkout -b`, `git stash`), use raw git commands with these rules:
+For operations not covered by the scripts above (read-only queries, `git checkout -b`, `git stash`), use raw git commands with these rules:
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
@@ -204,7 +214,7 @@ For operations not covered by the scripts above (read-only queries, `git rm`, `g
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
-- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
+- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `del-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git rm`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
 
 ### Worktree Mode (Optional)
