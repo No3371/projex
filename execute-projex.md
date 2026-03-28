@@ -96,7 +96,7 @@ git branch --show-current
 ```
 All subsequent commands use `{repo-name}.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
-3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template).
+3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template). Populate the header fields (`Repo Root`, `Plan File`, `Base Branch`) and the `Pre-Check Results` block directly from the precheck output produced in step 1 of PRE-EXECUTION CHECKLIST.
 
 ### 2. BUILD TASK LIST FROM PLAN
 
@@ -264,8 +264,13 @@ This workflow produces:
 ```markdown
 # Execution Log: [Plan Name]
 Started: [yyyymmdd hh:mm]
-Base Branch: [branch name recorded at step 1.1 — e.g. main, develop, feature/auth]
+Repo Root: [REPO_ROOT from precheck]
+Plan File: [PLAN_REL from precheck]
+Base Branch: [BRANCH from precheck — e.g. main, develop, feature/auth]
 Worktree Path: [{repo-name}.projexwt/{name} — omit line if checkout mode]
+
+## Pre-Check Results
+[Paste the PASS/WARN lines from precheck output verbatim]
 
 ## Steps
 
