@@ -60,7 +60,7 @@ For each file in the list, extract:
 **Parallelization:** When there are multiple files, summarize them in parallel using sub-agents — one sub-agent per file or in small batches. Each sub-agent reads the file and returns the fields above. Collect all results before proceeding.
 
 > **Sub-agent prompt template:**
-> "Read this projex file and return: filename, summary (1-2 sentences describing what this document is about and what it accomplished or found), keywords (5-10 comma-separated terms covering subject matter, affected areas, and key concepts). File: `{filepath}`"
+> "Read this projex file and return: filename, summary (1-2 sentences describing what this document is about and what it accomplished or found), keywords (5-10 comma-separated terms covering subject matter, affected areas, and key concepts — do NOT use workflow type names like plan, walkthrough, patch, evaluation, review, audit, log, memo, scan, etc. as keywords; the type is already in the filename). File: `{filepath}`"
 
 ### 4. DRAFT THE ARCHIVE DOCUMENT
 
@@ -161,7 +161,7 @@ This workflow produces:
 
 - [ ] Every `.md` file in `closed/` is represented in the index (except the archive itself)
 - [ ] Each row has a meaningful summary (not just the filename repeated)
-- [ ] Keywords are specific — avoid generic terms like "projex" or "file"
+- [ ] Keywords are specific — avoid generic terms like "projex" or "file", and avoid workflow type names (plan, walkthrough, patch, evaluation, review, audit, log, memo, scan, exploration, guide, etc.) — the type is already encoded in the filename
 - [ ] Archive file committed before individual files are removed
 - [ ] No individual files remain except the archive
 
