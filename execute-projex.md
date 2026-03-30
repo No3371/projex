@@ -185,10 +185,11 @@ Is the action different from the plan?
 
 1. **Run full verification** — all automated checks and acceptance criteria from the plan
 2. **Validate success criteria** — check each criterion, document proof
-3. **Final review** — check for anything left incomplete
-4. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
-5. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
-6. **Commit the status update and final log entry** — the branch must be clean before close-projex runs:
+3. **Spec compliance review** — if any spec, definition, or reference document was linked in the plan, re-read it now and diff every requirement against what was delivered. Flag each as met, partially met, or unmet. Partially met and unmet items must be resolved or explicitly deferred with rationale before proceeding.
+4. **Quality review** — review all changes made during execution for correctness, consistency, edge cases, readability, and adherence to project conventions. Check for regressions, dead code introduced, naming drift, and incomplete error paths. Log any issues found and fix them before proceeding.
+5. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
+6. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
+7. **Commit the status update and final log entry** — the branch must be clean before close-projex runs:
 
 ```bash
 {projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
