@@ -37,7 +37,9 @@ if (-not (Test-Path $WtBase)) {
 }
 
 # Fail if branch already exists
+$_prev = $ErrorActionPreference; $ErrorActionPreference = "SilentlyContinue"
 git -C $RepoRoot rev-parse --verify "refs/heads/$BranchName" 2>&1 | Out-Null
+$ErrorActionPreference = $_prev
 if ($LASTEXITCODE -eq 0) {
     Write-Error "Error: branch '$BranchName' already exists"
     exit 1
