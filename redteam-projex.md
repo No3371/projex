@@ -6,7 +6,16 @@ description: This workflow guides the creation of **Red Team** projex documents 
 
 Red Teams break things before they break in production. Attack ideas, find exploits, challenge assumptions, expose hidden flaws.
 
-**Modes:** Attack (break it) | Skeptic (challenge it) | Pessimist (worst case) | Contrarian (argue opposite) | Forensic (what's hidden)
+**Attack angles — apply as many as are relevant:**
+- **Assumption** — What beliefs are taken for granted that could be false?
+- **Edge Case** — What inputs, states, or sequences weren't designed for?
+- **Failure Cascade** — What breaks when one dependency fails?
+- **Inversion** — What if the opposite approach were taken?
+- **Scale** — What breaks at 10x, 100x load or volume?
+- **Omission** — What wasn't said? What was quietly sacrificed?
+- **Worst Case** — If everything goes wrong, how bad does it get?
+- **Incentive** — Who benefits from this failing or being gamed?
+- **Time** — What holds now but degrades as assumptions age?
 
 ---
 
@@ -34,12 +43,14 @@ Before attacking, identify whose perspective matters. List ALL roles involved in
 - **Support** — Who handles issues?
 - **Compliance/Legal** — Who ensures conformance?
 - **Integrators** — Who connects to this?
-- **Competitors** — Who benefits from this failing?
-- **Attackers** — Who actively tries to break this?
+- **Competitors** — Who benefits from this failing or being displaced?
+- **Attackers** — Who actively tries to exploit or subvert this?
+
+> **Adversarial roles (Competitors, Attackers) are different in kind.** They don't fail the system — they weaponize it. For these roles, the question is not "what goes wrong for them?" but "what can they do *to* the system, and what do they gain?" Analyze their capabilities, motivations, and the asymmetry between their effort and the damage they can cause.
 
 **For each role, note:**
 - What do they care about?
-- What would make them unhappy?
+- What would make them unhappy? (or, for adversarial roles: what would make them succeed?)
 - What assumptions do they make?
 - What edge cases hit them?
 
@@ -73,6 +84,12 @@ What breaks when dependencies fail, assumptions prove false, scale increases, ne
 **Security (from role's threat model):**
 What would this role's adversary target? What's valuable to attack from this role's perspective?
 
+**Adversarial roles — additional questions:**
+- What capability does this adversary have (technical, social, legal, financial)?
+- What do they gain from a partial exploit vs full compromise?
+- What is the cost asymmetry — how much effort for how much damage?
+- What defenses would they probe or bypass first?
+
 ### 4. CHALLENGE FRAMEWORK (ROLE-GROUNDED)
 
 Apply these across all roles:
@@ -90,22 +107,26 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 
 Create file: `{yymmddhhmm}-{subject}-redteam.md`
 
+**Write Bottom Line last.** Open the file with the placeholder exactly as shown in the template. Do not fill in Verdict or Top Vulnerabilities until all findings, edge cases, and assessments are complete. Only then synthesize the prioritized list and choose the verdict.
+
 ```markdown
 # Red Team: [Subject]
 
-> **Created:** YYYY-MM-DD | **Lead:** [name] | **Mode:** Attack/Skeptic/Pessimist/Contrarian/Forensic
+> **Created:** YYYY-MM-DD | **Lead:** [name]
 > **Subject:** [what is being attacked] | **Related:** [projex links]
 
 ---
 
 ## Bottom Line
 
+> **PLACEHOLDER — fill in last, after all findings are complete.**
+
 **Verdict:** Abort | Redesign | Fix Issues | Proceed with Caution | Approve
 
 **Top Vulnerabilities:**
-1. [Most critical]
-2. [Second critical]  
-3. [Third critical]
+1. [Most critical — filled in last]
+2. [Second critical — filled in last]
+3. [Third critical — filled in last]
 
 ---
 
@@ -236,12 +257,18 @@ Create file: `{yymmddhhmm}-{subject}-redteam.md`
 - [ ] Claims/assumptions challenged from each role's viewpoint
 - [ ] Edge cases tested for each role's experience
 - [ ] Acknowledged what's solid for each role
+- [ ] Every finding is grounded in concrete evidence — no unsubstantiated severity ratings
 - [ ] Severity ratings justified per role impact
 - [ ] Remediation addresses role-specific concerns
+- [ ] Bottom Line written last and reflects the actual findings
 
 ### 7. FINALIZE
 
-Save to appropriate `.projex/` folder. Link to subject being analyzed.
+**De-slop pass:** Before saving, strip agent self-narration ("I'll now analyze...", "Let me consider..."), hollow hedging ("it's worth noting that", "it's important to consider"), and redundant restatements of findings already captured in the template sections.
+
+**Fill in Bottom Line.** Replace the placeholder with the actual Verdict and Top Vulnerabilities synthesized from the completed findings.
+
+Save to appropriate `.projex/` folder. Link to subject being analyzed. Do not commit automatically — commit only when explicitly requested.
 
 ---
 
