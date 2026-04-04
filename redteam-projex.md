@@ -17,6 +17,9 @@ Red Teams break things before they break in production. Attack ideas, find explo
 - **Worst Case** — If everything goes wrong, how bad does it get?
 - **Incentive** — Who benefits from this failing or being gamed?
 - **Time** — What holds now but degrades as assumptions age?
+- **Dependency** — What external things does this rely on that you don't control? Vendor APIs, libraries, teams, licenses — what if one changes, deprecates, or disappears?
+- **Observability** — Will you know when this is failing? Can it fail silently? What's the detection lag between something going wrong and someone noticing?
+- **Adoption** — Will people use this as designed, or work around it, misuse it, or ignore it? What's the gap between designer intent and actual user behavior?
 
 ---
 
