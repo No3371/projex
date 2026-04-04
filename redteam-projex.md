@@ -12,7 +12,8 @@ Red Teams break things before they break in production. Attack ideas, find explo
 - **Failure Cascade** — What breaks when one dependency fails?
 - **Inversion** — What if the opposite approach were taken?
 - **Scale** — What breaks at 10x, 100x load or volume?
-- **Omission** — What wasn't said? What was quietly sacrificed?
+- **Omission** — What was quietly sacrificed or glossed over?
+- **Hidden** — What can be inferred from artifacts, patterns, or gaps that was never stated outright?
 - **Worst Case** — If everything goes wrong, how bad does it get?
 - **Incentive** — Who benefits from this failing or being gamed?
 - **Time** — What holds now but degrades as assumptions age?
