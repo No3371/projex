@@ -34,6 +34,26 @@ File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
 - Front-load key info for quick assessment at a glance
 - **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `2602081430-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/2602081430-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 
+### Dehydrate
+
+All projex output uses the densest form that fully preserves semantic and technical content. This is not a mode — it is how projex documents are written.
+
+**Techniques:**
+
+- **Drop filler words** — remove articles, prepositions, connectives where meaning survives without them
+  - `"The parser module is responsible for converting the input stream into an AST"` → `"Parser module: converts input stream → AST"`
+- **Key-value shorthand** — replace narrative with `key: value` structure
+  - `"The migration is currently blocked because the schema validator has not been updated"` → `"Migration: blocked — schema validator not updated"`
+- **Symbolic compression** — `→` (produces/becomes), `←` (sourced from), `✓/✗` (pass/fail), `|` (or/alternatives), `~` (approximately)
+- **Inline lists** — for items under ~5 words each, use `|` separators instead of bullet lists
+  - `"Affected: auth module | session store | token validator"`
+- **No transitions** — omit "Moving on to..." / "Now that we've covered X..."
+- **Compressed headers** — strip filler from section titles
+  - `"## Analysis of the Current Authentication State"` → `"## Auth Current State"`
+- **Abbreviate when unambiguous** — impl, config, auth, repo, fn, param, dep, req, spec (define on first use if non-standard)
+
+**Relationship to De-slop:** Dehydrate governs how content is written. De-slop catches filler that slipped through anyway. Both apply — Dehydrate is the standing register, De-slop is the safety net.
+
 ### De-slop (optional final pass)
 
 Before finalizing any generated projex document, re-read it as a reader — not as the agent that wrote it — and strip:

@@ -1,10 +1,12 @@
 # Add Dehydrate as Always-On Authoring Principle
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Created:** 2026-04-11
+> **Completed:** 2026-04-11
 > **Author:** Claude (agent)
 > **Source:** 2604110126-dehydrate-authoring-mode-proposal.md (accepted with modification: always-on, not opt-in)
 > **Related Projex:** 2604110126-dehydrate-authoring-mode-proposal.md
+> **Walkthrough:** 2604110131-dehydrate-authoring-principle-walkthrough.md
 > **Worktree:** No
 
 ---
