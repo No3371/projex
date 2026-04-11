@@ -36,21 +36,40 @@ File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
 
 ### Dehydrate
 
-All projex output uses the densest form that fully preserves semantic and technical content. This is not a mode — it is how projex documents are written.
+All projex output uses the densest form that fully preserves semantic and technical content, while keeping text grammatically parseable. Fragments are fine; ungrammatical grunt-speak is not. This is not a mode — it is how projex documents are written.
 
 **Techniques:**
 
 - **Drop filler words** — remove articles, prepositions, connectives where meaning survives without them
   - `"The parser module is responsible for converting the input stream into an AST"` → `"Parser module: converts input stream → AST"`
+- **Short synonyms** — prefer the shortest word that carries the same meaning
+  - `"implement a solution for"` → `"fix"` | `"extensive"` → `"big"` | `"in order to"` → `"to"` | `"at this point in time"` → `"now"` | `"utilize"` → `"use"`
 - **Key-value shorthand** — replace narrative with `key: value` structure
   - `"The migration is currently blocked because the schema validator has not been updated"` → `"Migration: blocked — schema validator not updated"`
+- **Finding pattern** — for observations/steps, use `[thing] [action] [reason]. [next step].`
+  - `"Auth middleware rejects valid tokens — expiry check uses < not <=. Fix: swap operator."`
 - **Symbolic compression** — `→` (produces/becomes), `←` (sourced from), `✓/✗` (pass/fail), `|` (or/alternatives), `~` (approximately)
 - **Inline lists** — for items under ~5 words each, use `|` separators instead of bullet lists
   - `"Affected: auth module | session store | token validator"`
 - **No transitions** — omit "Moving on to..." / "Now that we've covered X..."
 - **Compressed headers** — strip filler from section titles
   - `"## Analysis of the Current Authentication State"` → `"## Auth Current State"`
-- **Abbreviate when unambiguous** — impl, config, auth, repo, fn, param, dep, req, spec (define on first use if non-standard)
+- **Abbreviate when unambiguous** — impl, config, auth, repo, fn, param, dep, req, res, spec, DB (define on first use if non-standard)
+
+**Preserve exact — never dehydrate these:**
+
+- Technical terms, identifiers, API names, file paths
+- Code blocks (unchanged)
+- Error messages (quote verbatim)
+- Version numbers, commit SHAs, line numbers
+
+**Clarity carve-outs — drop dehydration for:**
+
+- Security warnings and irreversible-action confirmations
+- Multi-step sequences where fragment order could be misread
+- Sections aimed at a confused or first-time reader
+
+Resume dehydration once the clarity-critical section ends.
 
 **Relationship to De-slop:** Dehydrate governs how content is written. De-slop catches filler that slipped through anyway. Both apply — Dehydrate is the standing register, De-slop is the safety net.
 
