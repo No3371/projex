@@ -1,5 +1,5 @@
-# projex-commit.ps1 — Stage explicit files and commit atomically
-# Usage: projex-commit.ps1 <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
+# stage-n-commit.ps1 — Stage explicit files and commit atomically
+# Usage: stage-n-commit.ps1 <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
 #
 # Any trailing argument starting with '--' is treated as an extra git commit flag.
 # A flag+value pair can be passed as a single quoted string: "--trailer Co-authored-by: Claude".

@@ -112,7 +112,7 @@ Make changes aggressively. The branch will be discarded — there is no cost to 
 
 ```bash
 # Commit convention within simulation (these commits will be discarded)
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): [description of what was tried]" path/to/changed-file.ext
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(sim): [description of what was tried]" path/to/changed-file.ext
 ```
 
 **Simulations are not linear.** You may try approach A then revert and try approach B, stack changes to see cumulative effects, or partially implement to find hidden obstacles. Use git within the branch to manage iterations:
@@ -334,7 +334,7 @@ Create: `{yymmddhhmm}-{simulation-name}-simulation.md` in `.projex/closed/` (sim
 Committing the report is part of completing the simulation — the ephemeral branch is gone and the report is the only surviving record.
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" .projex/closed/{yymmddhhmm}-{simulation-name}-simulation.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(sim): add simulation report - {simulation-name}" .projex/closed/{yymmddhhmm}-{simulation-name}-simulation.md
 ```
 
 If the simulation was against an existing plan or proposal:
@@ -343,7 +343,7 @@ If the simulation was against an existing plan or proposal:
 - If blockers were found, update the source document's risks/open questions
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(sim): update related projex - {simulation-name}" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(sim): update related projex - {simulation-name}" \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
 ```

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# projex-commit.sh — Stage explicit files and commit atomically
-# Usage: projex-commit.sh <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
+# stage-n-commit.sh — Stage explicit files and commit atomically
+# Usage: stage-n-commit.sh <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
 #
 # Any trailing argument starting with '--' is treated as an extra git commit flag.
 # A flag+value pair can be passed as a single quoted string: "--trailer Co-authored-by: Claude".
@@ -9,7 +9,7 @@
 set -euo pipefail
 
 if [ $# -lt 3 ]; then
-  echo "Usage: projex-commit.sh <repo-root> \"commit message\" [\"--flag [value]\" ...] file1 [file2 ...]" >&2
+  echo "Usage: stage-n-commit.sh <repo-root> \"commit message\" [\"--flag [value]\" ...] file1 [file2 ...]" >&2
   exit 1
 fi
 

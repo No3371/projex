@@ -192,7 +192,7 @@ Surface the definition file path and a summary of the entity's identity and open
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(def): create definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
 ```
 
 ---
@@ -237,7 +237,7 @@ Surface the updated definition file path and a summary of what changed (resolved
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(def): revise definition - {entity-name}" .projex/{yymmddhhmm}-{entity-name}-def.md
 ```
 
 ---

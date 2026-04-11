@@ -168,14 +168,14 @@ When no file reference is given, infer the target repo from context (cwd, recent
 
 ### Utility Scripts
 
-Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{projex-scripts}/` as a placeholder — substitute the absolute path to the directory containing this `SKILL.md` (e.g., if loaded from `/home/user/projex/SKILL.md`, then `{projex-scripts}/projex-commit.{sh|ps1}`).
+Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{projex-scripts}/` as a placeholder — substitute the absolute path to the directory containing this `SKILL.md` (e.g., if loaded from `/home/user/projex/SKILL.md`, then `{projex-scripts}/stage-n-commit.{sh|ps1}`).
 
 #### Committing
 
-`projex-commit` — stages explicit files and commits atomically with rollback on failure.
+`stage-n-commit` — stages explicit files and commits atomically with rollback on failure.
 
 ```
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
 ```
 
 Any argument starting with `--` is passed to `git commit` as an extra flag. A flag+value pair can be supplied as one quoted string (e.g. `"--trailer Co-authored-by: Claude"`). File paths never start with `--`, so no separator is needed.
@@ -253,7 +253,7 @@ For operations not covered by the scripts above (read-only queries, `git checkou
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
 - **Stage by explicit path** — `git add <file> ...` by exact path. Never `git add .`, `git add -A`, `git add -u`, directories, or wildcards
-- **Never mix scripts with raw git** — When a utility script covers an operation (`projex-commit`, `move-n-stage`, `del-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git rm`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
+- **Never mix scripts with raw git** — When a utility script covers an operation (`stage-n-commit`, `move-n-stage`, `del-n-stage`, `stage-by-pattern`), use the script exclusively. Do not combine script calls with raw `git add`, `git mv`, `git rm`, `git reset`, etc. in the same logical operation — the scripts manage their own rollback, but raw commands outside them are unmanaged and break atomicity
 - **Stash discipline** — If you `git stash` to get a clean working state, **log it** in the execution log so it is not forgotten. Stashed changes are restored during `/close-projex` after branch finalization
 
 ### Worktree Mode (Optional)
@@ -265,7 +265,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 **How it works:**
 - `projex-worktree` creates the worktree in a sibling directory
 - All execution happens in the worktree directory (`{repo-name}.projexwt/<name>/`)
-- `projex-commit` works unchanged (`-C` accepts worktree paths)
+- `stage-n-commit` works unchanged (`-C` accepts worktree paths)
 - Finalization scripts receive `--worktree` flag to remove the worktree instead of checking out base
 - No stashing needed — the base branch working directory is never touched
 

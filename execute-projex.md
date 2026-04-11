@@ -79,7 +79,7 @@ git branch --show-current
 Edit the plan file, then commit the status change on the base branch:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: start execution of {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
 2. **Create ephemeral branch and verify**
@@ -151,7 +151,7 @@ For each step in the plan:
 4. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
 5. **Mark the task complete** in your task list — only after both the work and log entry are committed
@@ -192,7 +192,7 @@ Is the action different from the plan?
 7. **Commit the status update and final log entry** — the branch must be clean before close-projex runs:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
 Do not move the plan file — relocation to `.projex/closed/` happens during `/close-projex.md`

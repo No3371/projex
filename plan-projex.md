@@ -310,7 +310,7 @@ Before marking Ready:
 6. **Commit the plan** — Plan must be committed to base branch before execution
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
 > **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
