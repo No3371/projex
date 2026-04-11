@@ -1,4 +1,4 @@
-# stage-n-commit.ps1 — Stage explicit files and commit atomically
+﻿# stage-n-commit.ps1 — Stage explicit files and commit atomically
 # Usage: stage-n-commit.ps1 <repo-root> "commit message" ["--flag [value]" ...] file1 [file2 ...]
 #
 # Any trailing argument starting with '--' is treated as an extra git commit flag.
