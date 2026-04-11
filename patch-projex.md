@@ -99,7 +99,7 @@ Act directly:
 **Commit convention:**
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): [concise description of change]" path/to/changed-file1.ext path/to/changed-file2.ext
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): [concise description of change]" path/to/changed-file1.ext path/to/changed-file2.ext
 ```
 
 - Prefix: `projex(patch):` for traceability
@@ -201,7 +201,7 @@ After the patch is written:
 4. **Commit document updates:**
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
   .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md \
   path/to/any-other-updated-doc.md
@@ -230,10 +230,10 @@ Patches commit directly to the current branch. This is intentional — the overh
 
 ```bash
 # Step 1: Make changes and commit
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): [description]" path/to/changed-file1.ext path/to/changed-file2.ext
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): [description]" path/to/changed-file1.ext path/to/changed-file2.ext
 
 # Step 2: Write patch doc, update related documents, commit
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
   .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md
 ```

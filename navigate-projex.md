@@ -187,7 +187,7 @@ Surface the navigation file path and roadmap overview to the user. **Do not comm
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(nav): create roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
 ```
 
 ---
@@ -263,13 +263,13 @@ Surface the updated navigation file path and a summary of what changed to the us
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(nav): revise roadmap - {roadmap-name}" .projex/{yymmddhhmm}-{roadmap-name}-nav.md
 ```
 
 If other projex documents were updated with references back to this navigation, commit those separately when requested:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" .projex/{other-projex-file}.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: update references to {roadmap-name} nav" .projex/{other-projex-file}.md
 ```
 
 ---

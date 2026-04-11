@@ -131,7 +131,7 @@ Surface the scan file path and entry count summary to the user. **Do not commit.
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" .projex/closed/{yymmddhhmm}-{scan-name}-scan.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(scan): {subject}" .projex/closed/{yymmddhhmm}-{scan-name}-scan.md
 ```
 
 ---

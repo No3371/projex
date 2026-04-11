@@ -100,13 +100,13 @@ If a related projex should reference this memo (e.g., a plan whose objectives we
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yymmddhhmm}-{memo-name}-memo.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(memo): {brief description}" .projex/{yymmddhhmm}-{memo-name}-memo.md
 ```
 
 If a related projex was updated, include it in the same commit or commit separately:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" .projex/{related-projex-file}.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(memo): link memo from {related-projex}" .projex/{related-projex-file}.md
 ```
 
 ---

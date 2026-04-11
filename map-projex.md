@@ -180,7 +180,7 @@ When the user requests a commit:
 
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): create structure map - {map-name}" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(map): create structure map - {map-name}" \
   .projex/{yymmddhhmm}-{map-name}-map.md \
   path/to/parent-map.md \
   path/to/child-map.md
@@ -230,7 +230,7 @@ When the user requests a commit:
 
 ```bash
 # Stage this map and any upstream/downstream maps whose references were updated
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(map): revise structure map - {map-name}" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(map): revise structure map - {map-name}" \
   .projex/{yymmddhhmm}-{map-name}-map.md \
   path/to/parent-map.md \
   path/to/child-map.md

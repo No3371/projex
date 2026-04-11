@@ -180,7 +180,7 @@ Surface the log file path and summary to the user. **Do not commit.** Wait — c
 When the user requests a commit:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" .projex/closed/{yymmddhhmm}-{log-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(log): {log-name}" .projex/closed/{yymmddhhmm}-{log-name}-log.md
 ```
 
 ---

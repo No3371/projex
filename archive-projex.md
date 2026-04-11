@@ -113,7 +113,7 @@ When the user requests to proceed:
 **Step 5a — commit the archive index:**
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yymmddhhmm}-{scope}-archive.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(archive): create archive index for {scope}" .projex/closed/{yymmddhhmm}-{scope}-archive.md
 ```
 
 Verify the commit succeeded before proceeding to file removal.
@@ -133,10 +133,10 @@ git rm .projex/closed/{filename2}.md
 Commit the deletions:
 
 ```bash
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" .projex/closed/{filename1}.md .projex/closed/{filename2}.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" .projex/closed/{filename1}.md .projex/closed/{filename2}.md
 ```
 
-> **Note:** `projex-commit` stages the listed files before committing. Since the files were already `git rm`'d (removed from working tree and staged for deletion), `projex-commit`'s `git add` on them is a no-op — the deletions are already staged. The script provides atomic rollback if the commit fails.
+> **Note:** `stage-n-commit` stages the listed files before committing. Since the files were already `git rm`'d (removed from working tree and staged for deletion), `stage-n-commit`'s `git add` on them is a no-op — the deletions are already staged. The script provides atomic rollback if the commit fails.
 
 Verify the commit. The folder should now contain only the archive index file.
 

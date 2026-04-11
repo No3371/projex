@@ -380,7 +380,7 @@ If this plan were to be executed again:
 
 ```bash
 # Stage all moved/created files — include proposal and deletion tracking only if applicable:
-{projex-scripts}/projex-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
   .projex/closed/{yymmddhhmm}-{name}-walkthrough.md \
   .projex/closed/{yymmddhhmm}-{name}-plan.md \
   .projex/closed/{yymmddhhmm}-{name}-proposal.md \
