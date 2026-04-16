@@ -198,12 +198,15 @@ After the patch is written:
    - Update affected specs, docs, or other projex to reflect the new state
    - Ensure no document now contains stale information
 
-4. **Commit document updates:**
+4. **Update nav (if noted):** If the patch notes `> **Nav:** {nav-filename}`, update that nav only: check off the milestone, link the patch under it, append a Revision Log entry. Do not search for navs not referenced by the patch.
+
+5. **Commit document updates:**
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
   .projex/closed/{yymmddhhmm}-{patch-name}-patch.md \
   .projex/{yymmddhhmm}-{related-plan-name}-plan.md \
+  .projex/{yymmddhhmm}-{nav-name}-nav.md \
   path/to/any-other-updated-doc.md
 ```
 
@@ -271,6 +274,7 @@ Before considering the patch complete:
 - [ ] Patch document written with all changes detailed
 - [ ] Related projex documents updated
 - [ ] Patch document placed in `.projex/closed/`
+- [ ] Nav updated if patch noted one
 - [ ] All document updates committed
 - [ ] No stale information left in related documents
 

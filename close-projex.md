@@ -370,6 +370,7 @@ If this plan were to be executed again:
 2. **Update related projex:**
    - Source proposal (if applicable)
    - Any dependent plans
+   - **Nav** — If the plan notes `> **Nav:** {nav-filename}`, update that nav only: check off the milestone, link the walkthrough under it, append a Revision Log entry. Do not search for navs not referenced by the plan.
 
 3. **Move to closed folder:**
    - Move Plan document to `.projex/closed/`
@@ -379,12 +380,13 @@ If this plan were to be executed again:
 4. **Commit walkthrough and file moves** — stage each moved/created file by explicit path:
 
 ```bash
-# Stage all moved/created files — include proposal and deletion tracking only if applicable:
+# Stage all moved/created files — include proposal, nav, and deletion tracking only if applicable:
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
   .projex/closed/{yymmddhhmm}-{name}-walkthrough.md \
   .projex/closed/{yymmddhhmm}-{name}-plan.md \
   .projex/closed/{yymmddhhmm}-{name}-proposal.md \
-  .projex/{yymmddhhmm}-{name}-plan.md
+  .projex/{yymmddhhmm}-{name}-plan.md \
+  .projex/{yymmddhhmm}-{nav-name}-nav.md
 ```
 
 ---
@@ -573,6 +575,7 @@ Before considering walkthrough complete:
 - [ ] Key insights captured
 - [ ] Source plan updated
 - [ ] Related projex linked
+- [ ] Nav updated if plan noted one
 - [ ] Plan and Walkthrough moved to `.projex/closed/`
 - [ ] Source proposal moved to `.projex/closed/` (if all derived plans closed)
 - [ ] **Ephemeral branch finalized** (merged or abandoned)
