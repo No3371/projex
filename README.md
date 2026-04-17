@@ -36,6 +36,11 @@ plan-projex.md phase3
 (asking the agent to make plan for phase 3 based on the eval and the review to the eval)
 ```
 
+Example for orchestrating:
+```
+> orchestrate-projex: xxx-nav.md plan-projex with Opus subagent, verify, execute-projex with sonnet subagent, verify, then close-projex yourself - for each of Phase 1 M1.1-1.5
+```
+
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
 
 Note1: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mention the name of the workflows.
