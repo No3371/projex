@@ -17,16 +17,16 @@ These are workflows (not skills) we constantly call and chain, and the workflows
 
 Example1: 
 ```
-> /eval-projex potential solutions to optimize the lookup (this gives a evaluation projex document
-> /plan-projex plan for the option A (I don't need to reference the projex for the agent to understand
-> /execute-projex (It starts to execute on a ephemeral git branch
-> /close-projex (It concludes the task and cleans up everything
+> eval-projex potential solutions to optimize the lookup (this gives a evaluation projex document
+> plan-projex plan for the option A (I don't need to reference the projex for the agent to understand
+> execute-projex (It starts to execute on a ephemeral git branch
+> close-projex (It concludes the task and cleans up everything
 ```
 
 Example2:
 ```
-> /navigate-projex  (this creates a navigation projex document
-> /plan-projex 2601311430-v1-foundation-roadmap-nav.md#L108 (Ask the agent to plan for a objective
+> navigate-projex  (this creates a navigation projex document
+> plan-projex 2601311430-v1-foundation-roadmap-nav.md#L108 (Ask the agent to plan for a objective
 ```
 
 Example3:
@@ -36,9 +36,14 @@ plan-projex.md phase3
 (asking the agent to make plan for phase 3 based on the eval and the review to the eval)
 ```
 
+Example for orchestrating:
+```
+> orchestrate-projex: xxx-nav.md plan-projex with Opus subagent, verify, execute-projex with sonnet subagent, verify, then close-projex yourself - for each of Phase 1 M1.1-1.5
+```
+
 This started as an attempt to "tame" Gemini 3 Pro, a smart but very rushy LLM model. The framework has been proven useful and re-shaped how I interact with LLM agents in general.
 
-Note1: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mentioning the name of the workflows should work even without making them commands in Claude Code.
+Note1: Workflow is Antigravity's "command", and the `workflows` folder is made for AG for /slash usage. For Claude Code, simply mention the name of the workflows.
 
 Note2: I proposed and designed the core principles for the workflows, Sonnet/Opus filled the details and revise them based on my requirements and feedback.
 
