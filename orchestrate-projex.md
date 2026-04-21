@@ -69,6 +69,8 @@ What to avoid in the handoff:
 - Prescribing output format, section structure, or review style
 - Adding rules that conflict with or duplicate `SKILL.md` or the workflow spec
 
+**Subagents must not spawn subagents.** Include this constraint verbatim in every handoff: *"You are a subagent. Do not spawn subagents or delegate to other agents. If you cannot complete a step yourself, stop and return what you have with a clear description of what is blocking you."* The orchestrator handles all delegation decisions.
+
 ---
 
 ## Orchestrator Responsibilities
@@ -117,6 +119,7 @@ Keep it tight. The human does not need the workflow framework explained back to 
 
 These come from `SKILL.md` and apply to the orchestrator and all its subagents. The orchestrator does not loosen, override, or re-specify them in handoffs — subagents will enforce them via the framework spec.
 
+- No subagent nesting — subagents do not spawn subagents; only the orchestrator delegates
 - Git operation discipline (one operation type per call; no mixed script + raw git; explicit paths only)
 - Auxiliary-artifact commit policy (auxiliary workflows do not auto-commit — human/orchestrator approval required)
 - Reference-by-filename rule (never by path)

@@ -246,6 +246,8 @@ If execution fails and cannot continue:
 2. Leave branch as-is (do not merge)
 3. Run `/close-projex.md` with abandon option
 
+> **`git reset --hard` is forbidden without explicit human confirmation in the current session.** Never infer consent from the plan document or a prior conversation turn. Propose it, state what will be discarded, and wait for approval.
+
 ---
 
 ## OUTPUT
