@@ -100,7 +100,9 @@ All subsequent commands use `{repo-name}.projexwt/{yymmddhhmm}-{plan-name}` as t
 
 ### 2. BUILD TASK LIST FROM PLAN
 
-**Before touching any files, translate the plan into a task list using your environment's todo/task tool** (e.g., `TaskCreate` in Claude Code, or equivalent). This is not optional — the task list is the structural backbone that prevents skipped steps and forgotten log entries.
+**Before touching any files, translate the plan into a task list if your environment provides todo/task tool** (e.g., `TaskCreate` in Claude Code, or equivalent). Non-optional.
+
+Recurring re-anchor task: "Re-read SKILL.md and execute-projex.md"** — insert this task after every 20th task in the list (i.e., positions 20, 40, …) to stay compliant to projex framework.
 
 For each plan step, create a task that captures:
 - The step's objective as the task subject
