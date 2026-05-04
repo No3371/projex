@@ -121,7 +121,29 @@ Also create explicit tasks for **every gate and sequential dependency**:
 
 > After any codebase exploration or research (reading code, understanding architecture, investigating dependencies), **re-read this workflow and the plan document** before proceeding. Exploration causes context drift — re-anchoring to the plan prevents it.
 
-### 3. EXECUTE STEPS SEQUENTIALLY
+### 3. CHOOSE EXECUTION MODE
+
+Two modes — pick before touching files:
+
+**Self-execute (default).** This invocation carries out every objective itself, sequentially, per step 4 below. Use when the plan is small, objectives are tightly coupled, or you are not running under an orchestrator.
+
+**Delegate per objective (sub-subagent mode).** Spawn one sub-subagent per objective; each invokes `/do-projex.md` against that single objective. Use when:
+
+- The plan has multiple distinct objectives / milestones whose execution is largely independent
+- Context isolation per objective improves robustness (long plan, large files, easy drift)
+- You are running under `/orchestrate-projex.md` (which permits this single nesting exception — see orchestrate-projex.md)
+
+Coordinator responsibilities in delegate mode:
+
+- Steps 1 (initialize), 2 (task list), 5 (deviations), 6 (failures escalation), 7 (complete) stay with this coordinator — never delegated
+- Dispatch sub-subagents **sequentially** (one objective at a time) unless each runs in its own worktree branch — concurrent writes to the same branch / log are forbidden
+- After each sub-subagent returns: read its report, mark the corresponding task complete, decide whether to dispatch the next or stop
+- Sub-subagent prompt must include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and the verbatim no-further-nesting clause from orchestrate-projex.md
+- On any blocker / out-of-scope discovery returned by a sub-subagent: stop dispatching, fall back to self-execute or escalate
+
+Sub-subagent boundaries are enforced by `do-projex.md`. The coordinator does not re-specify them in the handoff.
+
+### 4. EXECUTE STEPS SEQUENTIALLY
 
 For each step in the plan:
 
@@ -160,7 +182,7 @@ For each step in the plan:
 
 **User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 
-### 4. HANDLE DEVIATIONS
+### 5. HANDLE DEVIATIONS
 
 When the plan doesn't match reality:
 
@@ -176,14 +198,14 @@ Is the action different from the plan?
         → Stop, report to user, plan needs review
 ```
 
-### 5. HANDLE FAILURES
+### 6. HANDLE FAILURES
 
 1. **Diagnose** — What failed? Plan issue or execution issue? Fixable within scope?
 2. **Decide** — Fix within scope, consult user on scope change, or mark plan for review
 3. **Clean up** — Tear down any resources started during execution before stopping
 4. **Document** — What failed, root cause, resolution or blocker
 
-### 6. COMPLETE EXECUTION
+### 7. COMPLETE EXECUTION
 
 1. **Run full verification** — all automated checks and acceptance criteria from the plan
 2. **Validate success criteria** — check each criterion, document proof

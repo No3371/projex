@@ -47,6 +47,7 @@ The orchestrator must load relevant framework files for the path it chooses. Sub
 - `@./define-projex.md` — declarative entity spec
 - `@./guide-projex.md` — curated reading path for humans
 - `@./archive-projex.md` — compresses closed projex into index
+- `@./do-projex.md` — objective-scoped execution sub-workflow; only `/execute-projex.md` may invoke it (single-nesting exception)
 
 ---
 
@@ -70,6 +71,15 @@ What to avoid in the handoff:
 - Adding rules that conflict with or duplicate `SKILL.md` or the workflow spec
 
 **Subagents must not spawn subagents.** Include this constraint verbatim in every handoff: *"You are a subagent. Do not spawn subagents or delegate to other agents. If you cannot complete a step yourself, stop and return what you have with a clear description of what is blocking you."* The orchestrator handles all delegation decisions.
+
+**Single nesting exception — execute-projex → do-projex.** When the orchestrator dispatches `/execute-projex.md`, that subagent (acting as the execute coordinator) MAY spawn one further layer of sub-subagents that each invoke `/do-projex.md` for a single objective. This is the only sanctioned nesting in the framework. Constraints:
+
+- Only `/execute-projex.md` may nest, and only into `/do-projex.md` — no other workflow may spawn sub-subagents
+- Sub-subagents must not nest further; the verbatim no-nesting clause above still applies to them
+- Dispatching is sequential by default (one objective at a time); concurrent dispatch requires per-objective worktrees
+- The execute coordinator retains responsibility for init, task list, plan-wide verification, and completion — only per-objective execution is delegated
+
+The exception's rationale and full contract live in `execute-projex.md § Choose Execution Mode` and `do-projex.md`. The orchestrator does not re-specify them.
 
 ---
 
