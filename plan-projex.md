@@ -300,7 +300,26 @@ Before marking Ready:
 - [ ] All files belong to ONE projex scope — if not, split
 - [ ] Appropriately granular (not too broad, not too narrow)
 
-### 7. FINALIZE
+### 7. SPLIT DECISION
+
+Final gate before finalize. Explicitly evaluate whether to split this plan and record the verdict.
+
+**Auto-suggest split when ALL apply:**
+- Plan exceeds 500 lines OR 50 KB
+- Plan has more than 5 steps
+
+**Always-required split (per [Splitting Plans](#splitting-plans)):**
+- Cross-scope, cross-repo, or upstream/downstream mixing
+
+**Verdict (pick one and state explicitly):**
+- `No split — single scope, within size budget`
+- `No split — heuristic tripped but steps are tightly coupled (rationale: …)`
+- `Split required — proposing N child plans: …`
+- `Split recommended — proposing N child plans: …`
+
+If splitting, stop here, generate child plans (each with its own filename and `Dependencies`), and discard or archive the parent draft. Do not proceed to FINALIZE on a plan that is being split.
+
+### 8. FINALIZE
 
 1. **Refine document** — Front-load key info (summary, scope, criteria)
 2. **De-slop** (optional) — Re-read as a reader and strip agent self-talk, filler, redundant restatements, and unfilled template artifacts. See *De-slop* in SKILL.md.
@@ -346,6 +365,12 @@ Split is **required** when any of these apply:
 Split is **recommended** when:
 - Scope is too large for a focused session
 - Steps have no mutual dependency and can be executed independently
+
+**Size heuristic — suggest a plain split when ALL apply:**
+- Plan exceeds 500 lines OR 50 KB
+- Plan has more than 5 steps
+
+When the heuristic trips, propose a split (vertical slice, horizontal layer, or dependency group) before finalizing. If the user declines or steps are tightly coupled, proceed as one plan and note the rationale in `Notes`.
 
 ### How to split
 
