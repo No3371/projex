@@ -1,6 +1,6 @@
 # Dehydrate plan-projex.md
 
-> **Status:** Draft
+> **Status:** In Progress
 > **Created:** 2026-05-05
 > **Author:** agent
 > **Source:** Direct request — user-confirmed dehydration proposal in prior conversation
