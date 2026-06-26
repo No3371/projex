@@ -1,7 +1,9 @@
 # Dehydrate plan-projex.md
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Created:** 2026-05-05
+> **Completed:** 2026-05-07
+> **Walkthrough:** 2605051200-dehydrate-plan-projex-walkthrough.md
 > **Author:** agent
 > **Source:** Direct request — user-confirmed dehydration proposal in prior conversation
 > **Related Projex:** —

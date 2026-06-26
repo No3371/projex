@@ -4,12 +4,7 @@ description: This workflow guides the creation of **Plan** projex documents — 
 
 ## PURPOSE
 
-Plans capture WHAT needs doing and HOW — specific enough that any LLM or developer can follow without clarifying questions.
-
-- Specific problem/gap/need with clear objectives
-- Exact changes to exact files
-- Closed-ended with measurable success criteria
-- Granular scope with clear boundaries
+Plans capture WHAT and HOW — specific enough any LLM/dev follows without clarifying questions. Specific problem/gap/need | exact changes to exact files | closed-ended with measurable success criteria | granular scope with clear boundaries.
 
 ---
 
@@ -30,72 +25,61 @@ Plans capture WHAT needs doing and HOW — specific enough that any LLM or devel
 
 ### 1. SOURCE ANALYSIS
 
-**Resolve the target repo**: if a projex file is referenced, we find the exact git repo the projex belongs to. If no file is referenced, infer from context.
+**Resolve target repo** — projex file referenced → its git repo; no reference → infer from context. Record output as `<repo-root>` (used by all scripts below).
 
 ```bash
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
 
-Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
-
-**Determine worktree mode** for the plan's `Worktree` header field:
+**Determine worktree mode** for `Worktree` header:
 
 ```bash
 git -C <repo-root> status --porcelain
 git -C <repo-root> branch --list "projex/*"
 ```
 
-Set **Worktree: Yes** if any of:
-- Working directory has uncommitted changes (dirty state — avoids stashing during execution)
-- An active `projex/*` execution branch already exists (worktree enables parallel execution)
-- The plan involves many files or large-scale changes (worktree isolates disruption from editors/IDEs)
+**Worktree: Yes** if: dirty working dir | active `projex/*` branch | many files / large-scale changes. Else **No**. Auto-fills template; user can override.
 
-Otherwise set **Worktree: No**. This auto-fills the template's `Worktree` field. The user can override the result in the draft.
-
-**From Proposal:** Read the proposal → verify `Accepted` status → extract approach, scope, constraints.
-
-**From Direct Request:** Clarify objective with user → research current state → identify scope → check for related projex.
+**From Proposal:** read → verify `Accepted` → extract approach/scope/constraints.
+**From Direct Request:** clarify objective → research current state → identify scope → check related projex.
 
 ### 2. PRELIMINARY SCOPE
 
-Define initial boundaries — these may shift after research in Step 3:
+Define initial boundaries — may shift after Step 3:
 
 ```
-Answer these questions:
-- What is the specific, bounded objective?
-- What files/components are in scope?
-- What is explicitly OUT of scope?
-- What are the dependencies (must happen before)?
-- What are the blockers (must be resolved first)?
-- Which projex folder does this plan belong to?
-- Does this objective touch files governed by a different projex folder or repo?
+- Specific, bounded objective?
+- Files/components in scope? Explicitly OUT?
+- Dependencies (must happen before)? Blockers (must resolve first)?
+- Which projex folder?
+- Touches files governed by a different projex folder or repo?
 ```
 
-> **Boundary Rule:** A plan targets exactly ONE projex scope. Changes across multiple scopes or repos → split into separate plans linked via `Dependencies`. See [Splitting Plans](#splitting-plans).
+**Boundary Rule:** plan targets exactly ONE projex scope. Cross-scope/repo → split → see [Splitting Plans](#splitting-plans).
 
 **Scope validation:**
 - [ ] Completable in a focused session
-- [ ] All target files belong to a single projex scope
-- [ ] Has clear start and end points
-- [ ] Success is objectively measurable
+- [ ] All target files in a single projex scope
+- [ ] Clear start and end points
+- [ ] Success objectively measurable
 
 ### 3. CONTEXT RESEARCH
 
-Answer these questions by reading the actual code:
+Answer by reading actual code:
 
-1. **Current behavior** — What does the code do today? Trace the actual call path, not what you assume it does
-2. **Dependencies** — What calls into this code? What does it call? What breaks if it changes?
-3. **Conventions** — What patterns does the surrounding code follow? (naming, error handling, structure)
-4. **Edge cases** — What inputs, states, or timing conditions could cause problems?
-5. **Prior art** — Have related changes been attempted before? Check walkthroughs and git history for lessons learned
+1. **Current behavior** — trace actual call path; not assumptions
+2. **Dependencies** — callers, callees, what breaks on change
+3. **Conventions** — surrounding patterns (naming, error handling, structure)
+4. **Edge cases** — inputs, states, timing that could break things
+5. **Prior art** — related attempts? walkthroughs + git history for lessons
 
-**Refine scope.** Revisit the boundaries from Step 2 — research often reveals the scope was too broad, too narrow, or aimed at the wrong layer. Adjust before drafting.
+**Refine scope.** Research often reveals Step 2 boundaries too broad/narrow/wrong-layer. Adjust before drafting.
 
-**Checkpoint (complex plans).** Before drafting, briefly present to the user: key findings, the intended approach and why, any scope adjustments. This catches misalignment before effort is sunk into a full draft. Skip when the path is obvious.
+**Checkpoint (complex plans).** Before drafting, present briefly: findings, intended approach + why, scope adjustments. Catches misalignment early. Skip when path obvious.
 
 ### 4. DRAFT THE PLAN
 
-Create `<projex-folder>/{yymmddhhmm}-{plan-name}-plan.md` directly in the target projex folder from Step 2 — not in agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
+Create `<projex-folder>/{yymmddhhmm}-{plan-name}-plan.md` directly in the target projex folder (Step 2). Never agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
 
 **Template Structure:**
 
@@ -252,104 +236,66 @@ Per-step rollback is noted in each implementation step above. If the overall imp
 
 ### 5. SECOND PASS — CHALLENGE THE PLAN
 
-**Mandatory re-examination.** Early steps were written with incomplete understanding — this pass catches what they got wrong.
+Early steps used incomplete understanding. Re-read relevant code (don't rely on Step 3 memory):
 
-**Re-read the relevant code** — do not rely on memory from Step 3:
+1. **Assumptions** — Current State matches files now? Implicit ordering guaranteed? Signatures/return types/data shapes verified?
+2. **Discrepancies** — Steps describe same file differently? Later step needs what earlier doesn't produce? Criteria test what steps don't deliver?
+3. **Misunderstandings** — Actual call path / data flow vs plan? Side effects / validations / transformations missed? Modifying right layer (caller vs callee)?
+4. **Overengineering** — Fewer steps possible? Unneeded abstractions/helpers? More direct approach equally valid?
 
-1. **Assumptions** — What does the plan take for granted?
-   - Does the "Current State" section match what the files actually show right now?
-   - Are there implicit ordering assumptions (e.g., "X exists before Y runs") that aren't guaranteed?
-   - Does the plan assume a function signature, return type, or data shape without verifying?
-
-2. **Discrepancies** — Does the plan contradict itself?
-   - Do different steps describe the same file differently?
-   - Does a later step depend on something an earlier step doesn't actually produce?
-   - Do the success criteria test something the implementation steps don't actually deliver?
-
-3. **Misunderstandings** — Did the agent get the code wrong?
-   - Trace the actual call path / data flow through the referenced files — does it work the way the plan says?
-   - Are there side effects, validations, or intermediate transformations the plan doesn't account for?
-   - Is the plan modifying the right layer? (e.g., changing a caller when the callee is the actual problem)
-
-4. **Overengineering** — Is there a simpler way?
-   - Could fewer steps achieve the same result?
-   - Is the plan introducing abstractions, helpers, or indirection that aren't needed yet?
-   - Would a more direct approach work just as well, even if it's less "elegant"?
-
-**After this pass:**
-- Fix anything caught — update steps, file references, before/after code, assumptions
-- If the pass reveals the plan's approach is fundamentally wrong, stop and discuss with the user rather than patching a broken plan
-- Document surviving assumptions in the Context → Assumptions section — making them visible so execution can verify them early
+After: fix anything caught. Approach fundamentally wrong → stop, discuss with user, don't patch broken plan. Surviving assumptions → Context → Assumptions so execution verifies early.
 
 ### 6. VALIDATION
 
-Before marking Ready:
+Before marking Ready (cross-scope split decision deferred to step 7):
 
-**Completeness:**
 - [ ] Every step has specific file paths and before/after changes
 - [ ] Each step has verification method
-- [ ] Success criteria are measurable and testable
+- [ ] Success criteria measurable and testable
 - [ ] No open questions remain
-
-**Executability:**
-- [ ] Any LLM or developer could follow without clarifying questions
-- [ ] Dependencies and order of operations are unambiguous
-
-**Scope:**
+- [ ] Any LLM/dev could follow without clarifying questions
+- [ ] Dependencies and order unambiguous
 - [ ] Plan stays within declared scope
-- [ ] All files belong to ONE projex scope — if not, split
-- [ ] Appropriately granular (not too broad, not too narrow)
+- [ ] Granularity appropriate (not too broad, not too narrow)
 
 ### 7. SPLIT DECISION
 
-Final gate before finalize. Explicitly evaluate whether to split this plan and record the verdict.
+Final gate before finalize. State the verdict explicitly.
 
-**Auto-suggest split when ALL apply:**
-- Plan exceeds 500 lines OR 50 KB
-- Plan has more than 5 steps
+**Auto-suggest split** when ALL: > 500 lines OR > 50 KB | > 5 steps.
+**Always-required split** (see [Splitting Plans](#splitting-plans)): cross-scope | cross-repo | upstream/downstream mixing.
 
-**Always-required split (per [Splitting Plans](#splitting-plans)):**
-- Cross-scope, cross-repo, or upstream/downstream mixing
-
-**Verdict (pick one and state explicitly):**
+**Verdict — pick one:**
 - `No split — single scope, within size budget`
-- `No split — heuristic tripped but steps are tightly coupled (rationale: …)`
+- `No split — heuristic tripped but steps tightly coupled (rationale: …)`
 - `Split required — proposing N child plans: …`
 - `Split recommended — proposing N child plans: …`
 
-If splitting, stop here, generate child plans (each with its own filename and `Dependencies`), and discard or archive the parent draft. Do not proceed to FINALIZE on a plan that is being split.
+If splitting: stop, generate child plans (each with own filename + `Dependencies`), discard/archive parent draft. Do not FINALIZE a plan being split.
 
 ### 8. FINALIZE
 
-1. **Refine document** — Front-load key info (summary, scope, criteria)
-2. **De-slop** (optional) — Re-read as a reader and strip agent self-talk, filler, redundant restatements, and unfilled template artifacts. See *De-slop* in SKILL.md.
-3. **Update relationships** — Add links to/from related projex
-4. **Set status** — Mark as `Ready` when complete
-5. **Verify placement** — Confirm the file is in the correct `.projex/` folder (it should already be there from step 4)
-6. **Commit the plan** — Plan must be committed to base branch before execution
+1. **Refine** — front-load key info (summary, scope, criteria)
+2. **De-slop** (optional) — strip agent self-talk, filler, redundant restatements, unfilled template artifacts (see SKILL.md § De-slop)
+3. **Update relationships** — links to/from related projex
+4. **Set status** — `Ready` when complete
+5. **Verify placement** — file in correct `.projex/` (already there from step 4)
+6. **Commit** — must land on base branch before execution
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: add plan - {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md
 ```
 
-> **Important:** Plans must be committed before `/execute-projex.md` can be invoked. The ephemeral execution branch is created from the base branch, so the plan must exist in git history.
-
-**Folder placement:** See SKILL.md § Organizing. Plans move to `.projex/closed/` only after Walkthrough is authored.
+**Folder placement:** Plans move to `.projex/closed/` only after Walkthrough is authored. See SKILL.md § Organizing.
 
 ---
 
 ## STATUS TRANSITIONS
 
 ```
-Draft → Ready → In Progress → Complete
-                            → Blocked → Ready (when unblocked)
+Draft (writing) → Ready (validated) → In Progress (executing) → Complete (Walkthrough authored)
+                                                              → Blocked (document blocker) → Ready (when unblocked)
 ```
-
-- **Draft**: Still being written
-- **Ready**: Validated and ready for execution
-- **In Progress**: Currently being executed
-- **Blocked**: Cannot proceed (document blocker)
-- **Complete**: Execution finished, Walkthrough authored
 
 ---
 
@@ -357,65 +303,33 @@ Draft → Ready → In Progress → Complete
 
 ### When to split
 
-Split is **required** when any of these apply:
-- Plan touches files in more than one `.projex/` scope (different projex folders)
-- Plan touches files in more than one repository
-- Plan mixes upstream changes (e.g. spec, schema, API contract) with downstream consumers (e.g. implementation, client code)
-
-Split is **recommended** when:
-- Scope is too large for a focused session
-- Steps have no mutual dependency and can be executed independently
-
-**Size heuristic — suggest a plain split when ALL apply:**
-- Plan exceeds 500 lines OR 50 KB
-- Plan has more than 5 steps
-
-When the heuristic trips, propose a split (vertical slice, horizontal layer, or dependency group) before finalizing. If the user declines or steps are tightly coupled, proceed as one plan and note the rationale in `Notes`.
+**Required** (any apply): files cross > 1 `.projex/` scope | files cross > 1 repo | mixes upstream (spec/schema/API contract) + downstream (impl/client code).
+**Recommended:** scope too large for a focused session | steps have no mutual dependency, can run independently.
+**Size heuristic** (all apply → suggest split): > 500 lines OR > 50 KB | > 5 steps. On trip → propose split (vertical slice / horizontal layer / dependency group) before finalize. User declines or steps tightly coupled → proceed, note rationale in `Notes`.
 
 ### How to split
 
 **By projex boundary (mandatory):**
 
-> **Example — spec + implementation:**
-> A language spec change requires updating the C# runtime.
-> - **Wrong:** One plan covering both spec markdown and C# source.
-> - **Right:** Two plans:
->   1. `docs/.projex/2602081430-macro-syntax-revision-plan.md` — Spec only. Dependencies: "Blocks: impl plan."
->   2. `src/.projex/2602081430-macro-syntax-impl-plan.md` — C# only. Dependencies: "Requires: spec plan."
+> **Example:** spec change + C# runtime impl → two plans: `docs/.projex/...-macro-syntax-revision-plan.md` (Blocks: impl) + `src/.projex/...-macro-syntax-impl-plan.md` (Requires: spec). Wrong: one plan spanning both.
 
-**By slice (recommended when scope is large within one boundary):**
-1. **Vertical slices** — End-to-end for one feature
-2. **Horizontal layers** — One layer across features
-3. **Dependencies** — Group by what must happen first
+**By slice** (large scope within one boundary): vertical slices (end-to-end per feature) | horizontal layers (one layer across features) | dependencies (group by what must happen first).
 
 ### Split plan rules
 
-Each split plan must:
-- Be independently executable
-- Target exactly one projex scope
-- Link to sibling plans via `Dependencies` (Requires / Blocks)
-- Not create circular dependencies
+Each split plan: independently executable | targets exactly one projex scope | links siblings via `Dependencies` (Requires/Blocks) | no circular deps.
 
 ---
 
 ## OUTPUT
 
-This workflow produces:
-- A plan projex document at `.projex/{yymmddhhmm}-{name}-plan.md` (pending in parent folder)
-- Updated relationships in source proposal (if applicable)
-- Updated relationships in any related projex documents
-
-After execution and walkthrough creation, both Plan and Walkthrough move to `.projex/closed/`.
+Plan doc at `.projex/{yymmddhhmm}-{name}-plan.md` (pending) | updated relationships in source proposal + related projex. After exec + walkthrough → both move to `.projex/closed/`.
 
 ---
 
 ## NEXT STEPS
 
-**The plan workflow ends here.** Present the plan — do not suggest or initiate execution.
-
-- `/execute-projex.md @{plan-file}` — execute
-- `/review-projex.md` or `/redteam-projex.md` — challenge first
-- Revise, shelve, or reject
+Workflow ends here. Present the plan; do not suggest or initiate execution. User chooses: `/execute-projex.md @{plan-file}` (execute) | `/review-projex.md` or `/redteam-projex.md` (challenge first) | revise, shelve, or reject.
 
 ---
 
