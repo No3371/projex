@@ -1,7 +1,7 @@
 # projex-merge-close.ps1 — Merge with full history into base, then delete ephemeral
 # Usage: projex-merge-close.ps1 <repo-root> <base-branch> <ephemeral-branch> "merge message" [-Worktree]
 #
-# -Worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
+# -Worktree: merge from base, then best-effort remove the worktree at <repo>.projexwt/<branch-suffix>.
 #            The main working directory must already be on the base branch.
 
 param(
@@ -42,21 +42,7 @@ $WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Lea
 $WtPath = Join-Path $WtBase $WtSuffix
 
 if ($Worktree) {
-    # Worktree mode: remove worktree, then merge (already on base branch)
-    git -C $RepoRoot worktree remove $WtPath
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Normal worktree remove failed, retrying with --force..."
-        git -C $RepoRoot worktree remove --force $WtPath
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error "Could not remove worktree '$WtPath'"
-            Write-Error "  Common causes: editor or terminal still open in the worktree directory,"
-            Write-Error "  file watcher or antivirus holding locks, or shell CWD is inside the worktree."
-            Write-Error "  Fix: close programs using '$WtPath', then retry."
-            Write-Error "  Manual: Remove-Item -Recurse -Force '$WtPath'; git worktree prune"
-            Write-Error "  Branch '$Ephemeral' still exists for recovery."
-            exit 1
-        }
-    }
+    # Worktree mode: merge first; cleanup happens after merge so Windows locks cannot block close.
 } else {
     # Checkout mode: require clean tree, switch to base
     git -C $RepoRoot diff --quiet 2>$null
@@ -92,7 +78,17 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Clean stale worktree records before branch deletion
+if ($Worktree) {
+    git -C $RepoRoot worktree remove $WtPath
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Normal worktree remove failed, retrying with --force..."
+        git -C $RepoRoot worktree remove --force $WtPath
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Could not remove worktree '$WtPath' — close succeeded; clean up manually, then run: git worktree prune"
+        }
+    }
+}
+
 git -C $RepoRoot worktree prune 2>$null
 
 # Delete ephemeral branch (non-fatal)

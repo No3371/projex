@@ -2,7 +2,7 @@
 # projex-squash-close.sh — Squash-merge ephemeral branch into base, then delete ephemeral
 # Usage: projex-squash-close.sh <repo-root> <base-branch> <ephemeral-branch> "commit message" [--worktree]
 #
-# --worktree: remove the worktree at <repo>.projexwt/<branch-suffix> instead of checking out base.
+# --worktree: merge from base, then best-effort remove the worktree at <repo>.projexwt/<branch-suffix>.
 #             The main working directory must already be on the base branch.
 
 set -euo pipefail
@@ -51,20 +51,8 @@ if [ "$BASE" = "$EPHEMERAL" ]; then
 fi
 
 if [ "$WORKTREE_MODE" = true ]; then
-  # Worktree mode: remove worktree, then merge (already on base branch)
+  # Worktree mode: merge first; cleanup happens after commit so locks cannot block close.
   WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
-  if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
-    echo "Warning: normal worktree remove failed, retrying with --force..." >&2
-    if ! git -C "$REPO_ROOT" worktree remove --force "$WT_PATH" 2>&1; then
-      echo "Error: could not remove worktree '$WT_PATH'" >&2
-      echo "  Common causes: editor or terminal still open in the worktree directory," >&2
-      echo "  file watcher or antivirus holding locks, or shell CWD is inside the worktree." >&2
-      echo "  Fix: close programs using '$WT_PATH', then retry." >&2
-      echo "  Manual: rm -rf '$WT_PATH' && git worktree prune" >&2
-      echo "  Branch '$EPHEMERAL' still exists for recovery." >&2
-      exit 1
-    fi
-  fi
 else
   # Checkout mode: require clean tree, switch to base
   if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
@@ -102,7 +90,15 @@ if ! git -C "$REPO_ROOT" commit -m "$COMMIT_MSG" 2>&1; then
   exit 1
 fi
 
-# Clean stale worktree records before branch deletion
+if [ "$WORKTREE_MODE" = true ]; then
+  if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
+    echo "Warning: normal worktree remove failed, retrying with --force..." >&2
+    if ! git -C "$REPO_ROOT" worktree remove --force "$WT_PATH" 2>&1; then
+      echo "Warning: could not remove worktree '$WT_PATH' — close succeeded; clean up manually, then run: git worktree prune" >&2
+    fi
+  fi
+fi
+
 git -C "$REPO_ROOT" worktree prune 2>/dev/null || true
 
 # Delete ephemeral branch (non-fatal)
