@@ -57,6 +57,7 @@ Subagents have no memory of the orchestrating conversation. Each handoff must be
 
 - **Target repo** — absolute path (subagent resolves git root from there)
 - **Original human task** — verbatim, unfiltered
+- **Subagent Responsibility** — the role, the objectives, and the expected deliveries
 - **Which workflow to invoke** — e.g. `/plan-projex.md`, `/execute-projex.md`
 - **Path to the relevant workflow spec and `SKILL.md`** — so the subagent can load them
 - **Prior projex artifacts** — by **filename** (not path), e.g. `2604151200-auth-feature-plan.md`
