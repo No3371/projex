@@ -56,7 +56,9 @@ Classify what's being captured:
 
 ### 2. WRITE THE MEMO
 
-Create file: `{yymmddhhmm}-{memo-name}-memo.md` in `.projex/`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> memo "{memo-name}" <projex-folder>
+```
 
 **Template:**
 

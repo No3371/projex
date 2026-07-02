@@ -108,7 +108,9 @@ Act directly:
 
 ### 3. WRITE THE PATCH DOCUMENT
 
-Create: `{yymmddhhmm}-{patch-name}-patch.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> patch "{patch-name}" <projex-folder>
+```
 
 The patch document IS the walkthrough. It is a single, self-contained record.
 

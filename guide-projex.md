@@ -87,7 +87,9 @@ Order material into progressive phases:
 
 ### 4. DRAFT THE GUIDE
 
-Create file: `{yymmddhhmm}-{guide-name}-guide.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> guide "{guide-name}" <projex-folder>
+```
 
 Use the template structure below, adapting sections based on guide type and depth needed.
 

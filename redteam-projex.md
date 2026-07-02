@@ -109,7 +109,9 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 
 ### 5. DRAFT RED TEAM REPORT
 
-Create file: `{yymmddhhmm}-{subject}-redteam.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> redteam "{subject}" <projex-folder>
+```
 
 **Write Bottom Line last.** Open the file with the placeholder exactly as shown in the template. Do not fill in Verdict or Top Vulnerabilities until all findings, edge cases, and assessments are complete. Only then synthesize the prioritized list and choose the verdict.
 

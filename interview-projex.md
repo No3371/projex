@@ -50,7 +50,9 @@ When all branches are resolved or the user stops:
 
 ## DOCUMENT TEMPLATE
 
-Create file: `{yymmddhhmm}-{topic}-interview.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> interview "{topic}" <projex-folder>
+```
 
 ```markdown
 # Interview: [Topic]

@@ -73,7 +73,9 @@ Don't rush to document — keep discussing until you and the user feel the major
 
 #### 3. DRAFT THE DEFINITION
 
-Create file in the appropriate `.projex/` folder: `{yymmddhhmm}-{entity-name}-def.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> define "{entity-name}" <projex-folder>
+```
 
 **Template Structure:**
 

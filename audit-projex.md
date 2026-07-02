@@ -80,7 +80,9 @@ Actual user value? Could be better/simpler? Missed opportunities? What makes it 
 
 ### 6. DRAFT AUDIT REPORT
 
-Create file: `{yymmddhhmm}-{subject}-audit.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> audit "{subject}" <projex-folder>
+```
 
 ```markdown
 # Audit: [Subject]

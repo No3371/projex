@@ -139,7 +139,9 @@ Select lenses appropriate to the evaluation. Lens count scales with tier.
 
 ### 4. DRAFT THE EVALUATION
 
-Create: `{yymmddhhmm}-{eval-name}-eval.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> eval "{eval-name}" <projex-folder>
+```
 
 #### Document Structure
 

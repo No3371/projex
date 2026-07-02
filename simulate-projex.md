@@ -159,7 +159,9 @@ git diff <earlier-commit>..HEAD        # Between simulation steps
 
 Now on the base branch with all changes rolled back, write the simulation report from gathered logs and observations.
 
-Create: `{yymmddhhmm}-{simulation-name}-simulation.md` in `.projex/closed/` (simulations are born closed).
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> simulate "{simulation-name}" <projex-folder>
+```
 
 **Template:**
 

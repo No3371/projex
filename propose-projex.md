@@ -52,7 +52,9 @@ Questions to answer:
 
 ### 2. DRAFT THE PROPOSAL
 
-Create a new file following naming convention: `{yymmddhhmm}-{proposal-name}-proposal.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> propose "{proposal-name}" <projex-folder>
+```
 
 **Template Structure:**
 

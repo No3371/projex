@@ -73,7 +73,9 @@ Search systematically. Use whatever combination of tools finds everything:
 
 ### 3. WRITE THE SCAN DOCUMENT
 
-Create file: `{yymmddhhmm}-{scan-name}-scan.md` in `.projex/closed/`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> scan "{scan-name}" <projex-folder>
+```
 
 **Template:**
 

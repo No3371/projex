@@ -173,7 +173,9 @@ Based on analysis, decide:
 
 ### 7. DRAFT THE REVIEW
 
-Create a new file: `{yymmddhhmm}-{original-projex-name}-review.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{original-projex-name}" <projex-folder>
+```
 
 **Template Structure:**
 

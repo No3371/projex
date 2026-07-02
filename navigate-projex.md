@@ -72,7 +72,9 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 #### 3. DRAFT THE ROADMAP
 
-Create file in the appropriate `.projex/` folder for the scope: `{yymmddhhmm}-{roadmap-name}-nav.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> navigate "{roadmap-name}" <projex-folder>
+```
 
 - Project-level → root `.projex/`
 - Module-level → `src/{module}/.projex/`

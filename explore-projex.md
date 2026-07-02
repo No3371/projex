@@ -67,7 +67,11 @@ Define scope and questions:
 
 ### 2. SCAFFOLD THE DOCUMENT
 
-Create file: `{yymmddhhmm}-{exploration-name}-explore.md` **before investigating anything**.
+Scaffold the file **before investigating anything**:
+
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> explore "{exploration-name}" <projex-folder>
+```
 
 Fill in what you know so far — the header, guiding questions, scope, context — then identify **investigation targets**: the specific areas, components, files, or concepts you intend to dive into. Each target becomes a section under Investigation with a brief rationale for why it matters. The rest of the document (findings, patterns, answers) stays empty — it gets filled during the dives.
 

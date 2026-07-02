@@ -79,7 +79,9 @@ Answer by reading actual code:
 
 ### 4. DRAFT THE PLAN
 
-Create `<projex-folder>/{yymmddhhmm}-{plan-name}-plan.md` directly in the target projex folder (Step 2). Never agent artifacts, temp paths, or anywhere outside the repo's `.projex/` folders.
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> plan "{plan-name}" <projex-folder>
+```
 
 **Template Structure:**
 

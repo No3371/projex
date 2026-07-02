@@ -84,7 +84,9 @@ For clear change sets, proceed directly to drafting.
 
 ### 4. DRAFT THE LOG
 
-Create file: `{yymmddhhmm}-{log-name}-log.md` in the appropriate `.projex/closed/` folder (born closed).
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> log "{log-name}" <projex-folder>
+```
 
 **Template Structure:**
 

@@ -64,7 +64,9 @@ For each file in the list, extract:
 
 ### 4. DRAFT THE ARCHIVE DOCUMENT
 
-Create: `{yymmddhhmm}-{scope}-archive.md` directly in the target `.projex/closed/` folder.
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> archive "{scope}" <projex-folder>
+```
 
 Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).
 

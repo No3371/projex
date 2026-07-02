@@ -115,7 +115,9 @@ Frame challenges constructively: "This creates an interesting tension between X 
 
 ### 6. DRAFT THE IMAGINATION DOCUMENT
 
-Create file: `{yymmddhhmm}-{imagination-name}-imagine.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> imagine "{imagination-name}" <projex-folder>
+```
 
 **Template Structure:**
 

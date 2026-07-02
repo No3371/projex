@@ -72,7 +72,9 @@ For straightforward structures, proceed directly to drafting.
 
 #### 3. DRAFT THE MAP
 
-Create file in the appropriate `.projex/` folder: `{yymmddhhmm}-{map-name}-map.md`
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> map "{map-name}" <projex-folder>
+```
 
 - Project-level → root `.projex/`
 - Module-level → `src/{module}/.projex/`
