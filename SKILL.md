@@ -230,13 +230,13 @@ On any failure, all completed deletions are rolled back in reverse order from te
 
 #### Worktree Creation
 
-`projex-worktree` — creates a worktree in a sibling directory `{repo-name}.projexwt/` next to the repo.
+`projex-worktree` — creates a worktree in `{repo-name}/.projexwt/` inside the repo, and registers `.projexwt/` in the repo's `.git/info/exclude` so the parent's git status stays clean.
 
 ```
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> <branch-name> [<base-ref>]
 ```
 
-The worktree is created at `{repo-name}.projexwt/<branch-suffix>/` (a sibling directory next to the repo) where `<branch-suffix>` is the last path segment of `<branch-name>`.
+The worktree is created at `{repo-name}/.projexwt/<branch-suffix>/` (inside the repo, so it stays in the editor workspace) where `<branch-suffix>` is the last path segment of `<branch-name>`.
 
 #### Branch Finalization
 
@@ -246,7 +246,7 @@ The worktree is created at `{repo-name}.projexwt/<branch-suffix>/` (a sibling di
 
 Each validates inputs, reports failure with state context, and rolls back on error.
 
-When `--worktree` is passed, the script removes the worktree at `{repo-name}.projexwt/<branch-suffix>` instead of checking out base. The main working directory must already be on the base branch (which it is — worktree mode never leaves it).
+When `--worktree` is passed, the script removes the worktree at `{repo-name}/.projexwt/<branch-suffix>` instead of checking out base. The main working directory must already be on the base branch (which it is — worktree mode never leaves it).
 
 ### Git Operation Discipline
 
@@ -263,13 +263,13 @@ For operations not covered by the scripts above (read-only queries, `git checkou
 
 ### Worktree Mode (Optional)
 
-Worktree mode creates ephemeral branches as separate working directories in `{repo-name}.projexwt/` (sibling to repo) instead of switching the main working directory via `git checkout`. The main directory stays on the base branch throughout.
+Worktree mode creates ephemeral branches as separate working directories in `{repo-name}/.projexwt/` (inside the repo) instead of switching the main working directory via `git checkout`. The main directory stays on the base branch throughout.
 
 **Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Simulations default to worktree mode.
 
 **How it works:**
-- `projex-worktree` creates the worktree in a sibling directory
-- All execution happens in the worktree directory (`{repo-name}.projexwt/<name>/`)
+- `projex-worktree` creates the worktree in `.projexwt/` inside the repo
+- All execution happens in the worktree directory (`{repo-name}/.projexwt/<name>/`)
 - `stage-n-commit` works unchanged (`-C` accepts worktree paths)
 - Finalization scripts receive `--worktree` flag to remove the worktree instead of checking out base
 - No stashing needed — the base branch working directory is never touched
@@ -280,7 +280,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 - Parallel executions possible (multiple worktrees)
 - Crash-safe — main directory always on base branch
 
-**Worktrees live outside the repo** in a sibling directory `{repo-name}.projexwt/`, so no gitignore entry is needed.
+**Worktrees live inside the repo** at `{repo-name}/.projexwt/`, so they stay in the editor workspace. `projex-worktree` registers `.projexwt/` in the repo's `.git/info/exclude` (local, uncommitted) so the checkout never shows up in the parent's git status — no tracked `.gitignore` entry is added.
 
 ### Notes
 

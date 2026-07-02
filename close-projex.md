@@ -403,7 +403,7 @@ If output is non-empty, commit or discard the remaining changes before continuin
 
 The ephemeral branch must be finalized. Present options to user.
 
-**Worktree mode:** If execution used a worktree (`{repo-name}.projexwt/`), pass `--worktree` to the finalization script. The script removes the worktree before merging/abandoning. The main working directory is already on the base branch — no checkout needed.
+**Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script removes the worktree before merging/abandoning. The main working directory is already on the base branch — no checkout needed.
 
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
@@ -465,7 +465,7 @@ Verify: branch deleted.
 
 **Best for:** Linear history preference, collaborative workflows
 
-> **Note:** Option C uses raw git commands and does not support `--worktree`. If worktree mode is active, use Option A or B instead, or manually remove the worktree first with `git worktree remove {repo-name}.projexwt/<name>`.
+> **Note:** Option C uses raw git commands and does not support `--worktree`. If worktree mode is active, use Option A or B instead, or manually remove the worktree first with `git worktree remove {repo-name}/.projexwt/<name>`.
 
 #### Option D: Abandon (Failed Execution)
 Discards the branch without merging.

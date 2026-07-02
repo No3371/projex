@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# projex-worktree.sh — Create a worktree in <repo>.projexwt/ (sibling to repo)
+# projex-worktree.sh — Create a worktree in <repo>/.projexwt/ (inside the repo)
 # Usage: projex-worktree.sh <repo-root> <branch-name> [<base-ref>]
 #
-# Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
+# Creates <repo>/.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
 # of <branch-name> (e.g., projex/2603071430-foo → 2603071430-foo).
-# The worktree directory sits next to the repo, not inside it.
+# The worktree sits inside the repo so it stays in the editor workspace; .projexwt/ is
+# registered in the repo's .git/info/exclude so the parent's git status stays clean.
 
 set -euo pipefail
 
@@ -25,7 +26,7 @@ fi
 
 # Derive worktree suffix from branch name (last path segment)
 WT_SUFFIX="${BRANCH_NAME##*/}"
-WT_BASE="${REPO_ROOT%/}.projexwt"
+WT_BASE="${REPO_ROOT%/}/.projexwt"
 WT_PATH="$WT_BASE/$WT_SUFFIX"
 
 # Check worktree doesn't already exist
@@ -34,7 +35,14 @@ if [ -d "$WT_PATH" ]; then
   exit 1
 fi
 
-# Create sibling worktree directory if needed
+# Keep the in-repo worktree dir out of the parent's git status (local, not committed)
+EXCLUDE_FILE="$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)/info/exclude"
+mkdir -p "$(dirname "$EXCLUDE_FILE")"
+if ! grep -qxF '.projexwt/' "$EXCLUDE_FILE" 2>/dev/null; then
+  echo '.projexwt/' >> "$EXCLUDE_FILE"
+fi
+
+# Create worktree base directory if needed
 mkdir -p "$WT_BASE"
 
 # Fail if branch already exists

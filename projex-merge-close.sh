@@ -2,7 +2,7 @@
 # projex-merge-close.sh — Merge with full history into base, then delete ephemeral
 # Usage: projex-merge-close.sh <repo-root> <base-branch> <ephemeral-branch> "merge message" [--worktree]
 #
-# --worktree: merge from base, then best-effort remove the worktree at <repo>.projexwt/<branch-suffix>.
+# --worktree: merge from base, then best-effort remove the worktree at <repo>/.projexwt/<branch-suffix>.
 #             The main working directory must already be on the base branch.
 
 set -euo pipefail
@@ -52,7 +52,7 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: merge first; cleanup happens after merge so locks cannot block close.
-  WT_PATH="${REPO_ROOT%/}.projexwt/${EPHEMERAL##*/}"
+  WT_PATH="${REPO_ROOT%/}/.projexwt/${EPHEMERAL##*/}"
 else
   # Checkout mode: require clean tree, switch to base
   if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then

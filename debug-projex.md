@@ -39,7 +39,7 @@ Debug-projex tackles a specific, reproducible issue when the cause is unknown. T
 
 ## REVERSIBILITY MODEL
 
-Debug-projex runs in an isolated worktree (`{repo-name}.projexwt/{branch-suffix}/`) on an ephemeral branch (`projex/debug/{yymmddhhmm}-{debug-name}`). The main working directory stays on the base branch throughout. Per-attempt rollback uses `git reset --hard` or `git checkout -- .` within the worktree.
+Debug-projex runs in an isolated worktree (`{repo-name}/.projexwt/{branch-suffix}/`) on an ephemeral branch (`projex/debug/{yymmddhhmm}-{debug-name}`). The main working directory stays on the base branch throughout. Per-attempt rollback uses `git reset --hard` or `git checkout -- .` within the worktree.
 
 ### ALLOWED inside the worktree
 
@@ -130,7 +130,7 @@ Without reading code yet, list 3–7 plausible causes ordered by likelihood from
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/debug/{yymmddhhmm}-{debug-name}
 ```
 
-Record `<worktree-root>` as `{repo-name}.projexwt/{yymmddhhmm}-{debug-name}/` (sibling to repo). All subsequent script calls use `<worktree-root>` as the working repo for `stage-n-commit` and other utilities.
+Record `<worktree-root>` as `{repo-name}/.projexwt/{yymmddhhmm}-{debug-name}/` (inside the repo). All subsequent script calls use `<worktree-root>` as the working repo for `stage-n-commit` and other utilities.
 
 #### B. Create the debug log file
 

@@ -1,9 +1,10 @@
-# projex-worktree.ps1 — Create a worktree in <repo>.projexwt/ (sibling to repo)
+# projex-worktree.ps1 — Create a worktree in <repo>/.projexwt/ (inside the repo)
 # Usage: projex-worktree.ps1 <repo-root> <branch-name> [<base-ref>]
 #
-# Creates <repo>.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
+# Creates <repo>/.projexwt/<branch-suffix>/ where <branch-suffix> is the last path segment
 # of <branch-name> (e.g., projex/2603071430-foo → 2603071430-foo).
-# The worktree directory sits next to the repo, not inside it.
+# The worktree sits inside the repo so it stays in the editor workspace; .projexwt/ is
+# registered in the repo's .git/info/exclude so the parent's git status stays clean.
 
 param(
     [Parameter(Mandatory=$true)][string]$RepoRoot,
@@ -22,7 +23,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Derive worktree suffix from branch name (last path segment)
 $WtSuffix = ($BranchName -split '/')[-1]
-$WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
+$WtBase = Join-Path $RepoRoot ".projexwt"
 $WtPath = Join-Path $WtBase $WtSuffix
 
 # Check worktree doesn't already exist
@@ -31,7 +32,16 @@ if (Test-Path $WtPath) {
     exit 1
 }
 
-# Create sibling worktree directory if needed
+# Keep the in-repo worktree dir out of the parent's git status (local, not committed)
+$CommonDir = git -C $RepoRoot rev-parse --path-format=absolute --git-common-dir
+$ExcludeFile = Join-Path $CommonDir "info/exclude"
+$ExcludeDir = Split-Path $ExcludeFile -Parent
+if (-not (Test-Path $ExcludeDir)) { New-Item -ItemType Directory -Path $ExcludeDir -Force | Out-Null }
+if (-not ((Test-Path $ExcludeFile) -and (Select-String -Path $ExcludeFile -Pattern '^\.projexwt/$' -Quiet))) {
+    Add-Content -Path $ExcludeFile -Value '.projexwt/'
+}
+
+# Create worktree base directory if needed
 if (-not (Test-Path $WtBase)) {
     New-Item -ItemType Directory -Path $WtBase -Force | Out-Null
 }

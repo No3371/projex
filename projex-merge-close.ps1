@@ -1,7 +1,7 @@
 # projex-merge-close.ps1 — Merge with full history into base, then delete ephemeral
 # Usage: projex-merge-close.ps1 <repo-root> <base-branch> <ephemeral-branch> "merge message" [-Worktree]
 #
-# -Worktree: merge from base, then best-effort remove the worktree at <repo>.projexwt/<branch-suffix>.
+# -Worktree: merge from base, then best-effort remove the worktree at <repo>/.projexwt/<branch-suffix>.
 #            The main working directory must already be on the base branch.
 
 param(
@@ -38,7 +38,7 @@ if ($Base -eq $Ephemeral) {
 }
 
 $WtSuffix = ($Ephemeral -split '/')[-1]
-$WtBase = Join-Path (Split-Path $RepoRoot -Parent) ("$(Split-Path $RepoRoot -Leaf).projexwt")
+$WtBase = Join-Path $RepoRoot ".projexwt"
 $WtPath = Join-Path $WtBase $WtSuffix
 
 if ($Worktree) {
