@@ -1,16 +1,16 @@
 ---
-description: This workflow enables quick, lightweight actions — skipping the full Plan → Execute → Close cycle for small, well-understood changes. The output is a single Patch document that doubles as its own walkthrough. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
+description: Quick, lightweight actions — skip the full Plan → Execute → Close cycle for small, well-understood changes. Output is one Patch document that doubles as its own walkthrough. (Part of @projex-framework skill. MUST load the skill first.)
 ---
 
 ## PURPOSE
 
-Patches are the fast path for small, well-understood changes. When the overhead of Plan → Execute → Close exceeds the work itself, a patch lets you act directly while still maintaining traceability and documentation.
+Patches are the fast path for small, well-understood changes. When Plan → Execute → Close overhead exceeds the work itself, a patch lets you act directly while keeping traceability and documentation.
 
 **Key characteristics:**
 - Immediate action — no plan document, no ephemeral branch
-- Single output document serves as both record and walkthrough
-- Scope-guarded — escalates to full plan-execute if complexity warrants
-- Still updates related projex and documents to match post-patch status
+- Single output doc is both record and walkthrough
+- Scope-guarded — escalates to plan-execute if complexity warrants
+- Still updates related projex/docs to post-patch status
 - Commits directly to current branch
 
 **When to use Patch vs Plan-Execute:**
@@ -38,14 +38,14 @@ Patches are the fast path for small, well-understood changes. When the overhead 
 - `/patch-projex Add missing null check in handleSubmit`
 
 The directive can be:
-- **A direct instruction** — Describe what to do
-- **A reference to a plan objective** — Execute a specific part of an existing plan without the full ceremony
+- **A direct instruction** — what to do
+- **A reference to a plan objective** — execute a specific part of an existing plan without the full ceremony
 
 ---
 
 ## SCOPE GUARD
 
-**CRITICAL: Before taking any action, assess whether this truly qualifies as a patch.**
+**CRITICAL: Before any action, assess whether this truly qualifies as a patch.**
 
 ### Qualifies as Patch
 - [ ] Change is well-understood — no exploration or design needed
@@ -60,7 +60,7 @@ The directive can be:
 - Multiple stakeholders need to review the approach first
 - You find yourself writing a plan in your head
 
-**If scope exceeds patch threshold:** Stop, inform the user, and recommend `/plan-projex` instead. Do not proceed with a patch that should be a plan.
+**If scope exceeds patch threshold:** Stop, inform the user, recommend `/plan-projex` instead. Do not proceed with a patch that should be a plan.
 
 ---
 
@@ -70,21 +70,21 @@ The directive can be:
 
 Before acting:
 
-1. **Resolve the target repo** — If the directive references a projex file, we find the exact git repo the projex belongs to. If no file is referenced, infer from context.
+1. **Resolve the target repo** — If the directive references a projex file, find the exact git repo it belongs to. If no file is referenced, infer from context.
 ```bash
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
 Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
 2. **Understand the directive** — What exactly needs to happen?
 3. **Locate relevant files** — Read them, understand current state
-4. **Check for related projex** — Is this part of an existing plan or proposal?
+4. **Check for related projex** — Part of an existing plan or proposal?
 5. **Verify scope** — Run the scope guard checklist above
 6. **Identify what else needs updating** — Related docs, specs, projex files
 
 If the directive references an existing plan:
 - Read the plan
 - Identify the specific objective(s) being patched
-- Note remaining objectives that are NOT being patched
+- Note remaining objectives NOT being patched
 - The plan's context/constraints still apply
 
 ### 2. EXECUTE THE CHANGE
@@ -92,9 +92,9 @@ If the directive references an existing plan:
 Act directly:
 
 1. **Make the changes** — Edit files, run commands, do the work
-2. **Log actions as you go** — Track what you're doing for the patch document
+2. **Log actions as you go** — Track work for the patch document
 3. **Verify immediately** — Run relevant tests, lint, build, or manual checks
-4. **Fix issues** — If verification reveals problems, fix them before proceeding
+4. **Fix issues** — If verification reveals problems, fix before proceeding
 
 **Commit convention:**
 
@@ -104,7 +104,7 @@ Act directly:
 
 - Prefix: `projex(patch):` for traceability
 - Single commit for the patch (group related changes)
-- If the patch has distinct logical parts, multiple commits are acceptable
+- Distinct logical parts → multiple commits acceptable
 
 ### 3. WRITE THE PATCH DOCUMENT
 
@@ -112,7 +112,7 @@ Act directly:
 {projex-scripts}/new-projex.{sh|ps1} <repo-root> patch "{patch-name}" <projex-folder>
 ```
 
-The patch document IS the walkthrough. It is a single, self-contained record.
+The patch document IS the walkthrough. One self-contained record.
 
 **Template:**
 
@@ -187,22 +187,24 @@ The patch document IS the walkthrough. It is a single, self-contained record.
 After the patch is written:
 
 1. **If patching a plan:**
-   - Mark the patched work with `[PATCHED]` and link to the patch document
+   - Mark the patched work with `[PATCHED]` and link to the patch doc
    - Note what remains open, if anything
    - Add to the plan's Related Projex section: `> Partial Execution: [description] completed via [patch doc link]`
-   - If the patch leaves nothing more to do within the plan, update plan status to `Complete` and move the plan to `.projex/closed/`
+   - If the patch leaves nothing more to do within the plan, set plan status to `Complete` and move the plan to `.projex/closed/`
 
 2. **If related to a proposal:**
-   - Add a reference to the patch in the proposal's related projex
+   - Reference the patch in the proposal's related projex
    - Note what the patch addressed
 
 3. **If the patch changes behavior documented elsewhere:**
    - Update affected specs, docs, or other projex to reflect the new state
-   - Ensure no document now contains stale information
+   - Leave no stale information
 
 4. **Update nav (if noted):** If the patch notes `> **Nav:** {nav-filename}`, update that nav only: check off the milestone, link the patch under it, append a Revision Log entry. Do not search for navs not referenced by the patch.
 
-5. **Commit document updates:**
+5. **Update any other relevant projex documents**
+
+6. **Commit document updates:**
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
@@ -229,7 +231,7 @@ Small, obvious, and bounded? ─── No → /plan-projex
 
 ### No Ephemeral Branch
 
-Patches commit directly to the current branch. This is intentional — the overhead of branch creation, merge, and cleanup is disproportionate to the change size.
+Patches commit directly to the current branch. Intentional — branch creation, merge, and cleanup overhead is disproportionate to the change size.
 
 ### Commit Sequence
 
@@ -271,7 +273,7 @@ This workflow produces:
 
 Before considering the patch complete:
 
-- [ ] Change is implemented and committed
+- [ ] Change implemented and committed
 - [ ] Verification passed (tests, build, manual check)
 - [ ] Patch document written with all changes detailed
 - [ ] Related projex documents updated
@@ -284,10 +286,10 @@ Before considering the patch complete:
 
 ## NOTES
 
-- Patches are born closed — they go directly to `.projex/closed/`
-- The patch document is the walkthrough. There is no separate walkthrough
+- Patches are born closed — go directly to `.projex/closed/`
+- The patch document is the walkthrough. No separate walkthrough
 - If a patch fails verification, fix it or abandon it — don't leave broken state
-- If you discover the patch is bigger than expected mid-execution, stop and escalate to `/plan-projex`
+- If the patch grows bigger than expected mid-execution, stop and escalate to `/plan-projex`
 - Patches are still first-class projex documents — searchable, linkable, referenceable
 - Use relative paths when referencing repository files
 - The `projex(patch):` commit prefix distinguishes patches from full executions in git history
