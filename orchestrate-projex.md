@@ -103,6 +103,10 @@ The orchestrator owns decisions a human user would normally make:
 
 Default to the workflow spec's own defaults. Deviate only when the human's task clearly requires it.
 
+**Explicit workflow lists are literal.** If the human names specific workflows (e.g. "orchestrate-projex plan, redteam"), that list IS the full scope — run exactly those and stop. Do not infer or auto-chain further workflows that would normally follow in a full cycle (e.g. no silent execute/close after a named plan), even if the next step seems obvious. If a natural next step looks missing once the named workflows finish, surface it in the completion report as a question — do not act on it.
+
+This only applies when the human gives an explicit list. If the human instead states a task and lets the orchestrator choose the path, normal workflow selection above applies.
+
 ### Human Escalation
 
 Escalate (pause and ask the human) when:
