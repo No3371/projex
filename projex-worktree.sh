@@ -59,3 +59,4 @@ wt_out=$(git -C "$REPO_ROOT" worktree add "$WT_PATH" -b "$BRANCH_NAME" "$BASE_RE
 }
 
 echo "Worktree created: $WT_PATH (branch: $BRANCH_NAME, base: $BASE_REF)"
+echo "# next: from now on, target $WT_PATH as the working repo root for all script/git calls (not $REPO_ROOT), until this worktree is closed (squash-merged or abandoned)."

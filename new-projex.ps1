@@ -81,4 +81,4 @@ $Content = @"
 Set-Content -Path $Path -Value $Content -NoNewline
 Write-Host $Path
 Write-Host "# next: scaffold contains header only — update the format, structure and content per $Type-projex.md"
-Write-Host "# commit: $PSScriptRoot\projex-commit.ps1 $RepoRoot `"projex($Type): add $Slug`" $RelPath"
+Write-Host "# commit: $PSScriptRoot\stage-n-commit.ps1 $RepoRoot `"projex($Type): add $Slug`" $RelPath"

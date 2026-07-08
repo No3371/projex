@@ -63,3 +63,4 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Worktree created: $WtPath (branch: $BranchName, base: $BaseRef)"
+Write-Host "# next: from now on, target $WtPath as the working repo root for all script/git calls (not $RepoRoot), until this worktree is closed (squash-merged or abandoned)."

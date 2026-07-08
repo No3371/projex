@@ -294,6 +294,9 @@ if ($cleanStage) {
 
 $count = ($filtered -split "`n" | Where-Object { $_ -match '^diff --git ' }).Count
 Write-Host "Staged filtered changes in $count file(s):"
+$stagedFiles = @()
 $filtered -split "`n" | Where-Object { $_ -match '^diff --git a/(.+) b/' } | ForEach-Object {
     Write-Host "  $($Matches[1])"
+    $stagedFiles += $Matches[1]
 }
+Write-Host "# next: $PSScriptRoot\stage-n-commit.ps1 $RepoRoot `"<msg>`" $($stagedFiles -join ' ')"

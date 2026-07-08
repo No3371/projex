@@ -86,4 +86,4 @@ EOF
 echo "$path"
 echo "# next: scaffold contains header only — update the format, structure and content per ${type}-projex.md"
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-echo "# commit: $script_dir/projex-commit.sh $repo_root \"projex($type): add $slug\" $rel_dir/$file_name"
+echo "# commit: $script_dir/stage-n-commit.sh $repo_root \"projex($type): add $slug\" $rel_dir/$file_name"

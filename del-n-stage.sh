@@ -159,3 +159,6 @@ for (( i=0; i<${#DONE_FILES[@]}; i++ )); do
     echo "  ${DONE_FILES[$i]}  (untracked, removed from disk only)"
   fi
 done
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+echo "# next: $script_dir/stage-n-commit.sh $REPO_ROOT \"<msg>\" ${DONE_FILES[*]}"

@@ -158,3 +158,5 @@ for ($i = 0; $i -lt $doneFiles.Count; $i++) {
         Write-Host "  $($doneFiles[$i])  (untracked, removed from disk only)"
     }
 }
+
+Write-Host "# next: $PSScriptRoot\stage-n-commit.ps1 $RepoRoot `"<msg>`" $($doneFiles -join ' ')"

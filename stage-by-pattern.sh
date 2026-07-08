@@ -291,3 +291,7 @@ fi
 COUNT=$(printf '%s\n' "$FILTERED" | grep -c '^diff --git ' || true)
 echo "Staged filtered changes in $COUNT file(s):"
 printf '%s\n' "$FILTERED" | grep '^diff --git ' | sed 's|^diff --git a/\(.*\) b/.*|  \1|'
+
+STAGED_FILES=$(printf '%s\n' "$FILTERED" | grep '^diff --git ' | sed 's|^diff --git a/\(.*\) b/.*|\1|' | tr '\n' ' ')
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+echo "# next: $script_dir/stage-n-commit.sh $REPO_ROOT \"<msg>\" $STAGED_FILES"

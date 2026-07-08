@@ -154,3 +154,5 @@ Write-Host "Moved $($doneSrc.Count) file(s):"
 for ($i = 0; $i -lt $doneSrc.Count; $i++) {
     Write-Host "  $($doneSrc[$i]) -> $($doneDst[$i])"
 }
+
+Write-Host "# next: $PSScriptRoot\stage-n-commit.ps1 $RepoRoot `"<msg>`" $($doneDst -join ' ')"

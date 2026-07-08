@@ -149,3 +149,6 @@ echo "Moved ${#DONE_SRC[@]} file(s):"
 for (( i=0; i<${#DONE_SRC[@]}; i++ )); do
   echo "  ${DONE_SRC[$i]} -> ${DONE_DST[$i]}"
 done
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+echo "# next: $script_dir/stage-n-commit.sh $REPO_ROOT \"<msg>\" ${DONE_DST[*]}"
