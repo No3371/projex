@@ -30,7 +30,8 @@ The orchestrator must load relevant framework files for the path it chooses. Sub
 - `@./plan-projex.md` — actionable task spec
 - `@./execute-projex.md` — plan execution
 - `@./close-projex.md` — post-execution walkthrough + branch finalization
-- `@./patch-projex.md` — quick-action for small, well-understood changes
+- `@./patch-projex.md` — quick-action for small, well-understood changes to code/config
+- `@./revise-projex.md` — quick-action to fix a projex document's own content (not code) when new context makes it stale
 - `@./eval-projex.md` — open-ended analysis
 - `@./review-projex.md` — inspection of existing projex against status quo
 - `@./redteam-projex.md` — adversarial analysis
@@ -91,6 +92,14 @@ The exception's rationale and full contract live in `execute-projex.md § Choose
 Read the subagent's output as a human user would. Judge whether it serves the human's original task. If not, request revision with specific feedback, or redirect to a different workflow. The workflow spec already defines what the subagent should have produced — compare against that, not against your own rules.
 
 If a second attempt still fails, escalate to the human rather than forcing a third round.
+
+### Patch vs Revise — Disambiguate Before Delegating
+
+"Patch the plan" is ambiguous. Common source of misrouted delegation. Means *fix the code the plan describes* (`/patch-projex`) or *fix what the plan document itself says* (`/revise-projex`). Resolve which one the human means before spawning either subagent:
+- What the **system/code does** → `/patch-projex`
+- What a **projex document claims** (Plan step, Proposal trade-off, Definition boundary, Nav milestone) → `/revise-projex`
+
+Still ambiguous after one inference attempt? Ask the human. Guessing wrong spawns the wrong subagent — wastes a round trip, can produce an unwanted code change.
 
 ### Mid-Workflow Decisions
 

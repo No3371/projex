@@ -100,6 +100,7 @@ Repos can have multiple `.projex/` folders scoped to different areas (e.g., `doc
 | **Execute** | `/execute-projex` | Carry out a plan in an isolated ephemeral branch |
 | **Walkthrough** | `/close-projex` | Post-execution record — what actually happened, verification results, lessons learned |
 | **Patch** | `/patch-projex` | Quick action for small changes — skip the full plan/execute/close cycle |
+| **Revise** | `/revise-projex` | Quick fix to any projex document's own content (Plan, Proposal, Definition, Nav, Map, …) — new context makes it stale. Distinct from Patch: Patch fixes code, Revise fixes what a document *claims* |
 | **Log** | `/log-projex` | Standalone change record — observe staged changes or commits and document what happened |
 | **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, roll everything back |
 
@@ -140,9 +141,10 @@ Not a pipeline. Building blocks that chain freely — any output can trigger any
   │   │          ┌┴──────────────────┐            Define · Navigate · Map · Scan
   │   │          ▼                   ▼           │ Guide · Interview · Imagine · Memo │
   │   │    ┌───────────┐      ┌────────────┐       auxiliary — can inform or be
-  │   │    │   Plan    │─────>│   Patch    │     │  informed by any workflow above  │
-  │   │    └─────┬─────┘      │ (act+doc)  │
-  │   │          │            └────────────┘     └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+  │   │    │   Plan    │◄────>│   Patch    │     │  informed by any workflow above  │
+  │   │    └─────┬─────┘  ╲   │ (act+doc)  │
+  │   │          │         ╲  └────────────┘     └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+  │   │          │          ╲── Revise: any projex doc, edited in place, no new file
   │   │          │ ◄── review/redteam plan
   │   │          │     before execution
   │   │    ┌─────┴──────┐
@@ -179,6 +181,7 @@ Patterns, not rules.
 | Simulation | Plan, Patch, Proposal | Trial results inform how to proceed for real |
 | Plan | Review, Red Team, Simulation | Inspect the plan before committing |
 | Plan | Execute, Patch | Plan vetted — run it or cherry-pick objectives |
+| Any document | Revise | New context makes what it claims stale — fixes the document, not the code |
 | Execute + Close | Review, Audit, Navigate | Completed work needs validation or roadmap update |
 | Review | Proposal, Plan, Patch | Stale or incomplete documents need updating |
 | Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
@@ -194,6 +197,7 @@ Patterns, not rules.
 - **Execute/Close** — ephemeral branch (`projex/{yymmddhhmm}-{name}`), merged or abandoned at close
 - **Simulate** — throwaway branch (`projex/sim/{yymmddhhmm}-{name}`), always discarded
 - **Patch** — commits directly to current branch
+- **Revise** — edits the target projex document in place, commits to whatever branch it currently lives on; no new file
 - **Log** — observes existing changes (staged or committed); commits only the log document itself
 - **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)
 - **Everything else** — operates on current branch
@@ -219,6 +223,7 @@ All workflow specs live in the repository root.
 | `close-projex.md` | Walkthroughs and branch finalization |
 | `log-projex.md` | Standalone change logs |
 | `patch-projex.md` | Quick-action patches |
+| `revise-projex.md` | In-place revisions to any projex document |
 | `simulate-projex.md` | Disposable simulations |
 | `review-projex.md` | Document reviews |
 | `redteam-projex.md` | Adversarial analysis |

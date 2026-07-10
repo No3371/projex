@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``simulate-projex``debug-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``map-projex``guide-projex``imagine-projex``log-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -16,6 +16,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Log** — Standalone change record: observes staged changes or commits, documents what changed and why. Born closed. No plan or branch lifecycle required. WORKFLOW -> @./log-projex.md
 - **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Active until consumed. WORKFLOW -> @./memo-projex.md
 - **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
+- **Revise** (no doc type — edits any existing projex document) — Quick-action fix to a projex document's own content (Plan, Proposal, Definition, Nav, Map, etc.) when new context makes part of it stale. Edits in place, logs the trigger. Unlike Patch (fixes code/implementation), Revise fixes the document's claims. Escalates to that document's own authoring workflow if the core content itself is wrong. WORKFLOW -> @./revise-projex.md
 - **Simulation** — Disposable execution: makes changes, observes outcomes, rolls back everything. Only the report survives. No irreversible actions. Can trial-run plans or "what if" scenarios. WORKFLOW -> @./simulate-projex.md
 - **Debug** — Issue-bound investigation: confirms a concrete bug, enumerates hypotheses, iterates fix attempts in an isolated worktree until Resolved (fix squash-merged) or Exhausted (all imaginable cases ruled out, document handed back). Unlike Patch (known fix) or Simulate (always discards). WORKFLOW -> @./debug-projex.md
 - **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md
@@ -122,6 +123,7 @@ Workflow specs are actions invoked in verb sense:
 - `/audit-projex.md the database migration we just finished`
 - `/interview-projex.md authentication system design`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
+- `/revise-projex.md @2602011430-api-cleanup-plan.md Step 2 assumed Redis, it's actually Memcached` (Patch = fix code; Revise = fix what a projex document claims)
 - `/simulate-projex.md What happens if we remove the legacy compatibility layer?`
 - `/debug-projex.md Login button does nothing on Safari iOS — works on Chrome/Firefox`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
@@ -140,7 +142,7 @@ Workflow specs are actions invoked in verb sense:
 
 Auxiliary workflows: propose, plan, eval, review, redteam, audit, interview, guide, explore, imagine, scan, log, memo, map, navigate, define, archive.
 
-Execute, close, patch, and **simulate** are exempt — they commit as a structural requirement of their lifecycle. For simulate specifically: the ephemeral branch is always discarded and the report is the sole surviving artifact; committing it completes the simulation rather than being an incidental save.
+Execute, close, patch, revise, and **simulate** are exempt — they commit as a structural requirement of their lifecycle. For simulate specifically: the ephemeral branch is always discarded and the report is the sole surviving artifact; committing it completes the simulation rather than being an incidental save.
 
 **Pattern for auxiliary workflows:**
 1. Create the artifact file
