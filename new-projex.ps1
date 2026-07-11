@@ -12,6 +12,12 @@ param(
     [string]$ProjexDir = ".projex"
 )
 
+# Normalize separators agents may mix (/, \). RepoRoot: /→OS sep (UNC-safe). ProjexDir: /-relative for git.
+$Sep = [IO.Path]::DirectorySeparatorChar
+$RepoRoot = ($RepoRoot -replace '/', $Sep).TrimEnd($Sep)
+$ProjexDir = (($ProjexDir -replace '\\', '/') -replace '/+', '/').Trim('/')
+if (-not $ProjexDir) { $ProjexDir = ".projex" }
+
 # type -> @(DisplayName, filename suffix). Suffix is authoritative per each *-projex.md spec
 # and does NOT always match the type key (e.g. propose->proposal, simulate->simulation,
 # define->def, navigate->nav).
@@ -36,10 +42,12 @@ if (-not $TypeInfo.ContainsKey($Type)) {
 $BornClosed = @('log', 'archive', 'patch', 'simulate', 'scan', 'guide')
 $IsBornClosed = $BornClosed -contains $Type
 
+# Join-Path on some hosts only takes 2 args — join child segments explicitly
+$ProjexDirFs = $ProjexDir -replace '/', $Sep
 $Dir = if ($IsBornClosed) {
-    Join-Path $RepoRoot $ProjexDir "closed"
+    Join-Path (Join-Path $RepoRoot $ProjexDirFs) "closed"
 } else {
-    Join-Path $RepoRoot $ProjexDir
+    Join-Path $RepoRoot $ProjexDirFs
 }
 if (-not (Test-Path $Dir)) {
     New-Item -ItemType Directory -Path $Dir -Force | Out-Null
@@ -78,7 +86,17 @@ $Content = @"
 ---
 "@
 
-Set-Content -Path $Path -Value $Content -NoNewline
+try {
+    Set-Content -Path $Path -Value $Content -NoNewline -ErrorAction Stop
+} catch {
+    Write-Error "Failed to create file: $Path — $_"
+    exit 1
+}
+if (-not (Test-Path -LiteralPath $Path)) {
+    Write-Error "Failed to create file: $Path"
+    exit 1
+}
+
 Write-Host $Path
 Write-Host "# next: scaffold contains header only — update the format, structure and content per $Type-projex.md"
 Write-Host "# commit: $PSScriptRoot\stage-n-commit.ps1 $RepoRoot `"projex($Type): add $Slug`" $RelPath"

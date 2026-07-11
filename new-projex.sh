@@ -12,6 +12,11 @@ type="${2:?type required}"
 title="${3:?title required}"
 projex_dir="${4:-.projex}"
 
+# Normalize separators agents may mix (/, \) — collapse to /, strip edge slashes
+repo_root=$(printf '%s' "$repo_root" | tr '\\' '/' | sed -E 's|/+$||')
+projex_dir=$(printf '%s' "$projex_dir" | tr '\\' '/' | sed -E 's|^/+||; s|/+$||; s|/+|/|g')
+[ -n "$projex_dir" ] || projex_dir=".projex"
+
 # suffix is authoritative per each *-projex.md spec and does NOT always match the type
 # key (e.g. propose->proposal, simulate->simulation, define->def, navigate->nav).
 case "$type" in
@@ -72,7 +77,7 @@ fi
 
 today=$(date +%Y-%m-%d)
 
-cat > "$path" <<EOF
+if ! cat > "$path" <<EOF
 # ${title}
 
 > **Status:** ${status}
@@ -82,6 +87,14 @@ cat > "$path" <<EOF
 
 ---
 EOF
+then
+    echo "Failed to create file: $path" >&2
+    exit 1
+fi
+if [ ! -f "$path" ]; then
+    echo "Failed to create file: $path" >&2
+    exit 1
+fi
 
 echo "$path"
 echo "# next: scaffold contains header only — update the format, structure and content per ${type}-projex.md"
