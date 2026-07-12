@@ -112,6 +112,21 @@ The orchestrator owns decisions a human user would normally make:
 
 Default to the workflow spec's own defaults. Deviate only when the human's task clearly requires it.
 
+### Stacked Orchestration — Dependent Plans
+
+B depends on A → stack B's ephemeral branch on A's instead of waiting for A to reach base. No new tooling, just handoff facts:
+
+```
+A: base ── execute-projex ──> [projex/A] (stays open)
+B: [projex/A] ── execute-projex ──> [projex/B] ── close-projex ──> [projex/A] ── close-projex ──> [base]
+```
+
+- Tell B's execute-subagent to start from `projex/A` — checkout mode: check out `projex/A` first; worktree mode: pass `projex/A` as `<base-ref>` to `projex-worktree.{sh|ps1}`
+- B's execution log records `Base Branch: projex/A` — close-projex already reads this field generically, so closing B merges into `projex/A`, not the repo base
+- Close order: B before A. Deeper chains (C on B on A) nest the same way
+
+Default, not a mandate — stack only when a dependency is declared or clearly implied; independent plans run in parallel against base as usual. A needing revision after B has started on its branch → escalate, don't rewrite a branch other work sits on.
+
 **Explicit workflow lists are literal.** If the human names specific workflows (e.g. "orchestrate-projex plan, redteam"), that list IS the full scope — run exactly those and stop. Do not infer or auto-chain further workflows that would normally follow in a full cycle (e.g. no silent execute/close after a named plan), even if the next step seems obvious. If a natural next step looks missing once the named workflows finish, surface it in the completion report as a question — do not act on it.
 
 This only applies when the human gives an explicit list. If the human instead states a task and lets the orchestrator choose the path, normal workflow selection above applies.
