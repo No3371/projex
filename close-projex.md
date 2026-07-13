@@ -371,7 +371,7 @@ If this plan were to be executed again:
 
    | Type's closing rule | Action |
    |---|---|
-   | Never closed (Definition, Navigation, Map) | Update in place — never move |
+   | Never closed (Definition, Navigation) | Update in place — never move |
    | Born closed already (Log, Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
    | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
    | Dependent plans not yet complete | Update the link only — they close on their own cycle |
@@ -451,36 +451,21 @@ Preserves full commit history from execution.
 **Best for:** Complex executions where step-by-step history is valuable
 
 #### Option C: Rebase and Merge
-Replays commits onto base branch for linear history.
+Replays commits onto base branch for linear history (fast-forward, no merge commit).
 
+**Checkout mode:**
 ```bash
-git checkout projex/{yymmddhhmm}-{plan-name}
+{projex-scripts}/projex-rebase-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name}
 ```
-Verify: on ephemeral branch.
 
+**Worktree mode:**
 ```bash
-git rebase {base-branch}
+{projex-scripts}/projex-rebase-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} --worktree
 ```
-Verify: rebase completed cleanly.
-
-```bash
-git checkout {base-branch}
-```
-Verify: branch switched.
-
-```bash
-git merge projex/{yymmddhhmm}-{plan-name} --ff-only
-```
-Verify: fast-forward merge succeeded.
-
-```bash
-git branch -d projex/{yymmddhhmm}-{plan-name}
-```
-Verify: branch deleted.
 
 **Best for:** Linear history preference, collaborative workflows
 
-> **Note:** Option C uses raw git commands and does not support `--worktree`. If worktree mode is active, use Option A or B instead, or manually remove the worktree first with `git worktree remove {repo-name}/.projexwt/<name>`.
+> **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit.
 
 #### Option D: Abandon (Failed Execution)
 Discards the branch without merging.
