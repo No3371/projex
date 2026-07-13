@@ -174,6 +174,7 @@ foreach ($line in $diffLines) {
         if ($ch -eq ' ' -or $null -eq $ch) {
             $hunkEntries += @{ Line = $line; Type = 'c' }
             $lastDropped = $false
+            continue
         }
         elseif ($ch -eq '-') {
             $origDel++
@@ -184,6 +185,7 @@ foreach ($line in $diffLines) {
                 $hunkEntries += @{ Line = " $content"; Type = 'c' }
             }
             $lastDropped = $false
+            continue
         }
         elseif ($ch -eq '+') {
             $origAdd++
@@ -194,6 +196,7 @@ foreach ($line in $diffLines) {
             } else {
                 $lastDropped = $true
             }
+            continue
         }
         elseif ($line -match '^\\ ') {
             # "\ No newline at end of file" — belongs to the preceding line.
@@ -202,8 +205,12 @@ foreach ($line in $diffLines) {
                 $hunkEntries += @{ Line = $line; Type = 'm' }
             }
             # Do not reset lastDropped: meta line is not a real content line
+            continue
         }
-        continue
+        # Anything else (the next hunk's "@@ ..." header, or the next file's
+        # "diff --git "/"index "/"---"/"+++" header) ends this hunk. Fall
+        # through to the header-matching logic below instead of silently
+        # swallowing the line — $inHunk stays true so Flush-Hunk still fires.
     }
 
     # File header
