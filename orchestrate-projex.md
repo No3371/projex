@@ -43,7 +43,6 @@ The orchestrator must load relevant framework files for the path it chooses. Sub
 - `@./log-projex.md` — standalone change record
 - `@./memo-projex.md` — lightweight capture
 - `@./navigate-projex.md` — living roadmap
-- `@./map-projex.md` — living structural index
 - `@./scan-projex.md` — exhaustive inventory
 - `@./define-projex.md` — declarative entity spec
 - `@./guide-projex.md` — curated reading path for humans

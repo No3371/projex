@@ -85,7 +85,6 @@ Prefer higher tiers. Research scope scales with depth tier.
 | Understand what exists and how it works | `/explore-projex` |
 | Inventory all touchpoints or dependencies | `/scan-projex` |
 | Gather stakeholder perspectives | `/interview-projex` |
-| Map structural relationships | `/map-projex` |
 | Understand a component's identity and boundaries | `/define-projex` |
 
 Reference composed projex in the eval's Related Projex and Evidence Log.

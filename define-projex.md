@@ -18,7 +18,6 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 - **Exploration** — HOW something currently works: investigation of existing code/systems, then closed
 - **Evaluation** — WHETHER something is good: open-ended analysis and judgment
 - **Proposal** — WHAT IF we go this way: directional with trade-offs
-- **Map** — WHERE things live: structural index of directories, not conceptual specification
 
 ---
 

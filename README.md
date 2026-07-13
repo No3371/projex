@@ -90,7 +90,6 @@ Repos can have multiple `.projex/` folders scoped to different areas (e.g., `doc
 |------|---------|---------|
 | **Definition** | `/define-projex` | Living declarative spec — exhaustively defines WHAT an entity is: identity, boundaries, properties, constraints |
 | **Navigation** | `/navigate-projex` | Living high-level roadmap — milestones, phases, and "what to work on next" |
-| **Map** | `/map-projex` | Living structural index of directories — orientation for where things live and why |
 
 ### Planning & Execution
 
@@ -100,7 +99,7 @@ Repos can have multiple `.projex/` folders scoped to different areas (e.g., `doc
 | **Execute** | `/execute-projex` | Carry out a plan in an isolated ephemeral branch |
 | **Walkthrough** | `/close-projex` | Post-execution record — what actually happened, verification results, lessons learned |
 | **Patch** | `/patch-projex` | Quick action for small changes — skip the full plan/execute/close cycle |
-| **Revise** | `/revise-projex` | Quick fix to any projex document's own content (Plan, Proposal, Definition, Nav, Map, …) — new context makes it stale. Distinct from Patch: Patch fixes code, Revise fixes what a document *claims* |
+| **Revise** | `/revise-projex` | Quick fix to any projex document's own content (Plan, Proposal, Definition, Nav, …) — new context makes it stale. Distinct from Patch: Patch fixes code, Revise fixes what a document *claims* |
 | **Log** | `/log-projex` | Standalone change record — observe staged changes or commits and document what happened |
 | **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, roll everything back |
 
@@ -138,7 +137,7 @@ Not a pipeline. Building blocks that chain freely — any output can trigger any
   │   │    │ Proposal / Eval / Explore / Imagination  │
   │   │    └──────┬───────────────────────────────────┘
   │   │           │                              ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
-  │   │          ┌┴──────────────────┐            Define · Navigate · Map · Scan
+  │   │          ┌┴──────────────────┐            Define · Navigate · Scan
   │   │          ▼                   ▼           │ Guide · Interview · Imagine · Memo │
   │   │    ┌───────────┐      ┌────────────┐       auxiliary — can inform or be
   │   │    │   Plan    │◄────>│   Patch    │     │  informed by any workflow above  │
@@ -189,7 +188,6 @@ Patterns, not rules.
 | Patch | Review, Audit, Log | Quick fix warrants retrospective validation or richer record |
 | Log | — | Standalone — documents changes already made; doesn't chain forward |
 | Imagination | Proposal, Eval, Plan | Vision crystallized — evaluate feasibility or plan it |
-| Map | Explore, Plan | Structure surveyed — investigate areas or plan changes |
 | Guide | Explore, Eval | Learning path reveals gaps worth investigating |
 
 ## Git Integration
@@ -199,7 +197,7 @@ Patterns, not rules.
 - **Patch** — commits directly to current branch
 - **Revise** — edits the target projex document in place, commits to whatever branch it currently lives on; no new file
 - **Log** — observes existing changes (staged or committed); commits only the log document itself
-- **Definition / Navigate / Map** — operates on current branch, revised in-place (living documents)
+- **Definition / Navigate** — operates on current branch, revised in-place (living documents)
 - **Everything else** — operates on current branch
 
 ### Discipline
@@ -230,7 +228,6 @@ All workflow specs live in the repository root.
 | `audit-projex.md` | Work audits |
 | `define-projex.md` | Entity definitions |
 | `navigate-projex.md` | Living roadmaps |
-| `map-projex.md` | Structural maps |
 | `interview-projex.md` | Interactive Q&A |
 | `guide-projex.md` | Learning guides |
 | `imagine-projex.md` | Generative imagination |
