@@ -367,24 +367,25 @@ If this plan were to be executed again:
 > **Walkthrough:** [link to walkthrough document]
 ```
 
-2. **Sweep every projex document this plan's lifecycle touched:** source Proposal or Memo, plus anything produced against it (Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, Patch, Log, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
+2. **Sweep every projex document this plan's lifecycle touched:** the execution log (`{yymmddhhmm}-{plan-name}-log.md`) always, plus anything produced against the plan if it exists (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
 
    | Type's closing rule | Action |
    |---|---|
    | Never closed (Definition, Navigation) | Update in place — never move |
-   | Born closed already (Log, Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
+   | Born closed already (Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
    | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
    | Dependent plans not yet complete | Update the link only — they close on their own cycle |
 
    **Nav** is a special case of "never closed": if the plan notes `> **Nav:** {nav-filename}`, update that nav only — check off the milestone, link the walkthrough, append a Revision Log entry. Skip navs not referenced by the plan.
 
-   Result: a list of documents (the Plan plus zero or more others) moving to `closed/` together.
+   Result: a list of documents (the Plan, its execution log, plus zero or more others) moving to `closed/` together.
 
 3. **Move every document from step 2 in one `move-n-stage` call** — one src/dst pair per document, staged atomically in a single operation:
 
 ```bash
 {projex-scripts}/move-n-stage.{sh|ps1} <repo-root> \
   .projex/{yymmddhhmm}-{name}-plan.md .projex/closed/{yymmddhhmm}-{name}-plan.md \
+  .projex/{yymmddhhmm}-{name}-log.md .projex/closed/{yymmddhhmm}-{name}-log.md \
   .projex/{yymmddhhmm}-{doc-a}.md .projex/closed/{yymmddhhmm}-{doc-a}.md \
   .projex/{yymmddhhmm}-{doc-b}.md .projex/closed/{yymmddhhmm}-{doc-b}.md \
   ... (one pair per document from step 2)
@@ -399,6 +400,7 @@ Write the new Walkthrough file directly at `.projex/closed/{yymmddhhmm}-{name}-w
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
   .projex/closed/{yymmddhhmm}-{name}-walkthrough.md \
   .projex/closed/{yymmddhhmm}-{name}-plan.md \
+  .projex/closed/{yymmddhhmm}-{name}-log.md \
   .projex/closed/{yymmddhhmm}-{doc-a}.md \
   .projex/closed/{yymmddhhmm}-{doc-b}.md \
   .projex/{yymmddhhmm}-{nav-name}-nav.md
@@ -552,6 +554,7 @@ This workflow produces:
     ├── {yymmddhhmm}-{name}-proposal.md    (if applicable)
     ├── {yymmddhhmm}-{name}-redteam.md     (if applicable — any resolved aux doc)
     ├── {yymmddhhmm}-{name}-plan.md
+    ├── {yymmddhhmm}-{name}-log.md
     └── {yymmddhhmm}-{name}-walkthrough.md
 ```
 
@@ -577,7 +580,7 @@ Before considering walkthrough complete:
 - [ ] Source plan updated
 - [ ] Related projex linked
 - [ ] Nav updated if plan noted one
-- [ ] Plan and Walkthrough moved to `.projex/closed/`
+- [ ] Plan, execution log, and Walkthrough moved to `.projex/closed/`
 - [ ] Every aux document this plan resolved (proposal, memo, redteam, audit, review, eval, ...) moved to `.projex/closed/` in the same commit
 - [ ] Still-open related documents linked to the walkthrough, not moved
 - [ ] **Ephemeral branch finalized** (merged or abandoned)
