@@ -54,7 +54,7 @@ Projex documents go stale mid-life. Plan assumption turns out false, Proposal tr
 ### Escalate to the Document's Own Authoring Workflow If
 - The core content itself is now wrong, not just a detail (e.g. a Plan's approach, a Proposal's direction, a Definition's identity)
 - The objective/scope changed materially — this is a different thing than what was originally authored
-- The document's type is normally born-closed and already closed (e.g. a completed Plan, a finished Walkthrough, a Log) — don't reopen it, write a new document or a Log entry instead
+- The document's type is normally born-closed and already closed (e.g. a completed Plan, a finished Walkthrough) — don't reopen it, write a new document instead
 - Fixing this requires redoing that workflow's research/analysis step from scratch
 
 **If scope exceeds revise threshold:** stop, inform the user, recommend the document's own workflow (`/plan-projex`, `/propose-projex`, `/define-projex`, etc. — new version or supersede). Do not force a rewrite through revise.
@@ -120,7 +120,7 @@ Edit the target file directly:
 ```
 Is a projex document's own content wrong/stale? ─── No → /patch-projex (code/config) or nothing
  └─ Yes → Core content invalidated (approach/direction/identity), not just a detail? ─── Yes → that document's own authoring workflow (new/superseding)
-     └─ No → Document already Complete/closed (and not meant to be reopened)? ─── Yes → /log-projex (record as history, don't reopen)
+     └─ No → Document already Complete/closed (and not meant to be reopened)? ─── Yes → don't reopen — write a new document to record history
          └─ No → /revise-projex
 ```
 

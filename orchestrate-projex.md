@@ -40,7 +40,6 @@ The orchestrator must load relevant framework files for the path it chooses. Sub
 - `@./explore-projex.md` — status-quo-grounded investigation
 - `@./imagine-projex.md` — generative vision from a seed
 - `@./simulate-projex.md` — disposable execution with rollback
-- `@./log-projex.md` — standalone change record
 - `@./memo-projex.md` — lightweight capture
 - `@./navigate-projex.md` — living roadmap
 - `@./scan-projex.md` — exhaustive inventory

@@ -30,7 +30,7 @@ Every script has both `.sh` and `.ps1` variants (except `read_file.ps1` which is
 
 Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The workflow spec file is loaded alongside `SKILL.md` to guide behavior. Workflows chain freely — any output can feed into any other.
 
-### Workflow Types (20)
+### Workflow Types (19)
 
 | Type | Purpose | Lifecycle |
 |------|---------|-----------|
@@ -42,7 +42,6 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 | **Audit** | Rigorous validation of completed work | Born open → Closed |
 | **Interview** | Interactive Q&A in rounds, full transcript | Born open → Closed |
 | **Walkthrough** | Post-execution record (authored by close-projex) | Born closed |
-| **Log** | Standalone change record from commits/staged changes | Born closed |
 | **Memo** | Lightweight capture of raw source/idea | Active until consumed |
 | **Patch** | Quick-action for small changes, skips full cycle | Born closed |
 | **Simulation** | Disposable execution: make changes, observe, rollback | Born closed |

@@ -100,7 +100,6 @@ Repos can have multiple `.projex/` folders scoped to different areas (e.g., `doc
 | **Walkthrough** | `/close-projex` | Post-execution record — what actually happened, verification results, lessons learned |
 | **Patch** | `/patch-projex` | Quick action for small changes — skip the full plan/execute/close cycle |
 | **Revise** | `/revise-projex` | Quick fix to any projex document's own content (Plan, Proposal, Definition, Nav, …) — new context makes it stale. Distinct from Patch: Patch fixes code, Revise fixes what a document *claims* |
-| **Log** | `/log-projex` | Standalone change record — observe staged changes or commits and document what happened |
 | **Simulation** | `/simulate-projex` | Disposable execution — make real changes, observe outcomes, roll everything back |
 
 ### Quality & Validation
@@ -185,8 +184,7 @@ Patterns, not rules.
 | Review | Proposal, Plan, Patch | Stale or incomplete documents need updating |
 | Red Team | Plan, Patch, Proposal | Weaknesses found — address them |
 | Audit | Plan, Patch, Proposal | Gaps in completed work — fix them |
-| Patch | Review, Audit, Log | Quick fix warrants retrospective validation or richer record |
-| Log | — | Standalone — documents changes already made; doesn't chain forward |
+| Patch | Review, Audit | Quick fix warrants retrospective validation |
 | Imagination | Proposal, Eval, Plan | Vision crystallized — evaluate feasibility or plan it |
 | Guide | Explore, Eval | Learning path reveals gaps worth investigating |
 
@@ -196,7 +194,6 @@ Patterns, not rules.
 - **Simulate** — throwaway branch (`projex/sim/{yymmddhhmm}-{name}`), always discarded
 - **Patch** — commits directly to current branch
 - **Revise** — edits the target projex document in place, commits to whatever branch it currently lives on; no new file
-- **Log** — observes existing changes (staged or committed); commits only the log document itself
 - **Definition / Navigate** — operates on current branch, revised in-place (living documents)
 - **Everything else** — operates on current branch
 
@@ -219,7 +216,6 @@ All workflow specs live in the repository root.
 | `plan-projex.md` | Plans |
 | `execute-projex.md` | Plan execution |
 | `close-projex.md` | Walkthroughs and branch finalization |
-| `log-projex.md` | Standalone change logs |
 | `patch-projex.md` | Quick-action patches |
 | `revise-projex.md` | In-place revisions to any projex document |
 | `simulate-projex.md` | Disposable simulations |
