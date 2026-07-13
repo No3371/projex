@@ -61,6 +61,7 @@ Subagents have no memory of the orchestrating conversation. Each handoff must be
 - **Path to the relevant workflow spec and `SKILL.md`** — so the subagent can load them
 - **Prior projex artifacts** — by **filename** (not path), e.g. `2604151200-auth-feature-plan.md`
 - **Facts already established** — human-confirmed scope boundaries, worktree preference, merge strategy, any constraint the orchestrator has already decided or cleared with the human
+- **Model override** — if the human's chain notation (see § Explicit Chain Notation) assigned this step a specific model, pass that as the subagent's `model` parameter; otherwise omit it and let the step run under whatever default is in effect
 
 The handoff is **context**, not instruction. Do not tell the subagent *what to do* or *how to do it* — the workflow spec governs that. The subagent will read `SKILL.md` and its workflow file and proceed correctly without further direction.
 
@@ -128,6 +129,21 @@ Default, not a mandate — stack only when a dependency is declared or clearly i
 **Explicit workflow lists are literal.** If the human names specific workflows (e.g. "orchestrate-projex plan, redteam"), that list IS the full scope — run exactly those and stop. Do not infer or auto-chain further workflows that would normally follow in a full cycle (e.g. no silent execute/close after a named plan), even if the next step seems obvious. If a natural next step looks missing once the named workflows finish, surface it in the completion report as a question — do not act on it.
 
 This only applies when the human gives an explicit list. If the human instead states a task and lets the orchestrator choose the path, normal workflow selection above applies.
+
+### Explicit Chain Notation
+
+An explicit list may annotate each step using this notation:
+
+```
+step, step(model), <model>, [step(model)]
+```
+
+- **`step`** — a bare workflow name (e.g. `plan`, `execute`, `redteam`). Runs whatever model is currently in effect — the orchestrator's default, or the last `<model>` switch encountered in the chain.
+- **`step(model)`** — a **per-step model override**. Spawn that step's subagent with the named model (`sonnet` / `opus` / `haiku` / `fable`). Applies to this step only and does not change the default for any other step.
+- **`<model>`** — a **mid-chain model switch**. Changes the default model for every step that follows it in the chain, until the next `<model>` marker or the chain ends. It does not itself spawn a workflow step.
+- **`[step]`** / **`[step(model)]`** — an **optional step**. This is the one sanctioned exception to "explicit workflow lists are literal" above: for a bracketed step, the orchestrator applies judgment — run it only if what's happened so far in the chain warrants it, skip it otherwise. Either way, record the decision (ran / skipped, and why) in the Completion Report. Unbracketed steps stay literal and mandatory regardless of this exception.
+
+Example: `plan(fable), <opus>, redteam, [revise], execute, audit, [patch], close(sonnet)` — plan is forced onto fable for that step only; the default then switches to opus for everything that follows; redteam, execute, and audit all run under opus; revise and patch are optional and run under opus too, but only if the orchestrator judges each warranted at that point in the chain (revise if redteam surfaced a document-level issue, patch if audit found a small code-level one); close is forced onto sonnet regardless of the opus default.
 
 ### Human Escalation
 
