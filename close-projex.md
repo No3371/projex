@@ -367,25 +367,40 @@ If this plan were to be executed again:
 > **Walkthrough:** [link to walkthrough document]
 ```
 
-2. **Update related projex:**
-   - Source proposal (if applicable)
-   - Any dependent plans
-   - **Nav** — If the plan notes `> **Nav:** {nav-filename}`, update that nav only: check off the milestone, link the walkthrough under it, append a Revision Log entry. Do not search for navs not referenced by the plan.
+2. **Sweep every projex document this plan's lifecycle touched:** source Proposal or Memo, plus anything produced against it (Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, Patch, Log, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
 
-3. **Move to closed folder:**
-   - Move Plan document to `.projex/closed/`
-   - Place Walkthrough in `.projex/closed/` alongside the Plan
-   - If source Proposal exists and all derived Plans are closed, move Proposal to `.projex/closed/` as well
+   | Type's closing rule | Action |
+   |---|---|
+   | Never closed (Definition, Navigation, Map) | Update in place — never move |
+   | Born closed already (Log, Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
+   | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
+   | Dependent plans not yet complete | Update the link only — they close on their own cycle |
 
-4. **Commit walkthrough and file moves** — stage each moved/created file by explicit path:
+   **Nav** is a special case of "never closed": if the plan notes `> **Nav:** {nav-filename}`, update that nav only — check off the milestone, link the walkthrough, append a Revision Log entry. Skip navs not referenced by the plan.
+
+   Result: a list of documents (the Plan plus zero or more others) moving to `closed/` together.
+
+3. **Move every document from step 2 in one `move-n-stage` call** — one src/dst pair per document, staged atomically in a single operation:
 
 ```bash
-# Stage all moved/created files — include proposal, nav, and deletion tracking only if applicable:
+{projex-scripts}/move-n-stage.{sh|ps1} <repo-root> \
+  .projex/{yymmddhhmm}-{name}-plan.md .projex/closed/{yymmddhhmm}-{name}-plan.md \
+  .projex/{yymmddhhmm}-{doc-a}.md .projex/closed/{yymmddhhmm}-{doc-a}.md \
+  .projex/{yymmddhhmm}-{doc-b}.md .projex/closed/{yymmddhhmm}-{doc-b}.md \
+  ... (one pair per document from step 2)
+```
+
+Write the new Walkthrough file directly at `.projex/closed/{yymmddhhmm}-{name}-walkthrough.md` — newly created, not moved.
+
+4. **Commit the walkthrough, every move, and any in-place updates (nav, still-open related docs) in one commit.** Splitting across commits leaves some documents in `closed/` with siblings still active:
+
+```bash
+# One path per document moved or updated this close — include only what applies:
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: close {plan-name} - add walkthrough" \
   .projex/closed/{yymmddhhmm}-{name}-walkthrough.md \
   .projex/closed/{yymmddhhmm}-{name}-plan.md \
-  .projex/closed/{yymmddhhmm}-{name}-proposal.md \
-  .projex/{yymmddhhmm}-{name}-plan.md \
+  .projex/closed/{yymmddhhmm}-{doc-a}.md \
+  .projex/closed/{yymmddhhmm}-{doc-b}.md \
   .projex/{yymmddhhmm}-{nav-name}-nav.md
 ```
 
@@ -540,8 +555,8 @@ If no stash was made, skip this step.
 This workflow produces:
 - A walkthrough projex document at `.projex/closed/{yymmddhhmm}-{name}-walkthrough.md`
 - Source plan moved to `.projex/closed/` with completion status and walkthrough link
-- Source proposal moved to `.projex/closed/` (if all derived plans are closed)
-- Updated relationships in related projex documents
+- Every other aux document this plan resolved (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...) moved to `.projex/closed/` alongside it
+- Still-open related documents and Nav updated in place with a link to the walkthrough, not moved
 - **Ephemeral branch merged/deleted** — changes now on base branch
 
 **Folder structure after close:**
@@ -549,7 +564,8 @@ This workflow produces:
 .projex/
 ├── [other pending projex...]
 └── closed/
-    ├── {yymmddhhmm}-{name}-proposal.md   (if applicable)
+    ├── {yymmddhhmm}-{name}-proposal.md    (if applicable)
+    ├── {yymmddhhmm}-{name}-redteam.md     (if applicable — any resolved aux doc)
     ├── {yymmddhhmm}-{name}-plan.md
     └── {yymmddhhmm}-{name}-walkthrough.md
 ```
@@ -577,7 +593,8 @@ Before considering walkthrough complete:
 - [ ] Related projex linked
 - [ ] Nav updated if plan noted one
 - [ ] Plan and Walkthrough moved to `.projex/closed/`
-- [ ] Source proposal moved to `.projex/closed/` (if all derived plans closed)
+- [ ] Every aux document this plan resolved (proposal, memo, redteam, audit, review, eval, ...) moved to `.projex/closed/` in the same commit
+- [ ] Still-open related documents linked to the walkthrough, not moved
 - [ ] **Ephemeral branch finalized** (merged or abandoned)
 - [ ] **Stashed changes restored** (if any were stashed at execution start)
 - [ ] **Back on base branch** with clean state
