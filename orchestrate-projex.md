@@ -62,6 +62,7 @@ Subagents have no memory of the orchestrating conversation. Each handoff must be
 - **Prior projex artifacts** — by **filename** (not path), e.g. `2604151200-auth-feature-plan.md`
 - **Facts already established** — human-confirmed scope boundaries, worktree preference, merge strategy, any constraint the orchestrator has already decided or cleared with the human
 - **Model override** — if the human's chain notation (see § Explicit Chain Notation) assigned this step a specific model, pass that as the subagent's `model` parameter; otherwise omit it and let the step run under whatever default is in effect
+- **Current Default Model / Your Model** — state which model is actually running this step (the per-step override if one applies, else the orchestrator's current default per § Explicit Chain Notation). Subagent should know what it's running as — matters for artifacts that record authorship/model, and for execute-projex → do-projex nesting where sub-subagents inherit the coordinator's effective model unless overridden
 
 The handoff is **context**, not instruction. Do not tell the subagent *what to do* or *how to do it* — the workflow spec governs that. The subagent will read `SKILL.md` and its workflow file and proceed correctly without further direction.
 
