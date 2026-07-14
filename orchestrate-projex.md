@@ -136,15 +136,18 @@ This only applies when the human gives an explicit list. If the human instead st
 An explicit list may annotate each step using this notation:
 
 ```
-step, step(model), <model>, [step(model)]
+step, step(model), stepA+stepB, <model>, [step(model)]
 ```
 
 - **`step`** — a bare workflow name (e.g. `plan`, `execute`, `redteam`). Runs whatever model is currently in effect — the orchestrator's default, or the last `<model>` switch encountered in the chain.
 - **`step(model)`** — a **per-step model override**. Spawn that step's subagent with the named model (`sonnet` / `opus` / `haiku` / `fable`). Applies to this step only and does not change the default for any other step.
+- **`stepA+stepB`** — a **parallel group**. Steps joined by `+` are dispatched as concurrent subagents that run at the same time, not one after another. The chain does not advance past the group until every member has returned; the orchestrator reviews them together before continuing. Each member keeps its own annotations — `audit(sonnet)+redteam(opus)` runs the two in parallel under different models, and `[audit]+redteam` lets the bracketed member stay optional while the other is mandatory.
 - **`<model>`** — a **mid-chain model switch**. Changes the default model for every step that follows it in the chain, until the next `<model>` marker or the chain ends. It does not itself spawn a workflow step.
 - **`[step]`** / **`[step(model)]`** — an **optional step**. This is the one sanctioned exception to "explicit workflow lists are literal" above: for a bracketed step, the orchestrator applies judgment — run it only if what's happened so far in the chain warrants it, skip it otherwise. Either way, record the decision (ran / skipped, and why) in the Completion Report. Unbracketed steps stay literal and mandatory regardless of this exception.
 
-Example: `plan(fable), <opus>, redteam, [revise], execute, audit, [patch], close(sonnet)` — plan is forced onto fable for that step only; the default then switches to opus for everything that follows; redteam, execute, and audit all run under opus; revise and patch are optional and run under opus too, but only if the orchestrator judges each warranted at that point in the chain (revise if redteam surfaced a document-level issue, patch if audit found a small code-level one); close is forced onto sonnet regardless of the opus default.
+**Parallel-group safety.** Only group steps with `+` when they can run without stepping on each other. Analytical / read-only workflows that are born open and don't commit immediately (`audit`, `redteam`, `eval`, `review`, `explore`, `scan`) parallelize freely — they inspect the same tree without mutating it. Steps that mutate a branch (`execute`, `patch`, `close`, `revise`) must **not** share a parallel group unless each runs in its own worktree; concurrent writes to one branch corrupt each other. If a requested group mixes mutating steps without isolation, the orchestrator serializes them and notes the deviation in the Completion Report rather than risking the conflict. Each parallel member is still a self-contained handoff (see § Subagent Handoff) — members do not see each other's output, so never make one depend on another's result within the same group.
+
+Example: `plan(fable), <opus>, execute, audit+redteam, [patch], close(sonnet)` — plan is forced onto fable for that step only; the default then switches to opus for everything that follows; execute runs under opus, then `audit` and `redteam` are dispatched **in parallel** (both under opus) and the chain waits for both before proceeding; patch is optional and runs under opus only if the parallel review surfaced a small code-level issue; close is forced onto sonnet regardless of the opus default.
 
 ### Human Escalation
 
