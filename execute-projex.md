@@ -50,7 +50,7 @@ Verify items requiring judgment (script output provides context for the first tw
 - [ ] No unresolved open questions in the plan
 - [ ] All dependencies are met
 - [ ] No blockers present
-- [ ] Required tools/dependencies available
+- [ ] Required tools/dependencies available (in worktree mode, gitignored deps that a fresh worktree lacks are bootstrapped at execution start — see § 1, not a reason to fail this gate)
 
 ### 3. CONTEXT REFRESH
 
@@ -94,7 +94,9 @@ git branch --show-current
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yymmddhhmm}-{plan-name}
 ```
-All subsequent commands use `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch. Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
+All subsequent commands use `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
+
+**Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected — not a failed precondition; do not halt over it.** Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
 
 3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template). Populate the header fields (`Repo Root`, `Plan File`, `Base Branch`) and the `Pre-Check Results` block directly from the precheck output produced in step 1 of PRE-EXECUTION CHECKLIST.
 

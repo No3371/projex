@@ -308,6 +308,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 - `stage-n-commit` works unchanged (`-C` accepts worktree paths)
 - Finalization scripts receive `--worktree` flag to remove the worktree instead of checking out base
 - No stashing needed — the base branch working directory is never touched
+- **Bootstrap contract:** a fresh worktree shares `.git` but starts with only git-tracked files — gitignored artifacts (`node_modules`, `.env`, `venv/`, build output) are absent by design. Their absence is **expected, not a blocked precondition**: bootstrap them (run the project's install/build command) before execution rather than treating missing deps as a stop condition. What gets installed here is exactly what the Cleanup contract removes before close.
 - **Cleanup contract:** anything created in the worktree that git does not track — symlinked/installed deps (`node_modules`), build output, scratch files — must be removed before close, and any tracked edits committed. Close scripts refuse to finalize over a non-clean worktree (untracked files or uncommitted tracked changes). Ignored content (deps/build output) does **not** block git-level removal, but can make removal fail mid-way in environment-dependent ways (seen with symlinked deps in a Linux docker sandbox, and with file locks/CWD-in-worktree on Windows) and leave a stray directory to clean up — so remove agent-created ignored tooling too.
 
 **Benefits over checkout mode:**
