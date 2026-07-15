@@ -136,10 +136,11 @@ This only applies when the human gives an explicit list. If the human instead st
 An explicit list may annotate each step using this notation:
 
 ```
-step, step(model), stepA+stepB, <model>, [step(model)]
+step, step!, step(model), stepA+stepB, <model>, [step(model)]
 ```
 
 - **`step`** — a bare workflow name (e.g. `plan`, `execute`, `redteam`). Runs whatever model is currently in effect — the orchestrator's default, or the last `<model>` switch encountered in the chain.
+- **`step!`** — a **required-success step**. The chain may only advance past it if the step completed successfully. If the step fails, returns blocked, or its review gate does not pass, the orchestrator **halts the entire orchestration immediately and escalates to the human** (per § Human Escalation) — it does not fall through to later steps, retry silently, or route around the failure. This overrides the normal "second attempt, then escalate" latitude: for a `!` step, a failed first attempt already warrants halting rather than pressing on. Use it to guard a step whose output every later step depends on — most commonly `execute!`, where auditing or closing a failed execution is pointless. The `!` combines with other annotations and attaches after any `(model)`: `execute(opus)!`, `[patch]` cannot take `!` (an optional step has nothing to require), and a `!` member inside a parallel group makes only that member mandatory-success.
 - **`step(model)`** — a **per-step model override**. Spawn that step's subagent with the named model (`sonnet` / `opus` / `haiku` / `fable`). Applies to this step only and does not change the default for any other step.
 - **`stepA+stepB`** — a **parallel group**. Steps joined by `+` are dispatched as concurrent subagents that run at the same time, not one after another. The chain does not advance past the group until every member has returned; the orchestrator reviews them together before continuing. Each member keeps its own annotations — `audit(sonnet)+redteam(opus)` runs the two in parallel under different models, and `[audit]+redteam` lets the bracketed member stay optional while the other is mandatory.
 - **`<model>`** — a **mid-chain model switch**. Changes the default model for every step that follows it in the chain, until the next `<model>` marker or the chain ends. It does not itself spawn a workflow step.
@@ -147,13 +148,13 @@ step, step(model), stepA+stepB, <model>, [step(model)]
 
 **Parallel-group safety.** Only group steps with `+` when they can run without stepping on each other. Analytical / read-only workflows that are born open and don't commit immediately (`audit`, `redteam`, `eval`, `review`, `explore`, `scan`) parallelize freely — they inspect the same tree without mutating it. Steps that mutate a branch (`execute`, `patch`, `close`, `revise`) must **not** share a parallel group unless each runs in its own worktree; concurrent writes to one branch corrupt each other. If a requested group mixes mutating steps without isolation, the orchestrator serializes them and notes the deviation in the Completion Report rather than risking the conflict. Each parallel member is still a self-contained handoff (see § Subagent Handoff) — members do not see each other's output, so never make one depend on another's result within the same group.
 
-Example: `plan(fable), <opus>, execute, audit+redteam, [patch], close(sonnet)` — plan is forced onto fable for that step only; the default then switches to opus for everything that follows; execute runs under opus, then `audit` and `redteam` are dispatched **in parallel** (both under opus) and the chain waits for both before proceeding; patch is optional and runs under opus only if the parallel review surfaced a small code-level issue; close is forced onto sonnet regardless of the opus default.
+Example: `plan(fable), <opus>, execute!, audit+redteam, [patch], close(sonnet)` — plan is forced onto fable for that step only; the default then switches to opus for everything that follows; `execute!` runs under opus and **must succeed** — if it fails, the orchestrator halts here and escalates to the human rather than auditing a broken execution; only on success do `audit` and `redteam` dispatch **in parallel** (both under opus), the chain waiting for both before proceeding; patch is optional and runs under opus only if the parallel review surfaced a small code-level issue; close is forced onto sonnet regardless of the opus default.
 
 ### Human Escalation
 
 Escalate (pause and ask the human) when:
 - Task intent is genuinely ambiguous after one inference attempt
-- A review gate fails twice on the same workflow step
+- A review gate fails twice on the same workflow step — or fails **once** on a step marked required-success (`step!`, see § Explicit Chain Notation)
 - An irreversible action is about to occur that wasn't implied by the original task
 - Required credentials, external access, or authority are unavailable
 - A decision requires business/personal judgment the orchestrator cannot substitute for
