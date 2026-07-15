@@ -4,7 +4,7 @@
 > **Created:** 2026-07-15
 > **Author:** Claude (opus) — orchestrate-projex subagent
 > **Source:** Direct request (human spec: `.closing-to-[base-branch]` agent lock)
-> **Related Projex:** `2607140251-close-scripts-per-branch-lock-plan.md` (script-level mkdir mutex — see § Relationship To The Script-Level Lock); `2607140239-active-projex-folder-proposal.md` (visibility — no interaction, this lock is intentionally git-invisible)
+> **Related Projex:** `2607140251-close-scripts-per-branch-lock-plan.md` (script-level mkdir mutex — **ABANDONED 2026-07-16**; this plan is now the sole mechanism; see § Relationship To The Script-Level Lock); `2607140239-active-projex-folder-proposal.md` (visibility — no interaction, this lock is intentionally git-invisible)
 > **Worktree:** No
 
 ---
@@ -245,6 +245,8 @@ that close after the holder releases (this is the concrete mechanism behind the
 
 ## Relationship To The Script-Level Lock (`2607140251-…`) — Reconciliation Verdict
 
+> **DECISION (2026-07-16): the sibling `2607140251-close-scripts-per-branch-lock-plan.md` was ABANDONED (moved to `.projex/abandoned/`). This agent-level lock — now with a deterministic `projex-close-lock` helper doing the atomic create — is the SOLE close-concurrency mechanism. The complementary-layers analysis below is retained for rationale, but note the consequence: the residual weakness in the honest caveat (crash-without-release, mitigated only by staleness detection) is no longer backed by a self-releasing script-level mutex. Accept that, or re-introduce a script-level guard in a future plan.**
+
 **Verdict: COMPLEMENTARY — keep both, layered. If the human wants only one, keep the sibling (script-level) plan; this agent-level lock is the weaker-as-mutex layer and is justified by coverage + observability, not by correctness.**
 
 Two mechanisms, two layers:
@@ -300,6 +302,7 @@ Per-step rollback reverts each file independently. To abandon entirely:
 
 ## Revision Log
 
+- **2026-07-16:** Sibling script-level plan `2607140251-close-scripts-per-branch-lock-plan.md` abandoned (moved to `.projex/abandoned/`) per user decision to consolidate on a single mechanism; reconciliation verdict annotated with the consequence (no script-level self-releasing backstop remains). This plan is now the sole close-concurrency mechanism.
 - **2026-07-16:** Name generation moved out of the LLM agent into a **mandatory deterministic helper** `projex-close-lock.{sh,ps1}` (new Implementation Step 1; existing steps renumbered 2–4; Summary, Scope/Estimated Changes, Key Files, Constraints, Success Criteria, Lock specification, and the Relationship caveat updated accordingly). Base-branch input pinned to the execution log's `Base Branch:` field. Resolves Open Question 3. **Trigger:** a stochastic model synthesizing the lock filename in prose can emit mismatched names across agents/shells (casing, missed `/`→`_`, stray suffix), silently defeating the mutex — the plan's own `.ps1`↔`.sh` "identical path" criterion is only guaranteed by one shared helper, not by hand-written one-liners re-interpreted each run. Scope grew from doc-only (3 files) to 3 docs + 2 helper variants.
 
 ---
