@@ -216,7 +216,7 @@ Otherwise commit the log update alone.
 #### D. Decision
 
 - **Reproduces** → proceed to ITERATE
-- **Does NOT reproduce** → log the non-repro finding with the exact command output, mark `Status: Non-Repro`, present to user, do NOT proceed. Likely causes: incomplete report, environment-specific, already fixed by intervening change.
+- **Does NOT reproduce** → log the non-repro finding with the exact command output, mark `Status: Escalated (Non-Repro)`, present to user, do NOT proceed. Likely causes: incomplete report, environment-specific, already fixed by intervening change.
 
 ### 4. ITERATE — HYPOTHESIS → ATTEMPT → VERIFY
 
@@ -374,7 +374,7 @@ The debug document is the polished, reader-facing artifact derived from the log.
 > **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Issue:** [one-sentence symptom]
-> **Status:** Resolved | Exhausted (handed back)
+> **Status:** Complete (Resolved) | Escalated (Exhausted)
 > **Fix Commit:** [SHA after squash, or "n/a — exhausted"]
 > **Debug Log:** {yymmddhhmm}-{debug-name}-debug-log.md
 > **Related Projex:** [filenames if any]
@@ -457,7 +457,7 @@ The debug document is the polished, reader-facing artifact derived from the log.
 - **What's needed to continue:** [missing repro environment, missing access, requires user knowledge, etc.]
 ```
 
-Commit the debug document together with a final log update marking `Status: Resolved` (or `Exhausted`):
+Commit the debug document together with a final log update marking `Status: Complete (Resolved)` (or `Escalated (Exhausted)`):
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): finalize - {debug-name}" .projex/closed/{yymmddhhmm}-{debug-name}-debug.md .projex/{yymmddhhmm}-{debug-name}-debug-log.md

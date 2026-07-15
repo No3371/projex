@@ -61,7 +61,7 @@ Questions to answer:
 ```markdown
 # [Proposal Title]
 
-> **Status:** Draft | Review | Accepted | Rejected
+> **Status:** Draft | In Progress | Complete (Accepted) | Complete (Rejected)
 > **Created:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Related Projex:** [links to related projex documents]
@@ -161,9 +161,9 @@ Save the proposal in the appropriate `.projex/` folder based on scope:
 - **Cross-cutting concerns** → Root `.projex/` with references in affected modules
 
 **Folder by status:**
-- **Pending** (Draft/Review) → `.projex/` (parent folder)
-- **Accepted** → Remains in `.projex/` until derived Plan is closed
-- **Rejected** → Move to `.projex/archived/` or delete
+- **Pending** (Draft / In Progress) → `.projex/` (parent folder)
+- **Complete (Accepted)** → Remains in `.projex/` until derived Plan is closed
+- **Complete (Rejected)** → Move to `.projex/archived/` or delete
 
 ### 4. REFINEMENT
 
@@ -176,7 +176,7 @@ After initial draft:
 
 ### 5. REVIEW READINESS
 
-Before moving to `Review` status:
+Before moving to `In Progress` (under review) status:
 
 - [ ] Summary clearly states the proposal in 2-3 sentences
 - [ ] Problem statement explains why this matters
@@ -190,14 +190,14 @@ Before moving to `Review` status:
 ## STATUS TRANSITIONS
 
 ```
-Draft → Review → Accepted
-                → Rejected
+Draft → In Progress → Complete (Accepted)
+                    → Complete (Rejected)
 ```
 
 - **Draft**: Initial creation, still being refined
-- **Review**: Ready for stakeholder feedback
-- **Accepted**: Approved for implementation (derive Plan projex)
-- **Rejected**: Not moving forward (document reasoning)
+- **In Progress**: Under review — ready for stakeholder feedback
+- **Complete (Accepted)**: Approved for implementation (derive Plan projex)
+- **Complete (Rejected)**: Not moving forward (document reasoning)
 
 ---
 
@@ -207,7 +207,7 @@ This workflow produces:
 - A proposal projex document at `.projex/{yymmddhhmm}-{name}-proposal.md`
 - Updated relationships in any related projex documents
 
-**Folder placement:** See SKILL.md § Organizing. Accepted proposals stay in `.projex/` until their Plan is closed.
+**Folder placement:** See SKILL.md § Organizing. `Complete (Accepted)` proposals stay in `.projex/` until their Plan is closed.
 
 **Committing:** Present the proposal document to the user. Do not commit automatically — commit only when the user explicitly requests it.
 

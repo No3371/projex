@@ -84,7 +84,7 @@ Don't rush to document — keep discussing until you and the user feel the major
 > **Created:** YYYY-MM-DD | **Last Revised:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Scope:** [what this definition covers]
-> **Status:** Draft | Stabilizing | Stable
+> **Status:** Draft | In Progress | Complete (Stable)
 
 ---
 
@@ -228,7 +228,7 @@ Update the document in-place:
 3. **Add new content** — new properties, relationships, constraints discovered
 4. **Revise stale content** — update anything that no longer accurately describes the entity
 5. **Add new open questions** — deeper exploration always surfaces new unknowns
-6. **Update Status** — Draft → Stabilizing (when open questions are narrowing) → Stable (when open questions are resolved or purely hypothetical)
+6. **Update Status** — Draft → In Progress (open questions narrowing) → Complete (Stable) (open questions resolved or purely hypothetical). Never-closed type: stays in `.projex/` at `Complete (Stable)`; drops back to `In Progress` on revision
 7. **Append to revision log**
 
 #### 4. PRESENT REVISION
@@ -271,4 +271,4 @@ Definition documents are **never** placed in `.projex/closed/` — they are livi
 - A Definition can be spawned from an Exploration ("we investigated X, now let's pin down exactly what it is")
 - Definitions are excellent context for new sessions — hand an agent a definition and it knows what it's working with
 - When a definition grows too large, split by facet into separate definitions with cross-references
-- The Status field (Draft → Stabilizing → Stable) helps other workflows gauge how much they can rely on this definition
+- The Status field (Draft → In Progress → Complete (Stable)) helps other workflows gauge how much they can rely on this definition

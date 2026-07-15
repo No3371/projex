@@ -44,7 +44,7 @@ When all branches are resolved or the user stops:
 - Summarize key findings and decisions
 - Extract actionable outcomes
 - Recommend next steps (proposals, plans, etc.)
-- Update status to "Concluded"
+- Update status to `Complete (Concluded)`
 
 ---
 
@@ -58,7 +58,7 @@ When all branches are resolved or the user stops:
 # Interview: [Topic]
 
 > **Date:** YYYY-MM-DD | **Scope:** [What this interview covers]
-> **Goal:** [Purpose] | **Status:** In Progress | Concluded
+> **Goal:** [Purpose] | **Status:** In Progress | Complete (Concluded)
 
 ---
 
@@ -130,6 +130,6 @@ When all branches are resolved or the user stops:
 
 Produces `.projex/{yymmddhhmm}-{topic}-interview.md` with full Q&A transcript.
 
-**Folder placement:** Active → `.projex/` | Concluded → `.projex/closed/`
+**Folder placement:** Active (`In Progress`) → `.projex/` | `Complete (Concluded)` → `.projex/closed/`
 
 **Committing:** Present to the user. Do not commit automatically.

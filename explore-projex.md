@@ -84,6 +84,7 @@ This scaffold is the working artifact. Everything learned goes into it, not into
 
 > **Created:** YYYY-MM-DD | **Author:** [name or agent]
 > **Type:** Domain | Architectural | Decision | Question | Historical
+> **Status:** In Progress | Complete (Done)
 > **Related Projex:** [links]
 
 ---

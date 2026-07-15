@@ -109,6 +109,43 @@ your-repo/
 └── ...
 ```
 
+## Lifecycle Status
+
+Every projex document that carries a lifecycle Status field draws its value from ONE canonical vocabulary. Type-specific terminal meanings (Accepted, Rejected, Resolved, Stable, Concluded, Done, …) survive as an inline **outcome qualifier** on a canonical state — never as their own lifecycle stage.
+
+### Canonical vocabulary
+
+| State | Meaning | Folder |
+|-------|---------|--------|
+| `Draft` | Authored, still changing, not yet reliable | `.projex/` |
+| `Ready` | Finalized & actionable, not yet started (types with an execution phase only) | `.projex/` |
+| `In Progress` | Actively being worked / executed | `.projex/` |
+| `Blocked` | Stalled awaiting an external dependency; resumes when it clears | `.projex/` |
+| `Escalated` | Agent exhausted its ability; handed back to a human to decide or take over | `.projex/` |
+| `Complete` | Terminal — done | `.projex/closed/` |
+| `Abandoned` | Terminal — dropped without completion | `.projex/abandoned/` |
+
+`Blocked` waits on a *thing* (another task, a resource) and resumes automatically when it clears. `Escalated` waits on a *human judgment* the agent cannot make itself.
+
+### Strict Status blockquote
+
+Status is machine-readable via a single strict line — the `> **Status:**` blockquote. No YAML frontmatter; this blockquote is the one source of truth.
+
+**Grammar:** `> **Status:** <state>` optionally followed by ` (<outcome>)`, where `<state>` is exactly one canonical value.
+
+```
+> **Status:** In Progress
+> **Status:** Complete (Accepted)
+> **Status:** Escalated (Non-Repro)
+```
+
+One regex parses it: `^> \*\*Status:\*\* ([\w ]+?)(?: \((.+)\))?\s*$` → group 1 = state, group 2 = optional outcome.
+
+### Exceptions
+
+- **Never-closed types (Definition, Navigation):** may sit at `Complete` while staying in `.projex/` rather than moving to `.projex/closed/`. `Complete` here means "current stable state"; they drop back to `In Progress` on revision.
+- **Per-item statuses are out of scope.** Objective status (`Success / Partial / Failed`) and per-target / per-question status (`Pending / In Progress / Done / Dropped`) are not document lifecycle. They use plain bold (not the `> **Status:**` blockquote) and are left untouched.
+
 ## Workflow
 
 Workflow specs are actions invoked in verb sense:
