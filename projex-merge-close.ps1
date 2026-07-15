@@ -61,6 +61,21 @@ if ($Worktree) {
     }
 }
 
+# Pre-flight cleanliness gate (worktree mode) — refuse to finalize over a non-clean worktree
+if ($Worktree) {
+    $dirty = @(git -C $WtPath status --porcelain 2>$null)
+    if ($dirty.Count -gt 0) {
+        $list = ($dirty | Select-Object -First 10) -join "`n"
+        Write-Error "Worktree '$WtPath' is not clean — commit tracked edits, and commit or remove untracked tooling, then re-run:`n$list"
+        exit 1
+    }
+    $ignored = @(git -C $WtPath status --porcelain --ignored=matching 2>$null | Where-Object { $_ -match '^!!' })
+    if ($ignored.Count -gt 0) {
+        $ilist = ($ignored | Select-Object -First 5) -join "`n"
+        Write-Warning "Worktree contains ignored content (deps/build output) — removal may leave a directory to clean manually:`n$ilist"
+    }
+}
+
 # Merge with full history
 git -C $RepoRoot merge $Ephemeral --no-ff -m $MergeMsg
 if ($LASTEXITCODE -ne 0) {
@@ -81,10 +96,12 @@ if ($LASTEXITCODE -ne 0) {
 if ($Worktree) {
     git -C $RepoRoot worktree remove $WtPath
     if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Normal worktree remove failed, retrying with --force..."
-        git -C $RepoRoot worktree remove --force $WtPath
-        if ($LASTEXITCODE -ne 0) {
-            Write-Warning "Could not remove worktree '$WtPath' — close succeeded; clean up manually, then run: git worktree prune"
+        $registered = git -C $RepoRoot worktree list --porcelain | Where-Object { $_ -match ('/\.projexwt/' + [regex]::Escape($WtSuffix) + '$') }
+        if ($registered) {
+            $blocking = (git -C $WtPath status --porcelain --ignored=matching 2>$null | Select-Object -First 10) -join "`n"
+            Write-Warning "Could not remove worktree '$WtPath' — close succeeded. Blocking content:`n$blocking`nRemove the files above (or release any lock/open handle on the worktree — an empty list means the block is a lock, not dirty content), then: git -C $RepoRoot worktree remove $WtPath"
+        } else {
+            Write-Warning "Worktree unregistered but directory remains at '$WtPath' — close succeeded; inspect and delete the plain directory manually, then run: git -C $RepoRoot worktree prune"
         }
     }
 }

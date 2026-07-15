@@ -418,9 +418,17 @@ git -C <repo-root> status --porcelain
 
 If output is non-empty, commit or discard the remaining changes before continuing. The most common offender is the plan file — if it was updated but not committed, stage and commit it now.
 
+**Worktree mode — also check the worktree for leftovers:**
+
+```bash
+git -C <worktree-path> status --porcelain --ignored=matching
+```
+
+Untracked (`??`) or modified/staged tracked (`M`/`A`) entries: commit them or remove agent-created tooling — the finalization scripts exit (before any merge) rather than merge from a stale commit or risk deleting untracked files. Ignored (`!!`) entries (deps, build output): remove agent-created ones now; they don't block git-level removal but can make it fail half-way on some filesystems.
+
 The ephemeral branch must be finalized. Present options to user.
 
-**Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script removes the worktree before merging/abandoning. The main working directory is already on the base branch — no checkout needed.
+**Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script merges first, then removes the worktree as best-effort cleanup (abandon removes it directly). A removal failure never undoes the close — the script reports what remains. The main working directory is already on the base branch — no checkout needed.
 
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
@@ -468,6 +476,8 @@ Replays commits onto base branch for linear history (fast-forward, no merge comm
 **Best for:** Linear history preference, collaborative workflows
 
 > **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit.
+
+> **If a script warns it could not remove the worktree:** the close itself succeeded. Run `git -C <repo-root> worktree list` — if the worktree path is no longer listed, only a plain untracked directory remains; inspect it for anything user-created, then delete it manually (`rm -rf` / `Remove-Item -Recurse -Force`) and run `git worktree prune`. If it is still listed, remove the blocking files it reported, then `git -C <repo-root> worktree remove <path>`.
 
 #### Option D: Abandon (Failed Execution)
 Discards the branch without merging.

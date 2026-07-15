@@ -66,6 +66,21 @@ else
   fi
 fi
 
+# Pre-flight cleanliness gate (worktree mode) — refuse to finalize over a non-clean worktree
+if [ "$WORKTREE_MODE" = true ]; then
+  DIRTY=$(git -C "$WT_PATH" status --porcelain 2>/dev/null || true)
+  if [ -n "$DIRTY" ]; then
+    echo "Error: worktree '$WT_PATH' is not clean — commit tracked edits, and commit or remove untracked tooling, then re-run:" >&2
+    echo "$DIRTY" | head -n 10 >&2
+    exit 1
+  fi
+  IGNORED=$(git -C "$WT_PATH" status --porcelain --ignored=matching 2>/dev/null | grep '^!!' || true)
+  if [ -n "$IGNORED" ]; then
+    echo "Warning: worktree contains ignored content (deps/build output) — removal may leave a directory to clean manually:" >&2
+    echo "$IGNORED" | head -n 5 >&2
+  fi
+fi
+
 # Merge with full history
 if ! git -C "$REPO_ROOT" merge "$EPHEMERAL" --no-ff -m "$MERGE_MSG" 2>&1; then
   git -C "$REPO_ROOT" merge --abort 2>/dev/null || true
@@ -81,9 +96,13 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
-    echo "Warning: normal worktree remove failed, retrying with --force..." >&2
-    if ! git -C "$REPO_ROOT" worktree remove --force "$WT_PATH" 2>&1; then
-      echo "Warning: could not remove worktree '$WT_PATH' — close succeeded; clean up manually, then run: git worktree prune" >&2
+    WT_SUFFIX="${EPHEMERAL##*/}"
+    if git -C "$REPO_ROOT" worktree list --porcelain | grep -q "/\.projexwt/${WT_SUFFIX}\$"; then
+      echo "Warning: could not remove worktree '$WT_PATH' — close succeeded. Blocking content:" >&2
+      { git -C "$WT_PATH" status --porcelain --ignored=matching 2>/dev/null || true; } | head -n 10 >&2
+      echo "Remove the files above (or release any lock/open handle on the worktree — an empty list above means the block is a lock, not dirty content), then: git -C $REPO_ROOT worktree remove $WT_PATH" >&2
+    else
+      echo "Warning: worktree unregistered but directory remains at '$WT_PATH' — close succeeded; inspect and delete the plain directory manually, then run: git -C $REPO_ROOT worktree prune" >&2
     fi
   fi
 fi

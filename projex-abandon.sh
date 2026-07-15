@@ -52,8 +52,17 @@ fi
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: remove worktree (already on base branch)
   WT_PATH="${REPO_ROOT%/}/.projexwt/${EPHEMERAL##*/}"
+  UNTRACKED=$(git -C "$WT_PATH" status --porcelain 2>/dev/null | grep '^??' || true)
+  if [ -n "$UNTRACKED" ]; then
+    echo "Note: discarding untracked files with the worktree:" >&2
+    echo "$UNTRACKED" | head -n 10 >&2
+  fi
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" --force 2>&1; then
-    echo "Warning: could not remove worktree '$WT_PATH' — remove manually: git worktree remove $WT_PATH --force"
+    if git -C "$REPO_ROOT" worktree list --porcelain | grep -q "/\.projexwt/${EPHEMERAL##*/}\$"; then
+      echo "Warning: could not remove worktree '$WT_PATH' — remove manually: git worktree remove $WT_PATH --force" >&2
+    else
+      echo "Warning: worktree unregistered but directory remains at '$WT_PATH' — inspect and delete the plain directory manually, then run: git worktree prune" >&2
+    fi
   fi
 else
   # Checkout mode: switch to base

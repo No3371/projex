@@ -1,11 +1,13 @@
 # Worktree Cleanup Contract + Close-Script Removal Diagnosis
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Created:** 2026-07-15
 > **Author:** agent (Claude)
 > **Source:** Direct request — incident: squash-close worktree removal failed on leftover gitignored `node_modules/`, `--force` retry hit "not a working tree"
 > **Related Projex:** 2606270200-squash-close-worktree-remove-windows-memo.md | 2607132112-projex-rebase-close-scripts-redteam.md (Finding 2: auto `--force` deletes untracked files) | 2607090215-util-script-output-hints-next-step-proposal.md (executed — hint line pattern this plan extends) | 2607140251-close-scripts-per-branch-lock-plan.md (pending — touches same script regions, see Constraints) | 2607150312-worktree-cleanup-contract-plan-redteam.md (Fix Issues — this plan's Revision Log resolves its 5 findings)
 > **Worktree:** Yes
+> **Completed:** 2026-07-15
+> **Walkthrough:** 2607150236-worktree-cleanup-contract-walkthrough.md
 
 ---
 

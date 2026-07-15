@@ -41,9 +41,19 @@ if ($Worktree) {
     $WtSuffix = ($Ephemeral -split '/')[-1]
     $WtBase = Join-Path $RepoRoot ".projexwt"
     $WtPath = Join-Path $WtBase $WtSuffix
+    $untracked = @(git -C $WtPath status --porcelain 2>$null | Where-Object { $_ -match '^\?\?' })
+    if ($untracked.Count -gt 0) {
+        $ulist = ($untracked | Select-Object -First 10) -join "`n"
+        Write-Warning "Discarding untracked files with the worktree:`n$ulist"
+    }
     git -C $RepoRoot worktree remove $WtPath --force
     if ($LASTEXITCODE -ne 0) {
-        Write-Warning "Could not remove worktree '$WtPath' — remove manually: git worktree remove $WtPath --force"
+        $registered = git -C $RepoRoot worktree list --porcelain | Where-Object { $_ -match ('/\.projexwt/' + [regex]::Escape($WtSuffix) + '$') }
+        if ($registered) {
+            Write-Warning "Could not remove worktree '$WtPath' — remove manually: git worktree remove $WtPath --force"
+        } else {
+            Write-Warning "Worktree unregistered but directory remains at '$WtPath' — inspect and delete the plain directory manually, then run: git worktree prune"
+        }
     }
 } else {
     # Checkout mode: switch to base

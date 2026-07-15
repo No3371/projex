@@ -60,10 +60,18 @@ if [ "$WORKTREE_MODE" = true ]; then
     echo "Error: worktree '$WT_PATH' does not exist — is worktree mode correct?" >&2
     exit 1
   fi
-  # Worktree must be clean before rewriting its history
-  if ! git -C "$WT_PATH" diff --quiet 2>/dev/null || ! git -C "$WT_PATH" diff --cached --quiet 2>/dev/null; then
-    echo "Error: worktree '$WT_PATH' has uncommitted changes — commit or stash before closing" >&2
+  # Pre-flight cleanliness gate — refuse to rewrite history / finalize over a non-clean worktree
+  # (unified: git status --porcelain covers untracked AND uncommitted tracked, replacing the old tracked-only check)
+  DIRTY=$(git -C "$WT_PATH" status --porcelain 2>/dev/null || true)
+  if [ -n "$DIRTY" ]; then
+    echo "Error: worktree '$WT_PATH' is not clean — commit tracked edits, and commit or remove untracked tooling, then re-run:" >&2
+    echo "$DIRTY" | head -n 10 >&2
     exit 1
+  fi
+  IGNORED=$(git -C "$WT_PATH" status --porcelain --ignored=matching 2>/dev/null | grep '^!!' || true)
+  if [ -n "$IGNORED" ]; then
+    echo "Warning: worktree contains ignored content (deps/build output) — removal may leave a directory to clean manually:" >&2
+    echo "$IGNORED" | head -n 5 >&2
   fi
   if ! git -C "$WT_PATH" rebase "$BASE" 2>&1; then
     git -C "$WT_PATH" rebase --abort 2>/dev/null || true
@@ -109,9 +117,13 @@ fi
 
 if [ "$WORKTREE_MODE" = true ]; then
   if ! git -C "$REPO_ROOT" worktree remove "$WT_PATH" 2>&1; then
-    echo "Warning: normal worktree remove failed, retrying with --force..." >&2
-    if ! git -C "$REPO_ROOT" worktree remove --force "$WT_PATH" 2>&1; then
-      echo "Warning: could not remove worktree '$WT_PATH' — close succeeded; clean up manually, then run: git worktree prune" >&2
+    WT_SUFFIX="${EPHEMERAL##*/}"
+    if git -C "$REPO_ROOT" worktree list --porcelain | grep -q "/\.projexwt/${WT_SUFFIX}\$"; then
+      echo "Warning: could not remove worktree '$WT_PATH' — close succeeded. Blocking content:" >&2
+      { git -C "$WT_PATH" status --porcelain --ignored=matching 2>/dev/null || true; } | head -n 10 >&2
+      echo "Remove the files above (or release any lock/open handle on the worktree — an empty list above means the block is a lock, not dirty content), then: git -C $REPO_ROOT worktree remove $WT_PATH" >&2
+    else
+      echo "Warning: worktree unregistered but directory remains at '$WT_PATH' — close succeeded; inspect and delete the plain directory manually, then run: git -C $REPO_ROOT worktree prune" >&2
     fi
   fi
 fi
