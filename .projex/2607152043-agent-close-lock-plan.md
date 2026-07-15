@@ -95,8 +95,8 @@ Define the lock convention once in `SKILL.md`; wire the acquire/release ceremony
 - **Filename:** `.closing-to-<sanitized-base>` where `<sanitized-base>` = base branch with `/` replaced by `_` (identical to the sibling plan). Example: base `main` → `.closing-to-main`; base `projex/2607…-x` → `.closing-to-projex_2607…-x`. The `projex-close-lock` helper computes this string from its `<base-branch>` argument (sourced from the execution log's `Base Branch:` field); the agent never builds the filename itself.
 - **Content (single line):** `<utc-iso8601-timestamp> | <agent/close identity>` — e.g. `2026-07-15T20:43:07Z | close-projex plan=2607…-x branch=projex/2607…-x`. The timestamp is *last-updated*: written at acquire; a long multi-phase close MAY re-write it (heartbeat) though v1 writes once.
 - **Acquire / release — always via the deterministic helper, never hand-built by the agent:**
-  - `projex-close-lock.{sh|ps1} acquire <repo-root> <base-branch> <identity>` — sanitizes `<base-branch>` (`/`→`_`), builds the path, atomically creates the file (bash `set -o noclobber`; PowerShell `[System.IO.File]::Open($Lock,'CreateNew','Write')`), writes `<utc-iso8601> | <identity>`, and prints the lock path. Non-zero exit ⇒ already held (prints the current holder line).
-  - `projex-close-lock.{sh|ps1} release <repo-root> <base-branch>` — recomputes the same path and deletes it (idempotent) after the final git operation.
+  - `{projex-scripts}/projex-close-lock.{sh|ps1} acquire <repo-root> <base-branch> <identity>` — sanitizes `<base-branch>` (`/`→`_`), builds the path, atomically creates the file (bash `set -o noclobber`; PowerShell `[System.IO.File]::Open($Lock,'CreateNew','Write')`), writes `<utc-iso8601> | <identity>`, and prints the lock path. Non-zero exit ⇒ already held (prints the current holder line).
+  - `{projex-scripts}/projex-close-lock.{sh|ps1} release <repo-root> <base-branch>` — recomputes the same path and deletes it (idempotent) after the final git operation.
   - `<base-branch>` is passed verbatim from the execution log's `Base Branch:` field, so the filename is byte-identical across every agent and both shells by construction.
 
 ### Step 1: Create the deterministic helper `projex-close-lock.{sh,ps1}`
@@ -133,7 +133,14 @@ Both variants MUST derive identical paths for identical inputs — one sanitizat
 **Files:**
 - `SKILL.md`
 
-**Changes:** (a) Add a `projex-close-lock.{sh|ps1}` entry to § Utility Scripts (acquire/release subcommands, deterministic path). (b) Add a short subsection (near § Git Integration / Utility Scripts) titled "Close Lock (`.closing-to-<base>`)" containing the Lock specification above verbatim, plus the three design decisions:
+**Changes:** (a) Add a `projex-close-lock` entry to § Utility Scripts in the same shape as the existing entries — bare name + one-line purpose, then the `{projex-scripts}/`-prefixed invocation:
+
+```
+{projex-scripts}/projex-close-lock.{sh|ps1} acquire <repo-root> <base-branch> <identity>
+{projex-scripts}/projex-close-lock.{sh|ps1} release <repo-root> <base-branch>
+```
+
+(b) Add a short subsection (near § Git Integration / Utility Scripts) titled "Close Lock (`.closing-to-<base>`)" containing the Lock specification above verbatim, plus the three design decisions:
 
 ```markdown
 // After (new subsection):
@@ -185,7 +192,7 @@ both shells); release after the last git op.
 
 **ACQUIRE THE CLOSE LOCK (both modes; skip only for worktree-mode abandon).**
 Before any git operation below, run
-`projex-close-lock.{sh|ps1} acquire <repo-root> <base-branch> <identity>` — where
+`{projex-scripts}/projex-close-lock.{sh|ps1} acquire <repo-root> <base-branch> <identity>` — where
 `<base-branch>` is the `Base Branch:` value from this plan's execution log. The
 helper computes the path and creates the lock atomically (see SKILL.md § Close
 Lock); do not hand-build the filename. A non-zero exit means the lock is already
@@ -203,7 +210,7 @@ And after the finalization options block:
 // After (end of Step 7, after the script returns):
 **RELEASE THE CLOSE LOCK.** Once the finalization script has returned and any
 post-finalize commit on the base is done, run
-`projex-close-lock.{sh|ps1} release <repo-root> <base-branch>`. Release even on a
+`{projex-scripts}/projex-close-lock.{sh|ps1} release <repo-root> <base-branch>`. Release even on a
 failed/aborted finalization — the scripts restore prior state, so holding the
 lock past that point only blocks retries.
 ```
@@ -302,6 +309,7 @@ Per-step rollback reverts each file independently. To abandon entirely:
 
 ## Revision Log
 
+- **2026-07-16:** Helper invocations aligned to the framework's script-reference convention — added the `{projex-scripts}/` placeholder prefix to the acquire/release commands in the Lock spec and the close-projex Step 7 ceremony, and made the SKILL § Utility Scripts entry show the prefixed form. Bare-name/`{sh,ps1}` prose mentions kept as-is (matches how SKILL.md and CLAUDE.md name scripts outside of commands). Trigger: consistency review — the runnable commands dropped the `{projex-scripts}/` prefix every other workflow spec uses. (Acquire/release stay inline backtick commands rather than nested ```bash fences, since they sit inside the plan's ```markdown before/after blocks.)
 - **2026-07-16:** Sibling script-level plan `2607140251-close-scripts-per-branch-lock-plan.md` abandoned (moved to `.projex/abandoned/`) per user decision to consolidate on a single mechanism; reconciliation verdict annotated with the consequence (no script-level self-releasing backstop remains). This plan is now the sole close-concurrency mechanism.
 - **2026-07-16:** Name generation moved out of the LLM agent into a **mandatory deterministic helper** `projex-close-lock.{sh,ps1}` (new Implementation Step 1; existing steps renumbered 2–4; Summary, Scope/Estimated Changes, Key Files, Constraints, Success Criteria, Lock specification, and the Relationship caveat updated accordingly). Base-branch input pinned to the execution log's `Base Branch:` field. Resolves Open Question 3. **Trigger:** a stochastic model synthesizing the lock filename in prose can emit mismatched names across agents/shells (casing, missed `/`→`_`, stray suffix), silently defeating the mutex — the plan's own `.ps1`↔`.sh` "identical path" criterion is only guaranteed by one shared helper, not by hand-written one-liners re-interpreted each run. Scope grew from doc-only (3 files) to 3 docs + 2 helper variants.
 
