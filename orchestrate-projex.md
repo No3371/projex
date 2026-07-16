@@ -136,13 +136,16 @@ This only applies when the human gives an explicit list. If the human instead st
 An explicit list may annotate each step using this notation:
 
 ```
-step, step!, step(model), stepA+stepB, <model>, [step(model)]
+step, step!, step(model), stepA+stepB, stepA & stepB, | group |*N, <model>, [step(model)]
 ```
 
 - **`step`** — a bare workflow name (e.g. `plan`, `execute`, `redteam`). Runs whatever model is currently in effect — the orchestrator's default, or the last `<model>` switch encountered in the chain.
 - **`step!`** — a **required-success step**. If it ultimately fails (the normal review latitude still applies — a second attempt is fine), the orchestrator **halts the orchestration and escalates to the human** instead of running any later step. Guards a step everything downstream depends on — typically `execute!`, since auditing or closing a failed execution is pointless. Attaches after any `(model)` (`execute(opus)!`); optional `[steps]` can't take it.
 - **`step(model)`** — a **per-step model override**. Spawn that step's subagent with the named model (`sonnet` / `opus` / `haiku` / `fable`). Applies to this step only and does not change the default for any other step.
 - **`stepA+stepB`** — a **parallel group**. Steps joined by `+` dispatch as concurrent subagents; the chain waits for all members before continuing, and the orchestrator reviews them together. Members keep their own annotations — `audit(sonnet)+redteam(opus)`, `[audit]+redteam`.
+- **`stepA & stepB`** — **glue**. Couples steps into one unit where the later step gates the earlier — a producer/checker pair (`execute & audit`). Unlike `,` (independent, run-and-move-on), glued members are judged together, which makes the pair the natural body of a `*` loop.
+- **`| … |`** — **grouping**. Brackets a run of steps into a single unit so a suffix operator applies to the whole run, not just the last step.
+- **`unit*N`** — **loop-til-success**. Repeat the preceding step or `| group |` up to N times, resuming/retrying each pass, until it succeeds — for a glued pair, until the checker is satisfied. Stop as soon as it passes; if it never does within N, escalate (§ Human Escalation). `| execute & audit |*3` runs execute→audit, and on each dissatisfied audit loops back to resume execute, up to 3 attempts.
 - **`<model>`** — a **mid-chain model switch**. Changes the default model for every step that follows it in the chain, until the next `<model>` marker or the chain ends. It does not itself spawn a workflow step.
 - **`[step]`** / **`[step(model)]`** — an **optional step**. This is the one sanctioned exception to "explicit workflow lists are literal" above: for a bracketed step, the orchestrator applies judgment — run it only if what's happened so far in the chain warrants it, skip it otherwise. Either way, record the decision (ran / skipped, and why) in the Completion Report. Unbracketed steps stay literal and mandatory regardless of this exception.
 
