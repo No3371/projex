@@ -133,7 +133,6 @@ Two modes — pick before touching files:
 
 - The plan has multiple distinct objectives / milestones whose execution is largely independent
 - Context isolation per objective improves robustness (long plan, large files, easy drift)
-- You are running under `/orchestrate-projex.md` (which permits this single nesting exception — see orchestrate-projex.md)
 
 Coordinator responsibilities in delegate mode:
 
