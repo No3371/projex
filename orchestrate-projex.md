@@ -42,7 +42,7 @@ Load framework files for the chosen path. Subagents load their own specs — orc
 - `@./define-projex.md` — declarative entity spec
 - `@./guide-projex.md` — curated reading path for humans
 - `@./archive-projex.md` — compress closed projex into index
-- `@./do-projex.md` — objective-scoped execution sub-workflow; only `/execute-projex.md` may invoke it (single-nesting exception)
+- `@./do-projex.md` — objective-scoped execution sub-workflow; only `/execute-projex.md` may invoke it
 
 ## Subagent Handoff — Context Only
 
@@ -55,8 +55,9 @@ Subagents have no memory of this conversation. Each handoff must be self-contain
 - **Path to its workflow spec + `SKILL.md`** — so it can load them
 - **Prior projex artifacts** — by **filename**, not path, e.g. `2604151200-auth-feature-plan.md`
 - **Facts already established** — human-confirmed scope boundaries, worktree preference, merge strategy, any constraint already decided or cleared
+- **Depth** — this subagent's nesting depth (§ Nesting Depth). Orchestrator always hands off depth `1`.
 - **Model override** — if chain notation (§ Explicit Chain Notation) assigned this step a model, pass it as the subagent's `model` param; else omit, run under current default
-- **Current Default Model / Your Model** — which model runs this step (per-step override if any, else current default). Matters for artifacts recording authorship/model, and for execute→do nesting where sub-subagents inherit the coordinator's effective model unless overridden
+- **Current Default Model / Your Model** — which model runs this step (per-step override if any, else current default). Matters for artifacts recording authorship/model, and for nested sub-subagents that inherit the coordinator's effective model unless overridden
 
 Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — the spec governs that. It reads `SKILL.md` + its workflow file and proceeds correctly without further direction.
 
@@ -66,14 +67,20 @@ Avoid in the handoff:
 - Prescribing output format, section structure, review style
 - Rules that conflict with or duplicate `SKILL.md` or the spec
 
-**Subagents must not spawn subagents.** Include this verbatim in every handoff: *"You are a subagent. Do not spawn subagents or delegate to other agents. If you cannot complete a step yourself, stop and return what you have with a clear description of what is blocking you."* The orchestrator handles all delegation.
+## Nesting Depth
 
-**Single nesting exception — execute-projex → do-projex.** When the orchestrator dispatches `/execute-projex.md`, that subagent (the execute coordinator) MAY spawn one further layer of sub-subagents that each invoke `/do-projex.md` for a single objective. Only sanctioned nesting in the framework. Constraints:
+Orchestrator is depth `0`. Every subagent it spawns directly is depth `1`. Subagents MAY spawn further subagents — depth-gated, not forbidden outright.
 
-- Only `/execute-projex.md` may nest, and only into `/do-projex.md` — no other workflow spawns sub-subagents
-- Sub-subagents must not nest further; the verbatim no-nesting clause still applies to them
+**Include this verbatim in every handoff, `{depth}` filled in:** *"You are a subagent at depth {depth}. You may spawn further subagents only if the new subagent's depth would be ≤ 3 — hand each one depth {depth}+1 and this same clause, updated. Never spawn a subagent at depth > 3. If you cannot complete a step yourself and cannot spawn further, stop and return what you have with a clear description of what is blocking you."*
+
+- Depth ≤ 3 → spawning allowed, subject to the invoked workflow's own rules
+- Depth > 3 → spawning forbidden — complete the step directly, or stop and report
+
+**execute-projex → do-projex.** When the orchestrator dispatches `/execute-projex.md` at depth 1, that coordinator MAY spawn sub-subagents at depth 2, each invoking `/do-projex.md` for a single objective. Constraints:
+
 - Sequential by default (one objective at a time); concurrent dispatch requires per-objective worktrees
-- The coordinator keeps init, task list, plan-wide verification, completion — only per-objective execution is delegated
+- Coordinator keeps init, task list, plan-wide verification, completion — only per-objective execution is delegated
+- Sub-subagent prompt uses this clause instead of the general one above: *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."* — `do-projex.md` forbids nesting outright, regardless of remaining depth budget
 
 Rationale + full contract: `execute-projex.md § Choose Execution Mode` and `do-projex.md`. Orchestrator doesn't re-specify them.
 
@@ -166,7 +173,7 @@ Keep it tight — don't explain the framework back to the human.
 
 From `SKILL.md`; apply to orchestrator + all subagents. Orchestrator doesn't loosen, override, or re-specify them in handoffs — subagents enforce them via the spec.
 
-- No subagent nesting — subagents don't spawn subagents; only the orchestrator delegates
+- Nesting depth-gated — subagents may spawn further subagents only through depth 3 (§ Nesting Depth); `do-projex` sub-subagents never nest, regardless of depth
 - Git discipline (one op type per call; no mixed script + raw git; explicit paths only)
 - Auxiliary-artifact commit policy (auxiliary workflows don't auto-commit — human/orchestrator approval required)
 - Reference-by-filename (never path)
