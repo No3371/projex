@@ -141,6 +141,7 @@ Coordinator responsibilities in delegate mode:
 - Dispatch sub-subagents **sequentially** (one objective at a time) unless each runs in its own worktree branch — concurrent writes to the same branch / log are forbidden
 - After each sub-subagent returns: read its report, mark the corresponding task complete, decide whether to dispatch the next or stop
 - Sub-subagent prompt must include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and the verbatim no-further-nesting clause from orchestrate-projex.md
+- Sub-subagent must be spawned on a model one tier lower than the model running this execute-projex coordinator (e.g. coordinator on Opus → do-projex sub-subagents on Sonnet; coordinator on Sonnet → do-projex sub-subagents on Haiku)
 - On any blocker / out-of-scope discovery returned by a sub-subagent: stop dispatching, fall back to self-execute or escalate
 
 Sub-subagent boundaries are enforced by `do-projex.md`. The coordinator does not re-specify them in the handoff.
