@@ -66,29 +66,36 @@ rollback() {
   if [ ${#DONE_SRC[@]} -eq 0 ]; then return; fi
   echo "Rolling back ${#DONE_SRC[@]} completed move(s)..." >&2
   local failed=0
+  # Physically move every completed move back on disk (both tracked and untracked).
+  # The index is restored wholesale from the pre-batch snapshot afterwards, so no
+  # per-file git commands are used here — git mv would re-stage and lose the original
+  # staged/unstaged split.
   for (( i=${#DONE_SRC[@]}-1; i>=0; i-- )); do
-    if [ "${DONE_TRACKED[$i]}" -eq 1 ]; then
-      if ! RB_OUT=$(git -C "$REPO_ROOT" mv -- "${DONE_DST[$i]}" "${DONE_SRC[$i]}" 2>&1); then
-        echo "  Warning: could not reverse '${DONE_DST[$i]}' -> '${DONE_SRC[$i]}'" >&2
-        echo "  $RB_OUT" >&2
-        failed=1
-      fi
-    else
-      # Untracked: unstage, move back via filesystem
-      git -C "$REPO_ROOT" rm --cached -- "${DONE_DST[$i]}" > /dev/null 2>&1 || true
-      SRC_DIR=$(dirname "$REPO_ROOT/${DONE_SRC[$i]}")
-      mkdir -p "$SRC_DIR" 2>/dev/null || true
-      if ! mv -- "$REPO_ROOT/${DONE_DST[$i]}" "$REPO_ROOT/${DONE_SRC[$i]}" 2>&1; then
-        echo "  Warning: could not reverse '${DONE_DST[$i]}' -> '${DONE_SRC[$i]}'" >&2
-        failed=1
-      fi
+    SRC_DIR=$(dirname "$REPO_ROOT/${DONE_SRC[$i]}")
+    mkdir -p "$SRC_DIR" 2>/dev/null || true
+    if ! mv -- "$REPO_ROOT/${DONE_DST[$i]}" "$REPO_ROOT/${DONE_SRC[$i]}" 2>&1; then
+      echo "  Warning: could not reverse '${DONE_DST[$i]}' -> '${DONE_SRC[$i]}'" >&2
+      failed=1
     fi
   done
+  # Restore the entire index to its pre-batch snapshot (index only — no -u, so the
+  # working tree is untouched). Undoes all staging done by the forward moves.
+  if ! git -C "$REPO_ROOT" read-tree "$INDEX_TREE" 2>/dev/null; then
+    echo "  Warning: could not restore index from pre-batch snapshot" >&2
+    failed=1
+  fi
   if [ "$failed" -eq 1 ]; then
     echo "Rollback incomplete — manual intervention required." >&2
   else
     echo "Rollback complete." >&2
   fi
+}
+
+# Snapshot the whole index once for rollback (restored wholesale on failure so the
+# original staged/unstaged split of each moved file is preserved)
+INDEX_TREE=$(git -C "$REPO_ROOT" write-tree) || {
+  echo "Error: git write-tree failed — cannot snapshot index" >&2
+  exit 1
 }
 
 # Execute moves

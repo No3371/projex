@@ -63,35 +63,43 @@ function Rollback {
     if ($script:doneSrc.Count -eq 0) { return }
     Write-Host "Rolling back $($script:doneSrc.Count) completed move(s)..."
     $failed = $false
+    # Physically move every completed move back on disk (both tracked and untracked).
+    # The index is restored wholesale from the pre-batch snapshot afterwards, so no
+    # per-file git commands are used here — git mv would re-stage and lose the original
+    # staged/unstaged split.
     for ($i = $script:doneSrc.Count - 1; $i -ge 0; $i--) {
-        if ($script:doneTracked[$i]) {
-            $rbOut = git -C $RepoRoot mv -- $script:doneDst[$i] $script:doneSrc[$i] 2>&1
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "  Warning: could not reverse '$($script:doneDst[$i])' -> '$($script:doneSrc[$i])'"
-                Write-Host "  $rbOut"
-                $failed = $true
-            }
-        } else {
-            # Untracked: unstage, move back via filesystem
-            git -C $RepoRoot rm --cached -- $script:doneDst[$i] 2>$null | Out-Null
-            $fullDst = Join-Path $RepoRoot $script:doneDst[$i]
-            $fullSrc = Join-Path $RepoRoot $script:doneSrc[$i]
-            try {
-                $srcDir = Split-Path $fullSrc -Parent
-                if (!(Test-Path $srcDir)) { New-Item -ItemType Directory -Path $srcDir -Force | Out-Null }
-                Move-Item -Path $fullDst -Destination $fullSrc -Force
-            } catch {
-                Write-Host "  Warning: could not reverse '$($script:doneDst[$i])' -> '$($script:doneSrc[$i])'"
-                Write-Host "  $_"
-                $failed = $true
-            }
+        $fullDst = Join-Path $RepoRoot $script:doneDst[$i]
+        $fullSrc = Join-Path $RepoRoot $script:doneSrc[$i]
+        try {
+            $srcDir = Split-Path $fullSrc -Parent
+            if (!(Test-Path $srcDir)) { New-Item -ItemType Directory -Path $srcDir -Force | Out-Null }
+            Move-Item -Path $fullDst -Destination $fullSrc -Force
+        } catch {
+            Write-Host "  Warning: could not reverse '$($script:doneDst[$i])' -> '$($script:doneSrc[$i])'"
+            Write-Host "  $_"
+            $failed = $true
         }
+    }
+    # Restore the entire index to its pre-batch snapshot (index only — no -u, so the
+    # working tree is untouched). Undoes all staging done by the forward moves.
+    git -C $RepoRoot read-tree $script:indexTree 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  Warning: could not restore index from pre-batch snapshot"
+        $failed = $true
     }
     if ($failed) {
         Write-Host "Rollback incomplete — manual intervention required."
     } else {
         Write-Host "Rollback complete."
     }
+}
+
+# Snapshot the whole index once for rollback (restored wholesale on failure so the
+# original staged/unstaged split of each moved file is preserved)
+$indexTree = git -C $RepoRoot write-tree
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "git write-tree failed — cannot snapshot index"
+    exit 1
 }
 
 # Execute moves
