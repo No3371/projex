@@ -1,6 +1,6 @@
 # Close Scripts: Dirty Base Safety
 
-> **Status:** Ready
+> **Status:** In Progress
 > **Created:** 2026-07-26
 > **Author:** Codex
 > **Source:** 2607260233-worktree-squash-close-dirty-base-reset-memo.md
