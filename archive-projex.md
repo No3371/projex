@@ -138,7 +138,7 @@ Commit the deletions:
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(archive): remove archived files from {scope}" .projex/closed/{filename1}.md .projex/closed/{filename2}.md
 ```
 
-> **Note:** `stage-n-commit` stages the listed files before committing. Since the files were already `git rm`'d (removed from working tree and staged for deletion), `stage-n-commit`'s `git add` on them is a no-op — the deletions are already staged. The script provides atomic rollback if the commit fails.
+> **Note:** `stage-n-commit` stages the listed files before committing. Files already `git rm`'d (absent from working tree and index) are skipped at the staging step — their deletions are already staged and are included in the commit. The script provides atomic rollback if the commit fails.
 
 Verify the commit. The folder should now contain only the archive index file.
 
