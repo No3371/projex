@@ -430,6 +430,19 @@ The ephemeral branch must be finalized. Present options to user.
 
 **Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script merges first, then removes the worktree as best-effort cleanup (abandon removes it directly). A removal failure never undoes the close — the script reports what remains. The main working directory is already on the base branch — no checkout needed.
 
+**Anticipated conflicts (`--resolve-conflicts` / `-ResolveConflicts`):** By default any conflict aborts the close and rolls back. When you *expect* a conflict in specific files — typically `.projex/` documents both branches touched — declare them: `--resolve-conflicts '.projex/,docs/notes.md'` (comma-separated repo-relative files or directory prefixes; `-ResolveConflicts '.projex/','docs/notes.md'` in PowerShell). Then:
+
+- **Every** conflicted path covered by the list → the operation is left **in progress** (nothing aborted) and the script exits **2**, listing the conflicts and the commands to resolve and continue.
+- **Any** conflicted path outside the list → unchanged behaviour: abort, roll back, exit 1, listing only the uncovered paths. It is all-or-nothing — one uncovered conflict aborts the whole operation.
+
+The list governs *which conflicts may halt instead of abort*; it does not restrict what gets integrated, and it cannot verify what you commit while resolving. Only declare paths you actually intend to resolve by hand.
+
+Exit codes: `0` closed · `1` failed and rolled back · `2` left in progress for you to finish.
+
+After resolving: **squash-close is not re-runnable** — a squash commit does not record the ephemeral branch as a parent, so re-running recomputes the same merge and conflicts again; follow the finishing commands the script prints. **merge-close and rebase-close are re-runnable** — once you have committed the merge or concluded the rebase, re-run the exact same command and it completes the cleanup. Re-running any of them *before* concluding the operation is refused with the work left untouched.
+
+A rebase stops at the **first** conflicting commit, so a covered stop is not a promise the rest is clean — the same gate applies at every later stop, and the script reports how many commits remain.
+
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch.
 
@@ -475,7 +488,7 @@ Replays commits onto base branch for linear history (fast-forward, no merge comm
 
 **Best for:** Linear history preference, collaborative workflows
 
-> **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit.
+> **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually, declare the paths via `--resolve-conflicts` (see above) to resolve them in place, or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit.
 
 > **If a script warns it could not remove the worktree:** the close itself succeeded. Run `git -C <repo-root> worktree list` — if the worktree path is no longer listed, only a plain untracked directory remains; inspect it for anything user-created, then delete it manually (`rm -rf` / `Remove-Item -Recurse -Force`) and run `git worktree prune`. If it is still listed, remove the blocking files it reported, then `git -C <repo-root> worktree remove <path>`.
 

@@ -1,5 +1,5 @@
 # projex-rebase-close.ps1 — Rebase ephemeral onto base for linear history, fast-forward base, delete ephemeral
-# Usage: projex-rebase-close.ps1 <repo-root> <base-branch> <ephemeral-branch> [-Worktree]
+# Usage: projex-rebase-close.ps1 <repo-root> <base-branch> <ephemeral-branch> [-Worktree] [-ResolveConflicts <paths>]
 #
 # Replays the ephemeral branch's commits onto the tip of base (rewriting their SHAs),
 # then fast-forwards base to include them. No merge commit is created.
@@ -7,13 +7,64 @@
 # -Worktree: the ephemeral branch is checked out in a worktree at <repo>/.projexwt/<branch-suffix>.
 #            The rebase runs inside that worktree; the main working directory must be on base.
 #            The worktree is removed after the fast-forward succeeds.
+#
+# -ResolveConflicts: repo-relative paths (files or directory prefixes) where conflicts are ANTICIPATED.
+#            Default behaviour on conflict is unchanged: abort and roll back. With this parameter,
+#            if EVERY conflicted path is covered by the list, the rebase is left in progress (exit 2)
+#            so the caller can resolve it. A conflict in any path outside the list still aborts.
+#            Once the caller concludes the rebase, re-running this exact command finishes the close.
+#
+# Exit codes: 0 = closed, 1 = failed and rolled back, 2 = left in progress for the caller to resolve.
 
 param(
     [Parameter(Mandatory)][string]$RepoRoot,
     [Parameter(Mandatory)][string]$Base,
     [Parameter(Mandatory)][string]$Ephemeral,
-    [switch]$Worktree
+    [switch]$Worktree,
+    [string[]]$ResolveConflicts = @()
 )
+
+# Paths git reports as unmerged (conflicted) in $Dir
+function Get-UnmergedPaths([string]$Dir) {
+    return @(git -C $Dir diff --name-only --diff-filter=U 2>$null | Where-Object { $_ -ne '' })
+}
+
+# Conflicted paths NOT covered by -ResolveConflicts (exact file match or directory prefix)
+function Get-UncoveredConflicts([string[]]$Conflicted, [string[]]$Allowed) {
+    $norm = @($Allowed | ForEach-Object { ($_ -replace '\\', '/').TrimEnd('/') } | Where-Object { $_ -ne '' })
+    return @($Conflicted | Where-Object {
+        $p = $_ -replace '\\', '/'
+        -not @($norm | Where-Object { $p -eq $_ -or $p.StartsWith("$_/") })
+    })
+}
+
+# Commits still queued behind the current stop, or -1 if it cannot be determined.
+# A rebase halts at the FIRST conflicting commit, so a covered stop is not a promise that the
+# remaining commits are conflict-free — the same gate is applied again at every later stop.
+function Get-RemainingRebaseCommits([string]$Dir) {
+    $gitDir = git -C $Dir rev-parse --absolute-git-dir 2>$null
+    if (-not $gitDir) { return -1 }
+    $todo = Join-Path $gitDir 'rebase-merge/git-rebase-todo'
+    if (Test-Path $todo) {
+        return @(Get-Content $todo | Where-Object { $_ -match '\S' -and $_ -notmatch '^\s*#' }).Count
+    }
+    $next = Join-Path $gitDir 'rebase-apply/next'
+    $last = Join-Path $gitDir 'rebase-apply/last'
+    if ((Test-Path $next) -and (Test-Path $last)) {
+        return ([int](Get-Content $last).Trim() - [int](Get-Content $next).Trim())
+    }
+    return -1
+}
+
+# Unfinished git operation in $Dir — 'rebase', 'merge', 'conflict', or $null
+function Get-InProgressOp([string]$Dir) {
+    $gitDir = git -C $Dir rev-parse --absolute-git-dir 2>$null
+    if (-not $gitDir) { return $null }
+    if ((Test-Path (Join-Path $gitDir 'rebase-merge')) -or (Test-Path (Join-Path $gitDir 'rebase-apply'))) { return 'rebase' }
+    if (Test-Path (Join-Path $gitDir 'MERGE_HEAD')) { return 'merge' }
+    if ((Get-UnmergedPaths $Dir).Count -gt 0) { return 'conflict' }
+    return $null
+}
 
 # Validate repo
 git -C $RepoRoot rev-parse --git-dir 2>$null | Out-Null
@@ -44,6 +95,16 @@ $WtSuffix = ($Ephemeral -split '/')[-1]
 $WtBase = Join-Path $RepoRoot ".projexwt"
 $WtPath = Join-Path $WtBase $WtSuffix
 
+# Refuse to start on top of an unfinished operation — never silently discard someone's half-done
+# resolution (a mid-flight multi-commit rebase would otherwise be aborted, losing earlier resolutions)
+$OpDir = if ($Worktree) { $WtPath } else { $RepoRoot }
+$inProgress = Get-InProgressOp $OpDir
+if ($inProgress) {
+    $verb = if ($inProgress -eq 'rebase') { "git -C $OpDir rebase --continue" } else { "git -C $OpDir commit" }
+    Write-Error "A $inProgress is already in progress in '$OpDir' — nothing was changed. Finish it (resolve, git -C $OpDir add <paths>, $verb) then re-run, or cancel it first (git -C $OpDir rebase --abort / merge --abort)."
+    exit 1
+}
+
 if ($Worktree) {
     # Worktree mode: rebase inside the worktree (ephemeral is checked out there), then ff base.
     if (-not (Test-Path $WtPath)) {
@@ -66,6 +127,21 @@ if ($Worktree) {
 
     git -C $WtPath rebase $Base
     if ($LASTEXITCODE -ne 0) {
+        $conflicted = Get-UnmergedPaths $WtPath
+        if ($ResolveConflicts.Count -gt 0 -and $conflicted.Count -gt 0) {
+            $uncovered = Get-UncoveredConflicts $conflicted $ResolveConflicts
+            if ($uncovered.Count -eq 0) {
+                $clist = ($conflicted | ForEach-Object { "  $_" }) -join "`n"
+                $remaining = Get-RemainingRebaseCommits $WtPath
+                $note = if ($remaining -gt 0) { "`n$remaining commit(s) remain to be replayed after this one — a rebase stops at the first conflicting commit, so later stops may surface conflicts outside -ResolveConflicts. The same gate applies at each stop." } else { "" }
+                Write-Host "Anticipated conflicts — rebase left IN PROGRESS in worktree '$WtPath' (not aborted):`n$clist$note`nResolve them, then:`n  git -C $WtPath add <paths>`n  git -C $WtPath rebase --continue   (repeat if later commits conflict)`nThen re-run this exact command to finish the close."
+                exit 2
+            }
+            git -C $WtPath rebase --abort 2>$null
+            $ulist = ($uncovered | ForEach-Object { "  $_" }) -join "`n"
+            Write-Error "Rebase conflict outside -ResolveConflicts — aborted, worktree '$WtPath' left on '$Ephemeral'. Unanticipated conflicts:`n$ulist"
+            exit 1
+        }
         git -C $WtPath rebase --abort 2>$null
         Write-Error "Rebase conflict — aborted, worktree '$WtPath' left on '$Ephemeral'. Resolve manually or use Option A/B."
         exit 1
@@ -92,6 +168,22 @@ if ($Worktree) {
     # Rebase ephemeral onto base (rewrites ephemeral's commits)
     git -C $RepoRoot rebase $Base
     if ($LASTEXITCODE -ne 0) {
+        $conflicted = Get-UnmergedPaths $RepoRoot
+        if ($ResolveConflicts.Count -gt 0 -and $conflicted.Count -gt 0) {
+            $uncovered = Get-UncoveredConflicts $conflicted $ResolveConflicts
+            if ($uncovered.Count -eq 0) {
+                $clist = ($conflicted | ForEach-Object { "  $_" }) -join "`n"
+                $remaining = Get-RemainingRebaseCommits $RepoRoot
+                if ($remaining -gt 0) { $clist = "$clist`n$remaining commit(s) remain to be replayed after this one — a rebase stops at the first conflicting commit, so later stops may surface conflicts outside -ResolveConflicts. The same gate applies at each stop." }
+                Write-Host "Anticipated conflicts — rebase left IN PROGRESS on '$Ephemeral' in '$RepoRoot' (not aborted):`n$clist`nResolve them, then:`n  git -C $RepoRoot add <paths>`n  git -C $RepoRoot rebase --continue   (repeat if later commits conflict)`nThen re-run this exact command to finish the close."
+                exit 2
+            }
+            git -C $RepoRoot rebase --abort 2>$null
+            git -C $RepoRoot checkout $OrigBranch 2>$null
+            $ulist = ($uncovered | ForEach-Object { "  $_" }) -join "`n"
+            Write-Error "Rebase conflict outside -ResolveConflicts — aborted, restored to '$OrigBranch'. Unanticipated conflicts:`n$ulist"
+            exit 1
+        }
         git -C $RepoRoot rebase --abort 2>$null
         git -C $RepoRoot checkout $OrigBranch 2>$null
         Write-Error "Rebase conflict — aborted, restored to '$OrigBranch'. Resolve manually or use Option A/B."
