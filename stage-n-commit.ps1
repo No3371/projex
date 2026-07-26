@@ -93,12 +93,24 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Stage files
-git -C $RepoRoot add @Files
-if ($LASTEXITCODE -ne 0) {
-    git -C $RepoRoot read-tree $indexTree 2>$null
-    Write-Error "git add failed — index rolled back"
-    exit 1
+# Stage files — skip paths absent from both worktree and index (e.g. deletions
+# already staged via `git rm`): their change is fully staged and `git add` would
+# die on a pathspec that matches nothing
+$AddFiles = @()
+foreach ($f in $Files) {
+    $inIndex = git -C $RepoRoot ls-files -- $f
+    if ((Test-Path -LiteralPath (Join-Path $RepoRoot $f)) -or $inIndex) {
+        $AddFiles += $f
+    }
+}
+
+if ($AddFiles.Count -gt 0) {
+    git -C $RepoRoot add @AddFiles
+    if ($LASTEXITCODE -ne 0) {
+        git -C $RepoRoot read-tree $indexTree 2>$null
+        Write-Error "git add failed — index rolled back"
+        exit 1
+    }
 }
 
 # Commit — rollback index on failure

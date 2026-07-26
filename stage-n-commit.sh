@@ -87,11 +87,22 @@ fi
 # Snapshot index for rollback
 INDEX_TREE=$(git -C "$REPO_ROOT" write-tree)
 
-# Stage files
-if ! git -C "$REPO_ROOT" add "${FILES[@]}"; then
-  git -C "$REPO_ROOT" read-tree "$INDEX_TREE" 2>/dev/null || true
-  echo "Error: git add failed — index rolled back" >&2
-  exit 1
+# Stage files — skip paths absent from both worktree and index (e.g. deletions
+# already staged via `git rm`): their change is fully staged and `git add` would
+# die on a pathspec that matches nothing
+ADD_FILES=()
+for f in "${FILES[@]}"; do
+  if [ -e "$REPO_ROOT/$f" ] || [ -L "$REPO_ROOT/$f" ] || [ -n "$(git -C "$REPO_ROOT" ls-files -- "$f")" ]; then
+    ADD_FILES+=("$f")
+  fi
+done
+
+if [ ${#ADD_FILES[@]} -gt 0 ]; then
+  if ! git -C "$REPO_ROOT" add "${ADD_FILES[@]}"; then
+    git -C "$REPO_ROOT" read-tree "$INDEX_TREE" 2>/dev/null || true
+    echo "Error: git add failed — index rolled back" >&2
+    exit 1
+  fi
 fi
 
 # Commit — rollback index on failure
