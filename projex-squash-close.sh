@@ -68,6 +68,44 @@ uncovered_conflicts() {
   return 0
 }
 
+# Full symbolic ref name of $2 as resolved in $1, or empty when it is not a ref (raw SHA)
+full_ref() {
+  git -C "$1" rev-parse --symbolic-full-name "$2" 2>/dev/null || true
+}
+
+# Tracked staged/unstaged content in $1. Untracked and ignored files are deliberately NOT counted:
+# busy repos keep them around, and .projexwt/ itself surfaces as untracked whenever the
+# .git/info/exclude registration is missing, so counting them would self-block worktree mode.
+# Submodule dirt is excluded too — a superproject whose recorded submodule commit is unchanged is
+# not dirty for integration purposes.
+tracked_dirt() {
+  git -C "$1" status --porcelain --untracked-files=no --ignore-submodules=dirty 2>/dev/null || true
+}
+
+# Discard a failed squash without the project-forbidden automatic `git reset --hard`.
+# `--merge` restores index and worktree to HEAD and clears conflict markers while leaving untracked
+# content alone. Returns non-zero (having reported) when the rollback itself fails, so the caller
+# exits rather than escalating destructiveness.
+#
+# Called for ANY non-zero `merge --squash` exit, which covers two different states:
+#   unmerged paths present — a real conflicted squash sits in the tree, rollback is meaningful.
+#   unmerged paths absent  — git refused before mutating anything (e.g. a tracked file went
+#                            index != HEAD != worktree inside the gate->merge window), so there is
+#                            no squash to roll back and `reset --merge` fails on the same dirt.
+# The two need opposite advice: hard-reset is a legitimate last resort for the first and would
+# destroy a concurrent writer's staged + worktree content on the second.
+safe_rollback() {
+  if git -C "$REPO_ROOT" reset --merge HEAD 2>&1; then
+    return 0
+  fi
+  if [ -n "$(unmerged_paths "$REPO_ROOT")" ]; then
+    echo "Error: merge --squash failed AND rollback via 'git reset --merge HEAD' also failed — the conflicted squash is STILL in '$REPO_ROOT' on '$BASE'. Nothing was committed and '$EPHEMERAL' is intact. This script will refuse to start again until that state is cleared (it detects the unmerged entries). Clear it by resolving and committing, or discard it with 'git -C $REPO_ROOT reset --hard HEAD' — a destructive command this script will not run for you, so it needs your explicit approval." >&2
+  else
+    echo "Error: merge --squash failed before starting a merge, and 'git reset --merge HEAD' then failed too. There are no unmerged entries and no merge in progress: NOTHING was changed in '$REPO_ROOT' on '$BASE', nothing was committed, and '$EPHEMERAL' is intact. Cause: a tracked file is both staged and further modified in the worktree (index != HEAD != worktree), so git refused the merge and 'reset --merge' cannot proceed over it either — most likely a concurrent writer changed the tree after this script's dirty-base check. That uncommitted work is still intact: do NOT run 'git reset --hard', it would destroy both the staged and the worktree copy. Inspect it with 'git -C $REPO_ROOT status', have its owner commit or stash it, then re-run this script." >&2
+  fi
+  return 1
+}
+
 # Unfinished git operation in $1 — prints 'rebase', 'merge', 'conflict', or nothing
 in_progress_op() {
   local git_dir
@@ -123,16 +161,46 @@ if [ -n "$IN_PROGRESS" ]; then
   exit 1
 fi
 
+# --- Dirty-base safety gate: everything below runs BEFORE any checkout/merge -------------------
+# Base must be a local branch. `rev-parse --verify` above also accepts tags, raw SHAs and
+# remote-tracking refs; none of those can be advanced by a close, so reject them by name.
+BASE_REF=$(full_ref "$REPO_ROOT" "$BASE")
+case "$BASE_REF" in
+  refs/heads/*) : ;;
+  refs/tags/*)    echo "Error: base '$BASE' resolves to a tag ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  refs/remotes/*) echo "Error: base '$BASE' resolves to a remote-tracking ref ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  "")             echo "Error: base '$BASE' resolves to a raw commit, not a local branch — nothing was changed." >&2; exit 1 ;;
+  *)              echo "Error: base '$BASE' resolves to '$BASE_REF', not a local branch (refs/heads/*) — nothing was changed." >&2; exit 1 ;;
+esac
+
+if [ "$WORKTREE_MODE" = true ]; then
+  # REPO_ROOT is the recorded originating/base worktree — which may be any registered worktree,
+  # not necessarily the primary one. It must still have BASE checked out; never guess another.
+  ORIGIN_REF=$(git -C "$REPO_ROOT" symbolic-ref --quiet HEAD 2>/dev/null || true)
+  if [ -z "$ORIGIN_REF" ]; then
+    echo "Error: '$REPO_ROOT' has a detached HEAD, not branch '$BASE' — nothing was changed. Check '$BASE' out there, or pass the worktree that holds it." >&2
+    exit 1
+  fi
+  if [ "$ORIGIN_REF" != "$BASE_REF" ]; then
+    echo "Error: '$REPO_ROOT' has '${ORIGIN_REF#refs/heads/}' checked out, not '$BASE' — nothing was changed. Finalizers never substitute another worktree or branch." >&2
+    exit 1
+  fi
+fi
+
+# Pre-flight (not a guarantee): the checkout about to be mutated must have no tracked changes.
+# Nothing re-checks between here and the merge, so a concurrent writer can still dirty it —
+# git's own overwrite refusal remains the real backstop.
+DIRT=$(tracked_dirt "$REPO_ROOT")
+if [ -n "$DIRT" ]; then
+  echo "Error: '$REPO_ROOT' has tracked changes — commit or stash them before closing; nothing was changed. Untracked and ignored files are fine, and a dirty submodule alone does not count:" >&2
+  echo "$DIRT" | head -n 10 >&2
+  exit 1
+fi
+
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: merge first; cleanup happens after commit so locks cannot block close.
   WT_PATH="${REPO_ROOT%/}/.projexwt/${EPHEMERAL##*/}"
 else
-  # Checkout mode: require clean tree, switch to base
-  if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
-    echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
-    exit 1
-  fi
-
   if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
     echo "Error: could not checkout '$BASE' — still on ephemeral branch, no state changed" >&2
     exit 1
@@ -172,18 +240,18 @@ if ! git -C "$REPO_ROOT" merge --squash "$EPHEMERAL" 2>&1; then
       echo "Do NOT re-run this script after committing: a squash commit does not record '$EPHEMERAL' as a parent, so the squash would be recomputed from the same base and conflict again." >&2
       exit 2
     fi
-    git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
-    echo "Error: merge --squash conflict outside --resolve-conflicts — reset to clean state on '$BASE'. Unanticipated conflicts:" >&2
+    safe_rollback || exit 1
+    echo "Error: merge --squash conflict outside --resolve-conflicts — rolled back to a clean pre-merge state on '$BASE'. Unanticipated conflicts:" >&2
     echo "$UNCOVERED" | sed 's/^/  /' >&2
     exit 1
   fi
-  git -C "$REPO_ROOT" reset --hard HEAD 2>/dev/null || true
+  safe_rollback || exit 1
   if [ "$WORKTREE_MODE" = true ]; then
-    echo "Error: merge --squash failed — reset to clean state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
+    echo "Error: merge --squash failed — rolled back to a clean pre-merge state on '$BASE'. Branch '$EPHEMERAL' still exists; re-create worktree with: git worktree add $WT_PATH $EPHEMERAL" >&2
   elif git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>/dev/null; then
     echo "Error: merge --squash failed — rolled back to '$EPHEMERAL'" >&2
   else
-    echo "Error: merge --squash failed — reset to clean state on '$BASE'" >&2
+    echo "Error: merge --squash failed — rolled back to a clean pre-merge state on '$BASE'" >&2
   fi
   exit 1
 fi

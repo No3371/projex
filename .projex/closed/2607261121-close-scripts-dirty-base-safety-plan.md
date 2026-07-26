@@ -1,11 +1,13 @@
 # Close Scripts: Dirty Base Safety
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Created:** 2026-07-26
 > **Author:** Codex
 > **Source:** 2607260233-worktree-squash-close-dirty-base-reset-memo.md
-> **Related Projex:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607261157-close-scripts-dirty-base-safety-redteam.md
+> **Related Projex:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607261157-close-scripts-dirty-base-safety-redteam.md | 2607261520-close-scripts-dirty-base-safety-audit.md | 2607261821-rollback-refusal-message-split-patch.md
 > **Worktree:** Yes
+> **Completed:** 2026-07-26
+> **Walkthrough:** 2607261121-close-scripts-dirty-base-safety-walkthrough.md
 
 ---
 
@@ -37,18 +39,18 @@ Worktree mode validates only the child execution worktree. All close scripts the
 
 ### Success Criteria
 
-- [ ] Worktree-mode finalizers verify that recorded `RepoRoot` still has recorded `Base` checked out before mutation; arbitrary utility/feature/parent-Projex bases remain supported.
-- [ ] `Base` that does not resolve to a local branch (`refs/heads/*`) exits `1` before mutation with a message naming the resolved ref type — a deliberate narrowing of today's `rev-parse --verify` permissiveness.
-- [ ] All six close implementations exit `1` before mutation when the checkout they will mutate has staged or unstaged tracked changes, excluding dirty-submodule noise.
-- [ ] Unrelated untracked/ignored content does not block close and remains byte-for-byte intact; a colliding untracked path fails **before any mutation** — no overwrite, no base-ref movement, **and no ephemeral history rewrite**.
-- [ ] `rebase-close` in worktree mode detects an untracked collision at `RepoRoot` before rebasing, and exits `1` with the colliding paths named.
-- [ ] Worktree mode still separately rejects a dirty execution worktree.
-- [ ] Squash failure cleanup contains no automatic `git reset --hard`, satisfying the project rule against unapproved hard resets, and restores a clean pre-merge checkout with `git reset --merge HEAD`.
-- [ ] The `reset --merge` rollback-failure branch is reachable and exercised by a regression case — an untested error path is worse than no error path.
-- [ ] Clean success, anticipated-conflict exit `2`, rollback exit `1`, branch deletion, and best-effort worktree removal retain existing behavior.
-- [ ] Dirty-base cases live in `tests/` alongside the existing suites, run from both `tests/run-all.sh` and `tests/run-all.ps1`, and assert content, refs, status, and exit codes.
-- [ ] The existing suite still passes on both platforms (baseline: `PASS=116 FAIL=0` for `.sh`, 188 assertions across both), or any changed assertion is updated with recorded rationale.
-- [ ] Workflow docs distinguish the tracked-clean integration-worktree gate from the fully clean execution-worktree gate, describe both as pre-flight checks rather than enforcement, and state that scripts apply them independently.
+- [x] Worktree-mode finalizers verify that recorded `RepoRoot` still has recorded `Base` checked out before mutation; arbitrary utility/feature/parent-Projex bases remain supported.
+- [x] `Base` that does not resolve to a local branch (`refs/heads/*`) exits `1` before mutation with a message naming the resolved ref type — a deliberate narrowing of today's `rev-parse --verify` permissiveness.
+- [x] All six close implementations exit `1` before mutation when the checkout they will mutate has staged or unstaged tracked changes, excluding dirty-submodule noise.
+- [x] Unrelated untracked/ignored content does not block close and remains byte-for-byte intact; a colliding untracked path fails **before any mutation** — no overwrite, no base-ref movement, **and no ephemeral history rewrite**.
+- [x] `rebase-close` in worktree mode detects an untracked collision at `RepoRoot` before rebasing, and exits `1` with the colliding paths named.
+- [x] Worktree mode still separately rejects a dirty execution worktree.
+- [x] Squash failure cleanup contains no automatic `git reset --hard`, satisfying the project rule against unapproved hard resets, and restores a clean pre-merge checkout with `git reset --merge HEAD`.
+- [~] The `reset --merge` rollback-failure branch is reachable and exercised by a regression case — an untested error path is worse than no error path. **Resolved via this criterion's own escape clause** (Step 2 Verification: "If no such state can be constructed, record that finding and the branch's unreachability"). Five constructions probed against live git; none reachable through the scripts' entry points. Finding recorded in the execution log, `tests/README.md`, and inline in both new suites; the reachable neighbours are covered instead.
+- [x] Clean success, anticipated-conflict exit `2`, rollback exit `1`, branch deletion, and best-effort worktree removal retain existing behavior.
+- [x] Dirty-base cases live in `tests/` alongside the existing suites, run from both `tests/run-all.sh` and `tests/run-all.ps1`, and assert content, refs, status, and exit codes.
+- [x] The existing suite still passes on both platforms (baseline: `PASS=116 FAIL=0` for `.sh`, 188 assertions across both), or any changed assertion is updated with recorded rationale.
+- [x] Workflow docs distinguish the tracked-clean integration-worktree gate from the fully clean execution-worktree gate, describe both as pre-flight checks rather than enforcement, and state that scripts apply them independently.
 
 ### Out of Scope
 
@@ -292,20 +294,20 @@ For squash, merge, and rebase close:
 
 ### Automated Checks
 
-- [ ] Run `tests/run-all.sh` — gating. Existing suites plus the new one; baseline before this plan is `PASS=116 FAIL=0`.
-- [ ] Run `pwsh tests/run-all.ps1` — gating. Both platforms required; `.sh` and `.ps1` duplicate logic, so one passing proves nothing about the other.
-- [ ] Confirm no pre-existing assertion regressed. Any deliberately changed assertion is recorded with rationale in the walkthrough.
-- [ ] Search six finalizers for `reset --hard`; only explicit manual approval guidance may remain.
-- [ ] Compare shell/PowerShell scenario results and exit codes.
+- [x] Run `tests/run-all.sh` — gating. Existing suites plus the new one; baseline before this plan is `PASS=116 FAIL=0`.
+- [x] Run `pwsh tests/run-all.ps1` — gating. Both platforms required; `.sh` and `.ps1` duplicate logic, so one passing proves nothing about the other.
+- [x] Confirm no pre-existing assertion regressed. Any deliberately changed assertion is recorded with rationale in the walkthrough.
+- [x] Search six finalizers for `reset --hard`; only explicit manual approval guidance may remain.
+- [x] Compare shell/PowerShell scenario results and exit codes.
 
 ### Manual Verification
 
-- [ ] Review each mutation path: gate precedes checkout/merge/rebase — and for rebase, precedes the rebase itself, not just the fast-forward.
-- [ ] Confirm ignored execution-worktree content remains warning-only.
-- [ ] Confirm no test or script stashes, deletes, or overwrites pre-existing integration-worktree content.
-- [ ] Confirm utility-worktree and nested-Projex cases integrate into their immediate recorded parent, not `main`/`master`.
-- [ ] Confirm every exit-`1` path leaves no durable mutation, or says plainly in its message what it did change.
-- [ ] Confirm unrelated current worktree changes are absent from implementation diff.
+- [x] Review each mutation path: gate precedes checkout/merge/rebase — and for rebase, precedes the rebase itself, not just the fast-forward.
+- [x] Confirm ignored execution-worktree content remains warning-only.
+- [x] Confirm no test or script stashes, deletes, or overwrites pre-existing integration-worktree content.
+- [x] Confirm utility-worktree and nested-Projex cases integrate into their immediate recorded parent, not `main`/`master`.
+- [x] Confirm every exit-`1` path leaves no durable mutation, or says plainly in its message what it did change.
+- [x] Confirm unrelated current worktree changes are absent from implementation diff.
 
 ### Acceptance Criteria Validation
 

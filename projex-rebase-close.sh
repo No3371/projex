@@ -92,6 +92,37 @@ remaining_rebase_commits() {
   return 0
 }
 
+# Full symbolic ref name of $2 as resolved in $1, or empty when it is not a ref (raw SHA)
+full_ref() {
+  git -C "$1" rev-parse --symbolic-full-name "$2" 2>/dev/null || true
+}
+
+# Tracked staged/unstaged content in $1. Untracked and ignored files are deliberately NOT counted:
+# busy repos keep them around, and .projexwt/ itself surfaces as untracked whenever the
+# .git/info/exclude registration is missing, so counting them would self-block worktree mode.
+# Submodule dirt is excluded too — a superproject whose recorded submodule commit is unchanged is
+# not dirty for integration purposes.
+tracked_dirt() {
+  git -C "$1" status --porcelain --untracked-files=no --ignore-submodules=dirty 2>/dev/null || true
+}
+
+# Untracked (non-ignored) paths at $1 that the ephemeral branch would bring in as tracked files.
+# Squash and merge close get this refusal free from git, because their integration command runs at
+# the base worktree before anything is rewritten. Rebase replays commits first, so it has to ask the
+# question itself or it discovers the collision only after the ephemeral SHAs are already rewritten.
+untracked_collisions() {
+  local repo="$1" base="$2" eph="$3" incoming untracked f
+  incoming=$(git -C "$repo" diff --name-only "$base...$eph" 2>/dev/null || true)
+  [ -z "$incoming" ] && return 0
+  untracked=$(git -C "$repo" ls-files --others --exclude-standard 2>/dev/null || true)
+  [ -z "$untracked" ] && return 0
+  while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    if printf '%s\n' "$untracked" | grep -Fxq -- "$f"; then echo "$f"; fi
+  done <<< "$incoming"
+  return 0
+}
+
 # Unfinished git operation in $1 — prints 'rebase', 'merge', 'conflict', or nothing
 in_progress_op() {
   local git_dir
@@ -143,6 +174,42 @@ if [ -n "$IN_PROGRESS" ]; then
   exit 1
 fi
 
+# --- Dirty-base safety gate: everything below runs BEFORE any rebase/checkout/fast-forward -----
+# Base must be a local branch. `rev-parse --verify` above also accepts tags, raw SHAs and
+# remote-tracking refs; none of those can be advanced by a close, so reject them by name.
+BASE_REF=$(full_ref "$REPO_ROOT" "$BASE")
+case "$BASE_REF" in
+  refs/heads/*) : ;;
+  refs/tags/*)    echo "Error: base '$BASE' resolves to a tag ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  refs/remotes/*) echo "Error: base '$BASE' resolves to a remote-tracking ref ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  "")             echo "Error: base '$BASE' resolves to a raw commit, not a local branch — nothing was changed." >&2; exit 1 ;;
+  *)              echo "Error: base '$BASE' resolves to '$BASE_REF', not a local branch (refs/heads/*) — nothing was changed." >&2; exit 1 ;;
+esac
+
+if [ "$WORKTREE_MODE" = true ]; then
+  # REPO_ROOT is the recorded originating/base worktree — which may be any registered worktree,
+  # not necessarily the primary one. It must still have BASE checked out; never guess another.
+  ORIGIN_REF=$(git -C "$REPO_ROOT" symbolic-ref --quiet HEAD 2>/dev/null || true)
+  if [ -z "$ORIGIN_REF" ]; then
+    echo "Error: '$REPO_ROOT' has a detached HEAD, not branch '$BASE' — nothing was changed. Check '$BASE' out there, or pass the worktree that holds it." >&2
+    exit 1
+  fi
+  if [ "$ORIGIN_REF" != "$BASE_REF" ]; then
+    echo "Error: '$REPO_ROOT' has '${ORIGIN_REF#refs/heads/}' checked out, not '$BASE' — nothing was changed. Finalizers never substitute another worktree or branch." >&2
+    exit 1
+  fi
+fi
+
+# Pre-flight (not a guarantee): the checkout about to be fast-forwarded must have no tracked
+# changes. Nothing re-checks between here and the fast-forward, so a concurrent writer can still
+# dirty it — git's own overwrite refusal remains the real backstop.
+DIRT=$(tracked_dirt "$REPO_ROOT")
+if [ -n "$DIRT" ]; then
+  echo "Error: '$REPO_ROOT' has tracked changes — commit or stash them before closing; nothing was changed. Untracked and ignored files are fine, and a dirty submodule alone does not count:" >&2
+  echo "$DIRT" | head -n 10 >&2
+  exit 1
+fi
+
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: rebase inside the worktree (ephemeral is checked out there), then ff base.
   WT_PATH="${REPO_ROOT%/}/.projexwt/${EPHEMERAL##*/}"
@@ -163,6 +230,16 @@ if [ "$WORKTREE_MODE" = true ]; then
     echo "Warning: worktree contains ignored content (deps/build output) — removal may leave a directory to clean manually:" >&2
     echo "$IGNORED" | head -n 5 >&2
   fi
+  # Untracked content at the base worktree is allowed by the gate above, but a path the ephemeral
+  # branch adds as tracked would make the later `merge --ff-only` refuse — after the rebase has
+  # already rewritten the ephemeral SHAs. Ask now, while nothing has been mutated.
+  COLLIDING=$(untracked_collisions "$REPO_ROOT" "$BASE" "$EPHEMERAL")
+  if [ -n "$COLLIDING" ]; then
+    echo "Error: untracked file(s) at '$REPO_ROOT' occupy paths that '$EPHEMERAL' brings in as tracked — the fast-forward would be refused after the rebase had already rewritten history, so nothing was changed. Move, delete or commit these, then re-run:" >&2
+    echo "$COLLIDING" | head -n 10 | sed 's/^/  /' >&2
+    exit 1
+  fi
+
   if ! git -C "$WT_PATH" rebase "$BASE" 2>&1; then
     CONFLICTED=$(unmerged_paths "$WT_PATH")
     if [ ${#RESOLVE_PATHS[@]} -gt 0 ] && [ -n "$CONFLICTED" ]; then
@@ -190,12 +267,8 @@ if [ "$WORKTREE_MODE" = true ]; then
     exit 1
   fi
 else
-  # Checkout mode: require clean tree, remember starting branch, rebase ephemeral onto base.
-  if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
-    echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
-    exit 1
-  fi
-
+  # Checkout mode: remember starting branch, rebase ephemeral onto base. (Tracked cleanliness was
+  # already gated above; `git checkout` refuses to clobber untracked paths, so no pre-check needed.)
   ORIG_BRANCH="$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)"
 
   if ! git -C "$REPO_ROOT" checkout "$EPHEMERAL" 2>&1; then

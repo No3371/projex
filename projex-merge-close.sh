@@ -71,6 +71,20 @@ uncovered_conflicts() {
   return 0
 }
 
+# Full symbolic ref name of $2 as resolved in $1, or empty when it is not a ref (raw SHA)
+full_ref() {
+  git -C "$1" rev-parse --symbolic-full-name "$2" 2>/dev/null || true
+}
+
+# Tracked staged/unstaged content in $1. Untracked and ignored files are deliberately NOT counted:
+# busy repos keep them around, and .projexwt/ itself surfaces as untracked whenever the
+# .git/info/exclude registration is missing, so counting them would self-block worktree mode.
+# Submodule dirt is excluded too — a superproject whose recorded submodule commit is unchanged is
+# not dirty for integration purposes.
+tracked_dirt() {
+  git -C "$1" status --porcelain --untracked-files=no --ignore-submodules=dirty 2>/dev/null || true
+}
+
 # Unfinished git operation in $1 — prints 'rebase', 'merge', 'conflict', or nothing
 in_progress_op() {
   local git_dir
@@ -121,16 +135,46 @@ if [ -n "$IN_PROGRESS" ]; then
   exit 1
 fi
 
+# --- Dirty-base safety gate: everything below runs BEFORE any checkout/merge -------------------
+# Base must be a local branch. `rev-parse --verify` above also accepts tags, raw SHAs and
+# remote-tracking refs; none of those can be advanced by a close, so reject them by name.
+BASE_REF=$(full_ref "$REPO_ROOT" "$BASE")
+case "$BASE_REF" in
+  refs/heads/*) : ;;
+  refs/tags/*)    echo "Error: base '$BASE' resolves to a tag ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  refs/remotes/*) echo "Error: base '$BASE' resolves to a remote-tracking ref ($BASE_REF), not a local branch — nothing was changed." >&2; exit 1 ;;
+  "")             echo "Error: base '$BASE' resolves to a raw commit, not a local branch — nothing was changed." >&2; exit 1 ;;
+  *)              echo "Error: base '$BASE' resolves to '$BASE_REF', not a local branch (refs/heads/*) — nothing was changed." >&2; exit 1 ;;
+esac
+
+if [ "$WORKTREE_MODE" = true ]; then
+  # REPO_ROOT is the recorded originating/base worktree — which may be any registered worktree,
+  # not necessarily the primary one. It must still have BASE checked out; never guess another.
+  ORIGIN_REF=$(git -C "$REPO_ROOT" symbolic-ref --quiet HEAD 2>/dev/null || true)
+  if [ -z "$ORIGIN_REF" ]; then
+    echo "Error: '$REPO_ROOT' has a detached HEAD, not branch '$BASE' — nothing was changed. Check '$BASE' out there, or pass the worktree that holds it." >&2
+    exit 1
+  fi
+  if [ "$ORIGIN_REF" != "$BASE_REF" ]; then
+    echo "Error: '$REPO_ROOT' has '${ORIGIN_REF#refs/heads/}' checked out, not '$BASE' — nothing was changed. Finalizers never substitute another worktree or branch." >&2
+    exit 1
+  fi
+fi
+
+# Pre-flight (not a guarantee): the checkout about to be mutated must have no tracked changes.
+# Nothing re-checks between here and the merge, so a concurrent writer can still dirty it —
+# git's own overwrite refusal remains the real backstop.
+DIRT=$(tracked_dirt "$REPO_ROOT")
+if [ -n "$DIRT" ]; then
+  echo "Error: '$REPO_ROOT' has tracked changes — commit or stash them before closing; nothing was changed. Untracked and ignored files are fine, and a dirty submodule alone does not count:" >&2
+  echo "$DIRT" | head -n 10 >&2
+  exit 1
+fi
+
 if [ "$WORKTREE_MODE" = true ]; then
   # Worktree mode: merge first; cleanup happens after merge so locks cannot block close.
   WT_PATH="${REPO_ROOT%/}/.projexwt/${EPHEMERAL##*/}"
 else
-  # Checkout mode: require clean tree, switch to base
-  if ! git -C "$REPO_ROOT" diff --quiet 2>/dev/null || ! git -C "$REPO_ROOT" diff --cached --quiet 2>/dev/null; then
-    echo "Error: working tree has uncommitted changes — commit or stash before closing" >&2
-    exit 1
-  fi
-
   if ! git -C "$REPO_ROOT" checkout "$BASE" 2>&1; then
     echo "Error: could not checkout '$BASE' — still on ephemeral, no state changed" >&2
     exit 1

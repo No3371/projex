@@ -37,6 +37,59 @@ function Get-UncoveredConflicts([string[]]$Conflicted, [string[]]$Allowed) {
     })
 }
 
+# Full symbolic ref name of $Ref as resolved in $Dir, or '' when it is not a ref (raw SHA)
+function Get-FullRef([string]$Dir, [string]$Ref) {
+    $r = @(git -C $Dir rev-parse --symbolic-full-name $Ref 2>$null)
+    if ($r.Count -eq 0) { return '' }
+    return "$($r[0])".Trim()
+}
+
+# Tracked staged/unstaged content in $Dir. Untracked and ignored files are deliberately NOT counted:
+# busy repos keep them around, and .projexwt/ itself surfaces as untracked whenever the
+# .git/info/exclude registration is missing, so counting them would self-block worktree mode.
+# Submodule dirt is excluded too — a superproject whose recorded submodule commit is unchanged is
+# not dirty for integration purposes.
+function Get-TrackedDirt([string]$Dir) {
+    return @(git -C $Dir status --porcelain --untracked-files=no --ignore-submodules=dirty 2>$null | Where-Object { $_ -ne '' })
+}
+
+# Reject a Base that is not a local branch, naming what it actually resolved to.
+function Assert-LocalBranch([string]$Dir, [string]$Ref) {
+    $full = Get-FullRef $Dir $Ref
+    if ($full -like 'refs/heads/*') { return $full }
+    if ($full -like 'refs/tags/*') { $kind = "a tag ($full)" }
+    elseif ($full -like 'refs/remotes/*') { $kind = "a remote-tracking ref ($full)" }
+    elseif ($full -eq '') { $kind = 'a raw commit' }
+    else { $kind = "'$full'" }
+    Write-Error "Base '$Ref' resolves to $kind, not a local branch (refs/heads/*) — nothing was changed."
+    exit 1
+}
+
+# Discard a failed squash without the project-forbidden automatic `git reset --hard`.
+# `--merge` restores index and worktree to HEAD and clears conflict markers while leaving untracked
+# content alone. Returns $false (having reported) when the rollback itself fails, so the caller
+# exits rather than escalating destructiveness.
+#
+# Called for ANY non-zero `merge --squash` exit, which covers two different states:
+#   unmerged paths present — a real conflicted squash sits in the tree, rollback is meaningful.
+#   unmerged paths absent  — git refused before mutating anything (e.g. a tracked file went
+#                            index != HEAD != worktree inside the gate->merge window), so there is
+#                            no squash to roll back and `reset --merge` fails on the same dirt.
+# The two need opposite advice: hard-reset is a legitimate last resort for the first and would
+# destroy a concurrent writer's staged + worktree content on the second.
+function Invoke-SafeRollback {
+    # Output is swallowed so the function's return value stays a clean boolean; the failure branch
+    # reports through Write-Error, which does not land on the output stream.
+    git -C $RepoRoot reset --merge HEAD *>&1 | Out-Null
+    if ($LASTEXITCODE -eq 0) { return $true }
+    if ((Get-UnmergedPaths $RepoRoot).Count -gt 0) {
+        Write-Error "merge --squash failed AND rollback via 'git reset --merge HEAD' also failed — the conflicted squash is STILL in '$RepoRoot' on '$Base'. Nothing was committed and '$Ephemeral' is intact. This script will refuse to start again until that state is cleared (it detects the unmerged entries). Clear it by resolving and committing, or discard it with 'git -C $RepoRoot reset --hard HEAD' — a destructive command this script will not run for you, so it needs your explicit approval."
+    } else {
+        Write-Error "merge --squash failed before starting a merge, and 'git reset --merge HEAD' then failed too. There are no unmerged entries and no merge in progress: NOTHING was changed in '$RepoRoot' on '$Base', nothing was committed, and '$Ephemeral' is intact. Cause: a tracked file is both staged and further modified in the worktree (index != HEAD != worktree), so git refused the merge and 'reset --merge' cannot proceed over it either — most likely a concurrent writer changed the tree after this script's dirty-base check. That uncommitted work is still intact: do NOT run 'git reset --hard', it would destroy both the staged and the worktree copy. Inspect it with 'git -C $RepoRoot status', have its owner commit or stash it, then re-run this script."
+    }
+    return $false
+}
+
 # Unfinished git operation in $Dir — 'rebase', 'merge', 'conflict', or $null
 function Get-InProgressOp([string]$Dir) {
     $gitDir = git -C $Dir rev-parse --absolute-git-dir 2>$null
@@ -84,19 +137,39 @@ if ($inProgress) {
     exit 1
 }
 
+# --- Dirty-base safety gate: everything below runs BEFORE any checkout/merge -------------------
+# Base must be a local branch. `rev-parse --verify` above also accepts tags, raw SHAs and
+# remote-tracking refs; none of those can be advanced by a close, so reject them by name.
+$BaseRef = Assert-LocalBranch $RepoRoot $Base
+
+if ($Worktree) {
+    # RepoRoot is the recorded originating/base worktree — which may be any registered worktree,
+    # not necessarily the primary one. It must still have Base checked out; never guess another.
+    $originRef = @(git -C $RepoRoot symbolic-ref --quiet HEAD 2>$null)
+    if ($originRef.Count -eq 0) {
+        Write-Error "'$RepoRoot' has a detached HEAD, not branch '$Base' — nothing was changed. Check '$Base' out there, or pass the worktree that holds it."
+        exit 1
+    }
+    $originRef = "$($originRef[0])".Trim()
+    if ($originRef -ne $BaseRef) {
+        Write-Error "'$RepoRoot' has '$($originRef -replace '^refs/heads/', '')' checked out, not '$Base' — nothing was changed. Finalizers never substitute another worktree or branch."
+        exit 1
+    }
+}
+
+# Pre-flight (not a guarantee): the checkout about to be mutated must have no tracked changes.
+# Nothing re-checks between here and the merge, so a concurrent writer can still dirty it —
+# git's own overwrite refusal remains the real backstop.
+$dirt = Get-TrackedDirt $RepoRoot
+if ($dirt.Count -gt 0) {
+    $dlist = ($dirt | Select-Object -First 10) -join "`n"
+    Write-Error "'$RepoRoot' has tracked changes — commit or stash them before closing; nothing was changed. Untracked and ignored files are fine, and a dirty submodule alone does not count:`n$dlist"
+    exit 1
+}
+
 if ($Worktree) {
     # Worktree mode: merge first; cleanup happens after commit so Windows locks cannot block close.
 } else {
-    # Checkout mode: require clean tree, switch to base
-    git -C $RepoRoot diff --quiet 2>$null
-    $diffClean = $LASTEXITCODE -eq 0
-    git -C $RepoRoot diff --cached --quiet 2>$null
-    $indexClean = $LASTEXITCODE -eq 0
-    if (-not $diffClean -or -not $indexClean) {
-        Write-Error "Working tree has uncommitted changes — commit or stash before closing"
-        exit 1
-    }
-
     git -C $RepoRoot checkout $Base
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Could not checkout '$Base' — still on ephemeral branch, no state changed"
@@ -131,20 +204,20 @@ if ($LASTEXITCODE -ne 0) {
             Write-Host "Anticipated conflicts — squash left IN PROGRESS on '$Base' in '$RepoRoot' (not reset):`n$clist`nResolve them, then:`n  git -C $RepoRoot add <paths>`n  git -C $RepoRoot commit -m `"$CommitMsg`"`nThen finish the close by hand:`n$wtStep  git -C $RepoRoot worktree prune`n  git -C $RepoRoot branch -D $Ephemeral`nDo NOT re-run this script after committing: a squash commit does not record '$Ephemeral' as a parent, so the squash would be recomputed from the same base and conflict again."
             exit 2
         }
-        git -C $RepoRoot reset --hard HEAD 2>$null
+        if (-not (Invoke-SafeRollback)) { exit 1 }
         $ulist = ($uncovered | ForEach-Object { "  $_" }) -join "`n"
-        Write-Error "merge --squash conflict outside -ResolveConflicts — reset to clean state on '$Base'. Unanticipated conflicts:`n$ulist"
+        Write-Error "merge --squash conflict outside -ResolveConflicts — rolled back to a clean pre-merge state on '$Base'. Unanticipated conflicts:`n$ulist"
         exit 1
     }
-    git -C $RepoRoot reset --hard HEAD 2>$null
+    if (-not (Invoke-SafeRollback)) { exit 1 }
     if ($Worktree) {
-        Write-Error "merge --squash failed — reset to clean state on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add $WtPath $Ephemeral"
+        Write-Error "merge --squash failed — rolled back to a clean pre-merge state on '$Base'. Branch '$Ephemeral' still exists; re-create worktree with: git worktree add $WtPath $Ephemeral"
     } else {
         git -C $RepoRoot checkout $Ephemeral 2>$null
         if ($LASTEXITCODE -eq 0) {
             Write-Error "merge --squash failed — rolled back to '$Ephemeral'"
         } else {
-            Write-Error "merge --squash failed — reset to clean state on '$Base'"
+            Write-Error "merge --squash failed — rolled back to a clean pre-merge state on '$Base'"
         }
     }
     exit 1

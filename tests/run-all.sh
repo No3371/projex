@@ -8,7 +8,7 @@ TOTAL_PASS=0
 TOTAL_FAIL=0
 STATUS=0
 
-for suite in resolve-conflicts.test.sh resume.test.sh worktree.test.sh; do
+for suite in resolve-conflicts.test.sh resume.test.sh worktree.test.sh dirty-base.test.sh; do
   echo "=== $suite"
   # git writes CRLF/LF advisories to stderr on Windows checkouts; they are noise here
   out=$(bash "$suite" 2>/dev/null)

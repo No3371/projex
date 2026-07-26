@@ -35,6 +35,34 @@ function Get-UncoveredConflicts([string[]]$Conflicted, [string[]]$Allowed) {
     })
 }
 
+# Full symbolic ref name of $Ref as resolved in $Dir, or '' when it is not a ref (raw SHA)
+function Get-FullRef([string]$Dir, [string]$Ref) {
+    $r = @(git -C $Dir rev-parse --symbolic-full-name $Ref 2>$null)
+    if ($r.Count -eq 0) { return '' }
+    return "$($r[0])".Trim()
+}
+
+# Tracked staged/unstaged content in $Dir. Untracked and ignored files are deliberately NOT counted:
+# busy repos keep them around, and .projexwt/ itself surfaces as untracked whenever the
+# .git/info/exclude registration is missing, so counting them would self-block worktree mode.
+# Submodule dirt is excluded too — a superproject whose recorded submodule commit is unchanged is
+# not dirty for integration purposes.
+function Get-TrackedDirt([string]$Dir) {
+    return @(git -C $Dir status --porcelain --untracked-files=no --ignore-submodules=dirty 2>$null | Where-Object { $_ -ne '' })
+}
+
+# Reject a Base that is not a local branch, naming what it actually resolved to.
+function Assert-LocalBranch([string]$Dir, [string]$Ref) {
+    $full = Get-FullRef $Dir $Ref
+    if ($full -like 'refs/heads/*') { return $full }
+    if ($full -like 'refs/tags/*') { $kind = "a tag ($full)" }
+    elseif ($full -like 'refs/remotes/*') { $kind = "a remote-tracking ref ($full)" }
+    elseif ($full -eq '') { $kind = 'a raw commit' }
+    else { $kind = "'$full'" }
+    Write-Error "Base '$Ref' resolves to $kind, not a local branch (refs/heads/*) — nothing was changed."
+    exit 1
+}
+
 # Unfinished git operation in $Dir — 'rebase', 'merge', 'conflict', or $null
 function Get-InProgressOp([string]$Dir) {
     $gitDir = git -C $Dir rev-parse --absolute-git-dir 2>$null
@@ -82,19 +110,39 @@ if ($inProgress) {
     exit 1
 }
 
+# --- Dirty-base safety gate: everything below runs BEFORE any checkout/merge -------------------
+# Base must be a local branch. `rev-parse --verify` above also accepts tags, raw SHAs and
+# remote-tracking refs; none of those can be advanced by a close, so reject them by name.
+$BaseRef = Assert-LocalBranch $RepoRoot $Base
+
+if ($Worktree) {
+    # RepoRoot is the recorded originating/base worktree — which may be any registered worktree,
+    # not necessarily the primary one. It must still have Base checked out; never guess another.
+    $originRef = @(git -C $RepoRoot symbolic-ref --quiet HEAD 2>$null)
+    if ($originRef.Count -eq 0) {
+        Write-Error "'$RepoRoot' has a detached HEAD, not branch '$Base' — nothing was changed. Check '$Base' out there, or pass the worktree that holds it."
+        exit 1
+    }
+    $originRef = "$($originRef[0])".Trim()
+    if ($originRef -ne $BaseRef) {
+        Write-Error "'$RepoRoot' has '$($originRef -replace '^refs/heads/', '')' checked out, not '$Base' — nothing was changed. Finalizers never substitute another worktree or branch."
+        exit 1
+    }
+}
+
+# Pre-flight (not a guarantee): the checkout about to be mutated must have no tracked changes.
+# Nothing re-checks between here and the merge, so a concurrent writer can still dirty it —
+# git's own overwrite refusal remains the real backstop.
+$dirt = Get-TrackedDirt $RepoRoot
+if ($dirt.Count -gt 0) {
+    $dlist = ($dirt | Select-Object -First 10) -join "`n"
+    Write-Error "'$RepoRoot' has tracked changes — commit or stash them before closing; nothing was changed. Untracked and ignored files are fine, and a dirty submodule alone does not count:`n$dlist"
+    exit 1
+}
+
 if ($Worktree) {
     # Worktree mode: merge first; cleanup happens after merge so Windows locks cannot block close.
 } else {
-    # Checkout mode: require clean tree, switch to base
-    git -C $RepoRoot diff --quiet 2>$null
-    $diffClean = $LASTEXITCODE -eq 0
-    git -C $RepoRoot diff --cached --quiet 2>$null
-    $indexClean = $LASTEXITCODE -eq 0
-    if (-not $diffClean -or -not $indexClean) {
-        Write-Error "Working tree has uncommitted changes — commit or stash before closing"
-        exit 1
-    }
-
     git -C $RepoRoot checkout $Base
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Could not checkout '$Base' — still on ephemeral, no state changed"

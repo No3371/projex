@@ -1,7 +1,7 @@
 # Runs every PowerShell suite. Each suite builds throwaway repos under $env:TEMP and cleans up after
 # itself; nothing touches the repo you run it from.
 # Usage: pwsh tests/run-all.ps1
-$suites = @('resolve-conflicts.test.ps1', 'worktree.test.ps1')
+$suites = @('resolve-conflicts.test.ps1', 'worktree.test.ps1', 'dirty-base.test.ps1')
 $totalPass = 0
 $totalFail = 0
 $status = 0

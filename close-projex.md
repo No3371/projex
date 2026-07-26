@@ -410,15 +410,22 @@ Write the new Walkthrough file directly at `.projex/closed/{yymmddhhmm}-{name}-w
 
 ### 7. FINALIZE GIT BRANCH
 
-**GATE: Verify clean working tree before proceeding.** The merge scripts will abort on uncommitted changes.
+**GATE: two checkouts, two different bars.** Execution may *begin* against a dirty originating worktree — that is what worktree mode is for — but finalization has requirements in both places:
+
+| Checkout | Bar | Why |
+|---|---|---|
+| Originating/base worktree (`<repo-root>`) | **No tracked changes.** Untracked and ignored files may stay. A dirty submodule alone does not count. | This is where the merge / fast-forward lands. Tracked index or worktree content is what an integration can consume or a rollback discard. |
+| Child execution worktree (`{repo-name}/.projexwt/<name>`) | **Fully clean** — no untracked entries either. | It is about to be deleted, so anything left in it is lost. |
+
+**Originating/base worktree:**
 
 ```bash
-git -C <repo-root> status --porcelain
+git -C <repo-root> status --porcelain --untracked-files=no --ignore-submodules=dirty
 ```
 
-If output is non-empty, commit or discard the remaining changes before continuing. The most common offender is the plan file — if it was updated but not committed, stage and commit it now.
+If output is non-empty, commit or stash those changes before continuing. The most common offender is the plan file — if it was updated but not committed, stage and commit it now. Untracked files (`??`) do **not** block: busy repos keep them, and `.projexwt/` itself shows up as untracked wherever the `.git/info/exclude` registration is missing.
 
-**Worktree mode — also check the worktree for leftovers:**
+**Worktree mode — also check the execution worktree for leftovers:**
 
 ```bash
 git -C <worktree-path> status --porcelain --ignored=matching
@@ -426,9 +433,17 @@ git -C <worktree-path> status --porcelain --ignored=matching
 
 Untracked (`??`) or modified/staged tracked (`M`/`A`) entries: commit them or remove agent-created tooling — the finalization scripts exit (before any merge) rather than merge from a stale commit or risk deleting untracked files. Ignored (`!!`) entries (deps, build output): remove agent-created ones now; they don't block git-level removal but can make it fail half-way on some filesystems.
 
+**These are pre-flight checks, not enforcement.** Every finalizer applies both gates itself, independently of this workflow — but each is a single check before the operation, and nothing re-checks between the check and the mutation. An IDE autosave, a file watcher, or a parallel agent can still dirty the tree inside that window. Git's own refusal to overwrite tracked or untracked paths remains the real backstop. Do not treat a passing gate as a licence to leave work uncommitted.
+
 The ephemeral branch must be finalized. Present options to user.
 
-**Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script merges first, then removes the worktree as best-effort cleanup (abandon removes it directly). A removal failure never undoes the close — the script reports what remains. The main working directory is already on the base branch — no checkout needed.
+**Worktree mode:** If execution used a worktree (`{repo-name}/.projexwt/`), pass `--worktree` to the finalization script. The script merges first, then removes the worktree as best-effort cleanup (abandon removes it directly). A removal failure never undoes the close — the script reports what remains. The originating/base worktree is already on the base branch — no checkout needed.
+
+**`<repo-root>` and `{base-branch}` must match each other.** `<repo-root>` is the *recorded originating worktree* — whichever worktree the execution branched from, which is not necessarily the repository's primary checkout. `{base-branch}` is its recorded parent branch. Finalizers assert that `<repo-root>` still has `{base-branch}` checked out and exit `1` without changing anything if it does not; they never search for another worktree or fall back to `main`/`master`. This keeps stacked work honest — a child of `projex/outer` closes into `projex/outer` at the utility worktree that holds it, never into `main`.
+
+`{base-branch}` must also be a **local branch** — any local branch, including a utility or outer Projex branch, but not a tag, a raw SHA, or a remote-tracking ref like `origin/main`. Those resolve fine but cannot be advanced by a close; the scripts exit `1` naming what the value actually resolved to.
+
+**Rebase close, worktree mode, one extra refusal:** untracked content at `<repo-root>` is allowed, but if one of those untracked paths is a path the ephemeral branch adds as a *tracked* file, the fast-forward would be refused — and a rebase rewrites the ephemeral commits before it ever reaches the fast-forward. `projex-rebase-close` therefore checks for that collision up front and exits `1` naming the paths, with the ephemeral branch untouched. Move, delete, or commit those files and re-run.
 
 **Anticipated conflicts (`--resolve-conflicts` / `-ResolveConflicts`):** By default any conflict aborts the close and rolls back. When you *expect* a conflict in specific files — typically `.projex/` documents both branches touched — declare them: `--resolve-conflicts '.projex/,docs/notes.md'` (comma-separated repo-relative files or directory prefixes; `-ResolveConflicts '.projex/','docs/notes.md'` in PowerShell). Then:
 
@@ -524,6 +539,8 @@ Was execution successful?
 ---
 
 ### 8. RESTORE STASHED CHANGES
+
+Stashing is **caller-owned**: the finalization scripts never create or pop a stash on your behalf — they refuse to close over tracked changes and leave the decision to you, so any stash must be recorded in the execution log or it will be forgotten here.
 
 If changes were stashed at the start of execution (check the execution log for stash entries):
 

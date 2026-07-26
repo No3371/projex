@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Projex is a prompt framework — a collection of self-contained markdown workflow specs that structure how LLMs plan, execute, and document work. No build system, no tests, no runtime code. Only markdown workflow definitions and shell utility scripts.
+Projex is a prompt framework — a collection of self-contained markdown workflow specs that structure how LLMs plan, execute, and document work. No build system, no runtime code. Only markdown workflow definitions and shell utility scripts, plus behavioural tests for the git-safety-critical ones under `tests/`.
 
 ## Repository Structure
 
@@ -21,10 +21,16 @@ projex/
 ├── del-n-stage.{sh,ps1}        # Batch git rm with rollback
 ├── read_file.ps1               # Line-numbered file reader (fallback when no tool available)
 ├── .github/gh_pr.ps1           # GitHub PR creation via API
+├── tests/                      # Behavioural tests for the close scripts (see tests/README.md)
 └── .projex/                     # This repo's own projex documents
 ```
 
 Every script has both `.sh` and `.ps1` variants (except `read_file.ps1` which is PowerShell-only).
+
+The close scripts rewrite history and delete branches, so they are covered by tests: `tests/run-all.sh`
+and `pwsh tests/run-all.ps1` (466 assertions, throwaway repos in temp, no fixtures). Run both after
+touching `projex-{squash,merge,rebase}-close.*` — the `.sh` and `.ps1` variants duplicate their logic,
+so passing one platform proves nothing about the other.
 
 ## How Projex Works
 

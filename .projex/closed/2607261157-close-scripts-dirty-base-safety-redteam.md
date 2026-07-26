@@ -3,7 +3,7 @@
 > **Created:** 2026-07-26 | **Lead:** Claude (Opus 5)
 > **Subject:** 2607261121-close-scripts-dirty-base-safety-plan.md
 > **Related:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607260233-worktree-squash-close-dirty-base-reset-memo.md
-> **Disposition (2026-07-26):** All 8 findings absorbed into the plan via revise; see that document's Revision Log. Findings are addressed *in specification only* — every Condition for Approval below still requires verification at execution time. This document stays open until then.
+> **Disposition (2026-07-26):** All 8 findings absorbed into the plan via revise; see that document's Revision Log. Findings addressed in specification, then verified at execution — see 2607261121-close-scripts-dirty-base-safety-walkthrough.md. Top Vulnerability 1 (rebase pre-rewrite collision) verified fixed via the collision regression case; Top Vulnerability 2 (Step 2 policy-only rationale) confirmed as stated; Top Vulnerability 3 (tests/ integration) verified via `run-all.{sh,ps1}` registration. Closed alongside the plan.
 
 ---
 

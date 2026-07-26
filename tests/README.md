@@ -26,8 +26,10 @@ assertion fails; the runners aggregate and do the same.
 | `resolve-conflicts.test.sh` | 30 | `--resolve-conflicts` core contract: covered conflicts halt (exit 2), uncovered abort (exit 1), no-flag behaviour unchanged, directory-prefix vs exact-file matching, `.projexwt` not matched by a `.projex` entry |
 | `resume.test.sh` | 52 | What a careless caller does between exit 2 and the re-run: re-running having done nothing, resolving without `git add`, staging without committing, committing conflict markers, dropping the flag, using the wrong close script, double-close, multi-commit rebase where a second conflict must not destroy the first resolution |
 | `worktree.test.sh` | 34 | Worktree mode for all three scripts, including the rebase gate targeting the worktree rather than the repo root, and paths containing spaces |
+| `dirty-base.test.sh` | 139 | The dirty-base gate: tracked staged/unstaged changes in the integration checkout refused pre-mutation, dirty submodules and unrelated untracked content still allowed, a colliding untracked path refused with the ephemeral tip unmoved, `Base` required to be a local branch, `RepoRoot` required to still have `Base` checked out, nested utility/parent-Projex origins closing into their recorded parent, safe (non-`--hard`) squash rollback |
 | `resolve-conflicts.test.ps1` | 33 | PowerShell parity for the core contract (checkout mode) |
 | `worktree.test.ps1` | 39 | PowerShell parity for worktree mode |
+| `dirty-base.test.ps1` | 139 | PowerShell parity for the dirty-base gate — same matrix, mechanically parallel names |
 
 The `.sh` and `.ps1` variants of each script carry duplicated logic, so both are tested independently
 — parity is not assumed. That is not theoretical: the PowerShell suite is what caught that
@@ -42,3 +44,11 @@ ephemeral branch as a parent and the squash is therefore recomputed from the sam
   index entries, branch existence, committed content — never script internals.
 - Suites deliberately assert the *documented* behaviour, including behaviour that looks like a
   failure (squash re-run re-conflicting), so that a future "fix" that changes the contract is caught.
+- One branch is knowingly unexercised: the rollback-failure path in `projex-squash-close`, where
+  `git reset --merge HEAD` itself fails. It is **not constructible as a deterministic regression
+  case; reachable only through the documented gate→merge window** — the tracked-clean gate and the
+  in-progress gate leave the tree tracked-clean when `merge --squash` runs, but nothing re-checks in
+  between, so a concurrent writer that leaves a tracked file at `index != HEAD != worktree` makes the
+  merge refuse pre-mutation *and* the reset fail. A test cannot pre-seed that state: the gate rejects
+  it up front. `safe_rollback` therefore splits its message on whether unmerged paths actually exist,
+  and `dirty-base.test.*` covers the reachable neighbours instead and says so inline.

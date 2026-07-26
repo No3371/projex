@@ -284,7 +284,7 @@ Each validates inputs, reports failure with state context, and rolls back on err
 
 `--resolve-conflicts` (PowerShell: `-ResolveConflicts`) takes comma-separated repo-relative files or directory prefixes where conflicts are *anticipated*. If every conflicted path is covered, the operation is left in progress for the caller to resolve (exit 2) instead of being aborted; a conflict in any undeclared path still aborts and rolls back (exit 1). All three refuse to start on top of an unfinished merge or rebase rather than discarding a half-done resolution. See `close-projex.md` for the resume rules — merge and rebase close are re-runnable after resolution, squash close is not.
 
-When `--worktree` is passed, the script removes the worktree at `{repo-name}/.projexwt/<branch-suffix>` instead of checking out base. The main working directory must already be on the base branch (which it is — worktree mode never leaves it).
+When `--worktree` is passed, the script removes the worktree at `{repo-name}/.projexwt/<branch-suffix>` instead of checking out base. The `<repo-root>` you pass must itself already have base checked out — it may be the main working directory or any other registered worktree, and the scripts now assert this rather than assuming it.
 
 ### Git Operation Discipline
 
