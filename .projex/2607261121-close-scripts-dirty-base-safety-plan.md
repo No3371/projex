@@ -11,7 +11,7 @@
 
 ## Summary
 
-Make every branch-finalization script reject tracked changes in the checkout it will mutate, including the base worktree at `RepoRoot` in worktree mode. Allow unrelated untracked/ignored content, remove squash-close's automatic `reset --hard`, preserve shell/PowerShell parity, and retain a disposable-repo regression check for the data-loss class.
+Make every branch-finalization script reject tracked changes in the checkout it will mutate, including the originating/base worktree passed as `RepoRoot` in worktree mode. `RepoRoot` may itself be any registered worktree; `Base` may be `main`, a utility branch, feature branch, or parent `projex/*` branch. Allow unrelated untracked/ignored content, remove squash-close's automatic `reset --hard`, preserve shell/PowerShell parity, and retain a disposable-repo regression check for the data-loss class.
 
 **Scope:** Squash, merge, and rebase close scripts; close workflow contract; dirty-base regression checks.
 **Estimated Changes:** 9 files — 6 close scripts, 1 workflow spec, 2 test launchers.
@@ -22,7 +22,7 @@ Make every branch-finalization script reject tracked changes in the checkout it 
 
 ### Problem / Gap / Need
 
-Worktree mode validates only the execution worktree. All close scripts then mutate the main checkout without verifying its tracked state. Observed effects:
+Worktree mode validates only the child execution worktree. All close scripts then mutate the originating/base worktree without verifying its tracked state or confirming it still has `Base` checked out. Observed effects:
 
 - `squash-close`: conflict cleanup runs `reset --hard HEAD`, deleting unrelated tracked edits. A staged edit is also deleted when `merge --squash` refuses to start but cleanup still resets.
 - `merge-close`: `merge --abort` preserved a simple unrelated edit in reproduction, but Git does not guarantee reconstruction when a merge begins with uncommitted changes.
@@ -33,6 +33,7 @@ Worktree mode validates only the execution worktree. All close scripts then muta
 
 ### Success Criteria
 
+- [ ] Worktree-mode finalizers verify that recorded `RepoRoot` still has recorded `Base` checked out before mutation; arbitrary utility/feature/parent-Projex bases remain supported.
 - [ ] All six close implementations exit `1` before mutation when the checkout they will mutate has staged or unstaged tracked changes.
 - [ ] Unrelated untracked/ignored content does not block close and remains byte-for-byte intact; a colliding untracked path makes Git fail without overwriting it.
 - [ ] Worktree mode still separately rejects a dirty execution worktree.
@@ -45,7 +46,7 @@ Worktree mode validates only the execution worktree. All close scripts then muta
 
 - Automatic stash creation/restoration.
 - Changing merge, squash, rebase, conflict allow-list, or cleanup semantics beyond dirty-base safety.
-- `projex-abandon`: worktree mode does not merge/reset the main checkout.
+- `projex-abandon`: worktree mode does not merge/reset the originating/base worktree.
 - Refactoring duplicated shell/PowerShell logic into shared helpers.
 - Updating the source memo in its separate repository.
 
@@ -55,11 +56,13 @@ Worktree mode validates only the execution worktree. All close scripts then muta
 
 ### Current State
 
-`projex-squash-close.{sh,ps1}` and `projex-merge-close.{sh,ps1}` skip main-checkout tracked-state validation in worktree mode, validate only `.projexwt/<branch-suffix>`, then merge in the main checkout. `projex-rebase-close.{sh,ps1}` validates and rebases the execution worktree, but later fast-forwards the main checkout without checking tracked changes there.
+`projex-squash-close.{sh,ps1}` and `projex-merge-close.{sh,ps1}` skip origin-worktree tracked-state validation in worktree mode, validate only `.projexwt/<branch-suffix>`, then merge at `RepoRoot`. `projex-rebase-close.{sh,ps1}` validates and rebases the child execution worktree, but later fast-forwards at `RepoRoot` without checking tracked changes there.
 
 Checkout mode checks `git diff --quiet` plus `git diff --cached --quiet`; these correctly cover tracked staged/unstaged changes but are absent from worktree mode. Worktree-mode validation correctly uses `git status --porcelain` for the execution worktree, where untracked content must block because that worktree will be removed.
 
-Dirty state belongs to a worktree filesystem + index, not a branch ref. In worktree mode, `RepoRoot` is the path of the main worktree where `Base` is checked out and where squash/merge/fast-forward runs; the existing branch assertion must remain before its tracked-clean gate. `Base` remains the ref used to validate identity/integration target, not a substitute status target.
+Dirty state belongs to a worktree filesystem + index, not a branch ref. In worktree mode, `RepoRoot` is the recorded origin worktree path where squash/merge/fast-forward runs; it is not necessarily Git's primary worktree. `Base` is the recorded parent branch and may itself be a utility, feature, or outer Projex branch. Current scripts document but do not enforce that `RepoRoot` still has `Base` checked out.
+
+Nested example: utility worktree on `projex/outer` → child worktree on `projex/inner` → close `inner` into `outer` at the utility worktree; later close `outer` into its own parent. Finalizers must preserve this ancestry and never substitute `main`/`master` or another worktree discovered from shared repository metadata.
 
 Squash merge does not create `MERGE_HEAD`; `git merge --abort` is unavailable. Current squash rollback therefore uses `git reset --hard HEAD` on every merge failure, including failures before a merge state exists.
 
@@ -71,7 +74,7 @@ Squash merge does not create `MERGE_HEAD`; `git merge --abort` is unavailable. C
 | `projex-squash-close.ps1` | PowerShell squash finalizer | Parity change |
 | `projex-merge-close.sh` | POSIX merge finalizer | Unified checkout gate |
 | `projex-merge-close.ps1` | PowerShell merge finalizer | Parity change |
-| `projex-rebase-close.sh` | POSIX rebase finalizer | Gate tracked base-worktree changes before rebase |
+| `projex-rebase-close.sh` | POSIX rebase finalizer | Verify origin/base pairing; gate tracked changes |
 | `projex-rebase-close.ps1` | PowerShell rebase finalizer | Parity change |
 | `close-projex.md` | Finalization workflow | Clarify script-enforced dual cleanliness gate |
 | `test-close-dirty-base.sh` | POSIX regression launcher | Disposable-repo safety matrix |
@@ -93,13 +96,14 @@ Squash merge does not create `MERGE_HEAD`; `git merge --abort` is unavailable. C
 ### Assumptions
 
 - `git status --porcelain --untracked-files=no` output means tracked staged/unstaged content exists and finalization must stop.
-- In worktree mode, `RepoRoot` is the base worktree path, not the base ref; existing current-branch validation remains authoritative.
-- Untracked/ignored main-worktree content is allowed. Git must reject tracked-path collisions before overwrite; regression checks preserve this contract.
+- In worktree mode, `RepoRoot` is the recorded originating/base worktree path, not a canonical repository root or base ref.
+- `Base` is the recorded parent branch. Implementation adds the currently missing assertion that `RepoRoot` still has that exact branch checked out.
+- Untracked/ignored origin-worktree content is allowed. Git must reject tracked-path collisions before overwrite; regression checks preserve this contract.
 - With a clean preflight, `git reset --merge HEAD` can clear failed squash index/worktree state without the destructive semantics of `--hard`.
 
 ### Impact Analysis
 
-- **Direct:** Six finalizers reject tracked-dirty states they currently accept; squash rollback becomes non-destructive. Untracked/ignored main-worktree content stays allowed.
+- **Direct:** Six finalizers verify the origin-worktree/base-branch pairing, reject tracked-dirty states they currently accept, and make squash rollback non-destructive. Untracked/ignored origin-worktree content stays allowed.
 - **Adjacent:** `close-projex.md` preflight matches executable enforcement; conflict-resolution guidance/error text changes where it claims a hard reset occurred.
 - **Downstream:** Agents invoking close scripts must commit or explicitly stash tracked changes in the integration checkout. Busy repos may retain unrelated untracked/ignored files.
 
@@ -109,9 +113,9 @@ Squash merge does not create `MERGE_HEAD`; `git merge --abort` is unavailable. C
 
 ### Overview
 
-Add the same early tracked-status guard to each finalizer, before checkout/merge/rebase. In worktree mode, first assert `RepoRoot` has `Base` checked out, then inspect that worktree's index/filesystem; refs themselves have no dirty state. Retain the stricter execution-worktree guard. Replace only squash-close's two unconditional hard resets with checked `reset --merge` rollback. Lock behavior with disposable repositories; no new abstraction or dependency.
+Add the same early tracked-status guard to each finalizer, before checkout/merge/rebase. In worktree mode, resolve `Base` to its full branch ref, assert `RepoRoot`'s symbolic `HEAD` matches it, then inspect that origin worktree's index/filesystem; do not assume `main`/`master` or locate a different worktree. Retain the stricter child execution-worktree guard. Replace only squash-close's two unconditional hard resets with checked `reset --merge` rollback. Lock behavior with disposable repositories; no new abstraction or dependency.
 
-### Step 1: Enforce Integration-Worktree Tracked Cleanliness
+### Step 1: Verify Origin/Base Pairing and Tracked Cleanliness
 
 **Objective:** Stop every finalizer before mutation when its integration worktree contains staged or unstaged tracked changes; allow unrelated untracked/ignored content.
 **Confidence:** High
@@ -134,17 +138,18 @@ Before:
 
 After:
 - checkout mode: check current checkout via `status --porcelain --untracked-files=no`, then switch to `Base`
-- worktree mode: assert `RepoRoot` is on `Base`, then check that base worktree via the same tracked-only status command
+- worktree mode: resolve `Base` and `RepoRoot`'s symbolic `HEAD` to canonical `refs/heads/*`; mismatch/detached state exits `1` before mutation
+- worktree mode: after identity match, check that origin/base worktree via the same tracked-only status command
 - tracked output: print first 10 entries, explain tracked changes must be committed/stashed, exit 1
 - untracked/ignored-only state: continue; Git remains responsible for rejecting path collisions
 - worktree mode: run existing strict execution-worktree gate after the base-worktree gate
 ```
 
-Place the guard after repository/branch/in-progress validation and before any checkout, rebase, or merge. Replace the checkout-only `diff`/`diff --cached` blocks with the same tracked-status expression for parity. Do not auto-stash.
+Place branch/worktree identity validation and the guard after repository/branch/in-progress validation and before any checkout, rebase, or merge. Replace the checkout-only `diff`/`diff --cached` blocks with the same tracked-status expression for parity. Do not auto-stash or search for another worktree when the recorded origin no longer matches.
 
-**Rationale:** The risk comes from tracked index/worktree content that merge/reset may consume or discard. Blocking unrelated untracked files would make worktree mode needlessly hostile in busy repos. A path is checked because dirt belongs to a worktree; `Base` is only a ref.
+**Rationale:** The risk comes from tracked index/worktree content that merge/reset may consume or discard. Blocking unrelated untracked files would make worktree mode needlessly hostile in busy repos. Identity needs both coordinates: `RepoRoot` selects the originating worktree state; `Base` selects its intended parent branch. Neither implies a primary checkout or `main`/`master`.
 
-**Verification:** For every implementation, staged and unstaged tracked scenarios exit `1` with unchanged state. Unrelated untracked/ignored scenarios complete and preserve bytes. A colliding untracked path fails without overwrite; base ref remains unchanged.
+**Verification:** For every implementation, utility-branch and parent-Projex origins close back into their recorded `Base` while unrelated branches/worktrees remain unchanged. Mismatched or detached `RepoRoot` exits `1`. Staged/unstaged tracked scenarios exit `1` with unchanged state. Unrelated untracked/ignored scenarios complete and preserve bytes; a colliding untracked path fails without overwrite or ref movement.
 
 **If this fails:** Revert only the new guard/removal of old checks; no repository state should have changed because the guard precedes mutations.
 
@@ -196,13 +201,14 @@ Apply to uncovered anticipated conflicts and generic merge failures. Preserve ex
 
 Each launcher creates temporary Git repositories and deletes them on completion. For squash, merge, and rebase close:
 
-1. Create base + divergent ephemeral branch + registered `.projexwt/<suffix>`.
+1. Create a repository with primary, utility-worktree, and parent-Projex origins; create each child execution worktree from the origin's `HEAD`.
 2. Dirty the integration checkout separately with unstaged tracked, staged tracked, unrelated untracked, and colliding untracked content.
 3. Invoke matching close script with worktree mode.
 4. For tracked dirt, assert exit `1`, unchanged file bytes/status/refs, registered execution worktree, and no merge/rebase state.
 5. For unrelated untracked/ignored content, assert close succeeds and content survives. For a colliding untracked path, assert failure without overwrite or base-ref movement.
 6. Run clean conflicting squash; assert exit `1`, clean rollback, unchanged base `HEAD`, surviving ephemeral branch.
 7. Run clean happy path for each close type; assert exit `0`, expected base result, deleted ephemeral branch, and removed worktree registration.
+8. Run utility-branch and nested-Projex cases; assert each child integrates only into its recorded parent branch/worktree. Run mismatched/detached-origin cases; assert exit `1` before mutation.
 
 Use shell-native assertions and Git only. Print one concise pass/fail summary; preserve failed temp repo path for diagnosis, remove successful cases.
 
@@ -225,9 +231,10 @@ Use shell-native assertions and Git only. Print one concise pass/fail summary; p
 
 **Changes:**
 
-- State that execution may begin while the main checkout is dirty, but finalization requires no tracked changes in the integration checkout; unrelated untracked/ignored content may remain.
-- Name both gates: tracked-clean base/current integration worktree and fully clean execution worktree.
-- Clarify `RepoRoot` identifies the worktree where `Base` is checked out in worktree mode; `Base` is the integration ref and has no independent dirty state.
+- State that execution may begin while the originating worktree is dirty, but finalization requires no tracked changes in the originating/base worktree; unrelated untracked/ignored content may remain.
+- Name both gates: tracked-clean originating/base worktree and fully clean child execution worktree.
+- Replace “main working directory/checkout” with “originating/base worktree.” Clarify `RepoRoot` may be any worktree and `Base` may be any branch, including a utility or outer Projex branch.
+- Document the required exact pairing: `RepoRoot` must still have `Base` checked out; finalizers fail rather than guess/substitute another worktree or `main`/`master`.
 - State finalizers independently enforce the integration-worktree gate.
 - Remove/adjust claims that squash failure cleanup uses or completed `reset --hard`; document safe rollback failure handling.
 - Keep stash restoration caller-owned and explicitly logged.
@@ -254,12 +261,15 @@ Use shell-native assertions and Git only. Print one concise pass/fail summary; p
 - [ ] Review each mutation path: gate precedes checkout/merge/rebase.
 - [ ] Confirm ignored execution-worktree content remains warning-only.
 - [ ] Confirm no test or script stashes, deletes, or overwrites pre-existing integration-worktree content.
+- [ ] Confirm utility-worktree and nested-Projex cases integrate into their immediate recorded parent, not `main`/`master`.
 - [ ] Confirm unrelated current worktree changes are absent from implementation diff.
 
 ### Acceptance Criteria Validation
 
 | Criterion | How to Verify | Expected Result |
 |-----------|---------------|-----------------|
+| Arbitrary parent topology preserved | utility + nested Projex origins × 3 close types × 2 shells | Child integrates into recorded parent only |
+| Origin/base mismatch rejected | wrong branch + detached origin × 3 close types × 2 shells | Exit `1`; zero state mutation |
 | Tracked-dirty integration checkout rejected | staged + unstaged × 3 close types × 2 shells | Exit `1`; zero state mutation |
 | Untracked busy-repo content preserved | unrelated + colliding paths × 3 close types × 2 shells | Unrelated survives successful close; collision fails without overwrite/ref move |
 | Squash rollback safe | Clean conflict scenario | Clean checkout; same `HEAD`; ephemeral survives |
@@ -283,6 +293,7 @@ If implementation must be abandoned:
 ## Revision Log
 
 - **2026-07-26:** Narrowed main/integration checkout gate from all porcelain output to tracked staged/unstaged content; allowed unrelated untracked/ignored files; clarified `RepoRoot` as base worktree path and `Base` as ref — trigger: “I'm not sure if this is viable in a busy repo” and “also why repo root? not base ref?”
+- **2026-07-26:** Replaced primary-main topology assumption with recorded origin-worktree/parent-branch model; added missing exact `RepoRoot`→`Base` assertion and utility/nested-Projex regression cases — trigger: “not every projex work tree branch of main/master; it could originate from a utility work tree or a projex branch”
 
 ## Notes
 
