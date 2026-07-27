@@ -360,14 +360,19 @@ If this plan were to be executed again:
 
 1. **Update the source plan:**
    - Change status to `Complete`
-   - Add link to walkthrough
+   - Add links to **both** the walkthrough and the execution log — filenames only, never paths:
 
 ```markdown
 > **Completed:** YYYY-MM-DD
-> **Walkthrough:** [link to walkthrough document]
+> **Walkthrough:** {yymmddhhmm}-{name}-walkthrough.md
+> **Log:** {yymmddhhmm}-{name}-log.md
 ```
 
-2. **Sweep every projex document this plan's lifecycle touched:** the execution log (`{yymmddhhmm}-{plan-name}-log.md`) always, plus anything produced against the plan if it exists (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
+   `Log:` may already be present from execute-projex POST-EXECUTION — verify it names the real file rather than assuming. Writing it here is what makes the log discoverable from the plan: nothing else links plan → log, so a plan closed without this field leaves its log unreachable by any later sweep or audit.
+
+2. **Reconcile the execution log's status with the plan's** — open the log and confirm its `> **Status:**` is terminal (`Complete` or `Blocked`) and matches what you just wrote on the plan. If execute-projex left it at `In Progress`, set it now. The log has no closed state of its own — like the plan, its move into `.projex/closed/` is what marks it closed. Opening the file here is deliberate: it is the step that puts the log's real filename in front of you before the sweep below.
+
+3. **Sweep every projex document this plan's lifecycle touched:** the execution log (`{yymmddhhmm}-{plan-name}-log.md`) always, plus anything produced against the plan if it exists (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
 
    | Type's closing rule | Action |
    |---|---|
@@ -380,7 +385,7 @@ If this plan were to be executed again:
 
    Result: a list of documents (the Plan, its execution log, plus zero or more others) moving to `closed/` together.
 
-3. **Move every document from step 2 in one `move-n-stage` call** — one src/dst pair per document, staged atomically in a single operation:
+4. **Move every document from step 3 in one `move-n-stage` call** — one src/dst pair per document, staged atomically in a single operation:
 
 ```bash
 {projex-scripts}/move-n-stage.{sh|ps1} <repo-root> \
@@ -388,12 +393,12 @@ If this plan were to be executed again:
   .projex/{yymmddhhmm}-{name}-log.md .projex/closed/{yymmddhhmm}-{name}-log.md \
   .projex/{yymmddhhmm}-{doc-a}.md .projex/closed/{yymmddhhmm}-{doc-a}.md \
   .projex/{yymmddhhmm}-{doc-b}.md .projex/closed/{yymmddhhmm}-{doc-b}.md \
-  ... (one pair per document from step 2)
+  ... (one pair per document from step 3)
 ```
 
 Write the new Walkthrough file directly at `.projex/closed/{yymmddhhmm}-{name}-walkthrough.md` — newly created, not moved.
 
-4. **Commit the walkthrough, every move, and any in-place updates (nav, still-open related docs) in one commit.** Splitting across commits leaves some documents in `closed/` with siblings still active:
+5. **Commit the walkthrough, every move, and any in-place updates (nav, still-open related docs) in one commit.** Splitting across commits leaves some documents in `closed/` with siblings still active:
 
 ```bash
 # One path per document moved or updated this close — include only what applies:

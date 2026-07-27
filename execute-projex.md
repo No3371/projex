@@ -98,7 +98,9 @@ All subsequent commands use `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as 
 
 **Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected — not a failed precondition; do not halt over it.** Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
 
-3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template). Populate the header fields (`Repo Root`, `Plan File`, `Base Branch`) and the `Pre-Check Results` block directly from the precheck output produced in step 1 of PRE-EXECUTION CHECKLIST.
+3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template). Set `Status:` to `In Progress`, and populate the remaining header fields (`Repo Root`, `Plan File`, `Base Branch`) and the `Pre-Check Results` block directly from the precheck output produced in step 1 of PRE-EXECUTION CHECKLIST.
+
+   The log carries a `> **Status:**` field so it is discoverable by the same status scan as every other projex document — it tracks the execution, not the plan: `In Progress` while executing, then `Complete` or `Blocked` at POST-EXECUTION. It is not a workflow type and is never authored on its own; it lives and closes with its plan.
 
 ### 2. BUILD TASK LIST FROM PLAN
 
@@ -216,8 +218,16 @@ Is the action different from the plan?
 5. **Clean up resources** — tear down anything started during execution (containers, servers, temp files). Leave pre-existing resources alone. Log what was cleaned up.
 
    In worktree mode, commit or remove everything you added inside the worktree before close: close scripts refuse finalization over any non-clean state (untracked files or uncommitted tracked edits). Ignored tooling (symlinked `node_modules`, installed deps, build artifacts) is not gated but can make worktree removal fail mid-way — remove it too.
-6. **Update plan status** — `Complete` if successful, `Blocked` if issues remain
-7. **Commit the status update and final log entry** — the branch must be clean before close-projex runs:
+6. **Update plan status and cross-link the log** — set the plan's status to `Complete` if successful, `Blocked` if issues remain. In the same edit, add the log reference to the plan header if it is not already there:
+
+```markdown
+> **Log:** {yymmddhhmm}-{plan-name}-log.md
+```
+
+   Filename only, never a path — the pair moves to `.projex/closed/` together at close.
+
+7. **Update the execution log's own status** — set its `> **Status:**` to the same value given to the plan (`Complete` or `Blocked`).
+8. **Commit the status updates and final log entry** — the branch must be clean before close-projex runs:
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
@@ -282,8 +292,8 @@ If execution fails and cannot continue:
 
 This workflow produces:
 - Executed plan objectives (code changes, test results, gathered data, etc.)
-- Execution log (`{yymmddhhmm}-{plan-name}-log.md`) documenting every action taken
-- Updated plan status (`Complete` or `Blocked`)
+- Execution log (`{yymmddhhmm}-{plan-name}-log.md`) documenting every action taken, its own `Status` set to `Complete` or `Blocked`
+- Updated plan status (`Complete` or `Blocked`), with a `> **Log:**` field naming the execution log
 - Ephemeral git branch `projex/{yymmddhhmm}-{plan-name}` with all commits (if any)
 
 ---
@@ -294,11 +304,13 @@ This workflow produces:
 
 ```markdown
 # Execution Log: [Plan Name]
-Started: [yyyymmdd hh:mm]
-Repo Root: [REPO_ROOT from precheck]
-Plan File: [PLAN_REL from precheck]
-Base Branch: [BRANCH from precheck — e.g. main, develop, feature/auth]
-Worktree Path: [{repo-name}/.projexwt/{name} — omit line if checkout mode]
+
+> **Status:** In Progress
+> **Started:** [yyyymmdd hh:mm]
+> **Repo Root:** [REPO_ROOT from precheck]
+> **Plan File:** [PLAN_REL from precheck]
+> **Base Branch:** [BRANCH from precheck — e.g. main, develop, feature/auth]
+> **Worktree Path:** [{repo-name}/.projexwt/{name} — omit line if checkout mode]
 
 ## Pre-Check Results
 [Paste the PASS/WARN lines from precheck output verbatim]
