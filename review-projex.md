@@ -1,382 +1,308 @@
 ---
-description: This workflow guides the creation of **Review** projex documents — inspection reports that ensure existing projex documents remain valid, current, and valuable. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
+description: This workflow guides the creation of **Review** projex documents — inspection of existing projex documents against the current status quo, verdicting whether each remains valid, needs revision, or should be retired. (This is part of @projex-framework skill. It is a MUST to load the skill first.)
 ---
 
 ## PURPOSE
 
-Reviews combat projex decay. As codebases evolve and time passes, projex documents can become outdated, inaccurate, or obsolete. Reviews systematically validate projex health.
+Reviews combat projex decay. Codebases move; documents don't. A review inspects existing projex against today's reality and delivers a verdict: keep, fix, or retire.
 
 **Key characteristics:**
-- Inspection against current status quo
-- Challenge original assumptions and content
-- Determine if expansion, modification, or archival needed
-- High-level perspective avoiding original content bias
+- Inspects projex documents, not code — the subject is always one or more projex files
+- Grounded in current status quo, established independently before reading the target
+- Verdict-driven: every reviewed document gets exactly one verdict with follow-up actions
+- Batch-capable: one review can cover many documents
+
+**Contrast with Audit and Red Team:**
+- **Review** — is this document still current and worth keeping? (currency check)
+- **Audit** — was this completed work actually done correctly? (correctness check)
+- **Red Team** — what is wrong with this idea/system? (adversarial attack)
+
+Review judges currency, not quality. A well-written plan whose target code no longer exists fails review; a mediocre but accurate one passes.
 
 ---
 
 ## INVOCATION
 
 ```
-/review-projex.md @<projex-file>
-/review-projex.md <recent-context>
+/review-projex @<projex-file>
+/review-projex <selector or context>
 ```
 
 **Examples:**
-- `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
-- `/review-projex.md the project we just made`
-- `/review-projex.md all pending plans`
+- `/review-projex @2607311430-language-macro-syntax-change-proposal.md`
+- `/review-projex all active plans`
+- `/review-projex everything in .projex/ older than 30 days`
+- `/review-projex the projex we made last week`
 
 ---
 
 ## REVIEW TRIGGERS
 
-When to review projex documents:
+- **Time** — document >30 days old without activity
+- **Event** — related codebase area changed significantly
+- **Dependency** — related projex changed, closed, or was abandoned
+- **Pre-execution** — before executing an older plan (strongly recommended)
+- **Post-completion** — after related work completes, sibling documents may be stale
+- **Request** — user or another workflow asks
 
-- **Time-based:** Document is >30 days old without activity
-- **Event-based:** Significant changes to related codebase areas
-- **Dependency-based:** Related projex documents changed
-- **Execution-based:** Before executing an older plan
-- **Completion-based:** After related work completes
-- **Request-based:** User or process requests review
+---
+
+## VERDICTS
+
+One verdict per reviewed document. Canonical vocabulary — no other values:
+
+| Verdict | Meaning | Follow-up |
+|---------|---------|-----------|
+| **Valid** | Current and accurate as-is | Record review note; nothing else |
+| **Revise** | Core still sound; content drifted (stale refs, changed assumptions) | List required edits; `/revise-projex` or manual update |
+| **Expand** | Accurate but status quo outgrew its scope | List coverage gaps; extend or spawn follow-up projex |
+| **Archive** | Superseded or obsolete, but worth keeping as record | Move to `.projex/archived/` |
+| **Abandon** | No longer relevant, not worth preserving | Move to `.projex/abandoned/` or delete |
+
+Verdicts are **recommendations**. Record review notes in the reviewed documents, but perform folder moves (Archive/Abandon) only after the user confirms — use `move-n-stage` / `del-n-stage` when confirmed.
+
+---
+
+## DEPTH TIERS
+
+Select during step 1. Depth per document, not per review — a batch may mix tiers.
+
+| Tier | When | Work |
+|------|------|------|
+| **Spot Check** | Recently active docs, low stakes, or batch triage | Verify refs resolve, assumptions hold at a glance. Roster row only — no detail section. |
+| **Standard** | Default — aging doc, pre-execution check | Full independent recon + examination + challenge. Detail section per doc. |
+| **Deep** | High-stakes doc (accepted proposal, plan about to execute, load-bearing definition) | Standard + trace every file ref, re-derive key claims from source, challenge core assumptions individually. |
+
+In batch mode, triage with Spot Check first; escalate any document that smells stale to Standard/Deep.
 
 ---
 
 ## WORKFLOW STEPS
 
-### 1. IDENTIFY REVIEW TARGET
+### 1. RESOLVE TARGETS
 
-**Resolve the target repo**: if a projex file is referenced, we find the exact git repo the projex belongs to. If no file is referenced, infer from context.
+**Resolve the target repo** — reviews run in the repo owning the projex:
 
 ```bash
 cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
 ```
 
-Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+Record output as `<repo-root>`. All script calls below use it.
 
-Determine what to review:
+**Build the target roster:**
+- **Specific document** — locate file; note type, status, age
+- **Context-based** ("the projex we made last week") — identify from recent history
+- **Batch selector** ("all active plans") — query `.projex/` folders; list matches
 
-**Specific document:**
-1. Locate the referenced projex file
-2. Note its type, status, and age
-3. Identify its scope and related documents
+For each target record: filename, type, `> **Status:**` value, created date (from filename prefix), last-modified date. Assign a depth tier per target.
 
-**Context-based (e.g., "the project we just made"):**
-1. Identify recently created/modified projex
-2. Select appropriate documents for review
+**Skip-by-default:** closed analytical documents (eval, review, redteam, audit, walkthrough) are historical records — reviewing them is usually `/archive-projex` territory, not review. Include only if explicitly requested.
 
-**Batch review (e.g., "all pending plans"):**
-1. Query projex folders for matching documents
-2. Prioritize by age, status, or relevance
+### 2. SCAFFOLD THE REVIEW DOCUMENT
 
-### 2. GATHER CONTEXT
-
-Before reviewing the projex content:
-
-#### Timeline Analysis
-```
-Questions to answer:
-- When was this projex authored?
-- What has changed in the codebase since then?
-- What other projex were created/completed since?
-- What external factors have changed?
-```
-
-#### Status Quo Research
-1. **Explore current state** — Look at relevant code/files now
-2. **Check recent history** — Review commits, changes, decisions
-3. **Identify drift** — Note differences from projex assumptions
-
-### 3. INDEPENDENT ASSESSMENT
-
-**Critical: Do NOT be biased by the projex content.**
-
-Before deep-reading the projex, form independent views:
-
-1. **Explore the domain** from scratch
-2. **Ask fresh questions** about this area
-3. **Form your own perspective** on what matters
-4. **Note what you observe** without projex influence
-
-### 4. PROJEX EXAMINATION
-
-Now read the projex document with critical eye:
-
-#### Validity Check
-- Are the stated problems still problems?
-- Are the assumptions still valid?
-- Does the proposed approach still make sense?
-- Have prerequisites/dependencies changed?
-
-#### Completeness Check
-- Does it cover everything it should?
-- Are there gaps that status quo reveals?
-- Should scope be expanded?
-
-#### Accuracy Check
-- Are file references still correct?
-- Is technical content still accurate?
-- Do code samples match reality?
-
-#### Value Check
-- Is this still worth doing/keeping?
-- Has the value proposition changed?
-- Is effort still justified by benefits?
-
-### 5. CHALLENGE THE PROJEX
-
-Formulate challenge questions:
-
-```markdown
-## Challenge Questions
-
-1. [Question that challenges a core assumption]
-   - Evidence for: [supporting points]
-   - Evidence against: [contradicting points]
-   
-2. [Question that probes edge cases]
-   - ...
-
-3. [Question that tests relevance]
-   - ...
-```
-
-Consider:
-- What if the opposite approach was taken?
-- What has been learned since authoring?
-- What would make this projex obsolete?
-- What risks weren't considered?
-
-### 6. DETERMINE OUTCOME
-
-Based on analysis, decide:
-
-**No Changes Needed:**
-- Projex remains valid and current
-- Document review with timestamp
-
-**Expansion Needed:**
-- Status quo has additions projex should cover
-- Document what should be added
-
-**Modification Needed:**
-- Content is no longer correct/complete/accurate
-- Document what should be changed
-
-**Archival Recommended:**
-- Projex is obsolete or superseded
-- Document reasoning for archival
-- Move to `.projex/archived/`
-
-**Abandonment Recommended:**
-- Projex is no longer relevant and not worth preserving
-- Move to `.projex/abandoned/` or delete
-
-### 7. DRAFT THE REVIEW
+Scaffold **before examining anything**:
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{original-projex-name}" <projex-folder>
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{target-name-or-batch-theme}" <projex-folder>
 ```
+
+Fill in header and target roster. Verdicts stay blank — the roster is the worklist. The document is the working artifact: findings go into it as each target is processed, not into context alone. An interrupted review still carries every completed target's verdict.
+
+### 3. INDEPENDENT RECON — PER TARGET
+
+**Do NOT deep-read the target yet.** Anchoring to the document's own narrative is the main failure mode of reviews. First, establish reality independently:
+
+1. **Explore the domain now** — read the current code/files the target concerns
+2. **Check history since authoring** — commits, merges, related projex closed/created after the target's date
+3. **Note observations** — what is true today, without the target's framing
+
+Recon depth scales with tier: Spot Check = glance at refs; Deep = full domain walk.
+
+### 4. EXAMINE THE TARGET
+
+Now read the target critically. Run the check matrix:
+
+| Check | Question |
+|-------|----------|
+| **Validity** | Stated problems still problems? Assumptions still hold? Approach still sensible? Prerequisites unchanged? |
+| **Accuracy** | File refs resolve? `file:ln` cites still correct? Code samples match reality? Facts current? |
+| **Completeness** | Does status quo reveal gaps the doc should cover? Scope still right? |
+| **Value** | Still worth doing/keeping? Effort still justified? Superseded by anything? |
+
+**Type-aware focus** — weight checks by target type:
+
+| Target type | Primary question |
+|-------------|------------------|
+| Proposal (open) | Direction still wanted? Trade-off landscape unchanged? |
+| Plan (Draft/Ready) | Executable against today's code as written? |
+| Navigation | Roadmap reflects reality? Dead entries? |
+| Definition | Spec still matches the entity it defines? |
+| Memo | Still unconsumed and worth consuming? |
+| Exploration/Guide (open) | Findings/reading path still accurate? |
+
+Record drift as findings: `[assumption/ref] [held/broke] [evidence]. [consequence].`
+
+### 5. CHALLENGE
+
+Standard/Deep tiers only. Two or three pointed challenges per target — not a full adversarial pass (that is `/redteam-projex`):
+
+- What single change since authoring most threatens this document?
+- What would make it obsolete tomorrow?
+- If authored fresh today, what would differ?
+
+A challenge that lands demotes the verdict; one that doesn't strengthens it. Record either way.
+
+### 6. VERDICT
+
+Per target, pick exactly one verdict from the table. Ground it in recorded findings — no verdict without evidence.
+
+**Derivation rules** — check outcomes constrain the verdict. Severity order: Valid < Expand < Revise < Archive < Abandon. Apply every triggered rule; the most severe constraint wins. Judgment picks within the constraint, not around it.
+
+| Condition (from recorded findings) | Constraint |
+|------------------------------------|------------|
+| All checks ✓, all challenges held | Valid |
+| Accuracy ✗ only — refs/facts stale, core sound | ≥ Revise |
+| Completeness ✗, all else ✓ | ≥ Expand |
+| Any Major drift row | ≥ Revise |
+| Validity ✗ — problem gone or approach invalidated | Archive or Abandon only |
+| Value ✗ | Archive if worth keeping as record, else Abandon |
+| Any challenge landed | Valid excluded |
+
+Deviating from a triggered rule requires an inline note in the detail section: `**Override:** [rule skipped] — [why]`. No silent overrides.
+
+Write the target's detail section (Standard/Deep) or roster row (Spot Check), then move to the next target.
+
+**Write the Summary last**, after all targets are verdicted.
 
 **Template Structure:**
 
 ```markdown
-# Review: [Original Projex Title]
+# Review: [Target Name or Batch Theme]
 
-> **Review Date:** YYYY-MM-DD
-> **Reviewer:** [name or agent]
-> **Reviewed Projex:** [link to original]
-> **Original Date:** [when projex was created]
-> **Time Since Creation:** [duration]
+> **Created:** YYYY-MM-DD | **Reviewer:** [name or agent]
+> **Status:** In Progress
+> **Targets:** [count] | **Related Projex:** [links]
 
 ---
 
-## Review Summary
+## Summary
 
-**Verdict:** Valid | Needs Expansion | Needs Modification | Recommend Archival
+> **PLACEHOLDER — write last, after all targets verdicted.**
 
-[2-3 sentences explaining the verdict]
+[2-4 sentences: what was reviewed, overall health, actions needed]
 
----
-
-## Timeline Analysis
-
-### When Authored
-- Created: [date]
-- Last modified: [date]
-- Status at authoring: [what was true then]
-
-### What Changed Since
-| Area | Then | Now | Impact |
-|------|------|-----|--------|
-| [Area 1] | [State then] | [State now] | [Effect on projex] |
-| [Area 2] | [State then] | [State now] | [Effect on projex] |
-
-### Related Events
-- [Event 1]: [relevance to projex]
-- [Event 2]: [relevance to projex]
+**Verdict counts:** Valid: n | Revise: n | Expand: n | Archive: n | Abandon: n
+**Ripple:** [n referrers flagged | contained — no referrers]
 
 ---
 
-## Status Quo Assessment
+## Targets
 
-### Current State
-[Description of relevant current implementation/situation]
-
-### Drift from Projex Assumptions
-| Assumption | Original | Current Reality | Drift Level |
-|------------|----------|-----------------|-------------|
-| [Assumption 1] | [What was assumed] | [What is true] | None/Minor/Major |
+| # | Document | Type | Age | Tier | Verdict | Note |
+|---|----------|------|-----|------|---------|------|
+| 1 | [filename] | [type] | [days] | Spot/Std/Deep | [verdict] | [one-liner] |
 
 ---
 
-## Validity Assessment
+## [Target 1 filename]
 
-### Problems Stated
-| Problem | Still Valid? | Notes |
-|---------|--------------|-------|
-| [Problem 1] | Yes/Partial/No | [Reasoning] |
+> **Verdict:** Valid | Revise | Expand | Archive | Abandon
 
-### Approach Proposed
-| Aspect | Still Valid? | Notes |
-|--------|--------------|-------|
-| [Approach aspect] | Yes/Partial/No | [Reasoning] |
+**Recon (independent):** [what is true today — established before reading target]
 
-### Prerequisites/Dependencies
-| Dependency | Status | Impact |
-|------------|--------|--------|
-| [Dependency 1] | Met/Unmet/Changed | [Effect] |
+**Drift:**
+| Assumption/Ref | Then | Now | Impact |
+|----------------|------|-----|--------|
+| [item] | [as authored] | [current reality] | None/Minor/Major |
 
----
+**Checks:** Validity: ✓/✗ [note] | Accuracy: ✓/✗ [note] | Completeness: ✓/✗ [note] | Value: ✓/✗ [note]
 
-## Completeness Assessment
+**Challenges:**
+- [Challenge] → [held/landed] — [evidence]
 
-### Coverage Gaps
-- [Gap 1]: [What should be added]
-- [Gap 2]: [What should be added]
-
-### Scope Expansion Candidates
-- [Area that should now be included]
+**Actions:**
+- [ ] [Specific edit, move, or follow-up projex]
 
 ---
 
-## Accuracy Assessment
+## Ripple
 
-### Technical Content
-| Content | Status | Issue |
-|---------|--------|-------|
-| [File reference] | Accurate/Outdated/Broken | [Details] |
-| [Code sample] | Accurate/Outdated | [Details] |
+> Referrers of non-Valid targets, found by filename search. Depth 1.
 
-### Factual Content
-- [Content that needs updating]
+| Referrer | References | Its verdict | Disposition |
+|----------|------------|-------------|-------------|
+| [filename] | [target filename] | [non-Valid verdict of target] | Rostered / Review candidate / Informational (closed) |
 
 ---
 
-## Challenge Questions
+## Open Questions
 
-### Challenge 1: [Question]
-**Evidence for projex position:**
-- [Point 1]
-
-**Evidence against:**
-- [Counter-point 1]
-
-**Assessment:** [Conclusion]
-
----
-
-### Challenge 2: [Question]
-[Same structure]
-
----
-
-## Value Assessment
-
-| Aspect | Original Value | Current Value | Change |
-|--------|----------------|---------------|--------|
-| Problem significance | [Then] | [Now] | [Delta] |
-| Solution benefit | [Then] | [Now] | [Delta] |
-| Implementation cost | [Then] | [Now] | [Delta] |
-
-**Value Verdict:** [Still valuable / Diminished value / No longer valuable]
-
----
-
-## Recommendations
-
-### Required Changes
-1. [Specific change needed]
-2. [Specific change needed]
-
-### Suggested Improvements
-1. [Optional improvement]
-
-### Action Items
-- [ ] [Action 1]
-- [ ] [Action 2]
-
-### Next Review
-- Recommended: [timeframe or trigger]
-
----
-
-## Appendix
-
-### Independent Observations
-[What was observed before reading the projex]
-
-### Related Projex Status
-[Status of related documents]
+- [ ] [Unresolved — needs user decision or further work]
 ```
 
-### 8. UPDATE ORIGINAL
+Spot Check targets get roster rows only; add a detail section only if the check found something.
 
-Based on review findings:
+### 7. RIPPLE CHECK
 
-1. **Add review note** to original projex:
+A stale document is rarely stale alone. For **every non-Valid verdict**, find who references the target — projex reference by filename (SKILL.md § Authoring), so one search suffices:
+
+```bash
+grep -rl "{target-filename}" <repo-root> --include="*.md"
+```
+
+For each referrer found (excluding the review doc itself):
+
+- **Already on the roster** — note the link in its detail section; its own verdict covers it
+- **Active projex** (`.projex/`, not closed/archived/abandoned) — add to the Ripple table; escalate onto the roster this session if the batch allows, else log as a review candidate
+- **Closed/archived projex** — log in the Ripple table as informational; historical records don't get re-verdicted
+
+Ripple depth is 1: referrers-of-referrers are checked only if a referrer joins the roster and itself goes non-Valid. An empty ripple result is worth recording — it says the decay is contained.
+
+### 8. UPDATE ORIGINALS
+
+For each reviewed document, add a review note near the top:
+
 ```markdown
-> **Reviewed:** YYYY-MM-DD - [link to review document]
-> **Review Outcome:** [verdict summary]
+> **Reviewed:** YYYY-MM-DD — {review-filename} — Verdict: [verdict]
 ```
 
-2. **Update relationships** in both documents
-3. **Flag for action** if changes needed
+Reference by filename only, both directions. Do not change the target's `> **Status:**` line — verdicts are recommendations; status changes belong to the follow-up actions the user approves.
+
+### 9. VALIDATE & FINALIZE
+
+**Checks:**
+- [ ] Every roster target has a verdict from the canonical table
+- [ ] Recon done before deep-read for every Standard/Deep target
+- [ ] Every verdict traceable to recorded findings — no vibes-based verdicts
+- [ ] Verdicts conform to the derivation rules; any override noted inline with reason
+- [ ] Ripple scan run for every non-Valid verdict; referrers rostered or logged
+- [ ] Every non-Valid verdict has concrete actions listed
+- [ ] Review notes added to all reviewed documents
+- [ ] Summary written last, matches roster counts
+- [ ] No folder moves performed without user confirmation
+
+**De-slop pass:** strip agent self-narration, hollow hedging, restated findings, unfilled template artifacts.
+
+Set `> **Status:** Complete` on the review document. Present it with the verdict roster and proposed moves. Do not commit automatically — commit only when the user explicitly requests it.
 
 ---
 
 ## REVIEW PRINCIPLES
 
-### Fresh Eyes
-- Look at status quo before reading projex
-- Form independent opinions first
-- Avoid anchoring to original content
-
-### Challenge Everything
-- Question assumptions explicitly
-- Test claims against reality
-- Consider what has changed
-
-### Objective Assessment
-- Separate what you want from what is
-- Acknowledge when projex should be abandoned
-- Value accuracy over attachment
-
-### Constructive Output
-- Don't just critique — recommend
-- Provide actionable next steps
-- Make updates easy to implement
+- **Fresh eyes first** — status quo before target content; independence is the whole point
+- **Currency, not quality** — a review is not a critique; it asks "still true?" not "well made?"
+- **Evidence over impression** — every verdict traces to a recorded finding
+- **Retirement is success** — Archive/Abandon verdicts are the system working, not failure
+- **Decay spreads** — a stale document's referrers are suspects, not bystanders; every non-Valid verdict gets a ripple scan
+- **Constructive** — every non-Valid verdict ships with actions, not just judgment
 
 ---
 
 ## OUTPUT
 
-This workflow produces:
-- A review projex document at `.projex/{yymmddhhmm}-{original-name}-review.md`
-- Review notation added to the reviewed projex
-- Clear verdict and recommended actions
-- Potential file moves based on verdict:
-  - **Archival** → Move reviewed projex to `.projex/archived/`
-  - **Abandonment** → Move to `.projex/abandoned/` or delete
+Produces `.projex/{yymmddhhmm}-{name}-review.md` with per-target verdicts and actions, plus review notes in each reviewed document.
+
+**Folder placement:** See SKILL.md § Organizing. Review doc: active → `.projex/`, done → `.projex/closed/`.
 
 **Committing:** Present the review document to the user. Do not commit automatically — commit only when the user explicitly requests it.
 
@@ -384,8 +310,7 @@ This workflow produces:
 
 ## NOTES
 
-- Reviews are about currency and validity, not quality judgment
-- A "Recommend Archival" verdict is not failure — contexts change
-- Use relative paths when referencing repository files
-- Link reviews to originals bidirectionally
-- Consider setting up periodic review schedules for critical projex
+- Reviews can chain: Revise → `/revise-projex`, Expand → new projex, deep concerns → `/redteam-projex` or `/audit-projex`
+- Batch reviews of large rosters may span sessions — the roster tracks progress
+- Consider periodic review schedules for load-bearing projex (navs, definitions, accepted proposals)
+- Use relative paths for repo files; filenames only for projex references
