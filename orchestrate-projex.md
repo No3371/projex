@@ -55,9 +55,9 @@ Subagents have no memory of this conversation. Each handoff must be self-contain
 - **Path to its workflow spec + `SKILL.md`** — so it can load them
 - **Prior projex artifacts** — by **filename**, not path, e.g. `2604151200-auth-feature-plan.md`
 - **Facts already established** — human-confirmed scope boundaries, worktree preference, merge strategy, any constraint already decided or cleared
+- **Prior findings — by pointer, not paraphrase** — analysis produced by earlier steps lives in its artifact; hand over filename + section (e.g. `2604151200-caching-proposal.md § Option B`), don't restate it in the orchestrator's voice. Anything that must be restated inline is labeled *prior finding — re-verify*, never asserted as ground truth
 - **Depth** — this subagent's nesting depth (§ Nesting Depth). Orchestrator always hands off depth `1`.
-- **Model override** — if chain notation (§ Explicit Chain Notation) assigned this step a model, pass it as the subagent's `model` param; else omit, run under current default
-- **Current Default Model / Your Model** — which model runs this step (per-step override if any, else current default). Matters for artifacts recording authorship/model, and for nested sub-subagents that inherit the coordinator's effective model unless overridden
+- **Model** — which model runs this step: per-step override from chain notation (§ Explicit Chain Notation) if assigned, else the current chain default. Override → pass as the subagent's `model` param; state it in the handoff either way — artifacts record authorship/model, and nested sub-subagents inherit the coordinator's effective model unless overridden
 
 Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — the spec governs that. It reads `SKILL.md` + its workflow file and proceeds correctly without further direction.
 
@@ -66,6 +66,14 @@ Avoid in the handoff:
 - Re-specifying workflow behavior
 - Prescribing output format, section structure, review style
 - Rules that conflict with or duplicate `SKILL.md` or the spec
+- **The orchestrator's own analysis of the question** — hypotheses, expected answers, worked counterexamples, pre-enumerated verdicts or document-structure decisions. Relay the question as the human posed it; independent judgment is the value of delegating. A subagent handed the expected conclusion echoes it — an echo is not verification. If the orchestrator has already formed a view, it belongs in review after the subagent returns (§ Review After Each Subagent Returns), not in the handoff
+
+### Follow-up Dispatches — Same Artifact, New Round
+
+Two cases, different rules — don't let one pattern-match into the other:
+
+- **Revision of a deficient return** — the subagent's output failed review. Specific, directive feedback is correct here: name what's wrong and cite the spec expectation it missed. This is the one sanctioned exception to "context, not instruction."
+- **New human question about an existing artifact** — a fresh dispatch, not a revision. Same rules as a first dispatch: verbatim question + prior-findings pointers, nothing pre-solved. The temptation is strongest here — the orchestrator often worked out an answer while judging whether the question warrants a step at all. Having the answer is not a reason to hand it over
 
 ## Nesting Depth
 
@@ -89,6 +97,8 @@ Rationale + full contract: `execute-projex.md § Choose Execution Mode` and `do-
 ### Review After Each Subagent Returns
 
 Read output as a user would; judge whether it serves the original task. If not: request revision with specific feedback, or redirect to another workflow. Compare against what the spec says the subagent should produce, not your own rules. Second attempt still fails → escalate, don't force a third round.
+
+Revision feedback is the one place directive specificity belongs — a *new question* about the artifact is not revision feedback, it's a fresh dispatch (§ Follow-up Dispatches — Same Artifact, New Round).
 
 ### Patch vs Revise — Disambiguate Before Delegating
 
