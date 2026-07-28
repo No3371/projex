@@ -34,11 +34,23 @@ Red Teams break things before they break in production. Attack ideas, find explo
 
 ## WORKFLOW
 
-### 1. IDENTIFY STAKEHOLDER ROLES
+### 1. SPAWN STAKEHOLDER ROLES — THREE WAVES
 
-Before attacking, identify whose perspective matters. List ALL roles involved in or affected by the subject:
+Roles are spawned **incrementally across exactly three waves**, never enumerated in one pass. Each wave attacks its own roles through steps 2–4 to completion, then the next wave's roles are derived from what those attacks surfaced. Roles nameable before attacking anything are the shallow ones; the roles that matter are implied by findings.
 
-**Common roles to consider:**
+| Wave | Who to spawn | Derived from |
+|------|--------------|--------------|
+| **1 — Direct** | Roles the subject names or serves outright: who holds it, runs it, builds on it. Typically 2–4. | The subject itself |
+| **2 — Implicated** | Roles appearing inside wave 1's findings: who else stands in a discovered failure path, who absorbs the blast radius, who is depended on but was never mentioned. | Wave 1 findings |
+| **3 — Adversarial & accountable** | Who profits from the findings, who answers for them. Adversarial roles (Attackers, Competitors) belong here — they weaponize *known* weaknesses, so they are spawned only once waves 1–2 have exposed them. Plus governance/conformance roles the findings implicate. | Waves 1–2 findings |
+
+**Per-wave loop:** spawn wave's roles → run steps 2–4 for those roles only → record findings → re-read findings → derive next wave. Waves are sequential: do not pre-spawn wave 2 or 3 roles while wave 1 is open, and do not attack a wave-2 role before wave 1's attacks are recorded.
+
+**Wave 3 is terminal.** A role surfacing after wave 3 closes is logged under `## Roles Not Attacked` with what would have been asked of it. It does not open a fourth wave.
+
+**An empty wave is a finding, not a gap to pad.** If wave 1's findings imply no new role, say so in the document rather than filling wave 2 with generic roles — nothing derivable usually means wave 1's attacks were too shallow. Return to them before moving on.
+
+**Role pool** — draw from these; place each in the wave its evidence supports rather than the wave it appears in here:
 - **End Users** — Who uses this?
 - **Operators** — Who runs/maintains this?
 - **Developers** — Who builds/extends this?
@@ -50,7 +62,7 @@ Before attacking, identify whose perspective matters. List ALL roles involved in
 - **Competitors** — Who benefits from this failing or being displaced?
 - **Attackers** — Who actively tries to exploit or subvert this?
 
-> **Adversarial roles (Competitors, Attackers) are different in kind.** They don't fail the system — they weaponize it. For these roles, the question is not "what goes wrong for them?" but "what can they do *to* the system, and what do they gain?" Analyze their capabilities, motivations, and the asymmetry between their effort and the damage they can cause.
+> **Adversarial roles (Competitors, Attackers) are different in kind — and wave-3 by construction.** They don't fail the system — they weaponize it. For these roles, the question is not "what goes wrong for them?" but "what can they do *to* the system, and what do they gain?" Analyze their capabilities, motivations, and the asymmetry between their effort and the damage they can cause.
 
 **For each role, note:**
 - What do they care about?
@@ -60,7 +72,9 @@ Before attacking, identify whose perspective matters. List ALL roles involved in
 
 ### 2. ESTABLISH ATTACK SURFACE PER ROLE
 
-For each identified role, map their specific attack surface:
+> Steps 2–4 run **once per wave**, scoped to that wave's roles only. Roles from earlier waves are not re-attacked — their findings are the input that spawned this wave.
+
+For each role in the current wave, map their specific attack surface:
 
 **Per-Role Questions:**
 - What does this role expect/require?
@@ -71,7 +85,7 @@ For each identified role, map their specific attack surface:
 
 ### 3. ROLE-BASED ATTACK VECTORS
 
-**For each role, execute these attacks:**
+**For each role in the current wave, execute these attacks:**
 
 **Assumption Attacks (from role's view):**
 - Says who? (What evidence does this role have?)
@@ -96,7 +110,7 @@ What would this role's adversary target? What's valuable to attack from this rol
 
 ### 4. CHALLENGE FRAMEWORK (ROLE-GROUNDED)
 
-Apply these across all roles:
+Apply these across the current wave's roles. Then, after wave 3 closes, run one final pass across all three waves' roles together — cascades that cross waves (a wave-1 failure an attacker reaches through a wave-2 role) are only visible once every wave exists.
 
 **Five Whys (per role):**
 From each role's perspective: Why believe → assertion → evidence → source → authority → first principles or circular reasoning
@@ -112,6 +126,8 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 ```bash
 {projex-scripts}/new-projex.{sh|ps1} <repo-root> redteam "{subject}" <projex-folder>
 ```
+
+**Scaffold the file at the start of wave 1, not after wave 3.** The report is the working artifact: append each wave's roles, attack surface, and findings as that wave closes. The next wave is derived from what is *written down*, not from memory — a wave whose findings never reached the document cannot spawn the wave after it.
 
 **Write Bottom Line last.** Open the file with the placeholder exactly as shown in the template. Do not fill in Verdict or Top Vulnerabilities until all findings, edge cases, and assessments are complete. Only then synthesize the prioritized list and choose the verdict.
 
@@ -138,13 +154,25 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 
 ## Stakeholder Roles
 
-| Role | Cares About | Pain Points | Critical Assumptions |
-|------|-------------|-------------|---------------------|
-| End Users | [What matters] | [What hurts] | [What they assume] |
-| Operators | [What matters] | [What hurts] | [What they assume] |
-| Developers | [What matters] | [What hurts] | [What they assume] |
-| Security | [What matters] | [What hurts] | [What they assume] |
-| [Other Role] | [What matters] | [What hurts] | [What they assume] |
+| Wave | Role | Cares About | Pain Points | Critical Assumptions |
+|------|------|-------------|-------------|---------------------|
+| 1 | [Role the subject names outright] | [What matters] | [What hurts] | [What they assume] |
+| 1 | [Role] | [What matters] | [What hurts] | [What they assume] |
+| 2 | [Role implicated by a wave-1 finding] | [What matters] | [What hurts] | [What they assume] |
+| 3 | [Adversarial or accountable role] | [What they gain] | [n/a — they succeed] | [What they assume] |
+
+### Wave Derivation
+
+- **Wave 1 → 2:** [Which wave-1 finding surfaced which role, and how]
+- **Wave 2 → 3:** [Which finding surfaced which adversarial/accountable role, and how]
+
+## Roles Not Attacked
+
+> Roles that surfaced after wave 3 closed. Recorded, not analyzed.
+
+| Role | Surfaced by | What would have been asked |
+|------|-------------|---------------------------|
+| [Role] | [Finding that implied it] | [The unasked question] |
 
 ---
 
@@ -258,7 +286,12 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 ### 6. VALIDATION
 
 **Checks:**
-- [ ] All relevant stakeholder roles identified
+- [ ] Exactly three waves run — none skipped, none merged, no fourth wave opened
+- [ ] Wave 2 and 3 roles each trace to a specific earlier finding, recorded in Wave Derivation
+- [ ] No wave attacked before the previous wave's findings were written to the document
+- [ ] Empty wave (if any) declared explicitly, with wave-1 depth revisited — not padded with generic roles
+- [ ] Post-wave-3 cross-wave pass run (step 4) — cascades spanning waves checked
+- [ ] Roles surfacing after wave 3 logged under Roles Not Attacked
 - [ ] Each role's perspective analyzed independently
 - [ ] Claims/assumptions challenged from each role's viewpoint
 - [ ] Edge cases tested for each role's experience
@@ -281,6 +314,7 @@ Save to appropriate `.projex/` folder. Link to subject being analyzed. Do not co
 ## PRINCIPLES
 
 - **Role-first thinking** — Every finding must be grounded in a stakeholder role's reality
+- **Waves, not a census** — Roles you can list up front are the obvious ones. Attack, read what you found, then ask who else it implicates. Three waves, each earning its roles from the previous one's evidence
 - **Assume nothing** — Every assumption is guilty until proven innocent per role
 - **Break it first** — Find failure modes in safety from each role's perspective
 - **No sacred cows** — Authority ≠ evidence, popularity ≠ correctness
