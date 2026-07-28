@@ -41,7 +41,7 @@ Audits validate that work was actually done, done correctly, and delivered value
 - "Improved Z" → Measurably better? By how much?
 
 **Evidence to inspect:**
-Git commits, code files, tests (existence, pass, coverage), documentation (accurate, complete), logs, metrics
+Git commits, code files, tests (existence, pass, coverage), documentation (accurate, complete), logs, metrics. Non-code work: deliverables, records, correspondence, published/filed artifacts
 
 **Gaps to discover:**
 Promised but not delivered, undocumented issues, unhandled edge cases, technical debt created

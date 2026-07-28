@@ -28,6 +28,7 @@ Proposals capture early-stage thinking before committing to implementation. They
 - `/propose-projex.md I want to add a caching layer to the API`
 - `/propose-projex.md Migrate from REST to GraphQL`
 - `/propose-projex.md Consolidate authentication across microservices`
+- `/propose-projex.md Restructure the onboarding curriculum around case studies`
 
 ---
 

@@ -16,6 +16,7 @@ Interviews extract knowledge through relentless, focused Q&A. Walk each branch o
 /interview-projex <scope/topic>
 /interview-projex authentication system design
 /interview-projex @2607311430-database-schema.md
+/interview-projex book chapter outline and argument structure
 ```
 
 ---

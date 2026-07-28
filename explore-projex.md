@@ -31,6 +31,7 @@ Explorations provide thorough, grounded investigation into what exists, how it w
 - `/explore-projex.md Why do we have these caching layers?`
 - `/explore-projex.md @src/core/engine.rs`
 - `/explore-projex.md Should we adopt microservices?`
+- `/explore-projex.md How does the current grant application process work?`
 
 ---
 

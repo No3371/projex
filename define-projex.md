@@ -33,6 +33,7 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 - `/define-projex.md The authentication subsystem`
 - `/define-projex.md Token class and its variants`
 - `/define-projex.md Our pricing model`
+- `/define-projex.md Our consulting engagement model`
 
 **Subsequent invocations** (revisit and deepen):
 - `/define-projex.md @2602151430-auth-subsystem-def.md`

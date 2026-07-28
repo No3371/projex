@@ -39,6 +39,10 @@ One line, full lifecycle: plan it, attack the plan, revise if the attack found s
 - **Safe undo.** Ephemeral branches, worktrees, and simulations make experiments cleanly discardable.
 - **Guard rails, not vibes.** Templates force scope, risks, and rollback thinking *before* acting. Strict git discipline prevents the classic agent disasters.
 
+## Not just for code
+
+The workflows are thinking disciplines, not programming tools — evaluation lenses, adversarial stakeholder waves, claims-vs-evidence audits, living roadmaps. Anything file-based kept in a git repo (a manuscript, course material, legal drafts, research notes) gets the **full** framework, branches and all. Without git, every analytical workflow still runs — documents are created directly, commits skipped. For work that isn't files at all, the agent authors the plan, you execute it, and the record is kept the same way. Scope rules per substrate: `SKILL.md § Substrate`.
+
 ## Workflows
 
 Invoke any of these by name. Each produces (or acts on) a typed document with a defined lifecycle.

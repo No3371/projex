@@ -8,7 +8,7 @@ Scans produce exhaustive lists. Given a subject — a concept, a dependency, a p
 
 **Key characteristics:**
 - **Coverage over insight** — find everything, explain nothing
-- **Precision matters** — every entry must be real and accurately located (`file:ln`)
+- **Precision matters** — every entry must be real and accurately located (`file:ln`, or the medium-appropriate locator — see Format adaptation)
 - **No purpose required** — the scan doesn't care what the result will be used for. It just finds things.
 - **Adaptive format** — usually `file:ln` entries, but adapts to subject (e.g., a scan of API endpoints might list `METHOD /path → handler`)
 - **Born closed** — scans are point-in-time snapshots
@@ -42,6 +42,7 @@ Scans produce exhaustive lists. Given a subject — a concept, a dependency, a p
 - `/scan-projex Public methods on the Parser interface`
 - `/scan-projex Every TODO and FIXME in the project`
 - `/scan-projex All references to the pricing calculation`
+- `/scan-projex Every unresolved citation across the manuscript`
 
 ---
 
@@ -125,6 +126,8 @@ The default is `file:ln — annotation`, but adapt to the subject:
 | Dependencies | `package@version` — used by [list] |
 | Config keys | `key = value` — in `file:ln` |
 | Database references | `table.column` — queried in `file:ln` |
+| Document/manuscript content | `doc § heading` or `page:para` — what the match is |
+| Web/external sources | `URL#anchor` — what the match is |
 
 ### 4. PRESENT THE SCAN
 

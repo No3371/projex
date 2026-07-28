@@ -30,6 +30,7 @@ Evaluations provide rigorous, intellectually honest analysis. They research esse
 - `/eval-projex What can be improved in the current implementation?`
 - `/eval-projex Compare REST vs GraphQL for our use case`
 - `/eval-projex @2607311430-caching-layer-proposal.md`
+- `/eval-projex Comparative vs longitudinal design for the thesis study`
 
 **Deepening an existing evaluation:**
 - `/eval-projex @2603041430-auth-rewrite-eval.md deepen assumptions section`

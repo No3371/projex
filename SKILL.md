@@ -204,6 +204,37 @@ The commit commands shown in auxiliary workflow docs are **reference templates**
 
 ---
 
+## Substrate
+
+Projex methods are domain-general; git is the **reference substrate**, not a requirement. The execution family needs four guarantees from whatever holds the work:
+
+1. **Inspectable corpus** — the status quo can be read
+2. **Edit mechanism** — the corpus can be changed
+3. **Checkpoint + rollback** — changes can be isolated and discarded
+4. **Provenance log** — what changed, when, why is recoverable
+
+Git provides all four. Substrate determines available workflows:
+
+| Substrate | Available |
+|-----------|-----------|
+| Files in a git repo (code, prose, any domain) | Full framework |
+| Files, no git | All analytical workflows + revise/memo/define/nav. No execute/simulate/debug cycle — no rollback guarantee |
+| Non-file domain (events, negotiations, physical work) | Analytical workflows + Field Mode cycle |
+
+### No-VCS Mode
+
+`.projex/` folder not inside a git repo: skip repo resolution and every commit/stage step; create and edit files directly (`new-projex` works without git — its printed commit hint does not apply). Naming, statuses, folder states (`closed/`, `archived/`, `abandoned/`) unchanged. Locators adapt to the medium — `doc § heading`, `page:para`, `URL#anchor` in place of `file:ln`.
+
+### Field Mode
+
+For plans whose actions the agent cannot perform (book the venue, file the application, run the negotiation): author the Plan normally → the human executes → the agent debriefs the human interview-style and writes the execution log from their account (entries marked human-reported) → Close records evidence from that log. Analytical workflows are unaffected — they never required the agent to act.
+
+### Irreversibility Discipline
+
+The Critical Git Rules generalize to every substrate: one state-changing operation at a time, read the outcome before the next; explicit scope per change — name what you touch, no wildcards; human confirmation before any destruction or unrecoverable step.
+
+---
+
 ## Git Integration
 
 The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and clean rollback.

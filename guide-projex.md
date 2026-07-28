@@ -29,6 +29,7 @@ Guides produce **human-facing study material** — an indexed, phased reading pa
 - `/guide-projex.md Get up to speed on the projex framework`
 - `/guide-projex.md Navigate the WebSocket spec (RFC 6455)`
 - `/guide-projex.md Onboard a new contributor to the compiler pipeline`
+- `/guide-projex.md Get up to speed on GDPR obligations for the newsletter`
 
 ---
 

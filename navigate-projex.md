@@ -36,6 +36,7 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 - `/navigate-projex.md Game engine project roadmap` — project-level, lives in root `.projex/`
 - `/navigate-projex.md Parser module direction` — module-level, lives in `src/parser/.projex/`
 - `/navigate-projex.md API documentation coverage` — area-level, lives in `docs/api/.projex/`
+- `/navigate-projex.md Thesis completion roadmap` — project-level, lives in root `.projex/`
 
 **Subsequent invocations** (revisit and revise):
 - `/navigate-projex.md @2602011430-engine-roadmap-nav.md`

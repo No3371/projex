@@ -32,6 +32,7 @@ Imaginations take a seed — an idea, an essence, a principle, a vision fragment
 - `/imagine-projex.md A language where errors are first-class values`
 - `/imagine-projex.md Evolve our CLI into a conversational interface`
 - `/imagine-projex.md @2607311430-capability-model-proposal.md — take this further`
+- `/imagine-projex.md A field guide that adapts its depth to the reader's location and season`
 
 ---
 

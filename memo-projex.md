@@ -38,6 +38,7 @@ Memos capture something worth remembering before it gets lost — a user's offha
 - `/memo-projex Deferred from @2602151430-api-cleanup-plan.md: objectives 3 and 4 (auth token rotation)`
 - `/memo-projex Noticed during execution: the test harness silently swallows stderr`
 - `/memo-projex Idea: what if Maps auto-detected child maps instead of requiring manual linking?`
+- `/memo-projex User said "the intro chapter buries the thesis statement"`
 
 ---
 

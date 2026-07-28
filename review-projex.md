@@ -33,6 +33,7 @@ Review judges currency, not quality. A well-written plan whose target code no lo
 - `/review-projex all active plans`
 - `/review-projex everything in .projex/ older than 30 days`
 - `/review-projex the projex we made last week`
+- `/review-projex @2607311430-course-outline-plan.md`
 
 ---
 
@@ -125,7 +126,7 @@ Now read the target critically. Run the check matrix:
 | Check | Question |
 |-------|----------|
 | **Validity** | Stated problems still problems? Assumptions still hold? Approach still sensible? Prerequisites unchanged? |
-| **Accuracy** | File refs resolve? `file:ln` cites still correct? Code samples match reality? Facts current? |
+| **Accuracy** | File refs resolve? `file:ln` cites still correct? Code samples match reality? Facts current? Non-code sources: cites resolve, quoted claims match source? |
 | **Completeness** | Does status quo reveal gaps the doc should cover? Scope still right? |
 | **Value** | Still worth doing/keeping? Effort still justified? Superseded by anything? |
 

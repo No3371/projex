@@ -28,6 +28,7 @@ Red Teams break things before they break in production. Attack ideas, find explo
 ```
 /redteam-projex.md <subject to attack>
 /redteam-projex.md @2607311430-auth-system-plan.md
+/redteam-projex.md The contingency plan for the outdoor launch event
 ```
 
 ---
