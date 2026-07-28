@@ -116,6 +116,7 @@ For each plan step, create a task that captures:
 Also create explicit tasks for **every gate and sequential dependency**:
 - Pre-execution gates (branch creation, log file creation)
 - Per-step log entries ("Log step N results to execution log")
+- Verification of steps marked `Verify-Projex: Required` ("Verify step N independently")
 - Per-step commits ("Commit step N changes")
 - Post-execution tasks (verification, status update, cleanup)
 
@@ -130,6 +131,8 @@ Also create explicit tasks for **every gate and sequential dependency**:
 Two modes — pick before touching files:
 
 **Self-execute (default).** This invocation carries out every objective itself, sequentially, per step 4 below. Use when the plan is small, objectives are tightly coupled, or you are not running under an orchestrator.
+
+Self-execute has no context isolation: the agent that implements each step also judges it, holding every assumption it made while implementing. Steps marked `Verify-Projex: Required` are checked by an independent `/verify-projex.md` sub-subagent before their commit — see § 4.C item 3.
 
 **Delegate per objective (sub-subagent mode).** Spawn one sub-subagent per objective; each invokes `/do-projex.md` against that single objective. Use when:
 
@@ -167,7 +170,21 @@ For each step in the plan:
 
 1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
 2. Confirm the step objective is achieved; check for side effects
-3. **Write the log entry** for this step using the inline template below, referencing tool outputs just produced — not from memory:
+3. **Independent verification** — when this step carries a `Verify-Projex: Required` line, spawn a `/verify-projex.md` sub-subagent for it and **block on its return** before proceeding.
+
+   Pass only `plan`, `step`, `repo`, `branch`. Never pass your own account of what you changed — that contamination is exactly what the verifier exists to avoid. Spawn on the same model you are running; a weaker verifier rubber-stamps.
+
+   Act on the verdict:
+
+   - **Verified** → continue to item 4
+   - **Patch** → apply the named fix, then re-spawn verification on this step
+   - **Rejected** → redo the step, then re-spawn verification
+
+   **Two verification rounds per step maximum.** If a third would be needed, the step is not converging: stop looping, log it `Partial` with the verifier's findings, and escalate to the user.
+
+   Record the verdict and the verifier's key findings in this step's log entry. The report is ephemeral and dies with the sub-subagent.
+
+4. **Write the log entry** for this step using the inline template below, referencing tool outputs just produced — not from memory:
 
 ```
 ### [yyyymmdd hh:mm] - Step N: [Step Title]
@@ -176,13 +193,13 @@ For each step in the plan:
 **Status:** Success / Failed / Partial
 ```
 
-4. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
+5. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
-5. **Mark the task complete** in your task list — only after both the work and log entry are committed
+6. **Mark the task complete** in your task list — only after both the work and log entry are committed
 
 **User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
 

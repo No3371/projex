@@ -1,12 +1,12 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
 
 - **Proposal** — Directional: "what if we go this way?" with trade-offs, approaches, and impact. Draft → Review → Accepted/Rejected. WORKFLOW -> @./propose-projex.md
-- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md | OBJECTIVE-SCOPED EXECUTION -> @./do-projex.md (only invokable from execute-projex)
+- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md | OBJECTIVE-SCOPED EXECUTION -> @./do-projex.md (only invokable from execute-projex) | STEP VERIFICATION -> @./verify-projex.md (only invokable from execute-projex)
 - **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
 - **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md

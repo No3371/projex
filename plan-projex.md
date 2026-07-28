@@ -244,6 +244,7 @@ Early steps used incomplete understanding. Re-read relevant code (don't rely on 
 2. **Discrepancies** — Steps describe same file differently? Later step needs what earlier doesn't produce? Criteria test what steps don't deliver?
 3. **Misunderstandings** — Actual call path / data flow vs plan? Side effects / validations / transformations missed? Modifying right layer (caller vs callee)?
 4. **Overengineering** — Fewer steps possible? Unneeded abstractions/helpers? More direct approach equally valid?
+5. **Principles**  — SOLID, YAGNI, DRY, KISS, etc.
 
 After: fix anything caught. Approach fundamentally wrong → stop, discuss with user, don't patch broken plan. Surviving assumptions → Context → Assumptions so execution verifies early.
 
@@ -275,7 +276,13 @@ Final gate before finalize. State the verdict explicitly.
 
 If splitting: stop, generate child plans (each with own filename + `Dependencies`), discard/archive parent draft. Do not FINALIZE a plan being split.
 
-### 8. FINALIZE
+### 8. ASSUME STEP STRATEGIES
+
+Review each planned step:
+- If a step is self-contained, needs little context, barely depends on prior execution details, or is mostly mechanical, add a `Do-Projex: Encouraged` header to it.
+- If a step carries a testable `**Verification:**` method **and** is risky, wide-reaching, or easy to get subtly wrong, add a `Verify-Projex: Encouraged` line to it. Steps whose verification is trivial or whose failure is self-evident do not need it. User can override. Applies to self-execute mode — see `execute-projex.md` § 4.C.
+
+### 9. FINALIZE
 
 1. **Refine** — front-load key info (summary, scope, criteria)
 2. **De-slop** (optional) — strip agent self-talk, filler, redundant restatements, unfilled template artifacts (see SKILL.md § De-slop)
