@@ -1,18 +1,15 @@
 # Orchestrate-Projex
 
-Orchestrator drives a human's task through projex workflows by acting as the projex **user**: spawns subagents to do the work, reviews their output, makes user-level decisions, reports back.
+Orchestrator IS the projex **user**: drives a human's task through projex workflows by spawning subagents to do the work, reviewing their output, making user-level decisions, and reporting back. Delegates and decides — never performs workflow steps itself.
 
 ## Role
 
-Orchestrator IS the projex user. It:
 - Picks which workflow(s) fit the task
 - Spawns subagents to run them
 - Reviews their output as a user would — accept | request revision | redirect
 - Makes mid-workflow decisions (worktree mode, merge strategy, scope)
 - Escalates when blocked or when an action exceeds the task's implied scope
 - Reports back when done
-
-Delegates and decides — never performs workflow steps itself.
 
 ## Framework References
 
@@ -42,7 +39,8 @@ Load framework files for the chosen path. Subagents load their own specs — orc
 - `@./define-projex.md` — declarative entity spec
 - `@./guide-projex.md` — curated reading path for humans
 - `@./archive-projex.md` — compress closed projex into index
-- `@./do-projex.md` — objective-scoped execution sub-workflow; only `/execute-projex.md` may invoke it
+
+Sub-workflows (`do-projex`, `verify-projex` — `SKILL.md § Sub-Workflows`) are never dispatched by the orchestrator — don't load them; their parent workflow owns their contracts.
 
 ## Subagent Handoff — Context Only
 
@@ -55,42 +53,32 @@ Subagents have no memory of this conversation. Each handoff must be self-contain
 - **Path to its workflow spec + `SKILL.md`** — so it can load them
 - **Prior projex artifacts** — by **filename**, not path, e.g. `2604151200-auth-feature-plan.md`
 - **Facts already established** — human-confirmed scope boundaries, worktree preference, merge strategy, any constraint already decided or cleared
-- **Prior findings — by pointer, not paraphrase** — analysis produced by earlier steps lives in its artifact; hand over filename + section (e.g. `2604151200-caching-proposal.md § Option B`), don't restate it in the orchestrator's voice. Anything that must be restated inline is labeled *prior finding — re-verify*, never asserted as ground truth
+- **Prior findings — by pointer, not paraphrase** — earlier steps' analysis lives in its artifact; hand over filename + section (e.g. `2604151200-caching-proposal.md § Option B`), don't restate in the orchestrator's voice. Anything restated inline is labeled *prior finding — re-verify*, never asserted as ground truth
 - **Depth** — this subagent's nesting depth (§ Nesting Depth). Orchestrator always hands off depth `1`.
-- **Model** — which model runs this step: per-step override from chain notation (§ Explicit Chain Notation) if assigned, else the current chain default. Override → pass as the subagent's `model` param; state it in the handoff either way — artifacts record authorship/model, and nested sub-subagents inherit the coordinator's effective model unless overridden
+- **Model** — per-step override from chain notation (§ Explicit Chain Notation) if assigned, else the current chain default. Override → pass as the subagent's `model` param; state it in the handoff either way — artifacts record authorship/model, and nested sub-subagents inherit the coordinator's effective model unless overridden
 
-Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — the spec governs that. It reads `SKILL.md` + its workflow file and proceeds correctly without further direction.
+Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — it reads `SKILL.md` + its workflow file and proceeds without further direction. Avoid:
 
-Avoid in the handoff:
 - Step-by-step directives ("first X, then Y")
 - Re-specifying workflow behavior
 - Prescribing output format, section structure, review style
 - Rules that conflict with or duplicate `SKILL.md` or the spec
-- **The orchestrator's own analysis of the question** — hypotheses, expected answers, worked counterexamples, pre-enumerated verdicts or document-structure decisions. Relay the question as the human posed it; independent judgment is the value of delegating. A subagent handed the expected conclusion echoes it — an echo is not verification. If the orchestrator has already formed a view, it belongs in review after the subagent returns (§ Review After Each Subagent Returns), not in the handoff
+- **Orchestrator's own analysis of the question** — hypotheses, expected answers, worked counterexamples, pre-enumerated verdicts or document-structure decisions. Relay the question as the human posed it; independent judgment is the value of delegating — a subagent handed the expected conclusion echoes it, and an echo is not verification. A pre-formed view belongs in review after return (§ Review After Each Subagent Returns), not in the handoff
 
 ### Follow-up Dispatches — Same Artifact, New Round
 
 Two cases, different rules — don't let one pattern-match into the other:
 
-- **Revision of a deficient return** — the subagent's output failed review. Specific, directive feedback is correct here: name what's wrong and cite the spec expectation it missed. This is the one sanctioned exception to "context, not instruction."
-- **New human question about an existing artifact** — a fresh dispatch, not a revision. Same rules as a first dispatch: verbatim question + prior-findings pointers, nothing pre-solved. The temptation is strongest here — the orchestrator often worked out an answer while judging whether the question warrants a step at all. Having the answer is not a reason to hand it over
+- **Revision of a deficient return** — output failed review. Specific, directive feedback is correct: name what's wrong, cite the missed spec expectation. The one sanctioned exception to "context, not instruction."
+- **New human question about an existing artifact** — a fresh dispatch under first-dispatch rules: verbatim question + prior-findings pointers, nothing pre-solved. Temptation is strongest here — the orchestrator often works out an answer while judging whether the question warrants a step at all. Having the answer is not a reason to hand it over.
 
 ## Nesting Depth
 
-Orchestrator is depth `0`. Every subagent it spawns directly is depth `1`. Subagents MAY spawn further subagents — depth-gated, not forbidden outright.
+Orchestrator is depth `0`; its direct subagents are depth `1`. Subagents MAY spawn further — depth-gated, not forbidden outright: ≤ 3 allowed, subject to the invoked workflow's own rules; > 3 forbidden — complete the step directly, or stop and report.
 
 **Include this verbatim in every handoff, `{depth}` filled in:** *"You are a subagent at depth {depth}. You may spawn further subagents only if the new subagent's depth would be ≤ 3 — hand each one depth {depth}+1 and this same clause, updated. Never spawn a subagent at depth > 3. If you cannot complete a step yourself and cannot spawn further, stop and return what you have with a clear description of what is blocking you."*
 
-- Depth ≤ 3 → spawning allowed, subject to the invoked workflow's own rules
-- Depth > 3 → spawning forbidden — complete the step directly, or stop and report
-
-**execute-projex → do-projex.** When the orchestrator dispatches `/execute-projex.md` at depth 1, that coordinator MAY spawn sub-subagents at depth 2, each invoking `/do-projex.md` for a single objective. Constraints:
-
-- Sequential by default (one objective at a time); concurrent dispatch requires per-objective worktrees
-- Coordinator keeps init, task list, plan-wide verification, completion — only per-objective execution is delegated
-- Sub-subagent prompt uses this clause instead of the general one above: *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."* — `do-projex.md` forbids nesting outright, regardless of remaining depth budget
-
-Rationale + full contract: `execute-projex.md § Choose Execution Mode` and `do-projex.md`. Orchestrator doesn't re-specify them.
+**Sub-workflows.** A subagent running a parent workflow (currently execute-projex) MAY spawn sub-subagents for sub-workflows (`SKILL.md § Sub-Workflows`). Those never nest and receive their own no-nesting clause instead of the general one above — embedded by the **parent** per its spec (`execute-projex.md § Choose Execution Mode`), not by the orchestrator. Orchestrator neither specifies nor polices grandchildren — its contract is with depth-1 subagents only.
 
 ## Orchestrator Responsibilities
 
@@ -98,11 +86,12 @@ Rationale + full contract: `execute-projex.md § Choose Execution Mode` and `do-
 
 Read output as a user would; judge whether it serves the original task. If not: request revision with specific feedback, or redirect to another workflow. Compare against what the spec says the subagent should produce, not your own rules. Second attempt still fails → escalate, don't force a third round.
 
-Revision feedback is the one place directive specificity belongs — a *new question* about the artifact is not revision feedback, it's a fresh dispatch (§ Follow-up Dispatches — Same Artifact, New Round).
+Revision feedback is the one place directive specificity belongs — a *new question* about the artifact is not revision feedback but a fresh dispatch (§ Follow-up Dispatches — Same Artifact, New Round).
 
 ### Patch vs Revise — Disambiguate Before Delegating
 
 "Patch the plan" is ambiguous — common misrouting. Resolve before spawning:
+
 - What the **system/code does** → `/patch-projex`
 - What a **projex document claims** (Plan step, Proposal trade-off, Definition boundary, Nav milestone) → `/revise-projex`
 
@@ -111,6 +100,7 @@ Still ambiguous after one inference → ask. Wrong guess spawns the wrong subage
 ### Mid-Workflow Decisions
 
 Orchestrator owns decisions a user would normally make:
+
 - Which workflow next (or stop)
 - Whether a plan is ready to execute
 - Whether execution is complete enough to close
@@ -128,15 +118,15 @@ A: base ── execute-projex ──> [projex/A] (stays open)
 B: [projex/A] ── execute-projex ──> [projex/B] ── close-projex ──> [projex/A] ── close-projex ──> [base]
 ```
 
-- Tell B's execute-subagent to start from `projex/A` — checkout mode: check out `projex/A` first; worktree mode: pass `projex/A` as `<base-ref>` to `projex-worktree.{sh|ps1}`
+- B's execute-subagent starts from `projex/A` — checkout mode: check out `projex/A` first; worktree mode: pass `projex/A` as `<base-ref>` to `projex-worktree.{sh|ps1}`
 - B's execution log records `Base Branch: projex/A` — close-projex reads this generically, so closing B merges into `projex/A`, not repo base
 - Close order: B before A. Deeper chains (C on B on A) nest the same way
 
 Default, not mandate — stack only when a dependency is declared or clearly implied; independent plans run in parallel against base. A needs revision after B started on its branch → escalate, don't rewrite a branch other work sits on.
 
-**Explicit workflow lists are literal.** Human names specific workflows (e.g. "orchestrate-projex plan, redteam") → that list IS the full scope; run exactly those and stop. Don't infer or auto-chain further workflows a full cycle would normally add (no silent execute/close after a named plan), even if the next step seems obvious. Natural next step looks missing → surface it as a question in the Completion Report, don't act on it. Applies only to explicit lists; if the human states a task and lets the orchestrator choose, normal selection applies.
-
 ### Explicit Chain Notation
+
+**Explicit workflow lists are literal.** Human names specific workflows (e.g. "orchestrate-projex plan, redteam") → that list IS the full scope; run exactly those and stop. Don't infer or auto-chain further workflows a full cycle would normally add (no silent execute/close after a named plan), even if the next step seems obvious. Natural next step looks missing → surface it as a question in the Completion Report, don't act on it. Applies only to explicit lists; if the human states a task and lets the orchestrator choose, normal selection applies.
 
 An explicit list may annotate each step:
 
@@ -161,6 +151,7 @@ Example: `plan(fable), <opus>, execute!, audit+redteam, [patch], close(sonnet)` 
 ### Human Escalation
 
 Escalate (pause and ask) when:
+
 - Task intent genuinely ambiguous after one inference attempt
 - A review gate fails twice on the same step, or a required-success (`step!`) step ultimately fails
 - An irreversible action not implied by the original task is about to occur
@@ -172,6 +163,7 @@ Surface: what's done, what's blocking, what decision the human must make. Nothin
 ### Completion Report
 
 After the path finishes, report:
+
 - Accomplished (mapped to the original task)
 - Deferred/skipped + why
 - Non-default mid-workflow decisions
@@ -183,7 +175,7 @@ Keep it tight — don't explain the framework back to the human.
 
 From `SKILL.md`; apply to orchestrator + all subagents. Orchestrator doesn't loosen, override, or re-specify them in handoffs — subagents enforce them via the spec.
 
-- Nesting depth-gated — subagents may spawn further subagents only through depth 3 (§ Nesting Depth); `do-projex` sub-subagents never nest, regardless of depth
+- Nesting depth-gated — subagents may spawn further subagents only through depth 3 (§ Nesting Depth); sub-workflows never nest, regardless of depth (`SKILL.md § Sub-Workflows`)
 - Git discipline (one op type per call; no mixed script + raw git; explicit paths only)
 - Auxiliary-artifact commit policy (auxiliary workflows don't auto-commit — human/orchestrator approval required)
 - Reference-by-filename (never path)

@@ -144,7 +144,7 @@ Coordinator responsibilities in delegate mode:
 - Steps 1 (initialize), 2 (task list), 5 (deviations), 6 (failures escalation), 7 (complete) stay with this coordinator — never delegated
 - Dispatch sub-subagents **sequentially** (one objective at a time) unless each runs in its own worktree branch — concurrent writes to the same branch / log are forbidden
 - After each sub-subagent returns: read its report, mark the corresponding task complete, decide whether to dispatch the next or stop
-- Sub-subagent prompt must include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and the verbatim no-further-nesting clause from orchestrate-projex.md
+- Sub-subagent prompt must include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and this clause verbatim, `{depth}` filled with the sub-subagent's depth (coordinator's + 1): *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."*
 - Sub-subagent must be of the same model as the executor.
 - On any blocker / out-of-scope discovery returned by a sub-subagent: stop dispatching, fall back to self-execute or escalate
 
@@ -172,7 +172,7 @@ For each step in the plan:
 2. Confirm the step objective is achieved; check for side effects
 3. **Independent verification** — when this step carries a `Verify-Projex: Required` line, spawn a `/verify-projex.md` sub-subagent for it and **block on its return** before proceeding.
 
-   Pass only `plan`, `step`, `repo`, `branch`. Never pass your own account of what you changed — that contamination is exactly what the verifier exists to avoid. Spawn on the same model you are running; a weaker verifier rubber-stamps.
+   Pass only `plan`, `step`, `repo`, `branch`, plus this clause verbatim, `{depth}` filled with the sub-subagent's depth (yours + 1): *"You are a verify-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the verification yourself, stop and return what you have with a clear description of what is blocking you."* Never pass your own account of what you changed — that contamination is exactly what the verifier exists to avoid. Spawn on the same model you are running; a weaker verifier rubber-stamps.
 
    Act on the verdict:
 

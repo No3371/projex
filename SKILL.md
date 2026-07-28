@@ -6,7 +6,7 @@ description: When these mentioned:`close-projex``eval-projex``execute-projex``do
 Projex are self-contained unit markdown documents in folders named "projex". Types:
 
 - **Proposal** — Directional: "what if we go this way?" with trade-offs, approaches, and impact. Draft → Review → Accepted/Rejected. WORKFLOW -> @./propose-projex.md
-- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md | OBJECTIVE-SCOPED EXECUTION -> @./do-projex.md (only invokable from execute-projex) | STEP VERIFICATION -> @./verify-projex.md (only invokable from execute-projex)
+- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md (may delegate to sub-workflows — § Sub-Workflows)
 - **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
 - **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
@@ -26,6 +26,24 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
 - **Archive** — Compresses all files in `.projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
 - **Orchestration** — Agent-driven lifecycle: an orchestrating agent acts as the projex user, manages subagents through full workflow (Plan → Execute → Close or selected path) on behalf of a human. No standalone projex document — sub-workflows produce their own artifacts. WORKFLOW -> @./orchestrate-projex.md
+
+## Sub-Workflows
+
+Not projex types — return-only worker contracts a parent workflow spawns mid-flight ("mini-projex"). Currently both parented by execute-projex; each spec names its parent.
+
+- `@./do-projex.md` — objective-scoped execution: delegates the **doing**. Mutates and commits on the parent's branch/log
+- `@./verify-projex.md` — independent pre-commit check of one executed step: delegates the **checking**. Strictly read-only
+
+A workflow is a sub-workflow iff all six hold:
+
+1. **Caller-only invocation** — never dispatched by a human or orchestrator
+2. **Keyed arguments** — all context caller-supplied (`plan=`, `repo=`, `branch=`, …)
+3. **Caller-guarantees preconditions** — never re-validated; look wrong → stop and report to the caller, don't fix
+4. **Return contract, no document** — results go back to the parent, who folds them into its log; nothing lands in `.projex/`
+5. **Ceremony-stripped** — branch creation, plan status, completion gates all stay with the parent
+6. **Never nests** — no spawning, regardless of remaining depth budget; the parent embeds a verbatim no-nesting clause in every spawn prompt (see the parent's spec)
+
+Consequence of rule 6, stated so it reads as design rather than accident: `Verify-Projex: Required` steps get independent verification only in self-execute mode. A delegated objective's do-projex agent self-verifies — it cannot spawn a verifier — accepted because it starts with fresh, undrifted context, which is the assumption build-up verify-projex exists to catch.
 
 ## Authoring
 
