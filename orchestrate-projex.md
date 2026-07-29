@@ -44,11 +44,11 @@ Sub-workflows (`do-projex`, `verify-projex` — `SKILL.md § Sub-Workflows`) are
 
 ## Subagent Handoff — Context Only
 
-Subagents have no memory of this conversation. Each handoff must be self-contained, carrying:
+Subagents have isolated context. Each handoff must be self-contained, carrying:
 
 - **Target repo** — absolute path (subagent resolves git root from there)
-- **Original human task** — verbatim, unfiltered
-- **Subagent Responsibility** — role, objectives, expected deliveries
+- **Original human prompt** — verbatim, unfiltered
+- **Subagent Responsibility** — role, objectives, expected deliveries, etc.
 - **Which workflow to invoke** — e.g. `/plan-projex.md`, `/execute-projex.md`
 - **Path to its workflow spec + `SKILL.md`** — so it can load them
 - **Prior projex artifacts** — by **filename**, not path, e.g. `2604151200-auth-feature-plan.md`
@@ -57,17 +57,18 @@ Subagents have no memory of this conversation. Each handoff must be self-contain
 - **Depth** — this subagent's nesting depth (§ Nesting Depth). Orchestrator always hands off depth `1`.
 - **Model** — per-step override from chain notation (§ Explicit Chain Notation) if assigned, else the current chain default. Override → pass as the subagent's `model` param; state it in the handoff either way — artifacts record authorship/model, and nested sub-subagents inherit the coordinator's effective model unless overridden
 
-Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — it reads `SKILL.md` + its workflow file and proceeds without further direction. Avoid:
+Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — it reads `SKILL.md` + its workflow file and proceeds without further direction.
 
+Avoid:
 - Step-by-step directives ("first X, then Y")
 - Re-specifying workflow behavior
 - Prescribing output format, section structure, review style
 - Rules that conflict with or duplicate `SKILL.md` or the spec
-- **Orchestrator's own analysis of the question** — hypotheses, expected answers, worked counterexamples, pre-enumerated verdicts or document-structure decisions. Relay the question as the human posed it; independent judgment is the value of delegating — a subagent handed the expected conclusion echoes it, and an echo is not verification. A pre-formed view belongs in review after return (§ Review After Each Subagent Returns), not in the handoff
+- Assert analysis/assumption/ideas/hypotheses/expectation/verdicts/etc. Relay just enough context; Leave judgment to the delegate — avoid inducing an echo. If you should provide the info, note that it can be false.
 
 ### Follow-up Dispatches — Same Artifact, New Round
 
-Two cases, different rules — don't let one pattern-match into the other:
+Two cases, different rules:
 
 - **Revision of a deficient return** — output failed review. Specific, directive feedback is correct: name what's wrong, cite the missed spec expectation. The one sanctioned exception to "context, not instruction."
 - **New human question about an existing artifact** — a fresh dispatch under first-dispatch rules: verbatim question + prior-findings pointers, nothing pre-solved. Temptation is strongest here — the orchestrator often works out an answer while judging whether the question warrants a step at all. Having the answer is not a reason to hand it over.
