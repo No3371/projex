@@ -73,13 +73,10 @@ if (Test-Path $Path) {
     exit 1
 }
 
-$Today = Get-Date -Format "yyyy-MM-dd"
-
 $Content = @"
 # $Title
 
 > **Status:** $Status
-> **Created:** $Today
 > **Author:** [name or agent]
 > **Related Projex:** [none yet]
 

@@ -66,7 +66,6 @@ Classify what's being captured:
 ```markdown
 # Memo: [Brief Title]
 
-> **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Source Type:** Quote | Idea | Issue | Deferred
 > **Origin:** [where this came from — conversation, projex reference, workflow name, or "Direct"]

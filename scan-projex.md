@@ -83,7 +83,6 @@ Search systematically. Use whatever combination of tools finds everything:
 ```markdown
 # Scan: [Subject]
 
-> **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Subject:** [exactly what was scanned for]
 > **Boundary:** [scope of the scan — whole repo, specific dirs, etc.]

@@ -371,7 +371,6 @@ The debug document is the polished, reader-facing artifact derived from the log.
 ```markdown
 # Debug: [Title]
 
-> **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Issue:** [one-sentence symptom]
 > **Status:** Complete (Resolved) | Escalated (Exhausted)

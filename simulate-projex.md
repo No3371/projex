@@ -168,7 +168,6 @@ Now on the base branch with all changes rolled back, write the simulation report
 ```markdown
 # Simulation: [Title]
 
-> **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Directive:** [The original instruction/question]
 > **Source:** [link to plan/proposal if applicable, otherwise "Direct"]

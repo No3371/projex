@@ -146,7 +146,7 @@ Select lenses appropriate to the evaluation. Lens count scales with tier.
 #### Document Structure
 
 **Frontmatter:**
-> Created, Author, Subject, Type (Proposal | Status Quo | Comparative | Compatibility | Gap Analysis), Tier, Lenses Applied, Related Projex
+> Author, Subject, Type (Proposal | Status Quo | Comparative | Compatibility | Gap Analysis), Tier, Lenses Applied, Related Projex
 
 **Sections in order:**
 

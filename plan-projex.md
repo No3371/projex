@@ -89,7 +89,6 @@ Answer by reading actual code:
 # [Plan Title]
 
 > **Status:** Draft | Ready | In Progress | Blocked | Complete
-> **Created:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Source:** [link to proposal or "Direct request"]
 > **Related Projex:** [links to related projex documents]

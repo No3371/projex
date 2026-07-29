@@ -111,7 +111,6 @@ Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (
 ```markdown
 # Archive: [Scope]
 
-> **Created:** YYYY-MM-DD
 > **Scope:** [which .projex/closed/ this covers]
 > **Files Archived:** [N]
 > **Date Range:** [earliest date] → [latest date]

@@ -119,7 +119,6 @@ The patch document IS the walkthrough. One self-contained record.
 ```markdown
 # Patch: [Title]
 
-> **Date:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Directive:** [The original instruction/request]
 > **Source Plan:** [link to plan if patching a plan objective, otherwise "Direct"]

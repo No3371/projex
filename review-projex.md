@@ -180,7 +180,7 @@ Write the target's detail section (Standard/Deep) or roster row (Spot Check), th
 ```markdown
 # Review: [Target Name or Batch Theme]
 
-> **Created:** YYYY-MM-DD | **Reviewer:** [name or agent]
+> **Reviewer:** [name or agent]
 > **Status:** In Progress
 > **Targets:** [count] | **Related Projex:** [links]
 

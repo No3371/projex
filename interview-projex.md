@@ -58,7 +58,7 @@ When all branches are resolved or the user stops:
 ```markdown
 # Interview: [Topic]
 
-> **Date:** YYYY-MM-DD | **Scope:** [What this interview covers]
+> **Scope:** [What this interview covers]
 > **Goal:** [Purpose] | **Status:** In Progress | Complete (Concluded)
 
 ---

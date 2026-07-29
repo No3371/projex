@@ -99,7 +99,7 @@ Use the template structure below, adapting sections based on guide type and dept
 ```markdown
 # [Guide Title]
 
-> **Created:** YYYY-MM-DD | **Author:** [name or agent]
+> **Author:** [name or agent]
 > **Type:** Codebase | Document | Concept | Onboarding
 > **Target Audience:** [who this is for, what they're assumed to know]
 > **Estimated Time:** [rough reading time]

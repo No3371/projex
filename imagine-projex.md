@@ -125,7 +125,6 @@ Frame challenges constructively: "This creates an interesting tension between X 
 ```markdown
 # [Imagination Title]
 
-> **Created:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Seed:** [the original seed, verbatim or lightly paraphrased]
 > **Type:** Concept | Design | Domain | Extension

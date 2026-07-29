@@ -63,7 +63,6 @@ Questions to answer:
 # [Proposal Title]
 
 > **Status:** Draft | In Progress | Complete (Accepted) | Complete (Rejected)
-> **Created:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Related Projex:** [links to related projex documents]
 

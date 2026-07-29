@@ -75,13 +75,10 @@ if [ -e "$path" ]; then
     exit 1
 fi
 
-today=$(date +%Y-%m-%d)
-
 if ! cat > "$path" <<EOF
 # ${title}
 
 > **Status:** ${status}
-> **Created:** ${today}
 > **Author:** [name or agent]
 > **Related Projex:** [none yet]
 

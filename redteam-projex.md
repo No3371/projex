@@ -135,7 +135,7 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 ```markdown
 # Red Team: [Subject]
 
-> **Created:** YYYY-MM-DD | **Lead:** [name]
+> **Lead:** [name]
 > **Subject:** [what is being attacked] | **Related:** [projex links]
 
 ---
