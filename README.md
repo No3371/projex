@@ -56,6 +56,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 | `propose-projex` | A directional "what if" with trade-offs and impact |
 | `imagine-projex` | A seed idea grown into a rich, detailed vision |
 | `interview-projex` | Interactive Q&A with you, in rounds, full transcript kept |
+| `coach-projex` | Interactive judgment on anything judgeable — collects, takes a position, discusses to consensus or documented dissent |
 | `memo-projex` | Lightweight capture of an idea or issue before it's lost — no research, just record |
 | `scan-projex` | Exhaustive `file:ln` inventory of everything connected to a subject |
 | `guide-projex` | Curated reading path for a human learner |

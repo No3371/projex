@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # new-projex.sh — Scaffold a new projex file with minimal common header
 # Usage: new-projex.sh <repo-root> <type> <title> [<projex-dir>]
-#   <type>: propose|plan|eval|review|redteam|audit|interview|log|memo|patch|
+#   <type>: propose|plan|eval|review|redteam|audit|interview|coach|log|memo|patch|
 #           simulate|debug|define|navigate|map|scan|explore|guide|imagine|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
@@ -27,6 +27,7 @@ case "$type" in
     redteam)   suffix="redteam" ;;
     audit)     suffix="audit" ;;
     interview) suffix="interview" ;;
+    coach)     suffix="coach" ;;
     log)       suffix="log" ;;
     memo)      suffix="memo" ;;
     patch)     suffix="patch" ;;
@@ -40,7 +41,7 @@ case "$type" in
     guide)     suffix="guide" ;;
     imagine)   suffix="imagine" ;;
     archive)   suffix="archive" ;;
-    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam audit interview log memo patch simulate debug define navigate map scan explore guide imagine archive" >&2; exit 1 ;;
+    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam audit interview coach log memo patch simulate debug define navigate map scan explore guide imagine archive" >&2; exit 1 ;;
 esac
 
 born_closed="log archive patch simulate scan guide"

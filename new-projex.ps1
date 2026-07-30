@@ -1,6 +1,6 @@
 # new-projex.ps1 — Scaffold a new projex file with minimal common header
 # Usage: new-projex.ps1 <repo-root> <type> <title> [<projex-dir>]
-#   <type>: propose|plan|eval|review|redteam|audit|interview|log|memo|patch|
+#   <type>: propose|plan|eval|review|redteam|audit|interview|coach|log|memo|patch|
 #           simulate|debug|define|navigate|map|scan|explore|guide|imagine|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
@@ -25,7 +25,8 @@ $TypeInfo = @{
     propose   = @("Proposal", "proposal");   plan      = @("Plan", "plan")
     eval      = @("Evaluation", "eval");      review    = @("Review", "review")
     redteam   = @("Red Team", "redteam");     audit     = @("Audit", "audit")
-    interview = @("Interview", "interview");  log       = @("Log", "log")
+    interview = @("Interview", "interview");  coach     = @("Coach", "coach")
+    log       = @("Log", "log")
     memo      = @("Memo", "memo");            patch     = @("Patch", "patch")
     simulate  = @("Simulation", "simulation"); debug    = @("Debug", "debug")
     define    = @("Definition", "def");       navigate  = @("Navigation", "nav")

@@ -372,13 +372,13 @@ If this plan were to be executed again:
 
 2. **Reconcile the execution log's status with the plan's** — open the log and confirm its `> **Status:**` is terminal (`Complete` or `Blocked`) and matches what you just wrote on the plan. If execute-projex left it at `In Progress`, set it now. The log has no closed state of its own — like the plan, its move into `.projex/closed/` is what marks it closed. Opening the file here is deliberate: it is the step that puts the log's real filename in front of you before the sweep below.
 
-3. **Sweep every projex document this plan's lifecycle touched:** the execution log (`{yymmddhhmm}-{plan-name}-log.md`) always, plus anything produced against the plan if it exists (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
+3. **Sweep every projex document this plan's lifecycle touched:** the execution log (`{yymmddhhmm}-{plan-name}-log.md`) always, plus anything produced against the plan if it exists (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Coach, Exploration, Imagination, ...). Check the plan's `Source:` and `Related Projex:` fields, and anything else that references this plan, then sort each by its type's closing rule (SKILL.md § Organizing):
 
    | Type's closing rule | Action |
    |---|---|
    | Never closed (Definition, Navigation) | Update in place — never move |
    | Born closed already (Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
-   | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
+   | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Coach, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
    | Dependent plans not yet complete | Update the link only — they close on their own cycle |
 
    **Nav** is a special case of "never closed": if the plan notes `> **Nav:** {nav-filename}`, update that nav only — check off the milestone, link the walkthrough, append a Revision Log entry. Skip navs not referenced by the plan.
@@ -587,7 +587,7 @@ If no stash was made, skip this step.
 This workflow produces:
 - A walkthrough projex document at `.projex/closed/{yymmddhhmm}-{name}-walkthrough.md`
 - Source plan moved to `.projex/closed/` with completion status and walkthrough link
-- Every other aux document this plan resolved (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Exploration, Imagination, ...) moved to `.projex/closed/` alongside it
+- Every other aux document this plan resolved (Proposal, Memo, Red Team, Audit, Review, Eval, Interview, Coach, Exploration, Imagination, ...) moved to `.projex/closed/` alongside it
 - Still-open related documents and Nav updated in place with a link to the walkthrough, not moved
 - **Ephemeral branch merged/deleted** — changes now on base branch
 

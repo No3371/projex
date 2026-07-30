@@ -36,7 +36,7 @@ so passing one platform proves nothing about the other.
 
 Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The workflow spec file is loaded alongside `SKILL.md` to guide behavior. Workflows chain freely — any output can feed into any other.
 
-### Workflow Types (19)
+### Workflow Types (20)
 
 | Type | Purpose | Lifecycle |
 |------|---------|-----------|
@@ -47,6 +47,7 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 | **Red Team** | Adversarial analysis, challenges assumptions | Born open → Closed |
 | **Audit** | Rigorous validation of completed work | Born open → Closed |
 | **Interview** | Interactive Q&A in rounds, full transcript | Born open → Closed |
+| **Coach** | Interactive judgment: collect, assess, discuss to consensus or documented dissent | Born open → Closed |
 | **Walkthrough** | Post-execution record (authored by close-projex) | Born closed |
 | **Memo** | Lightweight capture of raw source/idea | Active until consumed |
 | **Patch** | Quick-action for small changes, skips full cycle | Born closed |
