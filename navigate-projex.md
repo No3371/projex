@@ -50,7 +50,7 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 
 #### 1. RESEARCH STATUS QUO
 
-Before drafting any roadmap, build comprehensive understanding of the target scope:
+Build comprehensive understanding of the target scope:
 
 1. **Survey the scope** — What exists within this area? What state is it in? What's working, what's not?
 2. **Collect existing projex** — Scan the relevant `.projex/` folder(s) for active proposals, plans, evals, explorations. For a module-level navigation, focus on that module's projex folder; for project-level, scan broadly
@@ -58,6 +58,8 @@ Before drafting any roadmap, build comprehensive understanding of the target sco
 4. **Understand goals** — What is this scope trying to achieve? What does success look like?
 5. **Spot gaps** — What areas within this scope have no projex activity? What's neglected?
 6. **Locate parent/sibling navigations** — Does a higher-level navigation exist that this one nests under? Are there peer navigations for adjacent scopes?
+
+"Navigate" is a deliberate process going forward. Instead of setoff and move forward bindly, consider a "diffusion" approach: First dentify the goal and optionally the milestones/checkpoints along the way, use them as anchors to plot and plan.
 
 #### 2. DISCUSS WITH USER
 
@@ -96,7 +98,7 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 ## Vision
 
-[2-4 sentences: Where is this project/initiative headed? What does the end state look like?]
+[Where is this project/initiative headed? What does the end state look like?]
 
 ---
 
@@ -197,7 +199,7 @@ When the user requests a commit:
 
 ### REVISITING AN EXISTING NAVIGATION
 
-This is the primary mode — navigation documents are revisited repeatedly.
+Navigation documents are revisited repeatedly.
 
 #### 1. RESEARCH CURRENT STATE
 
@@ -307,7 +309,6 @@ Navigation documents are **never** placed in `.projex/closed/` — they are livi
 
 ## NOTES
 
-- Navigation is the only projex type designed to be revised indefinitely
 - Each revision should be a meaningful checkpoint, not a trivial tweak — if only one milestone changed, a revision log entry may suffice without full agent discussion
 - When a navigation document grows unwieldy, consider splitting by domain or phase into separate navigations at the appropriate folder level
 - A sub-area navigation does not need to repeat context already captured in a parent navigation — link to it instead
