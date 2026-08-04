@@ -4,9 +4,9 @@ description: This workflow guides **Interview** projex sessions — relentless Q
 
 ## PURPOSE
 
-Interviews extract knowledge through relentless, focused Q&A. Walk each branch of the topic tree, resolve dependencies between answers one-by-one, and log everything.
+Extract knowledge or intention through relentless, focused Q&A. Walk each branch of the topic tree, resolve dependencies between answers one-by-one, and log everything, until all ambiguities and uncharted domains are exhausted.
 
-**CRITICAL: Interviews are read-only. No code changes, no file edits, no implementations. Only the interview document itself is written.**
+No code changes, no file edits, no implementations. Only touch the interview document.
 
 ---
 
@@ -25,16 +25,20 @@ Interviews extract knowledge through relentless, focused Q&A. Walk each branch o
 
 ### 1. ESTABLISH SCOPE
 
-Define what the interview covers, its goal, and create the interview file: `{yymmddhhmm}-{topic}-interview.md`
+Define what the interview covers, its goal, and create the interview file:
+```bash
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> interview "{topic}" <projex-folder>
+```
 
 ### 2. INTERVIEW
 
-Ask questions **one at a time**. For each question:
+Loop:
 
-- **Provide your recommended answer** — show your thinking, then ask the user to confirm, correct, or expand.
-- **If the codebase can answer it, explore the codebase instead** — don't ask the user what you can discover yourself.
-- **Walk the decision tree** — each answer opens branches; follow them systematically.
-- **Log as you go** — record the question, answer, and your interpretation in the document.
+- Walk the topic tree. Research what needs to be discussed or answered.
+- Explore established facts related to the selected question.
+- Provide your recommended answer — show your thinking, then ask the user to confirm, correct, or expand.
+- Log as you go — record the question, answer, and your interpretation in the document.
+- Each answer may branches the interview; follow them systematically.
 
 Keep going until reaching shared understanding on all branches. The user can stop at any time.
 
@@ -42,7 +46,7 @@ Keep going until reaching shared understanding on all branches. The user can sto
 
 When all branches are resolved or the user stops:
 
-- Summarize key findings and decisions
+- Summarize key findings and conclusions
 - Extract actionable outcomes
 - Recommend next steps (proposals, plans, etc.)
 - Update status to `Complete (Concluded)`
@@ -51,9 +55,6 @@ When all branches are resolved or the user stops:
 
 ## DOCUMENT TEMPLATE
 
-```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> interview "{topic}" <projex-folder>
-```
 
 ```markdown
 # Interview: [Topic]
@@ -73,6 +74,8 @@ When all branches are resolved or the user stops:
 ## Q&A
 
 ### Q1: [Question]
+
+[**Context: Why the question**]
 
 **Recommended answer:** [Agent's recommendation with reasoning]
 
@@ -121,9 +124,9 @@ When all branches are resolved or the user stops:
 - **Read-only** — NEVER edit code or take implementation actions
 - **One question at a time** — never batch questions
 - **Recommend answers** — show your thinking, let the user confirm or correct
-- **Self-serve** — explore the codebase instead of asking when possible
+- **Self-serve** — do your own research, ask right and good question
 - **Relentless** — keep going until shared understanding on all branches
-- **Honest interpretation** — note when unclear, don't assume meaning
+- **Honest interpretation** — note when unclear, ask for clarification when needed, avoid making assumptions
 
 ---
 
