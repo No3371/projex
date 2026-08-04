@@ -6,7 +6,9 @@ description: This workflow guides the creation of **Red Team** projex documents 
 
 Red Teams break things before they break in production. Attack ideas, find exploits, challenge assumptions, expose hidden flaws.
 
-**Attack angles — apply as many as are relevant:**
+**Boundary:** if the subject is role-thin (an algorithm, a config, a single script, a document's argument) and stakeholder modeling would be padding, use `/stress-projex.md` instead — same attack angles, no role machinery.
+
+**Attack angles — apply as many as are relevant** (shared with stress-projex; keep the two lists in sync):
 - **Assumption** — What beliefs are taken for granted that could be false?
 - **Edge Case** — What inputs, states, or sequences weren't designed for?
 - **Failure Cascade** — What breaks when one dependency fails?
@@ -329,6 +331,7 @@ Save to appropriate `.projex/` folder. Link to subject being analyzed. Do not co
 **Always:** Security, auth, payments, privacy, consensus
 **Strongly consider:** Major architecture, accepted proposals, plans before execution, production deploys
 **Optional:** Internal tools, minor features, low-risk changes
+**Use `/stress-projex.md` instead:** Role-thin subjects where the adversarial pass matters but stakeholder modeling would be padding
 
 ---
 

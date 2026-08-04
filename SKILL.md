@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -10,6 +10,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
 - **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
+- **Stress** — Adversarial analysis by attack angle: applies a fixed angle inventory (assumption, edge case, scale, time, …) directly to the subject's claims. No stakeholder modeling — suits algorithms, configs, single scripts, document arguments. WORKFLOW -> @./stress-projex.md
 - **Audit** — Rigorous validation of completed work: cross-references claims against actual artifacts/evidence. Discovers undocumented issues and gaps. WORKFLOW -> @./audit-projex.md
 - **Interview** — Interactive Q&A in rounds (3-5 questions each), asked one-by-one. Full transcript logging. READ-ONLY: only the interview document is written. WORKFLOW -> @./interview-projex.md
 - **Coach** — Interactive judgment on any judgeable subject: collects via Q&A, states positions, hears pushback, converges to consensus or documented dissent. Unlike Interview (collects without judging), Red Team (unilateral), or Eval (agent alone). READ-ONLY: only the coach document is written. WORKFLOW -> @./coach-projex.md
@@ -174,6 +175,7 @@ Workflow specs are actions invoked in verb sense:
 - `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
 - `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
 - `/redteam-projex.md @2607311430-auth-system-plan.md`
+- `/stress-projex.md The retry logic in the sync script` or `/stress-projex.md @2607311430-parser-refactor-plan.md`
 - `/audit-projex.md the database migration we just finished`
 - `/interview-projex.md authentication system design`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
@@ -192,7 +194,7 @@ Workflow specs are actions invoked in verb sense:
 
 **Auxiliary workflows** (all workflows except execute, close, patch, and simulate) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
-Auxiliary workflows: propose, plan, eval, review, redteam, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, archive.
+Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, archive.
 
 Execute, close, patch, revise, and **simulate** are exempt — they commit as a structural requirement of their lifecycle. For simulate specifically: the ephemeral branch is always discarded and the report is the sole surviving artifact; committing it completes the simulation rather than being an incidental save.
 
