@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
