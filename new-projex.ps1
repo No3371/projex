@@ -1,7 +1,7 @@
 # new-projex.ps1 — Scaffold a new projex file with minimal common header
 # Usage: new-projex.ps1 <repo-root> <type> <title> [<projex-dir>]
-#   <type>: propose|plan|eval|review|redteam|audit|interview|coach|log|memo|patch|
-#           simulate|debug|define|navigate|map|scan|explore|guide|imagine|archive
+#   <type>: propose|plan|eval|review|redteam|stress|audit|interview|coach|log|memo|
+#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
 
@@ -19,16 +19,17 @@ $ProjexDir = (($ProjexDir -replace '\\', '/') -replace '/+', '/').Trim('/')
 if (-not $ProjexDir) { $ProjexDir = ".projex" }
 
 # type -> @(DisplayName, filename suffix). Suffix is authoritative per each *-projex.md spec
-# and does NOT always match the type key (e.g. propose->proposal, simulate->simulation,
-# define->def, navigate->nav).
+# and does NOT always match the type key (e.g. propose->proposal, define->def,
+# navigate->nav).
 $TypeInfo = @{
     propose   = @("Proposal", "proposal");   plan      = @("Plan", "plan")
     eval      = @("Evaluation", "eval");      review    = @("Review", "review")
-    redteam   = @("Red Team", "redteam");     audit     = @("Audit", "audit")
+    redteam   = @("Red Team", "redteam");     stress    = @("Stress", "stress")
+    audit     = @("Audit", "audit")
     interview = @("Interview", "interview");  coach     = @("Coach", "coach")
     log       = @("Log", "log")
     memo      = @("Memo", "memo");            patch     = @("Patch", "patch")
-    simulate  = @("Simulation", "simulation"); debug    = @("Debug", "debug")
+    preplan   = @("Preplan", "preplan");       debug    = @("Debug", "debug")
     define    = @("Definition", "def");       navigate  = @("Navigation", "nav")
     map       = @("Map", "map");              scan      = @("Scan", "scan")
     explore   = @("Exploration", "explore");  guide     = @("Guide", "guide")
@@ -40,7 +41,7 @@ if (-not $TypeInfo.ContainsKey($Type)) {
     exit 1
 }
 
-$BornClosed = @('log', 'archive', 'patch', 'simulate', 'scan', 'guide')
+$BornClosed = @('log', 'archive', 'patch', 'preplan', 'scan', 'guide')
 $IsBornClosed = $BornClosed -contains $Type
 
 # Join-Path on some hosts only takes 2 args — join child segments explicitly

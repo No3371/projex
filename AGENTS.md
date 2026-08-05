@@ -51,7 +51,7 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 | **Walkthrough** | Post-execution record (authored by close-projex) | Born closed |
 | **Memo** | Lightweight capture of raw source/idea | Active until consumed |
 | **Patch** | Quick-action for small changes, skips full cycle | Born closed |
-| **Simulation** | Disposable execution: make changes, observe, rollback | Born closed |
+| **Preplan** | Fast dirty planning spike in disposable worktree; only evidence survives | Born closed |
 | **Definition** | Declarative spec of what an entity is | Never closed |
 | **Navigation** | Living roadmap, continuously revised | Never closed |
 | **Scan** | Exhaustive inventory with `file:ln` precision | Born closed |
@@ -65,7 +65,7 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 
 - **Full cycle:** Plan → Execute → Close (ephemeral branch, squash-merged back)
 - **Quick path:** Patch (commits directly, no branch lifecycle)
-- **Simulation:** Execute on throwaway branch, rollback, keep only the report
+- **Preplan:** Hack representative path, capture planning evidence, discard worktree
 
 ## Critical Git Rules
 

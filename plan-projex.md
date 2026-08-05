@@ -11,12 +11,13 @@ Plans capture WHAT and HOW — specific enough any LLM/dev follows without clari
 ## INVOCATION
 
 ```
-/plan-projex.md <objective or proposal reference>
+/plan-projex.md <objective, proposal reference, or preplan reference>
 ```
 
 **Examples:**
 - `/plan-projex.md Update current impl to keep up with latest specs`
 - `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
+- `/plan-projex.md @2608051730-parser-api-preplan.md`
 - `/plan-projex.md Implement user session timeout feature`
 
 ---
@@ -40,7 +41,8 @@ git -C <repo-root> branch --list "projex/*"
 
 **Worktree: Yes** if: dirty working dir | active `projex/*` branch | many files / large-scale changes. Else **No**. Auto-fills template; user can override.
 
-**From Proposal:** read → verify `Accepted` → extract approach/scope/constraints.
+**From Proposal:** read → verify `Complete (Accepted)` → extract approach/scope/constraints.
+**From Preplan:** read → verify `Complete` → extract observed evidence, recommended direction, likely change surface, production risks, untested areas, and open decisions. Treat shortcuts as probes, NEVER as production patterns.
 **From Direct Request:** clarify objective → research current state → identify scope → check related projex.
 
 ### 2. PRELIMINARY SCOPE
@@ -73,6 +75,8 @@ Answer by reading actual code:
 4. **Edge cases** — inputs, states, timing that could break things
 5. **Prior art** — related attempts? walkthroughs + git history for lessons
 
+**Preplan evidence:** Reuse decision-relevant observations instead of repeating the disposable probes. Verify the source is current and re-check every claim the Plan will rely on against the present corpus. Convert prototype shortcuts into production requirements: compatibility, maintainability, complete caller migration, edge cases, and broad verification belong here. Unsupported preplan conclusions remain assumptions, not facts.
+
 **Refine scope.** Research often reveals Step 2 boundaries too broad/narrow/wrong-layer. Adjust before drafting.
 
 **Checkpoint (complex plans).** Before drafting, present briefly: findings, intended approach + why, scope adjustments. Catches misalignment early. Skip when path obvious.
@@ -90,7 +94,7 @@ Answer by reading actual code:
 
 > **Status:** Draft | Ready | In Progress | Blocked | Complete
 > **Author:** [name or agent]
-> **Source:** [link to proposal or "Direct request"]
+> **Source:** [proposal/preplan filename or "Direct request"]
 > **Related Projex:** [links to related projex documents]
 > **Worktree:** Yes | No
 

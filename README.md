@@ -36,7 +36,7 @@ One line, full lifecycle: plan it, attack the plan, revise if the attack found s
 - **Small, meaningful steps.** Every projex is a self-contained unit of work, so progress is naturally incremental.
 - **Documents are the memory.** Plans, reports, decisions all persist as files — the agent's context-retrieval burden drops to "read this file."
 - **Traceability for free.** Every change links to a plan; every plan links to a walkthrough. "Why was this done?" always has an answer.
-- **Safe undo.** Ephemeral branches, worktrees, and simulations make experiments cleanly discardable.
+- **Safe undo.** Ephemeral branches, worktrees, and preplan spikes make experiments cleanly discardable.
 - **Guard rails, not vibes.** Templates force scope, risks, and rollback thinking *before* acting. Strict git discipline prevents the classic agent disasters.
 
 ## Not just for code
@@ -77,7 +77,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 | `close-projex` | Walkthrough of what actually happened, then merge and cleanup |
 | `patch-projex` | Quick fix to code — skips the full plan/execute/close cycle |
 | `revise-projex` | Quick fix to a projex *document* whose claims went stale |
-| `simulate-projex` | Real changes on a throwaway branch, observe outcomes, roll everything back |
+| `preplan-projex` | Fast dirty spike in a disposable worktree; keep only evidence that sharpens the real plan |
 | `debug-projex` | Hypothesis→fix→verify iteration on one concrete bug, in an isolated worktree, until resolved or exhausted |
 | `orchestrate-projex` | An orchestrator acts as the projex user: spawns subagents through whole workflows, reviews their output, reports back |
 
@@ -91,7 +91,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 | `audit-projex` | Completed work validated claim-by-claim against actual artifacts |
 | `archive-projex` | Closed documents compressed into one searchable index |
 
-Workflows chain freely — any output can feed any other. A roadmap objective becomes a plan; a red team finding becomes a patch; an interview becomes an evaluation; a simulation's results shape the real plan. `SKILL.md` is the framework spec behind all of them.
+Workflows chain freely — any output can feed any other. A roadmap objective becomes a plan; a red team finding becomes a patch; an interview becomes an evaluation; a preplan's evidence shapes the real plan. `SKILL.md` is the framework spec behind all of them.
 
 ## Where documents live
 
@@ -108,7 +108,7 @@ A repo can carry multiple `.projex/` folders scoped to different areas (`docs/.p
 
 ## Git, done safely
 
-Execution runs on ephemeral branches (`projex/{yymmddhhmm}-{name}`), simulations on throwaway ones; patches and living documents commit to the current branch. Agents follow hard rules: sequential git operations verified one at a time, staging by explicit path only (never `git add .`), repo confirmation before any operation, and no `git reset --hard` without human sign-off.
+Execution runs on ephemeral branches (`projex/{yymmddhhmm}-{name}`), preplans in mandatory disposable worktrees; patches and living documents commit to the current branch. Agents follow hard rules: sequential git operations verified one at a time, staging by explicit path only (never `git add .`), repo confirmation before any operation, and no `git reset --hard` without human sign-off.
 
 Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with built-in rollback:
 

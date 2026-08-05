@@ -17,13 +17,13 @@ Workflows are verbs. Type the workflow name plus a natural-language directive, a
 ```
 > propose-projex I want to add XXX feature
 > eval-projex what can be improved in the current implementation?
-> plan-projex @2607311430-database-service-refactor-proposal.md
+> preplan-projex try one raw-SQL replacement and map the real migration surface
 > redteam-projex @2607311430-auth-system-plan.md
 > patch-projex fix the off-by-one in the parser loop
 > patch-projex execute objective 2 of @2602011430-api-cleanup-plan.md
 > revise-projex @2602011430-api-cleanup-plan.md step 2 assumed Redis, it's actually Memcached
 > debug-projex login button does nothing on Safari iOS — works on Chrome/Firefox
-> simulate-projex what happens if we remove the legacy compatibility layer?
+> plan-projex @2608051730-raw-sql-migration-preplan.md
 > execute-projex @2607311430-language-macro-syntax-change-plan.md
 > close-projex
 ```
@@ -32,7 +32,7 @@ Workflows are verbs. Type the workflow name plus a natural-language directive, a
 
 The core loop is Plan → Execute → Close. Here is what actually happens at each step and where you come in:
 
-**1. `plan-projex <directive or @proposal>`** — The agent writes a plan: exact file changes, order, scope, acceptance criteria, risks. It also decides whether execution should run in a worktree (`> **Worktree:** Yes`) based on dirty state, parallel executions, or change size — you can override that line in the draft.
+**1. `plan-projex <directive or @proposal/@preplan>`** — The agent writes a plan: exact file changes, order, scope, acceptance criteria, risks. A referenced preplan contributes observed spike evidence while the planner converts its shortcuts into production requirements and verifies freshness. The workflow also decides whether execution should run in a worktree (`> **Worktree:** Yes`) based on dirty state, parallel executions, or change size — you can override that line in the draft.
 
 **2. You review the plan.** This is the highest-leverage moment in the whole framework. Read it. Push back. Optionally harden it first:
 
@@ -65,12 +65,12 @@ For work too small to deserve this ceremony, skip it: `patch-projex <directive>`
 | Get a reading path to learn a subsystem | `guide-projex` |
 | Pin down what an entity *is* | `define-projex` (living doc) |
 | Maintain a roadmap / decide what's next | `navigate-projex` (living doc) |
-| Spec out a concrete change | `plan-projex` |
+| Collapse implementation uncertainty with a fast dirty disposable spike | `preplan-projex` |
 | Run a vetted plan | `execute-projex` |
 | Wrap up an execution | `close-projex` |
 | Make a small, well-understood code change | `patch-projex` |
 | Fix a projex document whose claims went stale | `revise-projex` |
-| Try something reversibly, keep only the findings | `simulate-projex` |
+| Spec out a concrete change, optionally from preplan evidence | `plan-projex` |
 | Hunt down one concrete bug until it's dead | `debug-projex` |
 | Check documents against reality | `review-projex` |
 | Attack a plan/proposal before trusting it | `redteam-projex` |
@@ -78,7 +78,7 @@ For work too small to deserve this ceremony, skip it: `patch-projex <directive>`
 | Compress a bloated `closed/` folder | `archive-projex` |
 | Delegate a whole chain to subagents | `orchestrate-projex` |
 
-The recurring confusions: **Patch fixes code, Revise fixes documents.** **Eval is open-ended, Explore is grounded in what exists, Propose is directional.** **Simulate always rolls back, Debug merges when it wins, Patch is for when you already know the fix.**
+The recurring confusions: **Patch fixes code, Revise fixes documents.** **Eval is open-ended, Explore is read-only status-quo research, Propose chooses direction, Preplan hacks just enough code to sharpen a future Plan.** **Preplan always discards, Debug merges when it wins, Patch is for when you already know the fix.**
 
 ## Document lifecycle
 
@@ -100,7 +100,7 @@ When `closed/` grows noisy, run `archive-projex`: every closed document gets com
 
 By default execution switches your working directory to the ephemeral branch. Worktree mode instead creates an isolated checkout under `{repo}/.projexwt/` — your main directory never leaves the base branch, editors are undisturbed, several executions can run in parallel, and no clean-state is required to start.
 
-`plan-projex` auto-selects it when it detects dirty state, parallel executions, or large changes; override by editing the `> **Worktree:**` line in the plan. Simulations and debug sessions default to worktrees. One thing to expect: a fresh worktree has only tracked files, so the agent will re-run installs (`node_modules` etc.) before executing, and must clean those up before close.
+`plan-projex` auto-selects worktree mode when it detects dirty state, parallel executions, or large changes; override its `> **Worktree:**` line. Preplans require worktrees; debug sessions default to them. A fresh worktree has only tracked files, so bootstrap only what the probe or execution needs and clean agent-created ignored tooling before removal.
 
 ## Orchestration
 
@@ -130,5 +130,5 @@ Example: `plan(opus), execute!, audit+redteam, [patch], close` — plan on Opus,
 - **Start sessions cheap.** New session, paste one filename, continue. The documents are the memory — don't re-explain.
 - **Memo instead of derailing.** Mid-workflow idea? `memo-projex` captures it in seconds without breaking the current task; it stays visible in `.projex/` until consumed.
 - **Navigate for anything multi-week.** A living roadmap gives every future session a "what's next" anchor, and plans derived from it record their origin (`> **Nav:**`) so closes update the roadmap automatically.
-- **Simulate before committing to a direction.** "What happens if we remove X?" answered with real changes and zero risk beats speculation in an eval.
+- **Preplan only when uncertainty is expensive.** Hack the smallest representative path, run the narrowest discriminating check, record the production implications, then stop and discard. Compatibility, polish, and completeness belong in Plan and Execute.
 - **Audit what matters.** After significant executions, `audit-projex` cross-checks the walkthrough's claims against the actual code. Agents' self-reports are optimistic; audits aren't.

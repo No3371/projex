@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``simulate-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -18,8 +18,8 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Active until consumed. WORKFLOW -> @./memo-projex.md
 - **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
 - **Revise** (no doc type — edits any existing projex document) — Quick-action fix to a projex document's own content (Plan, Proposal, Definition, Nav, etc.) when new context makes part of it stale. Edits in place, logs the trigger. Unlike Patch (fixes code/implementation), Revise fixes the document's claims. Escalates to that document's own authoring workflow if the core content itself is wrong. WORKFLOW -> @./revise-projex.md
-- **Simulation** — Disposable execution: makes changes, observes outcomes, rolls back everything. Only the report survives. No irreversible actions. Can trial-run plans or "what if" scenarios. WORKFLOW -> @./simulate-projex.md
-- **Debug** — Issue-bound investigation: confirms a concrete bug, enumerates hypotheses, iterates fix attempts in an isolated worktree until Resolved (fix squash-merged) or Exhausted (all imaginable cases ruled out, document handed back). Unlike Patch (known fix) or Simulate (always discards). WORKFLOW -> @./debug-projex.md
+- **Preplan** — Fast disposable planning spike: hacks a representative path in an isolated worktree, observes decision-relevant evidence, discards all changes, and leaves a compact brief for Plan. Born closed. No irreversible actions. WORKFLOW -> @./preplan-projex.md
+- **Debug** — Issue-bound investigation: confirms a concrete bug, enumerates hypotheses, iterates fix attempts in an isolated worktree until Resolved (fix squash-merged) or Exhausted (all imaginable cases ruled out, document handed back). Unlike Patch (known fix) or Preplan (always discards and never productionizes). WORKFLOW -> @./debug-projex.md
 - **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md
 - **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Never closed. WORKFLOW -> @./navigate-projex.md
 - **Scan** — Exhaustive inventory of everything connected to a subject — precise `file:ln` lists with full coverage. No analysis, no recommendations. Born closed. WORKFLOW -> @./scan-projex.md
@@ -180,7 +180,7 @@ Workflow specs are actions invoked in verb sense:
 - `/interview-projex.md authentication system design`
 - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
 - `/revise-projex.md @2602011430-api-cleanup-plan.md Step 2 assumed Redis, it's actually Memcached` (Patch = fix code; Revise = fix what a projex document claims)
-- `/simulate-projex.md What happens if we remove the legacy compatibility layer?`
+- `/preplan-projex.md Try the smallest raw-SQL replacement for one ORM query and map the real migration surface`
 - `/debug-projex.md Login button does nothing on Safari iOS — works on Chrome/Firefox`
 - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
 - `/define-projex.md The authentication subsystem` or `/define-projex.md @2602151430-auth-subsystem-def.md expand session lifecycle`
@@ -192,11 +192,11 @@ Workflow specs are actions invoked in verb sense:
 
 ## Auxiliary Artifact Commit Policy
 
-**Auxiliary workflows** (all workflows except execute, close, patch, and simulate) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
+**Auxiliary workflows** (all workflows except execute, close, patch, and preplan) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
 Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, archive.
 
-Execute, close, patch, revise, and **simulate** are exempt — they commit as a structural requirement of their lifecycle. For simulate specifically: the ephemeral branch is always discarded and the report is the sole surviving artifact; committing it completes the simulation rather than being an incidental save.
+Execute, close, patch, revise, and **preplan** are exempt — they commit as a structural requirement of their lifecycle. For preplan specifically: the disposable worktree is always discarded and the brief is the sole surviving artifact; committing it completes the preplan rather than being an incidental save.
 
 **Pattern for auxiliary workflows:**
 1. Create the artifact file
@@ -221,7 +221,7 @@ Git provides all four. Substrate determines available workflows:
 | Substrate | Available |
 |-----------|-----------|
 | Files in a git repo (code, prose, any domain) | Full framework |
-| Files, no git | All analytical workflows + revise/memo/define/nav. No execute/simulate/debug cycle — no rollback guarantee |
+| Files, no git | All analytical workflows + revise/memo/define/nav. No execute/preplan/debug cycle — no rollback guarantee |
 | Non-file domain (events, negotiations, physical work) | Analytical workflows + Field Mode cycle |
 
 ### No-VCS Mode
@@ -355,7 +355,7 @@ For operations not covered by the scripts above (read-only queries, `git checkou
 
 Worktree mode creates ephemeral branches as separate working directories in `{repo-name}/.projexwt/` (inside the repo) instead of switching the main working directory via `git checkout`. The main directory stays on the base branch throughout.
 
-**Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Simulations default to worktree mode.
+**Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Preplans require worktree mode.
 
 **How it works:**
 - `projex-worktree` creates the worktree in `.projexwt/` inside the repo
@@ -376,8 +376,8 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 
 ### Notes
 
-- Execute/Walkthrough and Simulation use ephemeral branches
-- Simulation branches (`.projex/sim/`) always discarded — only report committed to base
+- Execute/Walkthrough and Preplan use ephemeral branches
+- Preplan branches (`projex/preplan/`) always discarded — only the concise planning brief is committed to base
 - Other workflows operate on current branch, committed normally
 - Walkthrough committed as final commit before merge
 

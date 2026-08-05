@@ -32,7 +32,7 @@ Load framework files for the chosen path. Subagents load their own specs — orc
 - `@./interview-projex.md` — interactive Q&A rounds
 - `@./explore-projex.md` — status-quo-grounded investigation
 - `@./imagine-projex.md` — generative vision from a seed
-- `@./simulate-projex.md` — disposable execution + rollback
+- `@./preplan-projex.md` — fast dirty disposable spike → planning evidence
 - `@./memo-projex.md` — lightweight capture
 - `@./navigate-projex.md` — living roadmap
 - `@./scan-projex.md` — exhaustive inventory

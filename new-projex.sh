@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # new-projex.sh — Scaffold a new projex file with minimal common header
 # Usage: new-projex.sh <repo-root> <type> <title> [<projex-dir>]
-#   <type>: propose|plan|eval|review|redteam|audit|interview|coach|log|memo|patch|
-#           simulate|debug|define|navigate|map|scan|explore|guide|imagine|archive
+#   <type>: propose|plan|eval|review|redteam|stress|audit|interview|coach|log|memo|
+#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
 set -euo pipefail
@@ -18,20 +18,21 @@ projex_dir=$(printf '%s' "$projex_dir" | tr '\\' '/' | sed -E 's|^/+||; s|/+$||;
 [ -n "$projex_dir" ] || projex_dir=".projex"
 
 # suffix is authoritative per each *-projex.md spec and does NOT always match the type
-# key (e.g. propose->proposal, simulate->simulation, define->def, navigate->nav).
+# key (e.g. propose->proposal, define->def, navigate->nav).
 case "$type" in
     propose)   suffix="proposal" ;;
     plan)      suffix="plan" ;;
     eval)      suffix="eval" ;;
     review)    suffix="review" ;;
     redteam)   suffix="redteam" ;;
+    stress)    suffix="stress" ;;
     audit)     suffix="audit" ;;
     interview) suffix="interview" ;;
     coach)     suffix="coach" ;;
     log)       suffix="log" ;;
     memo)      suffix="memo" ;;
     patch)     suffix="patch" ;;
-    simulate)  suffix="simulation" ;;
+    preplan)   suffix="preplan" ;;
     debug)     suffix="debug" ;;
     define)    suffix="def" ;;
     navigate)  suffix="nav" ;;
@@ -41,10 +42,10 @@ case "$type" in
     guide)     suffix="guide" ;;
     imagine)   suffix="imagine" ;;
     archive)   suffix="archive" ;;
-    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam audit interview coach log memo patch simulate debug define navigate map scan explore guide imagine archive" >&2; exit 1 ;;
+    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam stress audit interview coach log memo patch preplan debug define navigate map scan explore guide imagine archive" >&2; exit 1 ;;
 esac
 
-born_closed="log archive patch simulate scan guide"
+born_closed="log archive patch preplan scan guide"
 is_born_closed=false
 for t in $born_closed; do
     [ "$type" = "$t" ] && is_born_closed=true && break

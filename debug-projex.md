@@ -16,7 +16,7 @@ Debug-projex tackles a specific, reproducible issue when the cause is unknown. T
 
 **Distinct from neighbors:**
 - vs `patch-projex` — patch handles small, well-understood changes with a known fix. Debug starts with an unknown cause.
-- vs `simulate-projex` — simulate always discards. Debug ships a real fix; rollback is per-attempt, not terminal.
+- vs `preplan-projex` — preplan runs minimal planning probes and always discards. Debug investigates exhaustively and ships a real fix; rollback is per-attempt, not terminal.
 - vs `execute-projex` — execute follows a pre-written plan. Debug discovers as it goes; the hypothesis list is the evolving plan.
 
 ---
