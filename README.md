@@ -131,6 +131,8 @@ Any output can be handed to any LLM in any session — the documents are plain m
 
 Ready to drive it? See **[USAGE.md](USAGE.md)** — setup, invocation grammar, the full cycle step by step, and the habits that make it work long-term.
 
+Editing or adding workflow specs? **[AUTHORING.md](AUTHORING.md)** — the writing rules for spec text.
+
 ---
 
 *Origin: this started as an attempt to tame Gemini 3 Pro — smart, but very rushy. It ended up reshaping how I interact with LLM agents in general. Core principles are mine; LLMs filled in details and revised against my feedback. The framework itself is model-agnostic — no lock-in to any provider or tool.*
