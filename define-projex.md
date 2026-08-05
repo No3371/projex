@@ -4,20 +4,14 @@ description: This workflow guides the creation and maintenance of **Definition**
 
 ## PURPOSE
 
-Definition documents answer "what is this thing, exactly?" They are declarative specifications of an entity — a product, component, feature, class, protocol, API surface, domain concept, or any other noun worth pinning down. The goal is to eliminate vagueness: every property, boundary, relationship, constraint, and open question is surfaced and made explicit.
+Definition documents answer "what is this thing, exactly?" They are declarative specifications of an entity — a product, component, feature, class, protocol, API surface, domain concept, or any other noun worth pinning down. Reader of the document should be able to understand every established facts about the subject: every property, boundary, relationship, constraint. 
 
 **Key characteristics:**
-- **Declarative, not procedural** — describes WHAT the entity is, not HOW to build or change it. Implementation plans, execution steps, and roadmaps belong in other projex types
+- **Declarative, not procedural** — describes WHAT the entity is, not HOW, WHY, WHEN, WHERE. Information only matters when it supports the WHATs.
 - **Exhaustive by intent** — the document strives to leave nothing ambiguous or assumed. Unknown areas are tracked explicitly until resolved
 - Living document — revisited and deepened over time as understanding grows; never "closed"
 - **Collaborative** — each invocation is a conversation: the agent explores the domain, surfaces questions, and works with the user to sharpen the definition
 - Scope-flexible — can define anything from a single class to an entire product
-
-**Contrast with other types:**
-- **Definition** — WHAT something is: identity, properties, boundaries, constraints, relationships
-- **Exploration** — HOW something currently works: investigation of existing code/systems, then closed
-- **Evaluation** — WHETHER something is good: open-ended analysis and judgment
-- **Proposal** — WHAT IF we go this way: directional with trade-offs
 
 ---
 
@@ -49,7 +43,7 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 
 Before drafting, understand the entity from available sources:
 
-1. **Gather existing knowledge** — read code, docs, specs, related projex, READMEs, comments, tests — anything that already describes or implies what this entity is
+1. **Gather existing information** — read code, docs, specs, related projex, READMEs, comments, tests — anything that already describes or implies what this entity is
 2. **Identify the entity's nature** — is it a runtime component, a data structure, a user-facing feature, an abstract concept, a protocol, a service boundary?
 3. **Note what's clear vs. what's vague** — separate what you can state with confidence from what needs user input
 
@@ -183,13 +177,13 @@ Don't rush to document — keep discussing until you and the user feel the major
 #### 4. VALIDATE AND PRESENT
 
 **Check:**
-- [ ] Identity section is clear enough for someone unfamiliar to understand the entity
+- [ ] The document is clear enough for someone unfamiliar to understand the entity
 - [ ] Boundaries are explicit — "is not" is populated, not just "is"
 - [ ] No properties are fabricated — everything stated is grounded in evidence or confirmed by user
 - [ ] Open Questions captures everything still unresolved (not silently omitted)
 - [ ] Status field reflects actual state (Draft if open questions remain)
 
-Surface the definition file path and a summary of the entity's identity and open questions to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
+Surface a summary of the entity's identity and open questions to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
 
 When the user requests a commit:
 
@@ -200,8 +194,6 @@ When the user requests a commit:
 ---
 
 ### REVISITING AN EXISTING DEFINITION
-
-This is the expected primary mode — definitions deepen over time.
 
 #### 1. ASSESS CURRENT STATE
 
@@ -246,7 +238,7 @@ When the user requests a commit:
 
 ## DEFINITION PRINCIPLES
 
-- **WHAT, not HOW** — the definition describes the entity's nature, not its implementation. "Sessions expire after the configured TTL" belongs here; "We use a Redis TTL to expire sessions" belongs in a plan or exploration
+- **WHAT, not HOW** — the definition describes the entity's nature, not its implementation, nor its history or origin. "Sessions expire after the configured TTL" belongs here; "We use a Redis TTL to expire sessions" belongs in a plan or exploration
 - **Exhaust the vagueness** — the ultimate goal is zero unacknowledged unknowns. Every open question is tracked. Every "it depends" is followed up with "on what, exactly?"
 - **Honest about gaps** — a definition with explicit open questions is trustworthy. One that looks complete but hides assumptions is dangerous. Mark uncertainty visibly
 - **Living, not archived** — definitions stay in `.projex/` for their active lifetime. They move to `.projex/archived/` only when the entity itself is deprecated or superseded
@@ -268,8 +260,6 @@ Definition documents are **never** placed in `.projex/closed/` — they are livi
 
 ## NOTES
 
-- Definitions pair naturally with Plans — define WHAT first, then plan HOW
-- A Definition can be spawned from an Exploration ("we investigated X, now let's pin down exactly what it is")
 - Definitions are excellent context for new sessions — hand an agent a definition and it knows what it's working with
 - When a definition grows too large, split by facet into separate definitions with cross-references
 - The Status field (Draft → In Progress → Complete (Stable)) helps other workflows gauge how much they can rely on this definition
