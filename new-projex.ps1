@@ -1,7 +1,7 @@
 # new-projex.ps1 — Scaffold a new projex file with minimal common header
 # Usage: new-projex.ps1 <repo-root> <type> <title> [<projex-dir>]
 #   <type>: propose|plan|eval|review|redteam|stress|audit|interview|coach|log|memo|
-#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|archive
+#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|conclude|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
 
@@ -34,6 +34,7 @@ $TypeInfo = @{
     map       = @("Map", "map");              scan      = @("Scan", "scan")
     explore   = @("Exploration", "explore");  guide     = @("Guide", "guide")
     imagine   = @("Imagination", "imagine");  archive   = @("Archive", "archive")
+    conclude  = @("Conclude", "conclude")
 }
 
 if (-not $TypeInfo.ContainsKey($Type)) {
@@ -41,7 +42,7 @@ if (-not $TypeInfo.ContainsKey($Type)) {
     exit 1
 }
 
-$BornClosed = @('log', 'archive', 'patch', 'preplan', 'scan', 'guide')
+$BornClosed = @('log', 'archive', 'patch', 'preplan', 'scan', 'guide', 'conclude')
 $IsBornClosed = $BornClosed -contains $Type
 
 # Join-Path on some hosts only takes 2 args — join child segments explicitly

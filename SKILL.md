@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named "projex". Types:
@@ -26,6 +26,7 @@ Projex are self-contained unit markdown documents in folders named "projex". Typ
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
 - **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
+- **Conclude** — Verified supersession: given a successor that crystallizes prior work (Definition, Nav, Plan, …), checks each source projex claim-by-claim (Captured / Overruled / Residue), stamps fully-consumed sources superseded and removes them (recoverable via git history; the report keeps filename + verdicts), and rewrites the successor's prior-artifact references into a do-not-consult ledger. Sources may be active or closed. Residue blocks retirement — no silent drops. Unlike Archive (mechanical compression), Conclude is judgment. Born closed. WORKFLOW -> @./conclude-projex.md
 - **Archive** — Compresses all files in `.projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
 - **Orchestration** — Agent-driven lifecycle: an orchestrating agent acts as the projex user, manages subagents through full workflow (Plan → Execute → Close or selected path) on behalf of a human. No standalone projex document — sub-workflows produce their own artifacts. WORKFLOW -> @./orchestrate-projex.md
 
@@ -188,13 +189,14 @@ Workflow specs are actions invoked in verb sense:
 - `/imagine-projex.md What would a plugin system for this framework look like?`
 - `/execute-projex.md @2607311430-language-macro-syntax-change-plan.md`
 - `/close-projex.md` after user reviewed execution results
+- `/conclude-projex.md @2608041653-vertical-axis-model-def.md` or `/conclude-projex.md @{successor}.md @{source1}.md @{source2}.md`
 - `/orchestrate-projex.md Add user authentication to the API` or `/orchestrate-projex.md Refactor the payment module per @2604031730-payment-cleanup-proposal.md`
 
 ## Auxiliary Artifact Commit Policy
 
 **Auxiliary workflows** (all workflows except execute, close, patch, and preplan) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
-Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, archive.
+Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, conclude, archive.
 
 Execute, close, patch, revise, and **preplan** are exempt — they commit as a structural requirement of their lifecycle. For preplan specifically: the disposable worktree is always discarded and the brief is the sole surviving artifact; committing it completes the preplan rather than being an incidental save.
 

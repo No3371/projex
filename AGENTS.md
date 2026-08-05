@@ -36,7 +36,7 @@ so passing one platform proves nothing about the other.
 
 Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The workflow spec file is loaded alongside `SKILL.md` to guide behavior. Workflows chain freely — any output can feed into any other.
 
-### Workflow Types (20)
+### Workflow Types (21)
 
 | Type | Purpose | Lifecycle |
 |------|---------|-----------|
@@ -58,6 +58,7 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 | **Exploration** | Status-quo-grounded investigation | Born open → Closed |
 | **Guide** | Curated reading path for human learners | Closed by default |
 | **Imagination** | Generative vision from a seed idea | Born open → Closed |
+| **Conclude** | Verified supersession: stamps and removes sources consumed by a crystallization successor, rewrites successor provenance | Born closed |
 | **Archive** | Compresses closed projex into index, removes originals | Born closed |
 | **Orchestration** | Agent-driven lifecycle: orchestrator acts as projex user, manages subagents through full workflow on behalf of a human | No document (sub-workflows produce their own) |
 

@@ -2,7 +2,7 @@
 # new-projex.sh — Scaffold a new projex file with minimal common header
 # Usage: new-projex.sh <repo-root> <type> <title> [<projex-dir>]
 #   <type>: propose|plan|eval|review|redteam|stress|audit|interview|coach|log|memo|
-#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|archive
+#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|conclude|archive
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
 set -euo pipefail
@@ -41,11 +41,12 @@ case "$type" in
     explore)   suffix="explore" ;;
     guide)     suffix="guide" ;;
     imagine)   suffix="imagine" ;;
+    conclude)  suffix="conclude" ;;
     archive)   suffix="archive" ;;
-    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam stress audit interview coach log memo patch preplan debug define navigate map scan explore guide imagine archive" >&2; exit 1 ;;
+    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam stress audit interview coach log memo patch preplan debug define navigate map scan explore guide imagine conclude archive" >&2; exit 1 ;;
 esac
 
-born_closed="log archive patch preplan scan guide"
+born_closed="log archive patch preplan scan guide conclude"
 is_born_closed=false
 for t in $born_closed; do
     [ "$type" = "$t" ] && is_born_closed=true && break
