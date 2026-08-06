@@ -7,7 +7,7 @@ description: This workflow guides the creation and maintenance of **Navigation**
 Navigation documents are the steering mechanism for a scope of work — from an entire project down to a single module, subsystem, or feature area. They maintain a roadmap of where that scope is headed, track progress against milestones, and evolve as understanding deepens and circumstances change.
 
 **Key characteristics:**
-- Living document — continuously revised, never "closed"
+- Living while open — continuously revised for as long as its goal is being pursued; closes when the goal is reached or a new roadmap supersedes it
 - Appropriately abstract — milestones and phases relative to the navigation's scope, not implementation details one level below
 - References child projex — plans, proposals, evals, explorations spawned from the roadmap
 - Each invocation is a checkpoint — research status quo, assess progress, discuss with user, revise direction
@@ -20,7 +20,7 @@ Navigation documents are the steering mechanism for a scope of work — from an 
 - The abstraction level is always relative: a module navigation's milestones may be as concrete as a project navigation's phases, and that's correct
 
 **Contrast with Plan:**
-- **Navigation** — open-ended, evolving, directional; lives for the duration of its scope's active development
+- **Navigation** — evolving, directional; lives across many cycles until its goal is reached or a successor roadmap replaces it
 - **Plan** — bounded, executable, detailed; born and closed within a focused cycle
 
 ---
@@ -88,6 +88,7 @@ Navigation documents represent shared understanding between agent and user. Befo
 ```markdown
 # [Roadmap Title]
 
+> **Status:** In Progress
 > **Created:** YYYY-MM-DD | **Last Revised:** YYYY-MM-DD
 > **Author:** [name or agent]
 > **Scope:** [what this roadmap covers — be specific about boundaries]
@@ -279,10 +280,44 @@ If other projex documents were updated with references back to this navigation, 
 
 ---
 
+### CLOSING A NAVIGATION
+
+A navigation holds `In Progress` for its entire open life — revisions are its work, and dormancy between revisions is not a state change. It closes on exactly two conditions, never as a side effect of another workflow:
+
+- **Goal reached** — the vision is achieved: every phase is `Done` or explicitly dropped, and a revision would only restate that fact. Outcome: `Complete (Goal Reached)`
+- **Superseded** — a newer roadmap for the same scope takes over the steering role. Outcome: `Complete (Superseded)`. When the successor claims to fully absorb this roadmap's content, prefer `/conclude-projex` — it verifies consumption before retiring the source
+
+A scope that keeps producing new goals is a revision signal, not a close signal — extend the vision and add phases. Closing is for roadmaps whose stated goal is genuinely done or whose steering role has moved elsewhere.
+
+#### 1. CONFIRM WITH USER
+
+Closure is a user decision, like every direction change on a navigation. Present the evidence — milestone states, the successor roadmap if any — and get explicit agreement before proceeding.
+
+#### 2. FINAL REVISION
+
+1. Mark every remaining milestone done or explicitly dropped; link final walkthroughs/patches
+2. Update "Current Position" to a closing assessment
+3. Set `> **Status:** Complete (Goal Reached)` or `Complete (Superseded)`; a superseded roadmap links its successor
+4. Append a Revision Log entry stating the closure and why
+
+#### 3. MOVE AND COMMIT
+
+```bash
+{projex-scripts}/move-n-stage.{sh|ps1} <repo-root> .projex/{yymmddhhmm}-{roadmap-name}-nav.md .projex/closed/{yymmddhhmm}-{roadmap-name}-nav.md
+```
+
+**Do not commit.** Wait — commit only when the user explicitly requests it:
+
+```bash
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(nav): close roadmap - {roadmap-name}" .projex/closed/{yymmddhhmm}-{roadmap-name}-nav.md
+```
+
+---
+
 ## NAVIGATION PRINCIPLES
 
 - **Relatively abstract** — Milestones describe outcomes at one level above the navigation's scope. A project nav says "Parser handles all expression types"; a parser module nav says "Binary, unary, and ternary expressions supported" — but neither says "Add binary expression parsing to parser.rs line 142"
-- **Living, not archived** — Navigation documents stay in their `.projex/` folder for their entire active lifetime. They are never moved to `closed/`
+- **Living until done** — Navigation documents stay in their `.projex/` folder at `In Progress` for their entire open life; dormancy between revisions is not a state change. They move to `closed/` only when their goal is reached or a successor roadmap supersedes them
 - **User-aligned** — Every revision involves the user. The agent researches and proposes; the user confirms direction
 - **Honest assessment** — Don't paper over stalled milestones or ignored phases. If something isn't progressing, say so
 - **Reference-rich** — The roadmap should be a map of maps — linking to the detailed projex that flesh out each milestone
@@ -295,10 +330,11 @@ If other projex documents were updated with references back to this navigation, 
 
 | State | Location |
 |-------|----------|
-| Active (always) | The `.projex/` folder matching the navigation's scope |
-| Superseded by new roadmap | `.projex/archived/` within the same scope |
+| Open (`In Progress`, including dormant between revisions) | The `.projex/` folder matching the navigation's scope |
+| Goal reached (`Complete (Goal Reached)`) | `.projex/closed/` within the same scope |
+| Superseded by new roadmap (`Complete (Superseded)`) | `.projex/closed/` within the same scope — via CLOSING A NAVIGATION, or `/conclude-projex` when the successor fully absorbs it |
 
-Navigation documents are **never** placed in `.projex/closed/` — they are living documents that persist until their scope's active development concludes or a new roadmap supersedes them.
+Only the navigation's own closing workflow moves it — no other workflow (close-projex included) closes a navigation as a side effect.
 
 **Examples:**
 - Project-level: `.projex/2602011430-engine-roadmap-nav.md`

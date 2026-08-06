@@ -53,7 +53,7 @@ Each workflow is invoked by name (e.g., `/plan-projex`, `/execute-projex`). The 
 | **Patch** | Quick-action for small changes, skips full cycle | Born closed |
 | **Preplan** | Fast dirty planning spike in disposable worktree; only evidence survives | Born closed |
 | **Definition** | Declarative spec of what an entity is | Never closed |
-| **Navigation** | Living roadmap, continuously revised | Never closed |
+| **Navigation** | Living roadmap, continuously revised | Born open → Closed (goal reached or superseded) |
 | **Scan** | Exhaustive inventory with `file:ln` precision | Born closed |
 | **Exploration** | Status-quo-grounded investigation | Born open → Closed |
 | **Guide** | Curated reading path for human learners | Closed by default |

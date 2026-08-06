@@ -51,7 +51,7 @@ The successor must **dominate** its sources. Verify before any analysis:
 | Successor location | Active (`.projex/`), not itself closed/archived | Stop |
 | Successor recency | Date prefix newer than every source | Flag older-than-source anomalies to the user |
 | Source location | Within the successor's projex scope — `.projex/` and `.projex/closed/` both eligible. Sources already compressed into an archive index are out of reach | Exclude with a note |
-| Source type | Not Definition or Navigation (never-closed types retire via their own deprecation path, not conclude) | Exclude; point to define/navigate revision |
+| Source type | Not Definition (never-closed; retires via define revision, not conclude). A Navigation **is** eligible when the successor is a newer roadmap for the same scope — conclude is the verified route for roadmap supersession | Exclude Definitions; point to define revision |
 | Source ≠ successor | A document cannot conclude itself | Exclude |
 
 ### 3. RESIDUE CHECK
@@ -210,7 +210,7 @@ Then commit the staged deletions:
 - [ ] Every Residue has exactly one recorded disposition
 - [ ] No stamp, removal, or commit before explicit user confirmation
 - [ ] Stamp commit verified before removals; removals by explicit path only
-- [ ] Successor never removed; Definitions/Navigations never taken as sources
+- [ ] Successor never removed; Definitions never taken as sources; Navigation sources only under a same-scope successor roadmap
 - [ ] Report references all documents by filename only, never path
 
 ---

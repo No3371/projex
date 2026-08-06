@@ -376,12 +376,13 @@ If this plan were to be executed again:
 
    | Type's closing rule | Action |
    |---|---|
-   | Never closed (Definition, Navigation) | Update in place — never move |
+   | Never closed (Definition) | Update in place — never move |
+   | Navigation | Update in place — closing a plan never closes a nav (see below) |
    | Born closed already (Patch, Scan, Debug, Simulation, Guide, Archive) | Already in `closed/` — nothing to move |
    | Born open → Closed (Proposal, Memo, Evaluation, Review, Red Team, Audit, Interview, Coach, Exploration, Imagination) | If this plan's completion **addresses/resolves** it, close it now alongside the plan. If it's still open on an unrelated concern, leave it active and update its link to the walkthrough |
    | Dependent plans not yet complete | Update the link only — they close on their own cycle |
 
-   **Nav** is a special case of "never closed": if the plan notes `> **Nav:** {nav-filename}`, update that nav only — check off the milestone, link the walkthrough, append a Revision Log entry. Skip navs not referenced by the plan.
+   **Nav:** if the plan notes `> **Nav:** {nav-filename}`, update that nav only — check off the milestone, link the walkthrough, append a Revision Log entry. Skip navs not referenced by the plan. Navigations close only through their own closing workflow (navigate-projex § CLOSING A NAVIGATION) — even if this plan completes the nav's last milestone, do not close it here; flag it to the user as a closure candidate instead.
 
    Result: a list of documents (the Plan, its execution log, plus zero or more others) moving to `closed/` together.
 

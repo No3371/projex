@@ -90,7 +90,7 @@ Every document carries a machine-readable status line:
 > **Status:** Escalated (Non-Repro)
 ```
 
-States: `Draft` → `Ready` → `In Progress` → `Complete`, with `Blocked` / `Escalated` as wait states and `Abandoned` as the other terminal. State maps to folder: active documents in `.projex/`, `Complete` in `.projex/closed/`, superseded in `.projex/archived/`, dropped in `.projex/abandoned/`. Living documents (Definition, Navigation) stay in `.projex/` permanently and cycle between `Complete` (stable) and `In Progress` (being revised).
+States: `Draft` → `Ready` → `In Progress` → `Complete`, with `Blocked` / `Escalated` as wait states and `Abandoned` as the other terminal. State maps to folder: active documents in `.projex/`, `Complete` in `.projex/closed/`, superseded in `.projex/archived/`, dropped in `.projex/abandoned/`. Definitions stay in `.projex/` permanently and cycle between `Complete` (stable) and `In Progress` (being revised). Navigations hold `In Progress` across all revisions and close (`Complete (Goal Reached)` / `Complete (Superseded)`) only when their goal is reached or a new roadmap supersedes them.
 
 Scoping: a repo can carry several `.projex/` folders (`docs/.projex/`, `src/.projex/`), each independently managed. Keep projex inside their area — a spec-update plan shouldn't touch runtime code.
 

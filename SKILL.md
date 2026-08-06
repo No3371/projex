@@ -21,7 +21,7 @@ Projex are self-contained unit markdown documents in folders named ".projex". Ty
 - **Preplan** — Fast disposable planning spike: hacks a representative path in an isolated worktree, observes decision-relevant evidence, discards all changes, and leaves a compact brief for Plan. Born closed. No irreversible actions. WORKFLOW -> @./preplan-projex.md
 - **Debug** — Issue-bound investigation: confirms a concrete bug, enumerates hypotheses, iterates fix attempts in an isolated worktree until Resolved (fix squash-merged) or Exhausted (all imaginable cases ruled out, document handed back). Unlike Patch (known fix) or Preplan (always discards and never productionizes). WORKFLOW -> @./debug-projex.md
 - **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md
-- **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Never closed. WORKFLOW -> @./navigate-projex.md
+- **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Born open, revised across many invocations → Closed when its goal is reached or a new roadmap supersedes it. WORKFLOW -> @./navigate-projex.md
 - **Scan** — Exhaustive inventory of everything connected to a subject — precise `file:ln` lists with full coverage. No analysis, no recommendations. Born closed. WORKFLOW -> @./scan-projex.md
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
 - **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
@@ -164,7 +164,8 @@ One regex parses it: `^> \*\*Status:\*\* ([\w ]+?)(?: \((.+)\))?\s*$` → group 
 
 ### Exceptions
 
-- **Never-closed types (Definition, Navigation):** may sit at `Complete` while staying in `.projex/` rather than moving to `.projex/closed/`. `Complete` here means "current stable state"; they drop back to `In Progress` on revision.
+- **Never-closed type (Definition):** may sit at `Complete` while staying in `.projex/` rather than moving to `.projex/closed/`. `Complete` here means "current stable state"; it drops back to `In Progress` on revision.
+- **Navigation:** holds `In Progress` for its entire open life — revisions are its work, and dormancy between revisions is not a state change. `Complete (Goal Reached)` / `Complete (Superseded)` are its only terminal states, set by its own closing workflow.
 - **Per-item statuses are out of scope.** Objective status (`Success / Partial / Failed`) and per-target / per-question status (`Pending / In Progress / Done / Dropped`) are not document lifecycle. They use plain bold (not the `> **Status:**` blockquote) and are left untouched.
 
 ## Workflow
