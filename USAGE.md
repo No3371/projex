@@ -117,13 +117,14 @@ Chain notation:
 | `step` | Run this workflow via a subagent |
 | `[step]` | Optional — orchestrator decides from results so far whether it's needed |
 | `step!` | Must succeed, or the whole orchestration halts and escalates |
-| `step(model)` | Model override for this step (`sonnet` \| `opus` \| `haiku` \| `fable`) |
-| `<model>` | Switch the default model for all following steps |
+| `step<model>` | Model override for this step (`sonnet` \| `opus` \| `haiku` \| `fable`) |
+| `<<model>>` | Switch the default model for all following steps |
+| `step<<model>>` | Override this step *and* switch the default for all following steps |
 | `stepA+stepB` | Run in parallel (safe for read-only workflows) |
 | `stepA & stepB` | Glue — producer/checker judged as one unit (`execute & audit`) |
 | `\| … \|*N` | Loop the group up to N times until the checker passes |
 
-Example: `plan(opus), execute!, audit+redteam, [patch], close` — plan on Opus, execution must succeed, audit and red team run in parallel, patch only if they found something, then close. The chain you give is literal: the orchestrator runs exactly those workflows, with `[...]` as the only judgment call.
+Example: `plan<opus>, execute!, audit+redteam, [patch], close` — plan on Opus, execution must succeed, audit and red team run in parallel, patch only if they found something, then close. The chain you give is literal: the orchestrator runs exactly those workflows, with `[...]` as the only judgment call.
 
 ## Habits that pay off
 

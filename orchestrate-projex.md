@@ -132,22 +132,23 @@ Default, not mandate — stack only when a dependency is declared or clearly imp
 An explicit list may annotate each step:
 
 ```
-step, step!, step(model), stepA+stepB, stepA & stepB, | group |*N, <model>, [step(model)]
+step, step!, step<model>, stepA+stepB, stepA & stepB, | group |*N, <<model>>, step<<model>>, [step<model>]
 ```
 
-- **`step`** — bare workflow name (`plan`, `execute`, `redteam`). Runs the model currently in effect — orchestrator default, or the last `<model>` switch.
-- **`step!`** — **required-success**. Ultimately fails (normal review latitude still applies — a second attempt is fine) → orchestrator **halts the orchestration and escalates** instead of running any later step. Guards a step everything downstream depends on — typically `execute!` (auditing/closing a failed execution is pointless). Attaches after `(model)` (`execute(opus)!`); optional `[steps]` can't take it.
-- **`step(model)`** — **per-step model override** (`sonnet` | `opus` | `haiku` | `fable`). This step only; doesn't change the default.
-- **`stepA+stepB`** — **parallel group**. `+`-joined steps dispatch as concurrent subagents; chain waits for all before continuing, orchestrator reviews them together. Members keep own annotations — `audit(sonnet)+redteam(opus)`, `[audit]+redteam`.
+- **`step`** — bare workflow name (`plan`, `execute`, `redteam`). Runs the model currently in effect — orchestrator default, or the last `<<model>>` switch.
+- **`step!`** — **required-success**. Ultimately fails (normal review latitude still applies — a second attempt is fine) → orchestrator **halts the orchestration and escalates** instead of running any later step. Guards a step everything downstream depends on — typically `execute!` (auditing/closing a failed execution is pointless). Attaches after `<model>` (`execute<opus>!`); optional `[steps]` can't take it.
+- **`step<model>`** — **per-step model override** (`sonnet` | `opus` | `haiku` | `fable`). This step only; doesn't change the default.
+- **`stepA+stepB`** — **parallel group**. `+`-joined steps dispatch as concurrent subagents; chain waits for all before continuing, orchestrator reviews them together. Members keep own annotations — `audit<sonnet>+redteam<opus>`, `[audit]+redteam`.
 - **`stepA & stepB`** — **glue**. Couples steps into one unit where the later gates the earlier — a producer/checker pair (`execute & audit`). Unlike `,` (independent, run-and-move-on), glued members are judged together — the natural body of a `*` loop.
 - **`| … |`** — **grouping**. Brackets a run of steps into one unit so a suffix operator applies to the whole run, not just the last step.
 - **`unit*N`** — **loop-til-success**. Repeat the preceding step or `| group |` up to N times, resuming each pass, until it succeeds — for a glued pair, until the checker is satisfied. Stop as soon as it passes; never passes within N → escalate (§ Human Escalation). `| execute & audit |*3`: execute→audit, each dissatisfied audit loops back to resume execute, up to 3 attempts.
-- **`<model>`** — **mid-chain model switch**. Changes the default for every following step until the next `<model>` or chain end. Doesn't itself spawn a step.
-- **`[step]`** / **`[step(model)]`** — **optional step**. The one sanctioned exception to "explicit lists are literal": orchestrator judges whether to run it from the chain so far, recording the decision (ran/skipped + why) in the Completion Report. Unbracketed steps stay literal and mandatory.
+- **`<<model>>`** — **mid-chain model switch**. Changes the default for every following step until the next `<<model>>` or chain end. Doesn't itself spawn a step.
+- **`step<<model>>`** — **override + switch**. Runs this step on the model *and* makes it the default for every following step — shorthand for `<<model>>, step`. Arity signals scope: single brackets = this step only, doubled = ambient default; attached = includes this step, standalone = following steps only.
+- **`[step]`** / **`[step<model>]`** — **optional step**. The one sanctioned exception to "explicit lists are literal": orchestrator judges whether to run it from the chain so far, recording the decision (ran/skipped + why) in the Completion Report. Unbracketed steps stay literal and mandatory.
 
 **Parallel-group safety.** Only group steps that won't collide. Read-only workflows (`audit`, `redteam`, `eval`, `review`, `explore`, `scan`) parallelize freely — share the tree without mutating. Mutating steps (`execute`, `patch`, `close`, `revise`) must not share a group unless each runs in its own worktree; else orchestrator serializes them and notes it in the Completion Report. Members don't see each other's output — never make one depend on another's.
 
-Example: `plan(fable), <opus>, execute!, audit+redteam, [patch], close(sonnet)` — plan forced onto fable for that step only; default then switches to opus for everything after; `execute!` runs under opus and **must succeed** (fails → halt + escalate rather than audit a broken execution); only on success do `audit` + `redteam` dispatch **in parallel** (both opus), chain waiting for both; patch optional, runs under opus only if the parallel review surfaced a small code-level issue; close forced onto sonnet regardless of the opus default.
+Example: `plan<fable>, <<opus>>, execute!, audit+redteam, [patch], close<sonnet>` — plan forced onto fable for that step only; default then switches to opus for everything after; `execute!` runs under opus and **must succeed** (fails → halt + escalate rather than audit a broken execution); only on success do `audit` + `redteam` dispatch **in parallel** (both opus), chain waiting for both; patch optional, runs under opus only if the parallel review surfaced a small code-level issue; close forced onto sonnet regardless of the opus default.
 
 ### Human Escalation
 
