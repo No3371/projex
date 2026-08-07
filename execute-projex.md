@@ -29,21 +29,19 @@ Execution transforms plans into reality. This workflow ensures faithful implemen
 
 ## PRE-EXECUTION CHECKLIST
 
-**GATE: Do not explore the codebase, check git status, read source files, or make any assumptions about the target repository before running the pre-check script and completing workflow step1: INITIALIZE EXECUTION. Any error (exit code non-zero) from the script means cancelling the execution. Warnings must be resolved before continuing — e.g., if the plan is not committed, commit it first, then resume.**
-
 ### 1. AUTOMATED VALIDATION
 
-Run the pre-check script — this is the **first action**, before anything else:
+**GATE: You MUST NOT explore, think, write, etc. before this. You MUST run the pre-check script before proceeding. Any error (exit code non-zero) from the script -> cancelling the execution. Warnings must be resolved before continuing — e.g., if the plan is not committed, commit it first, then resume.**
 
 ```bash
 {projex-scripts}/execute-precheck.{sh|ps1} <plan-file>
 ```
 
-The script makes sure you are starting execution in a right manner. It outputs `REPO_ROOT`, `BRANCH`, and `PLAN_REL` — record `REPO_ROOT` for use in **all** subsequent script calls and git commands. Do not use your CWD or any other path as the repo root.
+The script ensure you start the execution in a right manner. It outputs `REPO_ROOT`, `BRANCH`, and `PLAN_REL` — record `REPO_ROOT` for use in **all** subsequent script calls and git commands. Do not use your CWD or any other path as the repo root.
 
 ### 2. MANUAL VALIDATION
 
-Verify items requiring judgment (script output provides context for the first two):
+Verify items requiring judgment:
 
 - [ ] **Correct repository** — `REPO_ROOT` matches the repo that owns the plan's `.projex/` folder
 - [ ] **Correct base branch** — `BRANCH` is the expected branch (typically `main` or a feature branch)
@@ -59,10 +57,10 @@ Verify items requiring judgment (script output provides context for the first tw
 - [ ] Check for recent changes that might affect plan
 - [ ] Note any drift from plan assumptions
 
-**If significant drift detected:**
+**If significant drift or issues detected:**
 1. Stop execution
 2. Report drift to user
-3. Plan may need `/review-projex.md` and updates
+3. `/review-projex` or `/revise-projex` may be needed
 
 ---
 
@@ -96,17 +94,17 @@ git branch --show-current
 ```
 All subsequent commands use `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
 
-**Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected — not a failed precondition; do not halt over it.** Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
+**Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected**. Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
 
 3. **Create execution log** — `{yymmddhhmm}-{plan-name}-log.md` in the same `.projex/` folder. See [Execution Log Template](#execution-log-template). Set `Status:` to `In Progress`, and populate the remaining header fields (`Repo Root`, `Plan File`, `Base Branch`) and the `Pre-Check Results` block directly from the precheck output produced in step 1 of PRE-EXECUTION CHECKLIST.
 
-   The log carries a `> **Status:**` field so it is discoverable by the same status scan as every other projex document — it tracks the execution, not the plan: `In Progress` while executing, then `Complete` or `Blocked` at POST-EXECUTION. It is not a workflow type and is never authored on its own; it lives and closes with its plan.
+   The log tracks the execution: `In Progress` while executing, then `Complete` or `Blocked` at POST-EXECUTION. It is not a workflow type. It lives and closes with its plan.
 
 ### 2. BUILD TASK LIST FROM PLAN
 
 **Before touching any files, translate the plan into a task list if your environment provides todo/task tool** (e.g., `TaskCreate` in Claude Code, or equivalent). Non-optional.
 
-Recurring re-anchor task: "Re-read SKILL.md and execute-projex.md"** — insert this task after every 20th task in the list (i.e., positions 20, 40, …) to stay compliant to projex framework.
+Recurring re-anchor task: "Re-read SKILL.md and execute-projex.md"** — insert this task after every 10th task in the list (i.e., positions 20, 40, …) to stay compliant to projex framework.
 
 For each plan step, create a task that captures:
 - The step's objective as the task subject
@@ -126,33 +124,9 @@ Also create explicit tasks for **every gate and sequential dependency**:
 
 > After any codebase exploration or research (reading code, understanding architecture, investigating dependencies), **re-read this workflow and the plan document** before proceeding. Exploration causes context drift — re-anchoring to the plan prevents it.
 
-### 3. CHOOSE EXECUTION MODE
+### 3. EXECUTE STEPS SEQUENTIALLY
 
-Two modes — pick before touching files:
-
-**Self-execute (default).** This invocation carries out every objective itself, sequentially, per step 4 below. Use when the plan is small, objectives are tightly coupled, or you are not running under an orchestrator.
-
-Self-execute has no context isolation: the agent that implements each step also judges it, holding every assumption it made while implementing. Steps marked `Verify-Projex: Required` are checked by an independent `/verify-projex.md` sub-subagent before their commit — see § 4.C item 3.
-
-**Delegate per objective (sub-subagent mode).** Spawn one sub-subagent per objective; each invokes `/do-projex.md` against that single objective. Use when:
-
-- The plan has multiple distinct objectives / milestones whose execution is largely independent
-- Context isolation per objective improves robustness (long plan, large files, easy drift)
-
-Coordinator responsibilities in delegate mode:
-
-- Steps 1 (initialize), 2 (task list), 5 (deviations), 6 (failures escalation), 7 (complete) stay with this coordinator — never delegated
-- Dispatch sub-subagents **sequentially** (one objective at a time) unless each runs in its own worktree branch — concurrent writes to the same branch / log are forbidden
-- After each sub-subagent returns: read its report, mark the corresponding task complete, decide whether to dispatch the next or stop
-- Sub-subagent prompt must include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and this clause verbatim, `{depth}` filled with the sub-subagent's depth (coordinator's + 1): *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."*
-- Sub-subagent must be of the same model as the executor.
-- On any blocker / out-of-scope discovery returned by a sub-subagent: stop dispatching, fall back to self-execute or escalate
-
-Sub-subagent boundaries are enforced by `do-projex.md`. The coordinator does not re-specify them in the handoff.
-
-### 4. EXECUTE STEPS SEQUENTIALLY
-
-For each step in the plan:
+For each step in the plan, sequentially:
 
 #### A. PREPARE
 
@@ -162,46 +136,62 @@ For each step in the plan:
 
 #### B. EXECUTE
 
-1. Carry out the step (make changes / run commands / gather data)
+Carry out the step (make changes / run commands / gather data), either by yourself or via a `do-projex` sub-subagent (blocking).
 
-#### C. LOG, VERIFY, AND COMMIT
+If you choose do-projex:
+- Dispatch with a regular projex handoff, like any other workflow
+- Include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and this clause verbatim, `{depth}` filled with the sub-subagent's depth (coordinator's + 1): *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."*
+- For each returned `do-projex`, read its report, mark the corresponding task complete, decide whether to dispatch the next or stop.
+- do-projex must be of the same model as the executor.
+- On any blocker / out-of-scope discovery returned by a do-projex: stop dispatching, fall back to self-execute or escalate
 
-**GATE: The log entry for this step must be written before starting the next step. The execution log is a live record, not a retrospective summary. The walkthrough is derived from git history + these logs — gaps here become gaps there.**
+#### C. LOG
 
-1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
-2. Confirm the step objective is achieved; check for side effects
-3. **Independent verification** — when this step carries a `Verify-Projex: Required` line, spawn a `/verify-projex.md` sub-subagent for it and **block on its return** before proceeding.
-
-   Pass only `plan`, `step`, `repo`, `branch`, plus this clause verbatim, `{depth}` filled with the sub-subagent's depth (yours + 1): *"You are a verify-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the verification yourself, stop and return what you have with a clear description of what is blocking you."* Never pass your own account of what you changed — that contamination is exactly what the verifier exists to avoid. Spawn on the same model you are running; a weaker verifier rubber-stamps.
-
-   Act on the verdict:
-
-   - **Verified** → continue to item 4
-   - **Patch** → apply the named fix, then re-spawn verification on this step
-   - **Rejected** → redo the step, then re-spawn verification
-
-   **Two verification rounds per step maximum.** If a third would be needed, the step is not converging: stop looping, log it `Partial` with the verifier's findings, and escalate to the user.
-
-   Record the verdict and the verifier's key findings in this step's log entry. The report is ephemeral and dies with the sub-subagent.
-
-4. **Write the log entry** for this step using the inline template below, referencing tool outputs just produced — not from memory:
+Write the log entry:
 
 ```
 ### [yyyymmdd hh:mm] - Step N: [Step Title]
 **Action:** [What was done — command run, file edited, test executed, etc.]
 **Result:** [What happened — output, errors, observations, verification evidence]
-**Status:** Success / Failed / Partial
+**Status:** Verifying
 ```
 
-5. **Commit the log together with the step's file changes** in one atomic unit. Investigative steps (running tests, gathering data) commit only the log entry.
+You MUST update the log before proceeding to the next step. The execution log IS a live record, NOT a retrospective summary. The walkthrough is derived from git history + these logs — gaps here become gaps there.
+
+Note: **User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
+
+#### D. VERIFY
+
+Verify the step, either by yourself or via a `verify-projex` sub-subagent (blocking).
+
+A. If you choose verify-projex:
+
+Pass only `plan`, `step`, `repo`, `branch`, plus this clause verbatim, `{depth}` filled with the sub-subagent's depth (yours + 1): *"You are a verify-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the verification yourself, stop and return what you have with a clear description of what is blocking you."* Never pass your own account of what you changed — that contamination is exactly what the verifier exists to avoid. Spawn on the same model you are running; a weaker verifier rubber-stamps.
+
+When it returns, act on the verdict:
+- Verified → continue to item 4
+- Patch → apply the named fix, then restart this VERIFY step
+- Rejected → redo the step, then re-run this VERIFY step
+
+Max verification rounds per step: **2**. If a third would be needed, the step is not converging: stop looping, log it `Partial` with the verifier's findings, and escalate to the user.
+
+Record the verdict and the verifier's key findings in this step's log entry. The report is ephemeral and dies with the sub-subagent.
+
+B. Verify by yourself:
+1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
+2. Confirm the step objective is achieved; check for side effects; no significant issue
+3. Act on your own verdict: resolve until Success, or mark it Failed or Partial
+4. Update the step Status
+
+#### E. COMMIT
+
+Commit the log together with the step's file changes **in one atomic unit**. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
-6. **Mark the task complete** in your task list — only after both the work and log entry are committed
-
-**User interventions:** If the user interrupts, corrects, or redirects — whether mid-step, between steps, or after all steps — log the intervention (context, direction, action taken, impact on plan) with the same rigor as any planned step, then adjust execution accordingly.
+**Mark the task complete** in your task list — only after both the work and log entry are committed.
 
 ### 5. HANDLE DEVIATIONS
 
