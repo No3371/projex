@@ -78,7 +78,7 @@ The A1 direction in the source proposal is independently actionable under the hu
 ### Constraints
 
 - Report-only is a hard contract: use file reads and this Git read allowlist only — `rev-parse`, `branch --show-current`, `show-ref`, `for-each-ref`, `log`, `diff --stat`, `ls-tree`, `ls-files`, `status`, `stash list`, and `worktree list --porcelain`; no command may alter checkout, refs, index, worktree registration, files, or stash state. Pass every path/ref as a quoted argument; never use `eval` or a shell-generated command string.
-- Derive the target repository from the plan/log context and use `git -C`; do not rely on the caller's current directory after resolution and never fall back to `main`/`master`. Canonicalize existing paths before containment checks, reject symlink escapes, resolve relative `Worktree Path` only relative to the recorded canonical `Repo Root`, and verify exact registered worktree path, branch, and HEAD.
+- Derive the target repository from the plan/log context and use `git -C`; do not rely on the caller's current directory after resolution and never fall back to `main`/`master`. Canonicalize existing paths before containment checks; resolve relative `Worktree Path` only relative to the recorded canonical `Repo Root`; accept a symlink alias only when its canonical target remains inside that root and matches the exact registered worktree path, branch, and HEAD; reject only escaping symlinks and reused/mismatched registrations.
 - Base branch must be a local branch ref. Reject a tag, SHA, remote-tracking ref, malformed/duplicate field, or missing field before emitting a misleading commit range. Distinguish unsupported historical log format from malformed current context.
 - Preserve the existing precheck convention: hard context/format/snapshot errors are non-zero; cleanliness/document-state warnings remain visible, encoded, and do not silently become failures.
 - Use literal plan-filename matching for inventory, recurse across eligible `.projex` folders in the originating root and recorded child worktree, exclude `.git` and unrelated `.projexwt`, and keep all emitted repository paths stable and encoded repo-relative except the required encoded `REPO_ROOT`/worktree values. Inventory is factual; lifecycle disposition remains a later close decision.
@@ -90,7 +90,7 @@ The A1 direction in the source proposal is independently actionable under the hu
 
 - A closeable execution has a companion execution log. `> **Repo Root:**` and `> **Base Branch:**` are one-line fields in that log; `> **Worktree Path:**` is optional and identifies worktree mode. Required headers occur exactly once; conflicting duplicates are hard errors.
 - The plan's `> **Log:**` filename, when present, is authoritative relative to the plan's `.projex` folder; absent that field, the sibling `<plan-stem>-log.md` is the only fallback. Existing plan/log paths are canonicalized and must remain in the same Git repository/worktree set.
-- `Worktree Path` may be absolute or relative to the recorded `Repo Root`; only an exact registered worktree with the logged branch/HEAD is accepted. Symlink escapes and reused/mismatched registrations fail.
+- `Worktree Path` may be absolute or relative to the recorded `Repo Root`; relative paths are valid after canonicalization. An in-repo symlink alias is also valid when its canonical target matches the exact registered worktree path, logged branch, and HEAD. Symlink escapes and reused/mismatched registrations fail.
 - Branch names and document filenames do not contain newlines; other repository-controlled values are untrusted and percent-encoded. Framework filename uniqueness makes a no-argument branch-to-plan lookup safe only when it returns exactly one candidate.
 - A document's first strict `> **Status:**` line is its displayed status. Missing status is reportable (`MISSING`), not a reason to suppress the document from inventory. Inventory class does not infer whether an auxiliary document is resolved or safe to remove.
 - The report captures a sequential snapshot; concurrent mutation is outside the utility's guarantee. Ref/worktree drift detected before terminal output yields `STALE`/non-zero, and future consumers must compare snapshot identity and rerun.
@@ -129,7 +129,8 @@ Resolution:
    projex/* and find exactly one matching *-plan.md under an eligible .projex/ folder.
 2. Canonicalize the plan and derive its log from the plan's > **Log:** filename, or its
    sibling *-log.md fallback. Require plan/log containment in the same Git repository;
-   fail on absent, escaped, symlinked, or inaccessible paths.
+   fail on absent, escaping-symlink, or inaccessible paths. In-repo symlink aliases are
+   valid when their canonical targets remain contained and match the registered paths.
 3. Parse exactly one > **Repo Root:**, > **Base Branch:**, and optional > **Worktree Path:**
    header from the log. Resolve a relative worktree path against the canonical recorded
    repo root; validate exact `git worktree list --porcelain` path/branch/HEAD identity,
@@ -180,7 +181,7 @@ repo, local base, ephemeral branch, path identity, or snapshot.
 
 **Rationale:** Close needs the recorded originating repo and base branch, not a guessed `main` or the caller's current directory. Canonical paths and exact registration identity prevent wrong-worktree reports; a versioned escaped protocol prevents parser spoofing; snapshots make drift visible. Resolving all context before reporting keeps output safe to hand to later close steps as advisory evidence; warnings remain evidence rather than mutations or hidden gate failures.
 
-**Verification:** `bash -n close-precheck.sh`; run the Bash suite directly; parse every successful output with the protocol fixture parser; inspect explicit/inferred runs for identical encoded context and snapshot fields; exercise spaces, `=`, `%`, tabs, duplicate headers, symlink/relative/reused paths, child-only docs, and snapshot drift; static-review the Git allowlist and shell quoting; assert no ref/index/file/worktree/stash changes before and after.
+**Verification:** `bash -n close-precheck.sh`; run the Bash suite directly; parse every successful output with the protocol fixture parser; inspect explicit/inferred runs for identical encoded context and snapshot fields; exercise spaces, `=`, `%`, tabs, duplicate headers, valid relative paths, valid in-repo symlink aliases, escaping symlinks, reused/mismatched registrations, child-only docs, and snapshot drift; static-review the Git allowlist and shell quoting; assert no ref/index/file/worktree/stash changes before and after.
 
 **If this fails:** Delete the new untracked script in the execution worktree and rerun the suite from the unchanged base; do not use checkout/reset commands to recover a report-only fixture.
 
@@ -245,8 +246,9 @@ Required matrix:
 - no-argument inference succeeds for one matching plan and fails for zero/multiple
   candidates or a non-projex current branch;
 - missing/duplicate/conflicting headers, unsupported old format, missing log, missing
-  Base Branch, invalid/non-local base, escaped/symlinked/relative/reused worktree path,
-  and wrong/non-projex ephemeral branch fail before a false result;
+  Base Branch, invalid/non-local base, escaping-symlink or reused/mismatched worktree
+  path, and wrong/non-projex ephemeral branch fail before a false result; valid relative
+  paths and in-repo symlink aliases resolve successfully after canonical containment;
 - commit list, diff stat, stash entries, `NONE`, and terminal results decode through the
   protocol parser; paths/subjects/statuses containing spaces, `=`, `%`, tabs, and
   terminal-control bytes cannot create records or alter arguments;
@@ -353,7 +355,7 @@ After:
 
 | Criterion | How to Verify | Expected Result |
 | ----------- | --------------- | ----------------- |
-| Context/path resolution | Explicit/inferred, malformed/duplicate, symlink/relative/reused-path fixtures | Stable encoded fields; errors non-zero; no `main` fallback; exact registration identity |
+| Context/path resolution | Explicit/inferred, malformed/duplicate, valid relative/in-repo symlink, escaping/reused-path fixtures | Valid canonical paths resolve; only escapes/reuse/mismatch error; no `main` fallback; exact registration identity |
 | Protocol/snapshot | Parser, unusual values, ref/worktree drift fixtures | Schema v1 decodes deterministically; `STALE` forces rerun; no raw value spoofs a record |
 | Close evidence report | Fixture with commits, diff, stash, child/root related docs | Commit list, stat, stash, complete classified/location-aware inventory are present |
 | § 7 gates | Clean, dirty-origin, dirty-child, checkout-mode fixtures | PASS/WARN/N/A and advisory RESULT match bars; no mutation |
@@ -374,13 +376,14 @@ No close/finalizer command, branch deletion, reset, stash operation, or other de
 ## Revision Log
 
 - **2026-08-08:** Tightened A1 with a versioned escaped record protocol, snapshot identity/drift handling, canonical path/worktree validation, recorded child-root inventory, read-only command/argument rules, scale and runner fail-closed requirements, explicit PowerShell evidence gating, and a schema-adoption gate — trigger: validated stress findings 1–8 and red-team findings 1–11 in `2608082031-close-precheck-script-plan-stress.md` and `2608082042-close-precheck-script-plan-redteam.md`. Scope guard: qualifies as Revise — existing Ready Plan, concrete findings, and report-only A1 direction/boundary still hold; no re-author escalation.
+- **2026-08-08:** Clarified path policy: relative `Worktree Path` values and in-repo symlink aliases are valid after canonical containment and exact registration checks; only escaping symlinks and reused/mismatched registrations fail — trigger: acceptance correction to the prior revision.
 
 ## Notes
 
 ### Risks
 
 - **Log-format drift:** Missing or changed headers could produce false context. Mitigation: strict required-header failures, explicit tests, and no guessed base branch.
-- **Worktree path ambiguity/reuse:** Relative, symlinked, or reused child paths can redirect discovery. Mitigation: canonical containment, relative-to-recorded-root rule, exact registered path/branch/HEAD, and path fixtures.
+- **Worktree path ambiguity/reuse:** Relative paths and in-repo symlink aliases can redirect discovery if canonicalization is inconsistent; escaping symlinks and reused child paths are invalid. Mitigation: resolve relative-to-recorded-root, canonicalize, require exact registered path/branch/HEAD, and test both valid and rejected cases.
 - **Inventory false negatives/lifecycle ambiguity:** Auxiliary docs can live under multiple `.projex` roots, child worktrees, or remain untracked. Mitigation: scan originating plus recorded child roots, encode location/class/status, retain child-only records, and leave disposition to close.
 - **Output/protocol drift:** Independent implementations can diverge or untrusted values can spoof raw records. Mitigation: schema v1, percent encoding, parser fixtures, duplicate rejection, and decoded parity tests.
 - **Snapshot drift:** Refs or registration can change during/after reporting. Mitigation: start/end identity check, `STALE` non-zero result, and consumer-side compare/rerun rule; report remains advisory.
@@ -394,7 +397,7 @@ No close/finalizer command, branch deletion, reset, stash operation, or other de
 - Inventory both-ref paths: `tracked-on-ephemeral` wins, with `also-on-base` annotation; base-only is `tracked-on-base`; neither is `untracked`. Scan originating and recorded child `.projex` roots; child-only records are factual and never authorize deletion.
 - Output contract: schema v1, fixed record types/field order, UTF-8 percent-encoded values, explicit `NONE`, `ERROR`, and terminal `RESULT`; `PASS`/`PASS_WITH_WARNINGS` are advisory. Framework utility maintainer owns compatibility; A2/A4 cannot adopt pre-gate output.
 - Snapshot contract: emit ref/worktree identity and UTC generation time; ref/registration drift during a run yields `STALE`/non-zero, and later consumers rerun on mismatch.
-- Path/security contract: canonical containment, relative child paths resolve from recorded repo root, exact worktree registration is required, conflicting duplicate headers fail, and only the documented Git read allowlist is permitted.
+- Path/security contract: relative child paths resolve from recorded repo root; canonical in-repo symlink aliases are accepted only when exact registration matches; escaping symlinks and reused/mismatched paths fail; conflicting duplicate headers fail; only the documented Git read allowlist is permitted.
 - Warning exit policy: valid stable context with warnings exits zero and says `RESULT=PASS_WITH_WARNINGS`; missing/ambiguous/unsupported context or drift exits non-zero.
 - Platform/scale policy: PowerShell `NOT RUN` cannot satisfy parity; runner omission/missing summaries fail closed; output is complete-or-fail within the fixed 8 MiB budget.
 - Scope: plan/close lifecycle only; no `debug-projex` generalization and no A2–A4 workflow edits.
