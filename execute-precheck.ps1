@@ -61,6 +61,11 @@ if (-not $Dirty) {
     Write-Host "WARN  Working tree has $DirtyCount uncommitted change(s)"
 }
 
+# --- Opportunistic Worktree Mode guardrail ---
+if (Select-String -Path $PlanAbs -Pattern "> **Worktree:** Yes" -Quiet) {
+    Write-Host "`nExecuting in Worktree mode? Remember to bootstrap the branch/worktree (missing dev deps, etc.)"
+}
+
 # --- Result ---
 
 Write-Host ""
