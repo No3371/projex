@@ -371,7 +371,7 @@ The debug document is the polished, reader-facing artifact derived from the log.
 ```markdown
 # Debug: [Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Issue:** [one-sentence symptom]
 > **Status:** Complete (Resolved) | Escalated (Exhausted)
 > **Fix Commit:** [SHA after squash, or "n/a — exhausted"]

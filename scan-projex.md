@@ -83,7 +83,7 @@ Search systematically. Use whatever combination of tools finds everything:
 ```markdown
 # Scan: [Subject]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Subject:** [exactly what was scanned for]
 > **Boundary:** [scope of the scan — whole repo, specific dirs, etc.]
 > **Match Criteria:** [what counted as a hit]

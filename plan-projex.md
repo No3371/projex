@@ -93,7 +93,7 @@ Answer by reading actual code:
 # [Plan Title]
 
 > **Status:** Draft | Ready | In Progress | Blocked | Complete
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Source:** [proposal/preplan filename or "Direct request"]
 > **Related Projex:** [links to related projex documents]
 > **Worktree:** Yes | No

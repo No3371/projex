@@ -90,7 +90,7 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 > **Status:** In Progress
 > **Created:** YYYY-MM-DD | **Last Revised:** YYYY-MM-DD
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Scope:** [what this roadmap covers — be specific about boundaries]
 > **Parent Navigation:** [link to higher-level nav, if any]
 > **Related Projex:** [links]

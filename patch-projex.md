@@ -119,7 +119,7 @@ The patch document IS the walkthrough. One self-contained record.
 ```markdown
 # Patch: [Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Directive:** [The original instruction/request]
 > **Source Plan:** [link to plan if patching a plan objective, otherwise "Direct"]
 > **Result:** Success | Partial Success | Failed

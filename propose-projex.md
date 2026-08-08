@@ -63,7 +63,7 @@ Questions to answer:
 # [Proposal Title]
 
 > **Status:** Draft | In Progress | Complete (Accepted) | Complete (Rejected)
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Related Projex:** [links to related projex documents]
 
 ---

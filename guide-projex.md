@@ -99,7 +99,7 @@ Use the template structure below, adapting sections based on guide type and dept
 ```markdown
 # [Guide Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Type:** Codebase | Document | Concept | Onboarding
 > **Target Audience:** [who this is for, what they're assumed to know]
 > **Estimated Time:** [rough reading time]

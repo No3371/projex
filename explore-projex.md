@@ -83,7 +83,7 @@ This scaffold is the working artifact. Everything learned goes into it, not into
 ```markdown
 # [Exploration Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Type:** Domain | Architectural | Decision | Question | Historical
 > **Status:** In Progress | Complete (Done)
 > **Related Projex:** [links]

@@ -125,7 +125,7 @@ Frame challenges constructively: "This creates an interesting tension between X 
 ```markdown
 # [Imagination Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Seed:** [the original seed, verbatim or lightly paraphrased]
 > **Type:** Concept | Design | Domain | Extension
 > **Related Projex:** [links to related projex documents]

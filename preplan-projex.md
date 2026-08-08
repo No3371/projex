@@ -173,7 +173,7 @@ Create the sole surviving artifact on the base branch:
 # Preplan: [Title]
 
 > **Status:** Complete
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Source:** [proposal/memo filename or "Direct request"]
 > **Related Projex:** [filenames or "None"]
 

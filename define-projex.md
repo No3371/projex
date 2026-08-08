@@ -77,7 +77,7 @@ Don't rush to document — keep discussing until you and the user feel the major
 # Definition: [Entity Name]
 
 > **Created:** YYYY-MM-DD | **Last Revised:** YYYY-MM-DD
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Scope:** [what this definition covers]
 > **Status:** Draft | In Progress | Complete (Stable)
 

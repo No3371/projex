@@ -66,7 +66,7 @@ Classify what's being captured:
 ```markdown
 # Memo: [Brief Title]
 
-> **Author:** [name or agent]
+> **Author:** [Model(Role), or Model, or self identity, fallback: "Agent"]
 > **Source Type:** Quote | Idea | Issue | Deferred
 > **Origin:** [where this came from — conversation, projex reference, workflow name, or "Direct"]
 
