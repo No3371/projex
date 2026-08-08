@@ -465,7 +465,7 @@ After resolving: **squash-close is not re-runnable** — a squash commit does no
 A rebase stops at the **first** conflicting commit, so a covered stop is not a promise the rest is clean — the same gate applies at every later stop, and the script reports how many commits remain.
 
 #### Option A: Squash Merge (Default/Recommended)
-Combines all execution commits into a single clean commit on base branch.
+Combines all execution commits into a single clean commit on base branch. You MUST preserve the squashed commits (messages + descriptions or at least the messages) in the description.
 
 **Checkout mode:**
 ```bash
