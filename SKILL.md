@@ -113,6 +113,7 @@ This pass is **optional**: apply it when the draft reads like it was narrated ra
 ## Organizing
 
 Files live in `.projex/` folders in one or more paths (each dedicated to a individual domain/module/components/area/scope, etc.). Location in projex folders reflects state:
+
 - Active → `.projex/`
 - Closed → `.projex/closed/`
 - Archived → `.projex/archived/`
@@ -137,7 +138,7 @@ Every projex document that carries a lifecycle Status field draws its value from
 ### Canonical vocabulary
 
 | State | Meaning | Folder |
-|-------|---------|--------|
+| ------- | --------- | -------- |
 | `Draft` | Authored, still changing, not yet reliable | `.projex/` |
 | `Ready` | Finalized & actionable, not yet started (types with an execution phase only) | `.projex/` |
 | `In Progress` | Actively being worked / executed | `.projex/` |
@@ -152,7 +153,7 @@ Every projex document that carries a lifecycle Status field draws its value from
 
 Status is machine-readable via a single strict line — the `> **Status:**` blockquote. No YAML frontmatter; this blockquote is the one source of truth.
 
-**Grammar:** `> **Status:** <state>` optionally followed by ` (<outcome>)`, where `<state>` is exactly one canonical value.
+**Grammar:** `> **Status:** <state>` optionally followed by `(<outcome>)`, where `<state>` is exactly one canonical value.
 
 ```
 > **Status:** In Progress
@@ -202,6 +203,7 @@ Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interv
 Execute, close, patch, revise, and **preplan** are exempt — they commit as a structural requirement of their lifecycle. For preplan specifically: the disposable worktree is always discarded and the brief is the sole surviving artifact; committing it completes the preplan rather than being an incidental save.
 
 **Pattern for auxiliary workflows:**
+
 1. Create the artifact file
 2. Present it to the user (surface path, summary, key content)
 3. Wait — commit only if the user explicitly requests it (e.g., "commit this", "save it", "push it")
@@ -222,7 +224,7 @@ Projex methods are domain-general; git is the **reference substrate**, not a req
 Git provides all four. Substrate determines available workflows:
 
 | Substrate | Available |
-|-----------|-----------|
+| ----------- | ----------- |
 | Files in a git repo (code, prose, any domain) | Full framework |
 | Files, no git | All analytical workflows + revise/memo/define/nav. No execute/preplan/debug cycle — no rollback guarantee |
 | Non-file domain (events, negotiations, physical work) | Analytical workflows + Field Mode cycle |
@@ -264,6 +266,12 @@ When no file reference is given, infer the target repo from context (cwd, recent
 ### Utility Scripts
 
 Scripts live next to this file as `.{sh|ps1}`. All workflow examples use `{projex-scripts}/` as a placeholder — substitute the absolute path to the directory containing this `SKILL.md` (e.g., if loaded from `/home/user/projex/SKILL.md`, then `{projex-scripts}/stage-n-commit.{sh|ps1}`).
+
+#### Prechecks
+
+`execute-precheck.{sh,ps1}` — execution validation: resolves the plan repository, current branch, and plan-relative path; reports committed/dirty warnings before an execution begins.
+
+`close-precheck.{sh,ps1}` — report-only close-context discovery: resolves the plan and exactly one execution log, requires the recorded local base branch, emits schema v1 UTF-8 percent-encoded context/snapshot/commit/diff/inventory/stash/gate records, scans originating and recorded child `.projex` roots, and reports `PASS`, `PASS_WITH_WARNINGS`, `STALE`, or `ERROR`. It never authorizes close or mutates refs, index, worktrees, files, or stash state; consumers rerun on `STALE` and finalizers remain the enforcement backstop.
 
 #### Committing
 
@@ -361,6 +369,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 **Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Preplans require worktree mode.
 
 **How it works:**
+
 - `projex-worktree` creates the worktree in `.projexwt/` inside the repo
 - All execution happens in the worktree directory (`{repo-name}/.projexwt/<name>/`)
 - `stage-n-commit` works unchanged (`-C` accepts worktree paths)
@@ -370,6 +379,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 - **Cleanup contract:** anything created in the worktree that git does not track — symlinked/installed deps (`node_modules`), build output, scratch files — must be removed before close, and any tracked edits committed. Close scripts refuse to finalize over a non-clean worktree (untracked files or uncommitted tracked changes). Ignored content (deps/build output) does **not** block git-level removal, but can make removal fail mid-way in environment-dependent ways (seen with symlinked deps in a Linux docker sandbox, and with file locks/CWD-in-worktree on Windows) and leave a stray directory to clean up — so remove agent-created ignored tooling too.
 
 **Benefits over checkout mode:**
+
 - No clean-state requirement at execution start
 - No working directory disruption (editors/IDEs unaffected)
 - Parallel executions possible (multiple worktrees)
@@ -389,7 +399,9 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 ## NOTES
 
 ### AVOID ABSOLUTE PATHS
+
 Use file paths RELATIVE to project root. REDACT external paths.
 
 ### NO PARALLEL EXPLORATION WITH WORKFLOWS
+
 Workflow files (ex: execute-projex) may have requirements before starting, fully comply before reading stuff into context.

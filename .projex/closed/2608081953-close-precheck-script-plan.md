@@ -1,10 +1,16 @@
 # Plan: close-precheck Script
 
-> **Status:** In Progress
+> **Status:** Complete (Partial Success)
 > **Author:** luna (xhigh)
 > **Source:** 2607291729-close-projex-modernization-proposal.md
 > **Related Projex:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607261121-close-scripts-dirty-base-safety-plan.md (closed) | 2607261520-close-scripts-dirty-base-safety-audit.md (closed)
 > **Worktree:** Yes
+> **Log:** 2608090541-close-precheck-script-plan-log.md
+> **Completed:** 2026-08-09
+> **Walkthrough:** 2608090821-close-precheck-script-plan-walkthrough.md
+> **Deferred:** PowerShell parser/direct-suite/aggregate evidence remains `NOT RUN`; close is authorized as partial success.
+> **Partial Execution:** PowerShell runner registration `[PATCHED]` 2026-08-09 via 2608090620-close-precheck-runner-patch.md; platform and broader verification blockers remain.
+> **Patch Correction:** Unattributed Bash formatting drift was discarded, not adopted, 2026-08-09 via 2608090759-close-precheck-formatting-patch.md; `close-precheck.sh` and `tests/close-precheck.test.sh` restored to `ffe3868`.
 
 ---
 
@@ -279,7 +285,7 @@ Required matrix:
 
 ---
 
-### Step 4: Register and document the utility
+### Step 4: Register and document the utility `[PATCHED]`
 
 **Objective:** Make the new pair discoverable and ensure every standard test invocation exercises it.
 **Confidence:** High

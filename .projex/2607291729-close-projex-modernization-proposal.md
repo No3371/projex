@@ -3,7 +3,7 @@
 > **Status:** Draft
 > **Author:** Claude (fable) via orchestrate-projex
 > **Related Projex:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607152043-agent-close-lock-plan.md | 2607261121-close-scripts-dirty-base-safety-plan.md (closed) | 2607261520-close-scripts-dirty-base-safety-audit.md (closed)
-> **Plans:** 2608081953-close-precheck-script-plan.md (A1) | 2607291750-close-projex-evidence-and-tiers-plan.md (A2+A3) | 2607291750-close-projex-aux-docs-and-keyed-intake-plan.md (A4) — open questions resolved in the plans' Notes → Resolved Questions
+> **Plans:** 2608081953-close-precheck-script-plan.md (A1, closed partial success; PowerShell evidence deferred) | 2607291750-close-projex-evidence-and-tiers-plan.md (A2+A3) | 2607291750-close-projex-aux-docs-and-keyed-intake-plan.md (A4) — open questions resolved in the plans' Notes → Resolved Questions
 
 ---
 

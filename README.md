@@ -50,7 +50,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 ### Think
 
 | Command | What you get |
-|---|---|
+| --- | --- |
 | `eval-projex` | Open-ended analysis of any question or idea |
 | `explore-projex` | Investigation grounded in what actually exists in the repo |
 | `propose-projex` | A directional "what if" with trade-offs and impact |
@@ -64,14 +64,14 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 ### Orient
 
 | Command | What you get |
-|---|---|
+| --- | --- |
 | `define-projex` | Living spec of what an entity *is* — identity, boundaries, constraints |
 | `navigate-projex` | Living roadmap — milestones, phases, what to work on next |
 
 ### Act
 
 | Command | What you get |
-|---|---|
+| --- | --- |
 | `plan-projex` | Actionable blueprint: what to change, in which files, in what order |
 | `execute-projex` | Carries out a plan on an isolated ephemeral branch (optionally in a worktree) |
 | `close-projex` | Walkthrough of what actually happened, then merge and cleanup |
@@ -84,7 +84,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 ### Check
 
 | Command | What you get |
-|---|---|
+| --- | --- |
 | `review-projex` | Existing documents checked against the status quo for staleness and correctness |
 | `redteam-projex` | Adversarial pass — challenged assumptions, weaknesses, exploited edge cases |
 | `stress-projex` | Adversarial pass by attack angle — no stakeholder modeling, for role-thin subjects |
@@ -113,12 +113,13 @@ Execution runs on ephemeral branches (`projex/{yymmddhhmm}-{name}`), preplans in
 Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with built-in rollback:
 
 | Script | Does |
-|---|---|
+| --- | --- |
 | `new-projex` | Scaffold a projex file with the correct name and header |
 | `stage-n-commit` | Stage explicit paths + commit as one atomic operation |
 | `stage-by-pattern` | Regex-filtered selective staging |
 | `move-n-stage` / `del-n-stage` | Batch `git mv` / `git rm` with rollback |
 | `execute-precheck` | Validate a plan is ready to execute |
+| `close-precheck` | Report-only, versioned close context (advisory; not authorization or a finalizer) |
 | `projex-worktree` | Isolated worktree under `{repo}/.projexwt/` |
 | `projex-squash-close` / `projex-merge-close` / `projex-rebase-close` | Finalize an ephemeral branch, three flavors |
 | `projex-abandon` | Force-delete an ephemeral branch |
