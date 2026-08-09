@@ -1,6 +1,6 @@
 # Plan: close-precheck Script
 
-> **Status:** Ready
+> **Status:** In Progress
 > **Author:** luna (xhigh)
 > **Source:** 2607291729-close-projex-modernization-proposal.md
 > **Related Projex:** 2607132112-projex-rebase-close-scripts-redteam.md | 2607261121-close-scripts-dirty-base-safety-plan.md (closed) | 2607261520-close-scripts-dirty-base-safety-audit.md (closed)
