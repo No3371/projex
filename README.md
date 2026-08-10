@@ -1,6 +1,8 @@
 # Projex
 
 <img width="514" height="203" alt="image" src="https://github.com/user-attachments/assets/9e5dcaa0-3e34-4a1a-915e-1a9ab00c0583" />
+<img width="620" height="191" alt="image" src="https://github.com/user-attachments/assets/e5e1bc12-cc67-4470-b38b-ff6c31a4ed18" />
+<img width="562" height="213" alt="image" src="https://github.com/user-attachments/assets/92823ebc-8697-4d07-83b9-720e8a7d6232" />
 
 A prompt framework that structures how LLM agents think, plan, execute, and document work — as self-contained markdown units. No build system, no runtime, no lock-in: just workflow specs you invoke by name.
 
@@ -32,12 +34,12 @@ One line, full lifecycle: plan it, attack the plan, revise if the attack found s
 
 ## Why it works
 
-- **You stay in the loop where it matters.** You delegate execution, not understanding. Mistakes surface early because you review plans before they run.
-- **Small, meaningful steps.** Every projex is a self-contained unit of work, so progress is naturally incremental.
-- **Documents are the memory.** Plans, reports, decisions all persist as files — the agent's context-retrieval burden drops to "read this file."
-- **Traceability for free.** Every change links to a plan; every plan links to a walkthrough. "Why was this done?" always has an answer.
-- **Safe undo.** Ephemeral branches, worktrees, and preplan spikes make experiments cleanly discardable.
-- **Guard rails, not vibes.** Templates force scope, risks, and rollback thinking *before* acting. Strict git discipline prevents the classic agent disasters.
+- You stay in the loop. Mistakes surface early because you review plans before they run.
+- Work in meaningful steps. Every projex is a self-contained unit of work, so progress is naturally incremental.
+- Documents are the memory. Workflow output markdown files — files are all you and your agents need.
+- Traceability for free. Every change links to a plan; every plan links to a walkthrough. "Why was this done?" always has an answer.
+- Git powered. Ephemeral branches, worktrees, and preplan spikes make experiments cleanly discardable.
+- Streamlined guardrails. Templates force scope, risks, and rollback thinking *before* acting. Strict git discipline prevents the classic agent disasters.
 
 ## Not just for code
 
