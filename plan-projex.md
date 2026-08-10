@@ -102,7 +102,7 @@ Answer by reading actual code:
 
 ## Summary
 
-[2-3 sentences: What this plan accomplishes and why it matters]
+[What this plan accomplishes and why it matters]
 
 **Scope:** [One line defining boundaries]
 **Estimated Changes:** [X files, Y functions/components]
