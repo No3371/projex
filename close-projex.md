@@ -275,6 +275,8 @@ Create a new file: `{yymmddhhmm}-{plan-name}-walkthrough.md`
 
 ## Key Insights
 
+**Rationale promoted:** [shipped doc(s) that received load-bearing rationale from this execution, per `SKILL.md § Source Hygiene` rule 1 — or "none needed"]
+
 ### Lessons Learned
 
 1. **[Lesson Title]**
@@ -464,17 +466,33 @@ After resolving: **squash-close is not re-runnable** — a squash commit does no
 
 A rebase stops at the **first** conflicting commit, so a covered stop is not a promise the rest is clean — the same gate applies at every later stop, and the script reports how many commits remain.
 
+**Composing the landing message.** The message passed to a close script is what history shows on base, so it takes a conventional-type subject, not the `projex:` prefix — `<type>(<scope>): <summary>` with `<type>` from `feat` | `fix` | `docs` | `refactor` | `test` | `chore`. It also carries the `Projex:` trailer in its body: subject, blank line, `Projex: {yymmddhhmm}-{plan-name}`. **Doc-only executions are exempt** — if the execution changed nothing outside a `.projex/` folder, keep the `projex: {plan-name} - …` subject and omit the trailer (boundary rule). Full convention: `execute-projex.md` § Commit Message Convention.
+
 #### Option A: Squash Merge (Default/Recommended)
 Combines all execution commits into a single clean commit on base branch. You MUST preserve the squashed commits (messages + descriptions or at least the messages) in the description.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "projex: {plan-name} - [summary of changes]"
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "<type>(<scope>): [summary of changes]
+
+Projex: {yymmddhhmm}-{plan-name}"
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "projex: {plan-name} - [summary of changes]" --worktree
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "<type>(<scope>): [summary of changes]
+
+Projex: {yymmddhhmm}-{plan-name}" --worktree
+```
+
+PowerShell form (either mode):
+```powershell
+$msg = @"
+<type>(<scope>): [summary of changes]
+
+Projex: {yymmddhhmm}-{plan-name}
+"@
+{projex-scripts}/projex-squash-close.ps1 <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} $msg
 ```
 
 **Best for:** Clean history, routine executions
@@ -484,12 +502,16 @@ Preserves full commit history from execution.
 
 **Checkout mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "projex: merge {plan-name}"
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "<type>(<scope>): [summary of changes]
+
+Projex: {yymmddhhmm}-{plan-name}"
 ```
 
 **Worktree mode:**
 ```bash
-{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "projex: merge {plan-name}" --worktree
+{projex-scripts}/projex-merge-close.{sh|ps1} <repo-root> {base-branch} projex/{yymmddhhmm}-{plan-name} "<type>(<scope>): [summary of changes]
+
+Projex: {yymmddhhmm}-{plan-name}" --worktree
 ```
 
 **Best for:** Complex executions where step-by-step history is valuable
@@ -509,7 +531,7 @@ Replays commits onto base branch for linear history (fast-forward, no merge comm
 
 **Best for:** Linear history preference, collaborative workflows
 
-> **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually, declare the paths via `--resolve-conflicts` (see above) to resolve them in place, or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit.
+> **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually, declare the paths via `--resolve-conflicts` (see above) to resolve them in place, or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit. No trailer argument is needed either — the step commits being replayed already carry theirs.
 
 > **If a script warns it could not remove the worktree:** the close itself succeeded. Run `git -C <repo-root> worktree list` — if the worktree path is no longer listed, only a plain untracked directory remains; inspect it for anything user-created, then delete it manually (`rm -rf` / `Remove-Item -Recurse -Force`) and run `git worktree prune`. If it is still listed, remove the blocking files it reported, then `git -C <repo-root> worktree remove <path>`.
 

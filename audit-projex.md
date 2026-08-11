@@ -60,14 +60,52 @@ Does it match reality? All changes documented? Side effects? Migration/rollback 
 **Artifact Forensics:**
 Git history patterns, commit message quality, file timestamps, reverted/hidden changes, copy-paste code
 
-### 4. QUALITY ASSESSMENT
+### 4. SOURCE HYGIENE PASS
+
+Sweep the audited work against SKILL.md § Source Hygiene and `execute-projex.md` § Commit Message Convention. Not a general comment critique — only these rules. Subject is *source* as SKILL.md defines it: files a program or build consumes. Prose files carry no comments — skip them unless retrofit mode names them.
+
+**Scope: the audited diff.** Comments the work *added or modified*, not whole files. The exclusion must be glob-magic — a root-anchored exclude pathspec would hand nested `docs/.projex/`, `src/.projex/` documents to the pass as source.
+
+```bash
+git -C <repo-root> diff {base}..{head} -- . ':(exclude,glob)**/.projex/**'
+git -C <repo-root> log {base}..{head} --format='%h %s%n  trailer: %(trailers:key=Projex,valueonly)'
+```
+
+**No range available?** After a squash close the ephemeral branch is gone and there is no `{base}..{head}`. The walkthrough names the landing commit — use `git show <squash-sha> -- . ':(exclude,glob)**/.projex/**'`. Never fall back to a repo-wide sweep to recover a range.
+
+**Retrofit mode — opt-in.** On explicit user request the sweep extends to whole files or the whole repo. Never the default — a repo-wide sweep buries the findings the audit was called for.
+
+**Four directions, all produce findings:**
+
+1. **Rules 1–5 violations** — a comment citing a projex ID / filename / section, a hardcoded `file:ln` or bare `:123`, a changelog narration, plan structure (`// Step N:`, `====` banner runs), or reassurance with no rejected alternative attached.
+2. **Rule 6 false negatives** — a non-obvious change in the diff (rejected alternative, surprising constraint, don't-fix trap) with **no** rationale comment. Without this direction the pass is gamed by deleting comments.
+3. **Rule 6 vacuity** — a rationale comment that names no rejected alternative, constraint, or trap. Same finding as its absence; without it the pass is gamed by padding every site with generic prose.
+4. **Unpromoted rationale** — load-bearing rationale that exists only in the projex document. The walkthrough's `**Rationale promoted:**` line is the check: named target, or a stated "none needed" that the diff supports.
+
+**Commit check:** Every landed commit that changes a file outside any `.projex/` folder carries a `Projex:` trailer. Conventional-type subject and type-vs-diff checks apply to landing, merge, patch, and debug-fix commits; ephemeral step commits may retain `projex: step …` / `projex(do): …` subjects. Doc-only commits are exempt.
+
+**Trailer survival sample** — independent of the audited work, sample recent base history and report the rate:
+
+```bash
+git -C <repo-root> log {base-branch} -n 30 --format='%h %(trailers:key=Projex,valueonly)'
+```
+
+A rate of zero where the convention is supposed to be in force is a **Critical** finding — it means the sole code→doc channel is dead (typically a GitHub `squash_merge_commit_message` of `PR_BODY`/`BLANK`), and rule 1 has already removed the comment citations that used to carry it.
+
+**Remediability** — a landed commit's subject or trailer cannot be fixed without rewriting published history, which this framework forbids without explicit human instruction. Grade commit-composition findings **informational / fix-forward**; never file them as actionable defects. Comment findings (directions 1–4) are ordinary actionable findings.
+
+**Record locations by symbol, never `file:ln`** — the pass practises what it checks.
+
+Findings land in the report's `## Source Hygiene` section and are graded into the standard `## Findings` severities.
+
+### 5. QUALITY ASSESSMENT
 
 **Completeness:** All objectives/criteria/edge cases/docs?
 **Correctness:** Works in all cases? Subtle bugs? Error handling?
 **Quality:** Code/test/doc/architecture quality
 **Value:** Solves problem? Usable? Meets performance? Production-ready?
 
-### 5. OPEN EXPLORATION
+### 6. OPEN EXPLORATION
 
 **Undocumented Discovery:**
 What else changed? Problems hidden? Workarounds? Assumptions?
@@ -78,7 +116,7 @@ Downstream effects, future work enabled/blocked, technical debt, risks introduce
 **Value Questioning:**
 Actual user value? Could be better/simpler? Missed opportunities? What makes it excellent?
 
-### 6. DRAFT AUDIT REPORT
+### 7. DRAFT AUDIT REPORT
 
 ```bash
 {projex-scripts}/new-projex.{sh|ps1} <repo-root> audit "{subject}" <projex-folder>
@@ -167,6 +205,29 @@ Actual user value? Could be better/simpler? Missed opportunities? What makes it 
 **Completeness:** User/API/Migration/Rollback docs — Complete/Partial/Missing
 **Accuracy:** Matches implementation? Yes/Partial/No | Examples work? Yes/No
 **Quality:** Clarity/Completeness/Usability — High/Medium/Low
+
+---
+
+## Source Hygiene
+
+**Scope:** Diff only (`{base}..{head}` | `git show <squash-sha>`) | Retrofit (whole file) | Retrofit (whole repo)
+
+| Rule | Location (symbol) | Quote | Severity |
+|------|-------------------|-------|----------|
+| [1–6] | `module` → `functionName` | "[verbatim comment fragment]" | Critical/High/Medium/Low |
+
+**Rule 6 gaps** (non-obvious change, no rationale comment):
+- `symbol` — [what is non-obvious] — [why a reader needs the rationale]
+
+**Rule 6 vacuity** (rationale comment naming no alternative, constraint, or trap):
+- `symbol` — "[verbatim fragment]" — [what it fails to name]
+
+**Rationale promotion:** [shipped doc named in the walkthrough, or "none needed — supported by diff", or "unpromoted: what is missing"]
+
+**Commit composition** (informational — fix forward, never rewrite history): [N] landed commits checked — typed subject where required [N/N] | type matches diff where required [N/N] | `Projex:` trailer [N/N]
+**Violations:** [SHA — what is missing, or "None"]
+
+**Trailer survival on `{base-branch}`:** [N/30] of recent commits carry a `Projex:` trailer — [OK | **Critical: channel dead**, cause if known]
 
 ---
 
@@ -276,7 +337,7 @@ Actual user value? Could be better/simpler? Missed opportunities? What makes it 
 **Sign-off:** Yes/No — [Justification]
 ```
 
-### 7. VALIDATION
+### 8. VALIDATION
 
 **Checks:**
 - [ ] All claims cross-referenced against evidence
@@ -284,8 +345,9 @@ Actual user value? Could be better/simpler? Missed opportunities? What makes it 
 - [ ] Quality assessed beyond completion
 - [ ] Undocumented issues discovered
 - [ ] Findings supported by concrete evidence
+- [ ] Source hygiene pass run against the audited diff (or the declared retrofit scope)
 
-### 8. FINALIZE
+### 9. FINALIZE
 
 Save to `.projex/`. Link to audited work. Update related projex if issues found.
 

@@ -212,6 +212,21 @@ The commit commands shown in auxiliary workflow docs are **reference templates**
 
 ---
 
+## Source Hygiene
+
+**Subject.** *Source* = files a program or build consumes: code, config, schemas, scripts. *Comment* = a construct the language ignores at runtime. Prose files (`.md`, docs, specs) are shipped documentation — rule 1's promotion target — and are outside these rules unless a retrofit sweep names them. Bind every workflow that edits source (execute, do, patch, debug). Enforcement: `audit-projex.md` § Source Hygiene Pass.
+
+1. **No projex references in sources** — no projex ID, filename, or section pointer in a comment. Projexs are authoring layer artifacts, and should be invisible in the product. **Promotion:** load-bearing rationale that exists only in a projex document belongs in a shipped doc (README, spec, ADR) — promotion is the only channel that survives archival compression. Referencing a *shipped* doc from a comment is fine; the ban is on workflow artifacts.
+2. **Symbols, not line numbers** — name the function, const, or type; never `file:123` or bare `:123`. `file:ln` stays correct inside projex documents — they are point-in-time records.
+3. **Present tense** — what the code does, not what it used to do. Live hazard: state the hazard, not the changelog.
+4. **No plan shape in code** — no `// Step N:`, no `====` / `----` banners.
+5. **Reassurance must warn** — "deliberate" / "by design" only with the rejected alternative and its consequence.
+6. **Non-obvious decisions carry rationale** — a rejected alternative, surprising constraint, or don't-fix trap gets a self-contained comment. Naming none of the three is not compliance — a rationale comment that asserts without naming what it rejected is as much a violation as its absence.
+
+**No density or length caps.** Long comment blocks are not a violation; thinning comments to reach zero findings is (rule 6).
+
+---
+
 ## Substrate
 
 Projex methods are domain-general; git is the **reference substrate**, not a requirement. The execution family needs four guarantees from whatever holds the work:

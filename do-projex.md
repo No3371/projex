@@ -73,6 +73,7 @@ For each sub-step inside the objective:
 
 #### B. EXECUTE
 - Carry out the sub-step (edit / run / gather)
+- Comments written into source obey § SOURCE HYGIENE below — a deliberate second copy of `SKILL.md § Source Hygiene`, kept here so the rules survive any context loss on the sub-subagent boundary
 
 #### C. LOG, VERIFY, COMMIT
 - Evidence: `git diff`, command output, test result, file re-read — not memory
@@ -89,10 +90,10 @@ For each sub-step inside the objective:
 - **Atomic commit** — sub-step file changes + log entry, one call:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(do): obj {id} step {n} - [brief]" path/to/changed.ext .projex/{log-filename}
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(do): obj {id} step {n} - [brief]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed.ext .projex/{log-filename}
 ```
 
-Investigative sub-steps commit the log entry alone.
+Investigative sub-steps commit the log entry alone. Log-only commits drop the trailer.
 
 ### 3. OBJECTIVE COMPLETION
 
@@ -158,6 +159,22 @@ On exit (success, partial, or blocked), report to the parent coordinator:
 Keep it tight — the log holds the full detail.
 
 ---
+
+## SOURCE HYGIENE
+
+Deliberate copy of `SKILL.md § Source Hygiene` — do-projex is the highest-comment-volume path in the framework and this spec is what its agent is guaranteed to have. Redundant by design: edit either copy and update the other.
+
+**Subject.** *Source* = files a program or build consumes: code, config, schemas, scripts. *Comment* = a construct the language ignores at runtime. Prose files (`.md`, docs, specs) are shipped documentation — rule 1's promotion target — and are outside these rules unless a retrofit sweep names them. Bind every workflow that edits source (execute, do, patch, debug). Enforcement: `audit-projex.md` § Source Hygiene Pass.
+
+1. **No projex references in sources** — no projex ID, filename, or section pointer in a comment. Projexs are authoring layer artifacts, and should be invisible in the product. **Promotion:** load-bearing rationale that exists only in a projex document belongs in a shipped doc (README, spec, ADR) — promotion is the only channel that survives archival compression. Referencing a *shipped* doc from a comment is fine; the ban is on workflow artifacts.
+2. **Symbols, not line numbers** — name the function, const, or type; never `file:123` or bare `:123`. `file:ln` stays correct inside projex documents — they are point-in-time records.
+3. **Present tense** — what the code does, not what it used to do. Live hazard: state the hazard, not the changelog.
+4. **No plan shape in code** — no `// Step N:`, no `====` / `----` banners.
+5. **Reassurance must warn** — "deliberate" / "by design" only with the rejected alternative and its consequence.
+6. **Non-obvious decisions carry rationale** — a rejected alternative, surprising constraint, or don't-fix trap gets a self-contained comment. Naming none of the three is not compliance — a rationale comment that asserts without naming what it rejected is as much a violation as its absence.
+
+**No density or length caps.** Long comment blocks are not a violation; thinning comments to reach zero findings is (rule 6).
+
 
 ## GIT DISCIPLINE
 

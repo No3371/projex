@@ -99,10 +99,12 @@ Act directly:
 **Commit convention:**
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): [concise description of change]" path/to/changed-file1.ext path/to/changed-file2.ext
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "<type>(<scope>): [concise description of change]" "--trailer Projex: {yymmddhhmm}-{patch-name}" path/to/changed-file1.ext path/to/changed-file2.ext
 ```
 
-- Prefix: `projex(patch):` for traceability
+- Subject: conventional type (`feat` | `fix` | `docs` | `refactor` | `test` | `chore`) — a patch lands directly on the current branch, so this subject is what history shows
+- Trailer: `Projex: {yymmddhhmm}-{patch-name}` — required; it is the only link from the changed code back to the patch document
+- `<type>`: `feat` | `fix` | `docs` | `refactor` | `test` | `chore` — full convention: `execute-projex.md` § Commit Message Convention
 - Single commit for the patch (group related changes)
 - Distinct logical parts → multiple commits acceptable
 
@@ -236,7 +238,7 @@ Patches commit directly to the current branch. Intentional — branch creation, 
 
 ```bash
 # Step 1: Make changes and commit
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): [description]" path/to/changed-file1.ext path/to/changed-file2.ext
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "<type>(<scope>): [description]" "--trailer Projex: {yymmddhhmm}-{patch-name}" path/to/changed-file1.ext path/to/changed-file2.ext
 
 # Step 2: Write patch doc, update related documents, commit
 {projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(patch): add patch doc - {patch-name}" \
@@ -273,6 +275,7 @@ This workflow produces:
 Before considering the patch complete:
 
 - [ ] Change implemented and committed
+- [ ] Code commit carries a conventional-type subject and a `Projex: {yymmddhhmm}-{patch-name}` trailer
 - [ ] Verification passed (tests, build, manual check)
 - [ ] Patch document written with all changes detailed
 - [ ] Related projex documents updated
@@ -291,4 +294,4 @@ Before considering the patch complete:
 - If the patch grows bigger than expected mid-execution, stop and escalate to `/plan-projex`
 - Patches are still first-class projex documents — searchable, linkable, referenceable
 - Use relative paths when referencing repository files
-- The `projex(patch):` commit prefix distinguishes patches from full executions in git history
+- A patch's *code* commit uses a conventional-type subject like any landing commit; its `Projex: {yymmddhhmm}-{patch-name}` trailer is what identifies it in history (`git log --grep 'Projex: '`). The patch *document* commit keeps the `projex(patch):` prefix

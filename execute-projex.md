@@ -188,8 +188,10 @@ B. Verify by yourself:
 Commit the log together with the step's file changes **in one atomic unit**. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
+
+Investigative steps that commit only the log entry drop the trailer — it is required only on commits that change a file outside any .projex/ folder (§ Commit Message Convention).
 
 **Mark the task complete** in your task list — only after both the work and log entry are committed.
 
@@ -275,9 +277,33 @@ projex/{yymmddhhmm}-{plan-name}
 ```
 
 ### Commit Message Convention
-- Prefix with `projex:` for traceability
-- Reference step number when applicable
-- Keep messages concise but descriptive
+
+Subjects carry the *type* of change; a `Projex:` trailer carries the link back to the document.
+
+| Commit class | Subject | Trailer |
+|---|---|---|
+| Step commits on an ephemeral branch | `projex: step N - …` / `projex(do): obj {id} step {n} - …` | required |
+| Squash-close message landing on base | `<type>(<scope>): <summary>` | required |
+| Merge-close merge commit | `<type>(<scope>): <summary>` | required |
+| Patch code commits (land directly) | `<type>(<scope>): <summary>` | required |
+| Debug fix commit | `fix(<scope>): <summary>` | required |
+| Doc-only commits (plan add, walkthrough, log, memo, nav, revise, archive, preplan, patch doc) | `projex(...)` family — unchanged | not required |
+
+**Boundary rule** — the trailer is required on every commit that changes a file outside **any** `.projex/` folder (a repo may hold several — `docs/.projex/`, `src/.projex/`). Commits touching only projex documents keep their `projex(...)` subject and need no trailer. An execution whose entire diff stays inside `.projex/` is doc-only at close too: keep the `projex:` close subject, omit the trailer.
+
+`<type>` = conventional-commit vocabulary: `feat` | `fix` | `docs` | `refactor` | `test` | `chore`. `<scope>` = module/area touched. Pick by what the diff does: new capability → `feat` | behaviour correction → `fix` | prose/docs only → `docs` | tests only → `test` | same behaviour, different shape → `refactor` | tooling/deps/housekeeping → `chore`. Genuinely torn between two → pick either and move on; an approximate type beats no type. That is a tie-breaker, not a licence to default every commit to one type.
+
+**Trailer form** — `Projex: {yymmddhhmm}-{name}`: the projex document's filename minus its `-{type}.md` suffix. **Resolving one** — prefix-match `{yymmddhhmm}-*` across `.projex/`, `.projex/closed/`, `.projex/archived/`, and archive index entries; the stem is shared by the plan, its log, and any walkthrough of the same execution, so expect a small set, not one file.
+
+**Attaching it** — `stage-n-commit` forwards any `--`-prefixed argument to `git commit`; pass the trailer as one quoted string (template above). The close scripts take a single message argument — the landing trailer rides the message body (forms in `close-projex.md` § 7). `projex-rebase-close` takes no message and needs nothing extra: the step commits already carry the trailer.
+
+**Why a trailer** — delivery tooling rewrites subjects; bodies usually survive. Read back via `git log --grep 'Projex: '` or `git interpret-trailers --parse`.
+
+**Survival condition** — trailers reach base through a GitHub squash-merge only when the repo's `squash_merge_commit_message` setting is *commit messages*; `PR_BODY` and `BLANK` discard every body in the PR, and with rule 1 in force that leaves no code→doc link at all. Set it, or prefer merge/rebase close. `audit-projex.md` § Source Hygiene Pass samples base history for trailer survival — a rate of zero is a Critical finding, not a footnote.
+
+**Why every step commit** — `git blame` resolves to the commit that introduced a line, and merge/rebase closes land step commits on base verbatim.
+
+Step commits keep the `projex: step N - …` subject and add the trailer whenever they touch a file outside any `.projex/` folder; doc-only commits (log entries, plan status) take no trailer; the landing subject is composed at close.
 
 ### Resuming Execution
 If execution spans multiple sessions:

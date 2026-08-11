@@ -1,12 +1,17 @@
 # Source Hygiene Guardrails — Rules, Commit Composition, Audit Pass
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Author:** agent (Claude, opus)
 > **Source:** 2608051553-source-hygiene-guardrails-proposal.md (Option B, accepted)
 > **Related Projex:** 2608051553-source-hygiene-guardrails-proposal.md | 2608052346-source-hygiene-guardrails-plan-redteam.md | 2608111922-source-hygiene-guardrails-plan-review.md | 2604031727-workflow-guardrails-determinism-imagine.md
 > **Worktree:** Yes
+> **Log:** 2608052327-source-hygiene-guardrails-log.md
+> **Completed:** 2026-08-11
+> **Walkthrough:** 2608112108-source-hygiene-guardrails-walkthrough.md
 > **Reviewed:** 2026-08-11 — 2608111922-source-hygiene-guardrails-plan-review.md — Verdict: Revise. All 5 Actions applied 2026-08-11 (§ Revision Log).
 > **Red Team:** 2608052346-source-hygiene-guardrails-plan-redteam.md — Verdict: Fix Issues / Needs Work. All 5 Must-Fix + 2 No-Go conditions dispositioned (Notes § Red Team Dispositions).
+> **Patch:** [PATCHED] Audit commit-check subject exception and trailer-form verification expectation corrected via `2608112102-source-hygiene-guardrails-consistency-patch.md`. Remaining execution objectives: none; this follow-up only corrects post-execution documentation consistency.
+> **Partial Execution:** Documentation consistency follow-up completed via `2608112102-source-hygiene-guardrails-consistency-patch.md`.
 
 ---
 
@@ -657,7 +662,7 @@ Read § 4 in full: all four directions present, diff-only default explicit with 
 
 - [ ] `grep -rn "projex(patch):" *.md` — every hit is a document commit or the rewritten Notes line; none is a code commit
 - [ ] `grep -rn "simulate-projex" *.md` — no hits
-- [ ] `grep -rln "Projex: {yymmddhhmm}" *.md` — hits in exactly: `SKILL.md`, `execute-projex.md`, `do-projex.md`, `close-projex.md`, `patch-projex.md`, `debug-projex.md`
+- [ ] `grep -rln "Projex: {yymmddhhmm}" *.md` — hits in exactly: `close-projex.md`, `debug-projex.md`, `do-projex.md`, `execute-projex.md`, `patch-projex.md`; `SKILL.md` is intentionally absent because it carries no commit convention
 - [ ] `grep -rn "prefix with \`projex:\`\|Prefix: \`projex(patch):\`" *.md -i` — no surviving assertion that a bare prefix is the code-commit convention
 - [ ] `grep -n "^### [0-9]\." audit-projex.md` — contiguous 1–9
 - [ ] `git -C <worktree> diff --stat {base}..HEAD -- . ':(exclude,glob)**/.projex/**'` — exactly 8 files changed, all at repo root, all `.md`. **The unscoped form cannot pass**: execute-projex commits `-log.md` with every step and the plan file at completion, so the raw `{base}..HEAD` diff necessarily shows 10 files

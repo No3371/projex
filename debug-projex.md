@@ -346,7 +346,7 @@ The iteration history lives in the debug log; the git log on base should show th
 ```bash
 git -C <worktree-root> reset --soft {base-branch}                    # Unwind all attempt commits, keep changes staged
 git -C <worktree-root> reset HEAD .projex/{yymmddhhmm}-{debug-name}-debug-log.md   # Unstage log so it commits separately
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "fix({scope}): {one-line description}" path/to/fixed-file.ext [more files...]
+{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "fix({scope}): {one-line description}" "--trailer Projex: {yymmddhhmm}-{debug-name}" path/to/fixed-file.ext [more files...]
 ```
 
 If a repro test was kept, include it in the fix commit (or as a separate test commit immediately before the fix).
@@ -489,7 +489,9 @@ Was a candidate fix found and verified?
 Brings the fix commit AND the debug document onto the base branch as a single squashed commit, removes the worktree.
 
 ```bash
-{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/debug/{yymmddhhmm}-{debug-name} "fix({scope}): {one-line} - debug-projex {debug-name}" --worktree
+{projex-scripts}/projex-squash-close.{sh|ps1} <repo-root> {base-branch} projex/debug/{yymmddhhmm}-{debug-name} "fix({scope}): {one-line}
+
+Projex: {yymmddhhmm}-{debug-name}" --worktree
 ```
 
 Verify from the main repo directory:

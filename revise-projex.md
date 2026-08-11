@@ -168,4 +168,4 @@ Before considering the revision complete:
 - Document needs revising again next pass, same underlying reason? Core content is wrong. Escalate to that document's own authoring workflow — don't revise a third time
 - During `/orchestrate-projex`: directive says "patch"/"fix", target ambiguous (code vs document)? Resolve against this distinction before delegating. Wrong target spawns the wrong subagent
 - Use relative paths when referencing repository files
-- The `projex(revise):` commit prefix distinguishes document revisions from full additions (`projex:`) and code patches (`projex(patch):`) in git history
+- The `projex(revise):` prefix marks document revisions in git history. It belongs to the `projex(...)` doc-op family alongside `projex:` (plan and log additions) and `projex(patch): add patch doc`. Commits that change source instead carry a conventional-type subject plus a `Projex:` trailer — `execute-projex.md` § Commit Message Convention
