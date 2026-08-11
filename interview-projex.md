@@ -35,12 +35,14 @@ Define what the interview covers, its goal, and create the interview file:
 Loop:
 
 - Walk the topic tree. Research what needs to be discussed or answered.
-- Explore established facts related to the selected question.
+- Explore established facts/sources that are relevant and may answer the question.
 - Provide your recommended answer — show your thinking, then ask the user to confirm, correct, or expand.
-- Log as you go — record the question, answer, and your interpretation in the document.
+- Log as you go — Write the question first before asking, then record the answer and your interpretation in the document.
 - Each answer may branches the interview; follow them systematically.
 
 Keep going until reaching shared understanding on all branches. The user can stop at any time.
+
+Note: User facing conversation/Questions should be as rich/verbose as what is written into the question, if not more. It'd be inconvenience that the user mush look up the written question or referred document to understand what are you asking about.
 
 ### 3. CONCLUDE
 
