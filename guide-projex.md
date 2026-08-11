@@ -12,10 +12,6 @@ Guides produce **human-facing study material** — an indexed, phased reading pa
 - Each step tells the reader *what* to read, *what to focus on*, and *what to take away*
 - Sources can span codebase, docs, articles, specs, and external pages
 
-**Contrast with Exploration:**
-- **Exploration** — agent-facing: investigates status quo, produces knowledge maps and findings
-- **Guide** — human-facing: curates investigated material into a progressive learning path
-
 ---
 
 ## INVOCATION
@@ -204,11 +200,19 @@ Re-read the full guide as a reader — not as the agent that wrote it. This is a
 
 **Cut ruthlessly:** If a step survived drafting but fails the second pass, remove it. A shorter guide that earns every step beats a thorough one padded with filler.
 
-### 6. FINALIZE AND COMMIT
+### 6. FINALIZE
 
 1. Front-load the objective and key concepts
 2. Link to related projex
 3. Place in `.projex/closed/` — guides are point-in-time artifacts
+
+### 7. ENGAGE
+
+Human learns via repeated/prolonged exposure and hands on practices, not with only reading. A guide-projex should allow the human to leave with more knowledge than before the guide.
+
+Therefore, after authoring the guide, try to engage with the user to improve/confirm the effectiveness of the guide. Optionally, offer /coach-projex as a follow-up.
+
+In the process, you may refine/improve the guide with the user.
 
 ---
 
