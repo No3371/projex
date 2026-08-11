@@ -62,7 +62,7 @@ if (-not $Dirty) {
 }
 
 # --- Opportunistic Worktree Mode guardrail ---
-if (Select-String -Path $PlanAbs -Pattern "> **Worktree:** Yes" -Quiet) {
+if (Select-String -LiteralPath $PlanAbs -Pattern "> **Worktree:** Yes" -SimpleMatch -Quiet) {
     Write-Host "`nExecuting in Worktree mode? Remember to bootstrap the branch/worktree (missing dev deps, etc.)"
 }
 

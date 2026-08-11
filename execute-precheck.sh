@@ -66,7 +66,7 @@ else
 fi
 
 # --- Opportunistic Worktree Mode guardrail ---
-grep -q "> **Worktree:** Yes" $PLAN_ABS && echo -e "\nExecuting in Worktree mode? Remember to bootstrap the branch/worktree (missing dev deps, etc.)"
+grep -Fq -- "> **Worktree:** Yes" "$PLAN_ABS" && echo -e "\nExecuting in Worktree mode? Remember to bootstrap the branch/worktree (missing dev deps, etc.)"
 
 # --- Result ---
 
