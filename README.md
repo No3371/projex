@@ -3,6 +3,7 @@
 <img width="514" height="203" alt="image" src="https://github.com/user-attachments/assets/9e5dcaa0-3e34-4a1a-915e-1a9ab00c0583" />
 <img width="620" height="191" alt="image" src="https://github.com/user-attachments/assets/e5e1bc12-cc67-4470-b38b-ff6c31a4ed18" />
 <img width="562" height="213" alt="image" src="https://github.com/user-attachments/assets/92823ebc-8697-4d07-83b9-720e8a7d6232" />
+<img width="1129" height="208" alt="image" src="https://github.com/user-attachments/assets/f9b5697f-b908-47a4-8e80-3ec0fab74997" />
 
 A prompt framework that structures how LLM agents think, plan, execute, and document work — as self-contained markdown units. No build system, no runtime, no lock-in: just workflow specs you invoke by name.
 
