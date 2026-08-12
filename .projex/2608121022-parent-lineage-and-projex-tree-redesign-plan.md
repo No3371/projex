@@ -11,7 +11,7 @@
 
 ## Summary
 
-Land a causal lineage contract that survives orchestration, lifecycle removal, legacy migration, and cross-platform parsing. Replace anonymous `Orchestrator` roots with collision-safe thin `{yymmddhhmm}-{name}-{token}-orchestrate.md` run records; bound live metadata to a versioned top-of-file block; reserve filename identity across explicitly registered `.projex` roots; retain removed nodes and Parent-correction evidence in versioned grammars; provide targeted `projex-tree` reads plus strict `--check`; migrate legacy evidence through an auditable manifest without inventing `User` ancestry.
+Land a causal lineage contract that survives orchestration, lifecycle removal, legacy migration, and cross-platform parsing. Replace anonymous `Orchestrator` roots with collision-safe thin `{yymmddhhmm}-{slug}-orchestrate.md` run records; bound live metadata to a versioned top-of-file block; reserve filename identity across explicitly registered `.projex` roots; retain removed nodes and Parent-correction evidence in versioned grammars; provide targeted `projex-tree` reads plus strict `--check`; migrate legacy evidence through an auditable manifest without inventing `User` ancestry.
 
 **Scope:** Root Projex framework distribution: core/workflow specs, paired scaffold/tree scripts, focused behavioral suites, public utility inventories, root-registration and correction ledgers, and current root `.projex/` corpus. One repo; root `.projex/` is the only initially authorized lineage root.
 **Estimated Changes:** 2 new utilities, 2 scaffolders, 27 framework/workflow specs, 7 test files, 3 public docs, 3 governance TSVs, current 66-document corpus. Six coupled implementation steps.
@@ -29,7 +29,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 ### Success Criteria
 
 - [ ] Every newly created projex document has one bounded metadata preamble beginning `> **Projex Metadata:** 1`, followed immediately by exactly one `> **Parent:** User|{projex-filename}.md`; body examples never count as headers
-- [ ] Source-less and nested orchestration runs mint distinct thin `*-{24-lowercase-hex}-orchestrate.md` records via 96-bit CSPRNG tokens, exclusive reservation, and at most eight fresh-token attempts; top-level dispatched artifacts parent to their run record; execution logs/walkthroughs retain plan parentage
+- [ ] Source-less and nested orchestration runs mint thin `{yymmddhhmm}-{slug}-orchestrate.md` records through exclusive no-clobber reservation; a same-minute, same-normalized-title collision fails `E_ORCHESTRATE_NAME_COLLISION` as likely duplicate dispatch, while genuinely distinct concurrent runs use meaningfully distinct titles; top-level dispatched artifacts parent to their run record; execution logs/walkthroughs retain plan parentage
 - [ ] `new-projex.{sh,ps1}` require Parent with no compatibility default, reject invalid/unresolved parents, map every scaffold type to a canonical lifecycle Status, reserve full filenames across authorized live/virtual roots, and cannot both win one candidate during a cross-platform race
 - [ ] `projex-tree.{sh,ps1}` implement identical registered-root discovery, bounded parsing, canonical live/virtual Status validation, virtual-record parsing, targeted subtree output, deterministic diagnostics/exit classes, `--check`, and `--check-name`; unregistered nested `.projex` roots never contribute identities
 - [ ] Targeted queries return a valid requested subtree despite unrelated legacy quarantine/corruption; corruption affecting the target or its reachable descendants returns partial output plus nonzero; `--check` reports the whole authorized corpus
@@ -37,7 +37,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 - [ ] All 20 current `new-projex` workflow call sites supply deterministic Parent; orchestrate, execute, close, debug, and sprint manual writers route through the scaffold or an equivalent shared validation gate
 - [ ] Migration manifest covers every discovered current document (66 at planning time, adjusted only for files created before execution), records evidence/confidence/resolver/disposition, and never maps missing evidence to `User`; later Parent changes append complete correction evidence before metadata changes
 - [ ] Archive/conclude remain unavailable until manifest coverage is complete; afterward a scoped-quarantine gate permits only target-clean transitions when global defects exactly equal recorded unrelated quarantine, and records the accepted quarantine snapshot
-- [ ] Shared shell/PowerShell fixtures cover bounded examples, CRLF/BOM, symlinks, registered/unregistered roots, nested repos/worktrees, concurrent run-token collisions, canonical/noncanonical Status, cycles, dangling parents, correction→retention, virtual handoff under quarantine, diagnostic ordering, and exit classes
+- [ ] Shared shell/PowerShell fixtures cover bounded examples, CRLF/BOM, symlinks, registered/unregistered roots, nested repos/worktrees, same-minute orchestration-name collisions and distinct-title concurrent runs, canonical/noncanonical Status, cycles, dangling parents, correction→retention, virtual handoff under quarantine, diagnostic ordering, and exit classes
 - [ ] `README.md`, `AGENTS.md`, and `CLAUDE.md` expose the new utility/identity/root-registration contract; `USAGE.md` and `AUTHORING.md` remain unchanged after confirmed absence of relevant utility/header inventories
 - [ ] Auxiliary proposal/plan/eval/review/redteam/stress/etc. artifacts remain no-auto-commit; this Plan and its relationship edits are not committed by planning
 
@@ -71,7 +71,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 |---|---|---|
 | `SKILL.md` | Canonical framework contract | Versioned live preamble, Parent semantics/precedence, canonical Status mapping, registered-root trust boundary, virtual retention, Parent-correction governance, phased migration, orchestration-record policy |
 | `orchestrate-projex.md` | Per-run user-level coordinator | Collision-safe thin `-orchestrate.md` minting; pass its filename as parent to dispatched roots; nested parentage; commit-policy handling |
-| `new-projex.sh`, `new-projex.ps1` | Creation enforcement | Required Parent; canonical Status by type; new/manual types; authorized-root identity scan; exclusive candidate reservation; tokenized orchestration minting; versioned header emission |
+| `new-projex.sh`, `new-projex.ps1` | Creation enforcement | Required Parent; canonical Status by type; new/manual types; authorized-root identity scan; exclusive no-clobber reservation; timestamp-plus-title orchestration minting; versioned header emission |
 | `projex-tree.sh`, `projex-tree.ps1` | New read-only utility | Registered-root discovery/parser/index/tree/check contract with parity; correction and lifecycle-gate validation |
 | `.projex/trusted-roots-v1.tsv` | Root admission policy | Canonical root plus explicit repo-relative scoped-root registrations, owners, dates, evidence |
 | 20 scaffold-calling `*-projex.md` specs | Standard artifact creators | Parent selection, new argument, header preservation, readiness checks |
@@ -93,7 +93,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 
 ### Constraints
 
-- Filename is immutable identity. Orchestration's 96-bit token is part of its filename slug, not a second stored identifier; no separate UUID or central child registry.
+- Filename is immutable identity. Orchestration uses `{yymmddhhmm}-{slug}-orchestrate.md`; no token, separate UUID, or central child registry.
 - Parent is causal only. Top-level artifact dispatched by orchestration uses the run record; internal execution artifacts use their workflow source (`plan` or `debug-log`). Type-specific provenance remains intact.
 - Trusted discovery bootstrap: canonical `<repo-root>/.projex` only. Additional roots participate only when their canonical repo-relative path has one committed `.projex/trusted-roots-v1.tsv` row with owner/date/evidence; symlinked paths, `.git`, `.projexwt`, nested repositories, unregistered `.projex` directories, and paths escaping repo are excluded.
 - Live parser reads only a versioned preamble: first `# ` heading, blank line, `> **Projex Metadata:** 1`, immediate Parent line, remaining unique blockquote metadata, blank line, `---`. Text/fences after the separator are never metadata.
@@ -107,7 +107,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 
 ### Assumptions
 
-- Full filename identity remains practical because names already carry time + slug + type; orchestration adds 96-bit filename entropy solely to distinguish concurrent runs. Repo-wide reservation across registered roots closes the actual gap without adding a second identifier.
+- Full filename identity remains practical because names already carry time + slug + type. An orchestration candidate collision requires the same normalized title in the same minute, is strong duplicate-dispatch evidence, and fails explicitly; genuinely distinct concurrent runs use meaningfully distinct titles. Repo-wide reservation across registered roots closes the actual gap without a second identifier.
 - A strict Markdown preamble plus type-scoped virtual fences is implementable in both Bash and PowerShell without a general Markdown parser.
 - Target-local error scoping provides useful reads during migration while `--check` remains the explicit global health gate; exact manifest comparison makes scoped retention auditable rather than a bypass.
 - Current 66-document count is a planning snapshot. Execution must discover again and make manifest row count equal discovered physical documents before asserting coverage or enabling retention.
@@ -164,14 +164,14 @@ Define: marker/Parent ordering; blank + `---` terminator; no duplicate metadata 
 3. Define canonical initial scaffold Status by type: `Draft` = propose|plan|eval|redteam|stress|audit|interview|coach|memo|define|map|imagine; `In Progress` = review|explore|navigate|log|sprint|orchestrate; `Complete` = patch|preplan|debug|scan|guide|conclude|archive|walkthrough. Workflow transitions may replace these only with another canonical state/outcome. `Closed` is invalid data, never an alias.
 4. Define root admission: root `.projex` is bootstrap-authorized; every additional scoped root needs an exact row in `.projex/trusted-roots-v1.tsv` (`path	owner	added	evidence`). Registration changes require explicit human/repo-owner review; scanners ignore unregistered content for identity/tree resolution and report its directory only during `--check`.
 5. Define Parent corrections: `revise-projex` appends one `.projex/parent-lineage-corrections-v1.tsv` event before/atomically with each live Parent edit; migration's initial assignment stays in the migration manifest. Lifecycle records reference correction IDs and bind them to the retaining archive/conclude artifact.
-6. Revise SKILL orchestration description: orchestration has a thin record, not a new analytical type. Filename suffix fixed to `-orchestrate.md`; every run filename includes a 24-lowercase-hex CSPRNG token immediately before the suffix.
+6. Revise SKILL orchestration description: orchestration has a thin record, not a new analytical type. Filename is exactly `{yymmddhhmm}-{slug}-orchestrate.md`; suffix remains fixed to `-orchestrate.md`.
 7. In `orchestrate-projex.md`, create the run record before first dispatch through the scaffold's orchestrate mint mode; update it only at dispatch completion/escalation. Template contains metadata, Status, verbatim goal, literal chain/model annotations, final outcome, and child filenames returned. No copied subagent reports.
 8. Root record Parent: referenced source-of-record when orchestration is invoked against one; otherwise `User`. Nested record Parent: outer `-orchestrate.md`. Every directly dispatched document-producing workflow receives `parent={run-record-filename}`. Non-document subworkflows remain untouched.
 9. Preserve auxiliary commit policy explicitly: record and auxiliary children are presented uncommitted for auxiliary-only chains. If explicit chain includes execute/close, commit the record with the required plan prerequisite so worktree branches can resolve Parent; no standalone implicit auxiliary commit.
 
-**Rationale:** A per-run file with filename-embedded entropy is the smallest stable identity that makes concurrent and nested runs queryable. A literal sentinel or one-winner minute slug cannot. Registered roots prevent directory-name trust. Preamble version/boundary prevents examples in this proposal/plan from becoming headers.
+**Rationale:** A per-run timestamp-plus-title file is the smallest stable identity that makes runs queryable. Exclusive reservation converts a same-minute, same-normalized-title candidate into explicit likely-duplicate-dispatch evidence; genuinely distinct concurrent work names itself meaningfully. Registered roots prevent directory-name trust. Preamble version/boundary prevents examples in this proposal/plan from becoming headers.
 
-**Verification:** Focused spec inspection: every Parent case maps to one precedence row; canonical status table covers every scaffold type once; two concurrent source-less and two concurrent nested same-goal runs each yield distinct queryable filenames; nested example forms `outer orchestrate → inner orchestrate → child`; unregistered roots never resolve; no `Parent: Orchestrator` remains in normative text except rejected-history discussion.
+**Verification:** Focused spec inspection: every Parent case maps to one precedence row; canonical status table covers every scaffold type once; same-minute source-less and nested attempts with the same normalized title fail `E_ORCHESTRATE_NAME_COLLISION`; meaningfully distinct concurrent titles yield distinct queryable filenames; nested example forms `outer orchestrate → inner orchestrate → child`; unregistered roots never resolve; no `Parent: Orchestrator` remains in normative text except rejected-history discussion.
 
 **If this fails:** Revert both specs together. Do not implement a parser against ambiguous semantics.
 
@@ -217,13 +217,13 @@ new-projex.{sh|ps1} <repo-root> <type> <title> <parent> [<projex-dir>]
 
 Validate Parent grammar; resolve filename parent uniquely through `projex-tree --check-name`/identity scan; reject User when a caller supplied a source parent; emit metadata marker + Parent + the Step 1 canonical initial Status; no old-arity fallback.
 6. Add scaffold types needed by manual writers: `orchestrate → orchestrate` (active), `sprint → sprint` (active), `walkthrough → walkthrough` (born closed). Make generic `log` active; use title `{debug-name}-debug` for `-debug-log.md`; make final `debug` born closed. Preserve unrelated suffix mappings.
-7. Orchestrate mint mode generates a fresh 96-bit CSPRNG value rendered as exactly 24 lowercase hex chars and computes `{stamp}-{slug}-{token}-orchestrate.md`. Acquire the canonical-root per-candidate lock, run authorized-root `--check-name`, and exclusively create. On candidate collision, release only the owned lock and retry with fresh entropy; maximum eight attempts, then stable `E_NAME_MINT_EXHAUSTED` with no artifact. Paired fixtures set `PROJEX_TEST_MODE=1` plus comma-separated `PROJEX_TEST_MINT_TOKENS`; either variable alone is usage error, each token must match `[0-9a-f]{24}`, exhaustion is deterministic, and production never reads an injected sequence.
-8. Other types retain `{stamp}-{slug}-{suffix}.md`. Reserve each computed filename across authorized scopes before write. Both variants exclusively create the same per-filename lock under canonical root `.projex/.lineage-locks/`, run `--check-name`, create with exclusive/no-clobber semantics, and remove the owned lock in trap/finally. Existing/stale lock fails loud; never steal it. Remove empty lock dir best-effort. Scanner ignores this non-Markdown internal dir.
+7. Orchestrate mint mode computes `{stamp}-{slug}-orchestrate.md`. Acquire the canonical-root per-candidate lock, run authorized-root `--check-name`, and exclusively create with no-clobber semantics. A candidate collision fails `E_ORCHESTRATE_NAME_COLLISION: {candidate}: likely duplicate dispatch; choose a meaningfully distinct title`; never randomize, inject entropy, or retry under another name.
+8. Every computed filename reserves identity across authorized scopes before write. Both scripts create the same per-filename lock under canonical root `.projex/.lineage-locks/`, run `--check-name`, create with exclusive/no-clobber semantics, and remove the owned lock in trap/finally. Existing/stale lock fails loud; never steal it. Remove empty lock dir best-effort. Scanner ignores this non-Markdown internal dir.
 9. Define virtual handoff collision: one live + one virtual record with identical Filename/Parent/full canonical Status and virtual Source equal to live repo-relative path is a transitional pair; reader prefers live and warns. Any mismatch or >2 instances is an error. After deletion virtual record becomes sole identity.
 
-**Rationale:** Filename identity keeps existing reference conventions; registered-root scan + exclusive reservation fixes sequential/concurrent collision, while per-run entropy lets every valid orchestration obtain a root. Canonical Status makes live→virtual equality meaningful. Tree utility owns discovery semantics so scaffold cannot drift into a second parser.
+**Rationale:** Filename identity keeps existing reference conventions; registered-root scan + exclusive reservation fixes sequential/concurrent collision and turns an orchestration collision into useful duplicate-dispatch evidence. Canonical Status makes live→virtual equality meaningful. Tree utility owns discovery semantics so scaffold cannot drift into a second parser.
 
-**Verification:** Run only the four focused suites. Required observable cases: invalid/missing Parent; every scaffold type emits its mapped canonical state; `Closed` live/virtual rejected; body examples accepted; two live headers rejected; concurrent same-minute same-goal source-less and nested orchestrations both mint distinct roots even when their first injected candidate collides; cross-root sequential/concurrent creation allows one winner per non-orchestrate candidate; unregistered duplicate/cycle roots cannot affect a target and make `--check` report only their directory; live/virtual mismatch rejected; target query survives unrelated malformed doc; reachable cycle returns partial output/exit 1; `.sh`/`.ps1` stdout/stderr/exit match byte-for-byte after newline normalization.
+**Verification:** Run only the four focused suites. Required observable cases: invalid/missing Parent; every scaffold type emits its mapped canonical state; `Closed` live/virtual rejected; body examples accepted; two live headers rejected; same-minute same-normalized-title source-less and nested orchestration attempts fail with the stable collision diagnostic while distinct-title concurrent runs mint distinct roots; cross-root sequential/concurrent creation allows one winner per candidate; unregistered duplicate/cycle roots cannot affect a target and make `--check` report only their directory; live/virtual mismatch rejected; target query survives unrelated malformed doc; reachable cycle returns partial output/exit 1; `.sh`/`.ps1` stdout/stderr/exit match byte-for-byte after normalization.
 
 **If this fails:** Remove both new utilities and restore both scaffolders as one rollback unit. Do not migrate workflow arity until parity passes.
 
@@ -370,16 +370,16 @@ filename	path	parent	evidence	confidence	resolver	disposition
 
 **Changes:**
 
-1. README utility table adds `projex-tree`; `new-projex` row states required Parent, canonical Status, registered-root identity, and tokenized orchestration minting. Add one compact orchestration-record note with exact `-orchestrate.md` suffix.
+1. README utility table adds `projex-tree`; `new-projex` row states required Parent, canonical Status, registered-root identity, exclusive no-clobber reservation, and timestamp-plus-title orchestration minting. Add one compact orchestration-record note with exact `{yymmddhhmm}-{slug}-orchestrate.md` form.
 2. AGENTS/CLAUDE mirrored repository trees add `new-projex`, `projex-tree`, and root/correction registry files; filename guidance changes from convention-assumed uniqueness to enforced repo-wide authorized live/virtual identity; Parent references stay filename-only.
 3. Register `new-projex.test` and `projex-tree.test` once in each runner; preserve one-summary parsing. Document assertion counts and scenario coverage in tests README after actual runs.
 4. Keep `USAGE.md`/`AUTHORING.md` unchanged; record verification that neither contains a utility/header inventory requiring update.
 5. Run focused suites individually, not the project-wide runners during implementation verification. Also run Bash syntax parse and PowerShell AST parse only for the four changed/new scripts.
-6. Execute end-to-end smoke in one throwaway repo: concurrently mint two same-goal source-less and two same-goal nested orchestrations with a forced first-token collision; create children; query each tree; register one scoped root; inject an unregistered duplicate root and prove it cannot affect the target; remove that injected root and prove its sole `--check` error clears; correct one Parent with evidence; archive one child under unrelated manifest quarantine; conclude one ancestor; re-query; verify correction IDs survive, targeted output stays stable, and remaining `--check` failures exactly match recorded quarantine.
+6. Execute end-to-end smoke in one throwaway repo: concurrently mint source-less and nested orchestrations with meaningfully distinct titles and prove distinct query roots; attempt each again with the same normalized title in the same minute and prove exclusive reservation emits `E_ORCHESTRATE_NAME_COLLISION` without clobbering the first record; create children; query each tree; register one scoped root; inject an unregistered duplicate root and prove it cannot affect the target; remove that injected root and prove its sole `--check` error clears; correct one Parent with evidence; archive one child under unrelated manifest quarantine; conclude one ancestor; re-query; verify correction IDs survive, targeted output stays stable, and remaining `--check` failures exactly match recorded quarantine.
 
 **Rationale:** Shared fixtures and independently executed platform suites are the parity contract. Public inventory prevents a correct utility or governance gate from remaining undiscoverable.
 
-**Verification:** Focused suites exit 0 with one summary each; normalized golden stdout/stderr/exit records match across platforms; smoke proves concurrent minting, root admission, canonical Status, correction retention, and scoped-quarantine lifecycle; public docs name exact CLI/suffix; git diff contains only declared files plus plan lifecycle artifacts.
+**Verification:** Focused suites exit 0 with one summary each; normalized golden stdout/stderr/exit records match across platforms; smoke proves distinct-title concurrent minting, likely-duplicate collision failure without clobbering, root admission, canonical Status, correction retention, and scoped-quarantine lifecycle; public docs name exact CLI/filename form; git diff contains only declared files plus plan lifecycle artifacts.
 
 **If this fails:** Revert docs/runner registration independently only if suites themselves remain runnable directly. Parser/scaffold parity failure rolls back Step 2, not merely runner entries.
 
@@ -399,13 +399,13 @@ filename	path	parent	evidence	confidence	resolver	disposition
 - [ ] Manifest filename/path set equals fresh authorized physical discovery; resolved/quarantined partition has no third state; retention is active only after equality
 - [ ] Correction chain reconstructs manifest/creation Parent → current Parent; every retired corrected node has bidirectional correction/retained-record references
 - [ ] Targeted tree golden files match normalized shell/PowerShell output; diagnostic order and exit classes match
-- [ ] `--check-name`/mint fixtures cover live/live, live/virtual, virtual/virtual, cross-root, same-minute concurrent same-goal orchestration, and forced first-token collision
+- [ ] `--check-name`/mint fixtures cover live/live, live/virtual, virtual/virtual, cross-root, same-minute same-normalized-title orchestration collision, distinct-title concurrent orchestration, exclusive no-clobber behavior, and the stable collision diagnostic
 
 ### Manual Verification
 
 - [ ] Read SKILL Parent precedence against all 25 document-producing workflow paths; each resolves without judgment/open question
 - [ ] Inspect a proposal-shaped doc containing header examples: parser sees one live Parent, never fenced examples
-- [ ] Inspect records from two concurrent independent and two concurrent nested same-goal runs: all filenames/query roots are distinct and end `-orchestrate.md`
+- [ ] Inspect records from concurrent independent and nested runs with meaningfully distinct titles: filenames/query roots are distinct and match `{yymmddhhmm}-{slug}-orchestrate.md`; same-minute same-normalized-title attempts fail without replacing either record
 - [ ] Inspect trusted-root registry: only explicit canonical paths participate; planted nested `.projex` does not
 - [ ] Inspect archive/conclude handoff before and after deletion: same filename, Parent, full canonical Status, correction references, ancestry
 - [ ] Review every quarantined migration row: evidence explanation present; no fallback User assignment
@@ -417,7 +417,7 @@ filename	path	parent	evidence	confidence	resolver	disposition
 | Criterion | How to Verify | Expected Result |
 |---|---|---|
 | Bounded live metadata | Duplicate-example fixture + two-live-header fixture | Example accepted; duplicate live field rejected |
-| Queryable orchestration roots | Concurrent same-goal source-less + nested forced-collision fixture | Four distinct tokenized `-orchestrate.md` identities and correct trees |
+| Queryable orchestration roots | Distinct-title concurrent source-less + nested fixture; same-title collision fixture | Distinct `{yymmddhhmm}-{slug}-orchestrate.md` identities and correct trees; same candidate fails `E_ORCHESTRATE_NAME_COLLISION` without clobbering |
 | Repo-wide identity | Registered-root `--check-name` + concurrent scaffold fixture | One identity/writer per candidate; deterministic collision handling |
 | Trusted root admission | Registered scoped root + planted unregistered duplicate/cycle | Registered content participates; planted root never affects target |
 | Canonical Status | Table-driven scaffold + live/virtual invalid-state fixtures | Exact canonical states; `Closed` rejected, never normalized |
@@ -447,6 +447,7 @@ If whole implementation is abandoned:
 ## Revision Log
 
 - **2026-08-12:** Kept the accepted filename-only lineage/tree direction; made orchestration run minting collision-safe, mapped and validated canonical Status, bounded trusted `.projex` roots through registration/ownership, added durable Parent-correction evidence, and replaced unconditional lifecycle `--check` with a manifest-gated scoped-quarantine protocol — trigger: `2608121035-parent-lineage-and-projex-tree-redesign-redteam.md § Remediation / Must Fix` (five required corrections; verdict `Fix Issues`).
+- **2026-08-12:** Replaced random-token orchestration naming with `{yymmddhhmm}-{slug}-orchestrate.md`; require exclusive no-clobber reservation and `E_ORCHESTRATE_NAME_COLLISION` for same-minute, same-normalized-title likely duplicate dispatch; distinct concurrent work uses meaningfully distinct titles — trigger: human requirement, “use timestamp-plus-title `-orchestrate.md` filenames without random tokens”; collision is duplicate-dispatch evidence.
 
 ---
 
@@ -464,8 +465,8 @@ Auto-suggest split trips at 505 lines/52,741 bytes and six steps. No always-requ
 |---|---|---|
 | Header examples look like real headers | Versioned top-of-file preamble ending blank + `---`; body ignored | Steps 1–2 |
 | Global filename identity absent | Filename remains identity; authorized-root live/virtual scan + exclusive reservation | Steps 1–2 |
-| Same-minute run collision | 96-bit filename token + exclusive reservation + eight bounded retries | Steps 1–2 |
-| `Orchestrator` unqueryable | Thin stable tokenized `-orchestrate.md`; sentinel removed | Steps 1, 4 |
+| Same-minute run collision | Exclusive no-clobber reservation; same normalized title in one minute fails `E_ORCHESTRATE_NAME_COLLISION` as likely duplicate dispatch; genuinely distinct runs use meaningful titles | Steps 1–2 |
+| `Orchestrator` unqueryable | Thin stable `{yymmddhhmm}-{slug}-orchestrate.md`; sentinel removed | Steps 1, 4 |
 | Noncanonical `Closed` emission | Exhaustive initial-state map; strict live/virtual canonical validation | Steps 1–2 |
 | Archive/conclude schema undefined | One strict `projex-lineage-v1` fence grammar | Step 4 |
 | Legacy debt denies all reads/removal | Target-local validation; strict global `--check`; manifest-gated scoped retention | Steps 2, 4–5 |
@@ -481,7 +482,7 @@ Auto-suggest split trips at 505 lines/52,741 bytes and six steps. No always-requ
 ### Deviations from Original Proposal
 
 - Remove literal `Orchestrator`; it cannot name a run.
-- Tokenize orchestration filenames so same-minute same-goal runs all mint roots; token is filename entropy, not a second identity.
+- Use timestamp-plus-title orchestration filenames; same-minute same-normalized-title collision fails as likely duplicate dispatch rather than minting a random alternate name.
 - Allow phased legacy quarantine outside Parent grammar; unresolved history no longer blocks valid target queries, recorded scoped retention, or gets mislabeled User.
 - Add live preamble version/boundary, registered-root identity reservation, canonical Status validation, target-local error scope, `--check`, migration/correction ledgers, and strict correction-bound virtual records.
 - Route manual artifacts and Parent corrections through shared workflow gates instead of relying on prose validation alone.
@@ -491,7 +492,7 @@ Auto-suggest split trips at 505 lines/52,741 bytes and six steps. No always-requ
 ### Risks
 
 - **Shell/PowerShell scan drift:** High impact. Mitigation: normative behavior + independently executed shared scenarios; parity is acceptance, not inference.
-- **CSPRNG/token testability:** High/Low. Mitigation: 96-bit lowercase-hex token, exclusive reservation, eight retries, fixture-only injected sequence.
+- **Same-minute orchestration collision:** Medium/Low. Exclusive reservation never clobbers; `E_ORCHESTRATE_NAME_COLLISION` identifies likely duplicate dispatch, and genuinely distinct runs must use meaningfully distinct titles.
 - **Exclusive lock leakage after crash:** Medium/Low. Stale lock fails loud and is never stolen; cleanup trap/finally + fixture proves normal cleanup.
 - **Large legacy quarantine:** Medium. Targeted queries and recorded scoped lifecycle transitions remain usable; manifest makes debt measurable; no fake ancestry.
 - **Archive transitional duplicate:** High if misclassified. Exact Source/Parent/full Status/correction equivalence is the only allowed duplicate; mismatch blocks deletion.
