@@ -1,6 +1,6 @@
 # Parent Lineage and Projex Tree Addition
 
-> **Status:** Ready
+> **Status:** In Progress
 > **Author:** OpenAI Codex (Agent)
 > **Parent:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md
 > **Source:** Direct revision request after abandoned execution of 2608121022-parent-lineage-and-projex-tree-redesign-plan.md
