@@ -33,7 +33,7 @@ Projex documents expose topical relationships but no universal causal edge. Full
 - [ ] `projex-tree.{sh,ps1} <repo-root> <filename>` find the queried document's topmost currently discoverable root and print that complete deterministic component regardless of whether input names its root, intermediate node, or leaf
 - [ ] Target-affecting duplicate identities, malformed/duplicate Parent headers, cycles, ambiguous targets, and dangling filename parents emit no stdout, sorted coded stderr, and the specified nonzero exit class; unrelated-component defects do not fail a valid query
 - [ ] Shell and PowerShell scaffold/tree suites consume the same creator matrix and tree transcript goldens; parity is observable, not inferred from separate green summaries
-- [ ] `close-projex.md` queries the source plan tree before its related-document sweep; `conclude-projex.md` queries successor/source trees before retirement; both label tree output advisory and non-exhaustive, retain existing discovery, and leave type/residue/confirmation rules authoritative
+- [ ] `close-projex.md` executes `projex-tree` for its plan and `conclude-projex.md` executes it for the successor/sources during context gathering; both state that the result is advisory and not guaranteed exhaustive
 - [ ] `SKILL.md` gains only a compact Authoring invariant; enforcement details live in scripts and tests
 
 ### Out of Scope
@@ -90,7 +90,7 @@ Projex documents expose topical relationships but no universal causal edge. Full
 - Repo-scoped discovery excludes `.git`, `.projexwt`, and nested repositories using existing repo-boundary conventions; no registration system.
 - Lookup validates only the queried current-corpus component. Any nonzero result owns stderr only; stdout is empty.
 - Shell and PowerShell behavior must match one shared fixture/golden corpus.
-- Close/conclude treat every tree result as advisory, never exhaustive. A successful tree adds candidates/evidence but cannot prove no other relevant document exists; existing discovery and close type or conclude eligibility/residue/confirmation gates still run. Tree membership never authorizes mutation, and tree failure never suppresses those existing checks.
+- Close/conclude execute the tree utility to gain lineage context. Its result is advisory and not guaranteed exhaustive; existing workflow judgment remains authoritative.
 - Worktree mode: Yes because the base checkout is dirty.
 
 ### Assumptions
@@ -101,9 +101,9 @@ Projex documents expose topical relationships but no universal causal edge. Full
 
 ### Impact Analysis
 
-- **Direct:** Future document creation, orchestration Parent handoff, Parent-based current-corpus queries, and advisory close/conclude lineage inventory.
+- **Direct:** Future document creation, orchestration Parent handoff, Parent-based current-corpus queries, and richer close/conclude context.
 - **Adjacent:** Every scaffold caller, manual document template, lifecycle document sweep, and focused runner.
-- **Downstream:** Existing documents remain untouched; new descendants can name them as Parent. Close/conclude gain advisory pre-mutation visibility without retention redesign or an exhaustiveness claim.
+- **Downstream:** Existing documents remain untouched; new descendants can name them as Parent. Close/conclude gain lineage context without retention redesign.
 
 ---
 
@@ -250,15 +250,15 @@ The utility first follows Parent upward from the queried document to the topmost
 
 1. Add `projex-tree` and the new `new-projex` signature to existing utility inventories only.
 2. Add one filename-only Parent note where repository trees/authoring conventions are already summarized. Do not create a new guidance section.
-3. In `close-projex.md`, after close context resolves but before drafting/writing the walkthrough or any status edit/move/commit, run `projex-tree.{sh|ps1} <repo-root> <plan-filename>`. State beside this step: **tree output is advisory and is not guaranteed to be exhaustive**. On exit `0`, union its filenames with existing Source/Related/reverse-reference candidates, then apply existing per-type closing rules. Continue existing discovery regardless of tree contents; absence from the tree is never evidence that a document is unrelated. Tree membership alone never closes a document; ancestors, siblings, and unresolved descendants remain untouched unless existing close rules select them. On nonzero, surface coded stderr as an advisory warning and continue existing close discovery/gates; do not consume stdout.
-4. In `conclude-projex.md § Identify Successor and Sources`, run `projex-tree.{sh|ps1}` for the successor and each selected source before eligibility/residue analysis. State beside this step: **tree output is advisory and is not guaranteed to be exhaustive**. Implicit-source mode may add older same-scope causal ancestors from successful tree output as candidates; explicit-source mode remains literal. Continue existing source/reference discovery and claim analysis regardless of tree contents; absence from the tree never proves a source or retained descendant is irrelevant. Tree membership never retires a source. During report drafting, record tree-observed retained descendants in Notes as advisory current-corpus impact, not a complete inventory; existing eligibility, claim verdict, residue disposition, and explicit-confirmation gates remain unchanged. On nonzero, surface coded stderr as an advisory warning and continue those existing gates; do not consume stdout.
+3. In `close-projex.md`, execute `projex-tree.{sh|ps1} <repo-root> <plan-filename>` during context gathering, before document mutation. State only that its result is advisory and not guaranteed exhaustive; use it as additional context alongside the workflow's existing evidence.
+4. In `conclude-projex.md § Identify Successor and Sources`, execute `projex-tree.{sh|ps1}` for the successor and selected sources. State only that its result is advisory and not guaranteed exhaustive; use it as additional context during the existing source, residue, and impact analysis.
 5. Register exact new suite names in both runners. Update `tests/README.md` with actual assertion/case counts after execution and state that both platforms consume the same fixtures/goldens.
 6. Leave docs without a relevant utility, authoring inventory, or named consumer role unchanged.
 7. Run shell syntax checks, PowerShell AST parsing, the four focused suites, the Step 2 end-to-end smoke, and throwaway close/conclude inventory scenarios.
 
-**Rationale:** Inventory edits expose the addition; tests—not prose—guard edge cases and parity. Close/conclude reuse the reader as one advisory signal instead of rebuilding lineage, while their existing discovery and judgment gates remain authoritative because legacy or removed documents make exhaustiveness impossible.
+**Rationale:** Inventory edits expose the addition; tests—not prose—guard edge cases and parity. Close/conclude gain lineage context by executing the tool; their workflow judgment remains unchanged.
 
-**Verification:** Focused suites/shared-golden smoke pass; runner inventories include exact suite names; inventory references match actual CLI. In throwaway close/conclude scenarios, successful tree output adds candidates without auto-closing/retiring siblings; omitted legacy relationships are still found by existing discovery; explicit conclude sources stay literal; tree failure warns and existing lifecycle checks continue without consuming stdout. No new metadata/governance terminology appears.
+**Verification:** Focused suites/shared-golden smoke pass; runner inventories include exact suite names; inventory references match actual CLI. Inspect close/conclude specs for the tree invocation and advisory/non-exhaustive qualifier. No new metadata/governance terminology appears.
 
 **If this fails:** Revert close/conclude consumer edits and inventory/runner edits; direct scaffold/tree suites remain independently valid.
 
@@ -275,7 +275,7 @@ The utility first follows Parent upward from the queried document to the topmost
 - [ ] Shipped `new-projex` call inventory contains no old-arity invocation
 - [ ] Manual creator inventory contains exactly one Parent field per new document template, including sprint
 - [ ] Cross-scope scaffold collision fixture rejects without creating a file
-- [ ] Close/conclude specs invoke the host-matched tree utility before mutation, label its output advisory/non-exhaustive, and preserve existing discovery and lifecycle decision gates on success or failure
+- [ ] Close/conclude specs invoke the host-matched tree utility during context gathering and label its result advisory/non-exhaustive
 
 ### Manual Verification
 
@@ -286,9 +286,9 @@ The utility first follows Parent upward from the queried document to the topmost
 - [ ] Introduce target ambiguity, dangling/header/self/cycle corruption; each emits empty stdout, sorted coded stderr, and its specified exit class
 - [ ] Exercise direct, orchestrated, nested, follow-up, and multi-source creation; emitted Parent follows declared causal-role precedence
 - [ ] Inspect `SKILL.md`: Parent addition is one compact Authoring rule, not a chapter
-- [ ] Exercise close on a plan tree: causal documents enter advisory candidate review, existing discovery still runs, and only documents selected by existing type rules move
-- [ ] Exercise conclude in implicit and explicit modes: successful tree output may add advisory candidates/impact, explicit mode adds no source, and both preserve existing source discovery, residue, and confirmation gates
-- [ ] Omit a relevant legacy relationship from tree output and corrupt each consumer's target component; close/conclude state non-exhaustiveness, warn on tree failure, and still complete their existing discovery and decision gates without consuming failed stdout
+- [ ] Exercise close on a plan tree and confirm the agent receives tree context before applying existing close judgment
+- [ ] Exercise conclude with successor/source trees and confirm the agent receives tree context before existing source/residue analysis
+- [ ] Confirm both workflow specs state that tree context is advisory and not guaranteed exhaustive
 
 ### Acceptance Criteria Validation
 
@@ -302,7 +302,7 @@ The utility first follows Parent upward from the queried document to the topmost
 | Failure API safe | Target/unrelated error goldens | Target failure: empty stdout + exact sorted code/exit; unrelated defects do not poison query |
 | Guardrail-first docs | SKILL/workflow inspection | One invariant plus operand/template changes; no repeated guidance |
 | Cross-platform parity | Both suites consume same fixture files | Shell and PowerShell match the same stdout/stderr/exit oracle |
-| Close/conclude integration | Throwaway workflow inventory scenarios | Both invoke tree pre-mutation and label it advisory/non-exhaustive; success adds candidates only; failure warns; existing discovery and close/conclude gates always decide mutations |
+| Close/conclude integration | Workflow inspection + throwaway invocation | Both execute tree during context gathering and label the result advisory/non-exhaustive |
 
 ---
 
@@ -324,6 +324,7 @@ The utility first follows Parent upward from the queried document to the topmost
 - **2026-08-12:** Resolved the plan red team's must-fix contract gaps: explicit orchestration Parent origin and semantic precedence; complete creator inventory including sprint; new scaffold suites; target-component failure API with empty failure stdout/coded exits; shared cross-platform fixtures; current-corpus wording; pre-create cross-scope collision rejection — trigger: 2608121805-parent-lineage-and-projex-tree-addition-plan-redteam.md § Bottom Line, § Critical Findings, § Remediation (re-verified against current workflow specs, scaffold scripts, and test inventory).
 - **2026-08-12:** Added `close-projex.md` and `conclude-projex.md` as bounded `projex-tree` consumers: pre-mutation lineage inventory and no replacement of existing close/residue/confirmation authority. Initial fail-closed consumer behavior was superseded by the next revision — trigger: human requirement, “oh include this in the revise: close-projex and conclude-projex should make use of the projex tree script”.
 - **2026-08-12:** Made close/conclude tree consumption explicitly advisory and non-exhaustive; successful output only adds candidates, absence proves nothing, and tree failure warns without bypassing or blocking existing discovery and lifecycle gates — trigger: human requirement, “close-projex and conclude-projex should claim that the tree is advisory and is not guaranteed to be exhaustive.”
+- **2026-08-12:** Reduced close/conclude integration to the tool invocation plus one advisory/non-exhaustive qualifier; removed prescribed candidate unions, failure branches, and duplicated lifecycle rules because agents execute the tool to gain context and retain their workflow judgment — trigger: human requirement, “The script is a tool; by executing it the agents gain better context.”
 
 ---
 
@@ -342,7 +343,7 @@ The utility first follows Parent upward from the queried document to the topmost
 - **Connected corruption/denial:** only target-component defects fail; failure stdout is empty and diagnostics identify normalized locators.
 - **Broad caller cutover:** asserted creator inventory catches old scaffold arity and missing manual Parent, including sprint; no compatibility shim.
 - **Lifecycle decay:** output is explicitly current-corpus only; archive/conclude removal can later expose a dangling edge.
-- **Lifecycle overreach:** close/conclude explicitly label tree output advisory/non-exhaustive; success only adds candidates, failure warns, and existing discovery plus type/residue/confirmation gates remain authoritative.
+- **Lifecycle overreach:** close/conclude label tree context advisory/non-exhaustive; existing workflow judgment remains authoritative.
 - **Concurrent identity race:** scaffold rejects already-discovered collisions, but concurrent cross-scope scan/create remains; monitor before adding reservation machinery.
 
 ### Open Questions
