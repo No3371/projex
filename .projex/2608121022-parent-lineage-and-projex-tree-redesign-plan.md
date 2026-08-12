@@ -11,9 +11,9 @@
 
 ## Summary
 
-Land a causal lineage contract for future and explicitly adopted documents. Replace anonymous `Orchestrator` roots with collision-safe thin `{yymmddhhmm}-{slug}-orchestrate.md` run records; bound governed live metadata to a versioned top-of-file block; reserve filename identity across explicitly registered `.projex` roots; retain removed governed nodes and Parent-correction evidence in versioned grammars; provide targeted `projex-tree` reads plus strict `--check`.
+Land a causal lineage contract for future documents. Replace anonymous `Orchestrator` roots with collision-safe thin `{yymmddhhmm}-{slug}-orchestrate.md` run records; bound governed live metadata to a versioned top-of-file block; reserve filename identity across explicitly registered `.projex` roots; retain removed governed nodes and Parent-correction evidence in versioned grammars; provide targeted `projex-tree` reads plus strict `--check`.
 
-**Forward-only boundary:** A document is governed only when created through the new contract or later adopted by an evidence-backed `revise-projex` Parent event. Pre-contract documents remain outside strict lineage: targeted traversal refuses to present one as a tree, and `--check` lists it as excluded rather than compliant or defective. No historical ancestry is inferred.
+**Forward-only boundary:** A document is governed only when created through the new contract. Pre-contract documents remain permanently outside strict lineage: targeted traversal refuses to present one as a tree, and `--check` lists it as excluded rather than compliant or defective. No historical ancestry is inferred.
 
 **Scope:** Root Projex framework distribution: core/workflow specs, paired scaffold/tree scripts, focused behavioral suites, public utility inventories, root-registration and correction ledgers. One repo; root `.projex/` is the only initially authorized lineage root.
 **Estimated Changes:** 2 new utilities, 2 scaffolders, 27 framework/workflow specs, 7 focused test files, 3 public docs, 2 governance TSVs. Five coupled implementation steps.
@@ -35,11 +35,10 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 - [ ] `new-projex.{sh,ps1}` require Parent with no compatibility default, reject invalid/unresolved parents, map every scaffold type to a canonical lifecycle Status, reserve full filenames across authorized live/virtual roots, and cannot both win one candidate during a cross-platform race
 - [ ] `projex-tree.{sh,ps1}` implement identical registered-root discovery, bounded governed-document parsing, canonical live/virtual Status validation, virtual-record parsing, targeted subtree output, deterministic diagnostics/exit classes, `--check`, and `--check-name`; unregistered nested `.projex` roots never contribute identities
 - [ ] A pre-contract document is never shown as a valid lineage node: a targeted request reports `E_UNGOVERNED_DOCUMENT`; `--check` reports it as excluded from strict lineage, not compliant or malformed
-- [ ] A pre-contract document enters strict lineage only through one explicit, evidence-backed `revise-projex` adoption event; later Parent changes append complete correction evidence before metadata changes
-- [ ] Archive and conclude preserve deleted governed nodes in the same `projex-lineage-v1` record grammar, bind any Parent-correction/adoption IDs, validate target-local live→virtual handoff before deletion, and preserve ancestry/evidence afterward
+- [ ] Archive and conclude preserve deleted governed nodes in the same `projex-lineage-v1` record grammar, bind any Parent-correction IDs, validate target-local live→virtual handoff before deletion, and preserve ancestry/evidence afterward
 - [ ] All 20 current `new-projex` workflow call sites supply deterministic Parent; orchestrate, execute, close, debug, and sprint manual writers route through the scaffold or an equivalent shared validation gate
 - [ ] Archive/conclude gates apply only to governed source documents and their governed reachable lineage; unrelated pre-contract documents neither satisfy nor block the gate
-- [ ] Shared shell/PowerShell fixtures cover bounded examples, CRLF/BOM, symlinks, registered/unregistered roots, nested repos/worktrees, same-minute orchestration-name collisions and distinct-title concurrent runs, canonical/noncanonical Status, cycles, dangling parents, pre-contract exclusion, evidence-backed adoption, correction→retention, virtual handoff, diagnostic ordering, and exit classes
+- [ ] Shared shell/PowerShell fixtures cover bounded examples, CRLF/BOM, symlinks, registered/unregistered roots, nested repos/worktrees, same-minute orchestration-name collisions and distinct-title concurrent runs, canonical/noncanonical Status, cycles, dangling parents, pre-contract exclusion, correction→retention, virtual handoff, diagnostic ordering, and exit classes
 - [ ] `README.md`, `AGENTS.md`, and `CLAUDE.md` expose the new utility/identity/root-registration contract; `USAGE.md` and `AUTHORING.md` remain unchanged after confirmed absence of relevant utility/header inventories
 - [ ] Auxiliary proposal/plan/eval/review/redteam/stress/etc. artifacts remain no-auto-commit; this Plan and its relationship edits are not committed by planning
 
@@ -71,15 +70,15 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 
 | File(s) | Role | Change Summary |
 |---|---|---|
-| `SKILL.md` | Canonical framework contract | Versioned governed preamble, Parent semantics/precedence, forward-only boundary, canonical Status mapping, registered-root trust boundary, virtual retention, Parent-correction/adoption governance, orchestration-record policy |
+| `SKILL.md` | Canonical framework contract | Versioned governed preamble, Parent semantics/precedence, forward-only boundary, canonical Status mapping, registered-root trust boundary, virtual retention, Parent-correction governance, orchestration-record policy |
 | `orchestrate-projex.md` | Per-run user-level coordinator | Collision-safe thin `-orchestrate.md` minting; pass its filename as parent to dispatched roots; nested parentage; commit-policy handling |
 | `new-projex.sh`, `new-projex.ps1` | Creation enforcement | Required Parent; canonical Status by type; new/manual types; authorized-root identity scan; exclusive no-clobber reservation; timestamp-plus-title orchestration minting; versioned header emission |
 | `projex-tree.sh`, `projex-tree.ps1` | New read-only utility | Registered-root discovery/parser/index/tree/check contract with parity; governed/pre-contract boundary, correction and lifecycle-gate validation |
 | `.projex/trusted-roots-v1.tsv` | Root admission policy | Canonical root plus explicit repo-relative scoped-root registrations, owners, dates, evidence |
 | 20 scaffold-calling `*-projex.md` specs | Standard artifact creators | Parent selection, new argument, header preservation, readiness checks |
 | `execute-projex.md`, `close-projex.md`, `debug-projex.md`, `sprint-projex.md` | Manual creators | Route log/walkthrough/debug/sprint docs through scaffold and assign internal lineage |
-| `orchestrate-projex.md`, `archive-projex.md`, `conclude-projex.md`, `revise-projex.md` | Identity/lifecycle governance | Run minting; evidence logging for corrections/adoptions; governed-document gate; correction-bound virtual records before removal |
-| `.projex/parent-lineage-corrections-v1.tsv` | Durable correction/adoption trail | Append-only evidence events plus one-time retained-record binding |
+| `orchestrate-projex.md`, `archive-projex.md`, `conclude-projex.md`, `revise-projex.md` | Identity/lifecycle governance | Run minting; correction evidence logging; governed-document gate; correction-bound virtual records before removal |
+| `.projex/parent-lineage-corrections-v1.tsv` | Durable correction trail | Append-only correction events plus one-time retained-record binding |
 | `tests/new-projex.test.{sh,ps1}` | Scaffold contract | Argument/header/type/identity/reservation behavior |
 | `tests/projex-tree.test.{sh,ps1}` | Reader/integrity contract | Shared scenario matrix and exact output/exit assertions |
 | `tests/run-all.{sh,ps1}`, `tests/README.md` | Test integration | Register/document both paired suites |
@@ -97,11 +96,11 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 - Parent is causal only. Top-level artifact dispatched by orchestration uses the run record; internal execution artifacts use their workflow source (`plan` or `debug-log`). Type-specific provenance remains intact.
 - Trusted discovery bootstrap: canonical `<repo-root>/.projex` only. Additional roots participate only when their canonical repo-relative path has one committed `.projex/trusted-roots-v1.tsv` row with owner/date/evidence; symlinked paths, `.git`, `.projexwt`, nested repositories, unregistered `.projex` directories, and paths escaping repo are excluded.
 - Live parser reads only a versioned preamble: first `# ` heading, blank line, `> **Projex Metadata:** 1`, immediate Parent line, remaining unique blockquote metadata, blank line, `---`. Text/fences after the separator are never metadata.
-- A governed document is created through a contract-aware creator or adopted later through `revise-projex`. A pre-contract document has no valid v1 preamble and is outside strict lineage; its unbounded/legacy header fields are not parsed as Parent metadata.
+- A governed document is created only through a contract-aware creator. A pre-contract document has no valid v1 preamble and is permanently outside strict lineage; its unbounded/legacy header fields are not parsed as Parent metadata.
 - Status uses SKILL's exact canonical state plus optional outcome. Live/virtual parsers reject `Closed` and every other noncanonical state; they never normalize. Transitional handoff compares the full Status text exactly.
 - Virtual parser reads only `projex-lineage-v1` fences under `## Lineage Records` in files ending `-archive.md` or `-conclude.md`.
-- No compatibility default for missing Parent on new creation. An adoption requires an explicit evidence-backed ledger event; `User` is valid only when its evidence records direct human instruction with no source projex.
-- A Parent change after creation/adoption is valid only with an atomic `revise-projex` correction-ledger row. Lifecycle removal binds every applicable correction/adoption ID into the retained virtual record before deletion.
+- No compatibility default for missing Parent on new creation. `User` is valid only when direct human instruction has no source projex.
+- A Parent change after creation is valid only with an atomic `revise-projex` correction-ledger row. Lifecycle removal binds every applicable correction ID into the retained virtual record before deletion.
 - Archive/conclude strict lineage gates run only for governed source documents and their governed reachable descendants. Pre-contract documents use existing retention behavior and must not yield v1 records or a claimed lineage validation.
 - Auxiliary artifact commit policy remains authoritative. A chain that explicitly enters execute/close may commit its required plan + orchestration record together as an execution prerequisite; auxiliary-only chains do not gain implicit commit permission.
 - Worktree mode: Yes because base working directory is dirty; implementation creates many files and may coexist with other activity.
@@ -110,14 +109,14 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 
 - Full filename identity remains practical because names already carry time + slug + type. An orchestration candidate collision requires the same normalized title in the same minute, is strong duplicate-dispatch evidence, and fails explicitly; genuinely distinct concurrent runs use meaningfully distinct titles. Repo-wide reservation across registered roots closes the actual gap without a second identifier.
 - A strict Markdown preamble plus type-scoped virtual fences is implementable in both Bash and PowerShell without a general Markdown parser.
-- Explicitly excluding pre-contract documents makes strict results truthful without changing their bytes. A later evidence-backed adoption is intentional new provenance, not a reconstruction of prior ancestry.
+- Explicitly excluding pre-contract documents makes strict results truthful without changing their bytes. They remain permanently outside strict lineage.
 - `--check` can report the pre-contract exclusion set without treating it as a clean governed set or a failure in the governed contract.
 
 ### Impact Analysis
 
-- **Direct:** every future document creation, orchestration run, Parent correction/adoption, governed lifecycle archive/conclude operation, and lineage query.
+- **Direct:** every future document creation, orchestration run, Parent correction, governed lifecycle archive/conclude operation, and lineage query.
 - **Adjacent:** execute/close/debug/sprint state artifacts; authorized-root registration; auxiliary relationship edits; test runners; public utility inventory.
-- **Downstream:** repos syncing this framework must migrate all `new-projex` calls atomically, create their canonical root registry, and use explicit revise adoption when an older document needs strict lineage. Existing documents remain outside strict traversal until then.
+- **Downstream:** repos syncing this framework must cut over all `new-projex` calls atomically and create their canonical root registry. Existing documents remain permanently outside strict traversal.
 - **Failure containment:** unregistered roots never enter identity resolution; pre-contract documents are explicitly excluded; malformed governed nodes affect their target/reachable tree and `--check`, not unrelated valid target queries.
 
 ---
@@ -126,7 +125,7 @@ The redesign must preserve what held: one causal Parent distinct from `Related P
 
 ### Overview
 
-Five steps form one clean cutover. Step 1 fixes semantics and creates queryable run roots. Step 2 implements the single registered-root discovery/parser contract twice and makes scaffold identity/Status enforcement consume it. Step 3 updates every standard creator. Step 4 closes manual-writer, Parent-correction/adoption, and governed-retention gaps. Step 5 integrates docs/tests and proves parity. No step introduces a second lineage convention or historical reconstruction surface.
+Five steps form one clean cutover. Step 1 fixes semantics and creates queryable run roots. Step 2 implements the single registered-root discovery/parser contract twice and makes scaffold identity/Status enforcement consume it. Step 3 updates every standard creator. Step 4 closes manual-writer, Parent-correction, and governed-retention gaps. Step 5 integrates docs/tests and proves parity. No step introduces a second lineage convention or historical reconstruction surface.
 
 ### Step 1: Canonical Contract and Queryable Orchestration Roots
 
@@ -155,11 +154,11 @@ Five steps form one clean cutover. Step 1 fixes semantics and creates queryable 
 ```
 
 Define: marker/Parent ordering; blank + `---` terminator; no duplicate metadata keys; filename grammar `^[0-9]{10}-[a-z0-9][a-z0-9-]*-[a-z0-9]+\.md$`; no `Orchestrator` sentinel; no paths/self-parent; causal-vs-topical boundary; registered-root identity; live/virtual handoff; targeted vs `--check`; pre-contract exclusion semantics.
-2. Define forward-only boundary. Governed = v1 preamble emitted by a contract-aware creator, or a later `revise-projex` adoption event. Pre-contract = any other document. Never infer a Parent from its fields, body, filename, git history, or relationship metadata. Targeted tree request for it emits `E_UNGOVERNED_DOCUMENT`; `--check` emits sorted `I_PRECONTRACT_EXCLUDED` records and validates only governed documents.
-3. Define deterministic Parent precedence for governed creation and adoption: (1) internal artifact's source-of-record (execution log/walkthrough → plan; final debug doc → debug log); (2) orchestrator/sprint `parent=` handoff for a dispatched root; (3) single referenced source/target; (4) first explicit target left-to-right for multi-target workflows; (5) `User` only when direct human instruction has no source projex. Remaining inputs stay in existing Source/Subject/Nav/Sources/Related fields.
+2. Define forward-only boundary. Governed = v1 preamble emitted by a contract-aware creator. Pre-contract = any other document, permanently outside strict lineage. Never infer a Parent from its fields, body, filename, git history, or relationship metadata. Targeted tree request for it emits `E_UNGOVERNED_DOCUMENT`; `--check` emits sorted `I_PRECONTRACT_EXCLUDED` records and validates only governed documents.
+3. Define deterministic Parent precedence for governed creation: (1) internal artifact's source-of-record (execution log/walkthrough → plan; final debug doc → debug log); (2) orchestrator/sprint `parent=` handoff for a dispatched root; (3) single referenced source/target; (4) first explicit target left-to-right for multi-target workflows; (5) `User` only when direct human instruction has no source projex. Remaining inputs stay in existing Source/Subject/Nav/Sources/Related fields.
 4. Define canonical initial scaffold Status by type: `Draft` = propose|plan|eval|redteam|stress|audit|interview|coach|memo|define|map|imagine; `In Progress` = review|explore|navigate|log|sprint|orchestrate; `Complete` = patch|preplan|debug|scan|guide|conclude|archive|walkthrough. Workflow transitions may replace these only with another canonical state/outcome. `Closed` is invalid data, never an alias.
 5. Define root admission: root `.projex` is bootstrap-authorized; every additional scoped root needs an exact row in `.projex/trusted-roots-v1.tsv` (`path	owner	added	evidence`). Registration changes require explicit human/repo-owner review; scanners ignore unregistered content for identity/tree resolution and report its directory only during `--check`.
-6. Define Parent evidence events: `revise-projex` appends one `.projex/parent-lineage-corrections-v1.tsv` event before/atomically with a live Parent edit. Columns: `event_id	date	filename	event_kind	prior_parent	new_parent	evidence	resolver	reason	retained_record`; `event_kind=adoption|correction`; adoption requires `prior_parent=none`, correction requires the current Parent; evidence is a durable repo-relative/file-name locator or quoted human requirement. Event IDs use `pc-` + 24 lowercase hex. Rows are append-only; only blank→`{archive|conclude filename}#{source filename}` retained-record binding is allowed before removal.
+6. Define Parent corrections: `revise-projex` appends one `.projex/parent-lineage-corrections-v1.tsv` event before/atomically with a live Parent edit to a governed document. Columns: `correction_id	date	filename	prior_parent	new_parent	evidence	resolver	reason	retained_record`; `prior_parent` must equal the current Parent; evidence is a durable repo-relative/file-name locator or quoted human requirement. IDs use `pc-` + 24 lowercase hex. Rows are append-only; only blank→`{archive|conclude filename}#{source filename}` retained-record binding is allowed before removal.
 7. Revise SKILL orchestration description: orchestration has a thin record, not a new analytical type. Filename is exactly `{yymmddhhmm}-{slug}-orchestrate.md`; suffix remains fixed to `-orchestrate.md`.
 8. In `orchestrate-projex.md`, create the run record before first dispatch through the scaffold's orchestrate mint mode; update it only at dispatch completion/escalation. Template contains metadata, Status, verbatim goal, literal chain/model annotations, final outcome, and child filenames returned. No copied subagent reports.
 9. Root record Parent: referenced source-of-record when orchestration is invoked against one; otherwise `User`. Nested record Parent: outer `-orchestrate.md`. Every directly dispatched document-producing workflow receives `parent={run-record-filename}`. Non-document subworkflows remain untouched.
@@ -204,7 +203,7 @@ projex-tree.{sh|ps1} <repo-root> --check-name <filename>
 Exit `0`: requested operation valid; `1`: governed-lineage/integrity failure; `2`: usage, invalid root, path input, unsupported encoding, or ungoverned target. Diagnostics sort by filename then stable code; stdout tree siblings sort filename ascending.
 2. Read root registrations only from canonical root `.projex/trusted-roots-v1.tsv`. Validate exact TSV schema, canonical repo-relative `.projex` paths, unique paths, and owner/date/evidence values; reject symlinks, exclusions, nested repos, and escapes. Root `.projex` is always present as the sole bootstrap row. Targeted mode ignores unregistered `.projex` trees completely; `--check` emits sorted `E_UNREGISTERED_ROOT` diagnostics without parsing their files.
 3. Parse UTF-8 with optional BOM and LF/CRLF identically. Only a valid v1 preamble creates a live lineage node; a document without it is pre-contract and no header-shaped line elsewhere is metadata. Parse canonical virtual blocks; validate Status with the strict SKILL regex + canonical state set and reject `Closed` without normalization. Build identity map + Parent→children map only from governed live/virtual records. `Related Projex` and header-shaped body/fence lines are ignored.
-4. Targeted mode validates requested identity and reachable governed descendants. If the requested physical document exists but is pre-contract, emit `E_UNGOVERNED_DOCUMENT: {filename}: outside strict lineage; use revise-projex adoption with evidence` and exit `2`; do not print a tree. Unrelated malformed governed nodes produce one deterministic summary warning and do not change exit `0`; reachable duplicate/cycle/malformed/dangling state prints partial tree, detailed stderr, exit `1`. `--check` emits every sorted authorized-corpus/registration/correction defect plus one sorted `I_PRECONTRACT_EXCLUDED` record per pre-contract document; exclusion records do not make `--check` succeed for them or fail the governed set. `--check-name` checks grammar and absence across authorized physical/virtual identities without requiring a pre-contract document to become governed.
+4. Targeted mode validates requested identity and reachable governed descendants. If the requested physical document exists but is pre-contract, emit `E_UNGOVERNED_DOCUMENT: {filename}: permanently outside strict lineage` and exit `2`; do not print a tree. Unrelated malformed governed nodes produce one deterministic summary warning and do not change exit `0`; reachable duplicate/cycle/malformed/dangling state prints partial tree, detailed stderr, exit `1`. `--check` emits every sorted authorized-corpus/registration/correction defect plus one sorted `I_PRECONTRACT_EXCLUDED` record per pre-contract document; exclusion records do not make `--check` succeed for them or fail the governed set. `--check-name` checks grammar and absence across authorized physical/virtual identities without requiring a pre-contract document to become governed.
 5. Change scaffold signature cleanly:
 
 ```text
@@ -219,7 +218,7 @@ Validate Parent grammar; resolve filename parent uniquely through `projex-tree -
 
 **Rationale:** Filename identity keeps existing reference conventions; registered-root scan + exclusive reservation fixes sequential/concurrent collision and turns an orchestration collision into useful duplicate-dispatch evidence. Canonical Status makes live→virtual equality meaningful. Tree utility owns discovery semantics so scaffold cannot drift into a second parser. Explicit pre-contract exclusion prevents a strict output from claiming unknown ancestry is valid.
 
-**Verification:** Run only the four focused suites. Required observable cases: invalid/missing Parent; every scaffold type emits its mapped canonical state; `Closed` live/virtual rejected; body examples accepted; a pre-contract target returns `E_UNGOVERNED_DOCUMENT` and `--check` labels it excluded; evidence-backed adoption creates one valid v1 node; two live headers rejected; same-minute same-normalized-title source-less and nested orchestration attempts fail with the stable collision diagnostic while distinct-title concurrent runs mint distinct roots; cross-root sequential/concurrent creation allows one winner per candidate; unregistered duplicate/cycle roots cannot affect a target and make `--check` report only their directory; live/virtual mismatch rejected; target query survives unrelated malformed governed doc; reachable cycle returns partial output/exit 1; `.sh`/`.ps1` stdout/stderr/exit match byte-for-byte after normalizing platform paths/newlines.
+**Verification:** Run only the four focused suites. Required observable cases: invalid/missing Parent; every scaffold type emits its mapped canonical state; `Closed` live/virtual rejected; body examples accepted; a pre-contract target returns `E_UNGOVERNED_DOCUMENT` and `--check` labels it excluded; two live headers rejected; same-minute same-normalized-title source-less and nested orchestration attempts fail with the stable collision diagnostic while distinct-title concurrent runs mint distinct roots; cross-root sequential/concurrent creation allows one winner per candidate; unregistered duplicate/cycle roots cannot affect a target and make `--check` report only their directory; live/virtual mismatch rejected; target query survives unrelated malformed governed doc; reachable cycle returns partial output/exit 1; `.sh`/`.ps1` stdout/stderr/exit match byte-for-byte after normalizing platform paths/newlines.
 
 **If this fails:** Remove both new utilities and restore both scaffolders as one rollback unit. Do not change workflow arity until parity passes.
 
@@ -285,7 +284,7 @@ Validate Parent grammar; resolve filename parent uniquely through `projex-tree -
 3. `debug-projex.md`: create active `{debug-name}-debug-log.md` through `log` with Parent = orchestrate/sprint handoff, referenced source, or User. Create final closed debug doc through `debug` with Parent = debug-log filename. Keep both artifacts and cross-links.
 4. `sprint-projex.md`: create sprint nav through `sprint`; Parent = outer orchestration record, external nav/source, or User. Every body artifact receives sprint-nav filename as `parent=`; existing `Sprint:` stamp remains iteration provenance, not tree edge.
 5. `orchestrate-projex.md`: use `orchestrate` scaffold mint mode and settled suffix. Completion status is `Complete`; interruptions use canonical `Blocked`/`Escalated`; move completed record to `closed/` only when its chain's artifact policy permits persistence.
-6. `revise-projex.md`: require one atomic target+ledger commit for an adoption or any later Parent change. Adoption may introduce the v1 preamble only for a currently pre-contract document and records `prior_parent=none`; correction requires an already governed current Parent. Refuse missing values, invalid event kind, prior/current mismatch, repeated ID, unsupported evidence, or a second mutation not chained from the last row. Preserve the event's original evidence/resolver/date/reason forever.
+6. `revise-projex.md`: require one atomic target+ledger commit for a Parent change to an already governed document. Refuse a pre-contract target, missing values, prior/current mismatch, repeated ID, unsupported evidence, or a second mutation not chained from the last row. Preserve the correction's original evidence/resolver/date/reason forever.
 7. Add one virtual grammar to both archive and conclude:
 
 ```projex-lineage-v1
@@ -297,7 +296,7 @@ Disposition: Archived
 Correction-Refs: none
 ```
 
-Fields/order exact; Filename is immutable identity; Parent uses live grammar; Status uses full canonical text; Source is repo-relative; Disposition is `Archived|Concluded`; Correction-Refs is `none` or sorted comma-separated correction/adoption IDs. Blocks occur only under `## Lineage Records`.
+Fields/order exact; Filename is immutable identity; Parent uses live grammar; Status uses full canonical text; Source is repo-relative; Disposition is `Archived|Concluded`; Correction-Refs is `none` or sorted comma-separated correction IDs. Blocks occur only under `## Lineage Records`.
 8. Archive extraction adds Parent + Correction-Refs and writes one record per governed source. Conclude report writes one per retired governed source; successor prose ledger remains human-facing. Before removal, bind every applicable ledger row to the retaining record, then validate record IDs, old→new chain, final Parent, source, and full Status. Missing/unbound/mismatched evidence blocks governed deletion.
 9. Gate each governed archive/conclude source with targeted `projex-tree` validation of that source and its governed reachable descendants before and after deletion. A valid preflight, exact virtual handoff, and stable post-removal ancestry are required; unrelated pre-contract documents are excluded from this gate. A pre-contract source follows existing archive/conclude retention behavior and produces no v1 record or lineage-gate claim.
 10. Governed archive/conclude artifacts record `Lineage Gate: Target-Clean`, sorted governed source filenames, check timestamp/resolver, and pre/post normalized targeted-tree hashes. Delete only after preflight record exists; run targeted checks after deletion and require hashes/ancestry unchanged. No manual flag or undocumented bypass.
@@ -305,7 +304,7 @@ Fields/order exact; Filename is immutable identity; Parent uses live grammar; St
 
 **Rationale:** Manual creators and removal paths are predictable drift points. One scaffold, evidence ledger, target-clean gate, and correction-bound virtual grammar preserve governed attribution and deletion proof without imposing claims on pre-contract documents.
 
-**Verification:** Focused temp-repo scenarios: plan→log→walkthrough tree; orchestrate→plan and orchestrate→redteam siblings; outer→inner orchestrate; sprint→body artifact; debug-log→debug; archive child then conclude parent; all-virtual chain; ancestry/output identical before/after governed source deletion; an unrelated pre-contract document neither blocks nor appears in the target gate; Parent correction→archive and correction→conclude preserve old/new/evidence/resolver/date/reason plus mutual correction/retained-record references; evidence-backed adoption→retention preserves its adoption event.
+**Verification:** Focused temp-repo scenarios: plan→log→walkthrough tree; orchestrate→plan and orchestrate→redteam siblings; outer→inner orchestrate; sprint→body artifact; debug-log→debug; archive child then conclude parent; all-virtual chain; ancestry/output identical before/after governed source deletion; an unrelated pre-contract document neither blocks nor appears in the target gate; Parent correction→archive and correction→conclude preserve old/new/evidence/resolver/date/reason plus mutual correction/retained-record references.
 
 **If this fails:** Do not delete any governed source document. Revert workflow specs and generated fixture records; physical originals remain authoritative.
 
@@ -330,15 +329,15 @@ Fields/order exact; Filename is immutable identity; Parent uses live grammar; St
 **Changes:**
 
 1. README utility table adds `projex-tree`; `new-projex` row states required Parent, canonical Status, registered-root identity, exclusive no-clobber reservation, and timestamp-plus-title orchestration minting. Add one compact orchestration-record note with exact `{yymmddhhmm}-{slug}-orchestrate.md` form and one forward-only boundary note.
-2. AGENTS/CLAUDE mirrored repository trees add `new-projex`, `projex-tree`, and root/correction registry files; filename guidance changes from convention-assumed uniqueness to enforced repo-wide authorized live/virtual identity; Parent references stay filename-only; explain that older documents require evidence-backed adoption before strict traversal.
+2. AGENTS/CLAUDE mirrored repository trees add `new-projex`, `projex-tree`, and root/correction registry files; filename guidance changes from convention-assumed uniqueness to enforced repo-wide authorized live/virtual identity; Parent references stay filename-only; state that older documents remain permanently outside strict traversal.
 3. Register `new-projex.test` and `projex-tree.test` once in each runner; preserve one-summary parsing. Document assertion counts and scenario coverage in tests README after actual runs.
 4. Keep `USAGE.md`/`AUTHORING.md` unchanged; record verification that neither contains a utility/header inventory requiring update.
 5. Run focused suites individually, not the project-wide runners during implementation verification. Also run Bash syntax parse and PowerShell AST parse only for the four changed/new scripts.
-6. Execute end-to-end smoke in one throwaway repo: concurrently mint source-less and nested orchestrations with meaningfully distinct titles and prove distinct query roots; attempt each again with the same normalized title in the same minute and prove exclusive reservation emits `E_ORCHESTRATE_NAME_COLLISION` without clobbering the first record; create children; query each tree; register one scoped root; inject an unregistered duplicate root and prove it cannot affect the target; create a pre-contract document and prove targeted traversal refuses it while `--check` labels it excluded; adopt it through an evidence-backed revise event; correct one governed Parent with evidence; archive one governed child; conclude one governed ancestor; re-query; verify correction IDs survive, targeted output stays stable, and governed `--check` failure state is unaffected by the excluded document.
+6. Execute end-to-end smoke in one throwaway repo: concurrently mint source-less and nested orchestrations with meaningfully distinct titles and prove distinct query roots; attempt each again with the same normalized title in the same minute and prove exclusive reservation emits `E_ORCHESTRATE_NAME_COLLISION` without clobbering the first record; create children; query each tree; register one scoped root; inject an unregistered duplicate root and prove it cannot affect the target; create a pre-contract document and prove targeted traversal refuses it while `--check` labels it excluded; correct one governed Parent with evidence; archive one governed child; conclude one governed ancestor; re-query; verify correction IDs survive, targeted output stays stable, and governed `--check` failure state is unaffected by the excluded document.
 
 **Rationale:** Shared fixtures and independently executed platform suites are the parity contract. Public inventory prevents a correct utility or governance gate from remaining undiscoverable.
 
-**Verification:** Focused suites exit 0 with one summary each; normalized golden stdout/stderr/exit records match across platforms; smoke proves distinct-title concurrent minting, likely-duplicate collision failure without clobbering, root admission, canonical Status, pre-contract exclusion, evidence-backed adoption, correction retention, and target-clean lifecycle; public docs name exact CLI/filename form; git diff contains only declared files plus plan lifecycle artifacts.
+**Verification:** Focused suites exit 0 with one summary each; normalized golden stdout/stderr/exit records match across platforms; smoke proves distinct-title concurrent minting, likely-duplicate collision failure without clobbering, root admission, canonical Status, pre-contract exclusion, correction retention, and target-clean lifecycle; public docs name exact CLI/filename form; git diff contains only declared files plus plan lifecycle artifacts.
 
 **If this fails:** Revert docs/runner registration independently only if suites themselves remain runnable directly. Parser/scaffold parity failure rolls back Step 2, not merely runner entries.
 
@@ -356,7 +355,7 @@ Fields/order exact; Filename is immutable identity; Parent uses live grammar; St
 - [ ] Every scaffold type maps to exactly one canonical initial state; live/virtual `Closed` fixtures fail
 - [ ] Registered-root set equals trusted-roots TSV; injected unregistered `.projex` identities are absent from targeted resolution
 - [ ] A pre-contract fixture is absent from identity/tree maps, targeted request emits `E_UNGOVERNED_DOCUMENT`, and `--check` emits only its `I_PRECONTRACT_EXCLUDED` record
-- [ ] Adoption requires one evidence event before the v1 preamble; its correction chain reconstructs adoption/current Parent; every retired corrected/adopted node has bidirectional correction/retained-record references
+- [ ] Parent corrections require one evidence event before the metadata change; the correction chain reconstructs creation Parent → current Parent; every retired corrected node has bidirectional correction/retained-record references
 - [ ] Targeted tree golden files match normalized shell/PowerShell output; diagnostic order and exit classes match
 - [ ] `--check-name`/mint fixtures cover live/live, live/virtual, virtual/virtual, cross-root, same-minute same-normalized-title orchestration collision, distinct-title concurrent orchestration, exclusive no-clobber behavior, and the stable collision diagnostic
 
@@ -366,9 +365,9 @@ Fields/order exact; Filename is immutable identity; Parent uses live grammar; St
 - [ ] Inspect a proposal-shaped doc containing header examples: parser sees one live Parent, never fenced examples
 - [ ] Inspect records from concurrent independent and nested runs with meaningfully distinct titles: filenames/query roots are distinct and match `{yymmddhhmm}-{slug}-orchestrate.md`; same-minute same-normalized-title attempts fail without replacing either record
 - [ ] Inspect trusted-root registry: only explicit canonical paths participate; planted nested `.projex` does not
-- [ ] Inspect a pre-contract document: targeted tree does not present it as governed; `--check` labels its exclusion; a later evidence-backed adoption is the only strict-lineage entry path
+- [ ] Inspect a pre-contract document: targeted tree does not present it as governed; `--check` labels its exclusion; it remains permanently outside strict lineage
 - [ ] Inspect archive/conclude handoff before and after deletion: same filename, Parent, full canonical Status, correction references, ancestry
-- [ ] Review one Parent correction and one adoption: old/new or none/new, evidence/resolver/date/reason retained and virtual record points back after deletion
+- [ ] Review one Parent correction: old/new, evidence/resolver/date/reason retained and virtual record points back after deletion
 - [ ] Confirm auxiliary-only planning/red-team chain leaves all artifacts uncommitted
 
 ### Acceptance Criteria Validation
@@ -381,10 +380,9 @@ Fields/order exact; Filename is immutable identity; Parent uses live grammar; St
 | Trusted root admission | Registered scoped root + planted unregistered duplicate/cycle | Registered content participates; planted root never affects target |
 | Canonical Status | Table-driven scaffold + live/virtual invalid-state fixtures | Exact canonical states; `Closed` rejected, never normalized |
 | Forward-only boundary | Pre-contract target + `--check` fixture | No tree/compliance claim; targeted `E_UNGOVERNED_DOCUMENT`, explicit exclusion record |
-| Evidence-backed adoption | Revise adoption fixture | One valid v1 node only after durable evidence event |
+| Parent correction durable | Correction→archive/conclude fixture | Prior/new Parent and evidence retained with reciprocal IDs |
 | Reachable corruption loud | Reachable cycle/duplicate/dangling fixtures | Partial tree, sorted stderr, exit 1 |
 | Governed retention stability | Archive/conclude lifecycle fixture + unrelated pre-contract document | Target-clean gate recorded; tree identical before/after removal; excluded doc does not block |
-| Parent correction durable | Correction/adoption→archive/conclude fixture | Prior/new or none/new Parent and evidence retained with reciprocal IDs |
 | Creator coverage | Callsite/manual inventory assertions | 20 standard + 5 manual workflow surfaces covered |
 | Cross-platform parity | Compare normalized paired suite artifacts | Same stdout, stderr codes/order, exit values |
 | Commit policy preserved | Auxiliary-only smoke + git status | Artifacts present; no new commit |
@@ -398,8 +396,8 @@ Per-step rollback follows worktree commits; destructive archive/conclude verific
 If whole implementation is abandoned:
 
 1. Run the framework abandon utility against the recorded base/ephemeral branch; do not reset the dirty base checkout.
-2. Confirm no temporary `.lineage-locks` files, temp fixture repos, generated ignored artifacts, or partially bound correction/adoption rows remain.
-3. Leave this Ready Plan and its uncommitted relationship edits on base for a later attempt; no root registration, correction/adoption row, or governed retention activation is partially retained.
+2. Confirm no temporary `.lineage-locks` files, temp fixture repos, generated ignored artifacts, or partially bound correction rows remain.
+3. Leave this Ready Plan and its uncommitted relationship edits on base for a later attempt; no root registration, correction row, or governed retention activation is partially retained.
 
 ---
 
@@ -407,7 +405,7 @@ If whole implementation is abandoned:
 
 - **2026-08-12:** Kept the accepted filename-only lineage/tree direction; made orchestration run minting collision-safe, mapped and validated canonical Status, bounded trusted `.projex` roots through registration/ownership, added durable Parent-correction evidence, and replaced unconditional lifecycle `--check` with target-local governed retention — trigger: `2608121035-parent-lineage-and-projex-tree-redesign-redteam.md § Remediation / Must Fix` (five required corrections; verdict `Fix Issues`).
 - **2026-08-12:** Replaced random-token orchestration naming with `{yymmddhhmm}-{slug}-orchestrate.md`; require exclusive no-clobber reservation and `E_ORCHESTRATE_NAME_COLLISION` for same-minute, same-normalized-title likely duplicate dispatch; distinct concurrent work uses meaningfully distinct titles — trigger: human requirement, “use timestamp-plus-title `-orchestrate.md` filenames without random tokens”; collision is duplicate-dispatch evidence.
-- **2026-08-12:** Removed current-corpus migration, manifest, staged legacy quarantine, and associated retention gates. Strict lineage is forward-only; pre-contract documents are excluded until a later `revise-projex` adoption supplies durable Parent evidence — trigger: human requirement, “migration is not needed.”
+- **2026-08-12:** Removed current-corpus conversion, manifest, staged legacy quarantine, and any individual adoption path. Strict lineage applies only to documents created under v1; every pre-contract document remains permanently excluded — trigger: human requirement, “migration is not needed.”
 
 ---
 
@@ -417,7 +415,7 @@ If whole implementation is abandoned:
 
 **No split — coupled single scope; auto-suggest threshold accepted.**
 
-Five steps remain one repo/root framework scope. Breaking scaffold arity, registered discovery, creator cutover, correction/adoption ledger, and governed retention requires one clean cutover; splitting creates an invalid intermediate framework.
+Five steps remain one repo/root framework scope. Breaking scaffold arity, registered discovery, creator cutover, correction ledger, and governed retention requires one clean cutover; splitting creates an invalid intermediate framework.
 
 ### Resolved Redesign Decisions
 
@@ -429,8 +427,8 @@ Five steps remain one repo/root framework scope. Breaking scaffold arity, regist
 | `Orchestrator` unqueryable | Thin stable `{yymmddhhmm}-{slug}-orchestrate.md`; sentinel removed | Steps 1, 4 |
 | Noncanonical `Closed` emission | Exhaustive initial-state map; strict live/virtual canonical validation | Steps 1–2 |
 | Archive/conclude schema undefined | One strict `projex-lineage-v1` fence grammar for governed removals | Step 4 |
-| Unknown historical ancestry | Forward-only boundary; explicit evidence-backed adoption is the sole later entry path | Steps 1–2, 4 |
-| Parent edits erase accountability | Append-only correction/adoption events + reciprocal retained-record references | Steps 1, 4 |
+| Unknown historical ancestry | Forward-only boundary; pre-contract documents remain permanently outside strict lineage | Steps 1–2 |
+| Parent edits erase accountability | Append-only correction events + reciprocal retained-record references | Steps 1, 4 |
 | Named `.projex` root poisoning | Bootstrap root + explicit path/owner/date/evidence registry | Steps 1–2 |
 | Manual creators drift | Scaffold types + exhaustive 20 standard/5 manual inventory | Steps 3–4 |
 | Cross-platform behavior underdefined | Normative roots/symlink/encoding/newline/diagnostic/exit contract + paired fixtures | Steps 2, 5 |
@@ -443,7 +441,7 @@ Five steps remain one repo/root framework scope. Breaking scaffold arity, regist
 - Remove literal `Orchestrator`; it cannot name a run.
 - Use timestamp-plus-title orchestration filenames; same-minute same-normalized-title collision fails as likely duplicate dispatch rather than minting a random alternate name.
 - Apply strict Parent parsing only to governed v1 documents. Pre-contract files are explicitly excluded; no inferred ancestry, compatibility default, or corpus rewrite exists.
-- Add live preamble version/boundary, registered-root identity reservation, canonical Status validation, target-local error scope, `--check`, correction/adoption ledger, and strict correction-bound virtual records.
+- Add live preamble version/boundary, registered-root identity reservation, canonical Status validation, target-local error scope, `--check`, correction ledger, and strict correction-bound virtual records.
 - Route manual artifacts and Parent corrections through shared workflow gates instead of relying on prose validation alone.
 - Keep filename identity; reject UUID/central registry as needless second identity/source of truth.
 - Keep JSON/DOT deferred; no current consumer justifies them.
@@ -453,7 +451,7 @@ Five steps remain one repo/root framework scope. Breaking scaffold arity, regist
 - **Shell/PowerShell scan drift:** High impact. Mitigation: normative behavior + independently executed shared scenarios; parity is acceptance, not inference.
 - **Same-minute orchestration collision:** Medium/Low. Exclusive reservation never clobbers; `E_ORCHESTRATE_NAME_COLLISION` identifies likely duplicate dispatch, and genuinely distinct runs must use meaningfully distinct titles.
 - **Exclusive lock leakage after crash:** Medium/Low. Stale lock fails loud and is never stolen; cleanup trap/finally + fixture proves normal cleanup.
-- **Unrecognized pre-contract ancestry:** Medium. Strict tooling labels it excluded and never guesses; later adoption requires durable evidence.
+- **Unrecognized pre-contract ancestry:** Medium. Strict tooling labels it excluded and never guesses; it remains outside strict lineage.
 - **Archive transitional duplicate:** High if misclassified. Exact Source/Parent/full Status/correction equivalence is the only allowed duplicate; mismatch blocks governed deletion.
 - **Silent Parent correction:** High/Medium. Revise requires atomic evidence event; reader and lifecycle gates reconstruct correction chain and block missing evidence.
 - **Root registration abuse:** High/Low. Only canonical bootstrap registry admits paths; each row carries owner/date/evidence and requires explicit review; unregistered content never resolves.
