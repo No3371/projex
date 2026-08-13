@@ -3,7 +3,7 @@
 > **Status:** Draft
 > **Author:** OpenAI Codex (Agent)
 > **Parent:** User
-> **Related Projex:** 2604031730-util-script-ideas-imagine.md (`projex-refs` prior art) | 2604031727-workflow-guardrails-determinism-imagine.md (spawn lineage principle) | 2608120952-parent-lineage-header-and-projex-tree-utility-redteam.md (adversarial review) | 2608121003-parent-lineage-header-and-projex-tree-utility-proposal-stress.md (adversarial stress) | 2608121022-parent-lineage-and-projex-tree-redesign-plan.md (actionable redesign) | 2608121035-parent-lineage-and-projex-tree-redesign-redteam.md (plan red-team)
+> **Related Projex:** 2604031730-util-script-ideas-imagine.md (`projex-refs` prior art) | 2604031727-workflow-guardrails-determinism-imagine.md (spawn lineage principle) | 2608120952-parent-lineage-header-and-projex-tree-utility-redteam.md (adversarial review) | 2608121003-parent-lineage-header-and-projex-tree-utility-proposal-stress.md (adversarial stress) | 2608121022-parent-lineage-and-projex-tree-redesign-plan.md (abandoned redesign) | 2608121756-parent-lineage-and-projex-tree-addition-plan.md (replacement plan) | 2608121035-parent-lineage-and-projex-tree-redesign-redteam.md (abandoned-plan red-team)
 
 ---
 

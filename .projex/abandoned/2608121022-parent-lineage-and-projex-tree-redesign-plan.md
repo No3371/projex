@@ -1,10 +1,10 @@
 # Parent Lineage and Projex Tree Redesign
 
-> **Status:** Ready
+> **Status:** Abandoned
 > **Author:** OpenAI Codex (Agent)
 > **Parent:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md
 > **Source:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md — direction accepted by direct request; proposal header remains Draft by design
-> **Related Projex:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md | 2608120952-parent-lineage-header-and-projex-tree-utility-redteam.md | 2608121003-parent-lineage-header-and-projex-tree-utility-proposal-stress.md | 2608121035-parent-lineage-and-projex-tree-redesign-redteam.md | 2604031730-util-script-ideas-imagine.md | 2604031727-workflow-guardrails-determinism-imagine.md
+> **Related Projex:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md | 2608120952-parent-lineage-header-and-projex-tree-utility-redteam.md | 2608121003-parent-lineage-header-and-projex-tree-utility-proposal-stress.md | 2608121035-parent-lineage-and-projex-tree-redesign-redteam.md | 2604031730-util-script-ideas-imagine.md | 2604031727-workflow-guardrails-determinism-imagine.md | 2608121756-parent-lineage-and-projex-tree-addition-plan.md
 > **Worktree:** Yes
 
 ---
@@ -406,6 +406,7 @@ If whole implementation is abandoned:
 - **2026-08-12:** Kept the accepted filename-only lineage/tree direction; made orchestration run minting collision-safe, mapped and validated canonical Status, bounded trusted `.projex` roots through registration/ownership, added durable Parent-correction evidence, and replaced unconditional lifecycle `--check` with target-local governed retention — trigger: `2608121035-parent-lineage-and-projex-tree-redesign-redteam.md § Remediation / Must Fix` (five required corrections; verdict `Fix Issues`).
 - **2026-08-12:** Replaced random-token orchestration naming with `{yymmddhhmm}-{slug}-orchestrate.md`; require exclusive no-clobber reservation and `E_ORCHESTRATE_NAME_COLLISION` for same-minute, same-normalized-title likely duplicate dispatch; distinct concurrent work uses meaningfully distinct titles — trigger: human requirement, “use timestamp-plus-title `-orchestrate.md` filenames without random tokens”; collision is duplicate-dispatch evidence.
 - **2026-08-12:** Removed current-corpus conversion, manifest, staged legacy quarantine, and any individual adoption path. Strict lineage applies only to documents created under v1; every pre-contract document remains permanently excluded — trigger: human requirement, “migration is not needed.”
+- **2026-08-12:** Abandoned after execution exposed a direction mismatch; superseded by `2608121756-parent-lineage-and-projex-tree-addition-plan.md`. The replacement treats Parent + tree as an addition, accepts legacy files without migration/governance, and moves enforcement from guidance into scaffold/test guardrails — trigger: direct human rejection of redesign scope and prose-heavy enforcement.
 
 ---
 
