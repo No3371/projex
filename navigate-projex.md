@@ -76,7 +76,8 @@ Navigation documents represent shared understanding between agent and user. Befo
 #### 3. DRAFT THE ROADMAP
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> navigate "{roadmap-name}" <projex-folder>
+Resolve `{parent}` from an explicit source/nav filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> navigate "{roadmap-name}" {parent} <projex-folder>
 ```
 
 - Project-level → root `.projex/`

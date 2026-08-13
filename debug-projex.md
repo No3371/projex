@@ -137,6 +137,7 @@ Record `<worktree-root>` as `{repo-name}/.projexwt/{yymmddhhmm}-{debug-name}/` (
 `{yymmddhhmm}-{debug-name}-debug-log.md` in the worktree's `.projex/` folder. Live record — written and committed as the debug proceeds, not reconstructed at the end.
 
 Populate the header from PRE-DEBUG CHECKLIST output:
+Resolve `{debug-parent}` from explicit causal nav/subject; else supplied orchestrator Parent; else `User`.
 
 ```markdown
 # Debug Log: {debug-name}
@@ -145,6 +146,7 @@ Populate the header from PRE-DEBUG CHECKLIST output:
 > **Worktree Root:** {worktree-root}
 > **Base Branch:** {base-branch}
 > **Debug Branch:** projex/debug/{yymmddhhmm}-{debug-name}
+> **Parent:** {debug-parent}
 > **Started:** YYYY-MM-DD HH:MM
 > **Status:** In Progress
 
@@ -376,6 +378,7 @@ The debug document is the polished, reader-facing artifact derived from the log.
 > **Status:** Complete (Resolved) | Escalated (Exhausted)
 > **Fix Commit:** [SHA after squash, or "n/a — exhausted"]
 > **Debug Log:** {yymmddhhmm}-{debug-name}-debug-log.md
+> **Parent:** {debug-log-filename}
 > **Related Projex:** [filenames if any]
 
 ---

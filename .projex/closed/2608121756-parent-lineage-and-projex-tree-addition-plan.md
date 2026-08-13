@@ -1,11 +1,14 @@
 # Parent Lineage and Projex Tree Addition
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Author:** OpenAI Codex (Agent)
 > **Parent:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md
 > **Source:** Direct revision request after abandoned execution of 2608121022-parent-lineage-and-projex-tree-redesign-plan.md
 > **Related Projex:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md | 2608121022-parent-lineage-and-projex-tree-redesign-plan.md | 2608121805-parent-lineage-and-projex-tree-addition-plan-redteam.md
 > **Worktree:** Yes
+> **Log:** 2608121844-parent-lineage-and-projex-tree-addition-log.md
+> **Completed:** 2026-08-13
+> **Walkthrough:** 2608130419-parent-lineage-and-projex-tree-addition-walkthrough.md
 
 ---
 
@@ -26,15 +29,15 @@ Projex documents expose topical relationships but no universal causal edge. Full
 
 ### Success Criteria
 
-- [ ] Newly scaffolded documents require exactly one `> **Parent:** User|Orchestrator|{projex-filename}.md` header and reject a discovered repo-wide filename collision before creation
-- [ ] Orchestrated creation receives explicit Parent origin; each workflow selects Parent by declared causal-role precedence, never hidden context or input order
-- [ ] Every current scaffold caller and manual writer—including `sprint-projex.md`—emits one deterministic Parent; an asserted creator inventory prevents omissions
-- [ ] Existing documents without Parent remain readable and act as roots for explicit descendants
-- [ ] `projex-tree.{sh,ps1} <repo-root> <filename>` find the queried document's topmost currently discoverable root and print that complete deterministic component regardless of whether input names its root, intermediate node, or leaf
-- [ ] Target-affecting duplicate identities, malformed/duplicate Parent headers, cycles, ambiguous targets, and dangling filename parents emit no stdout, sorted coded stderr, and the specified nonzero exit class; unrelated-component defects do not fail a valid query
-- [ ] Shell and PowerShell scaffold/tree suites consume the same creator matrix and tree transcript goldens; parity is observable, not inferred from separate green summaries
-- [ ] `close-projex.md` executes `projex-tree` for its plan and `conclude-projex.md` executes it for the successor/sources during context gathering; both state that the result is advisory and not guaranteed exhaustive
-- [ ] `SKILL.md` gains only a compact Authoring invariant; enforcement details live in scripts and tests
+- [x] Newly scaffolded documents require exactly one `> **Parent:** User|Orchestrator|{projex-filename}.md` header and reject a discovered repo-wide filename collision before creation
+- [x] Orchestrated creation receives explicit Parent origin; each workflow selects Parent by declared causal-role precedence, never hidden context or input order
+- [x] Every current scaffold caller and manual writer—including `sprint-projex.md`—emits one deterministic Parent; an asserted creator inventory prevents omissions
+- [x] Existing documents without Parent remain readable and act as roots for explicit descendants
+- [x] `projex-tree.{sh,ps1} <repo-root> <filename>` find the queried document's topmost currently discoverable root and print that complete deterministic component regardless of whether input names its root, intermediate node, or leaf
+- [x] Target-affecting duplicate identities, malformed/duplicate Parent headers, cycles, ambiguous targets, and dangling filename parents emit no stdout, sorted coded stderr, and the specified nonzero exit class; unrelated-component defects do not fail a valid query
+- [x] Shell and PowerShell scaffold/tree suites consume the same creator matrix and tree transcript goldens; parity is observable, not inferred from separate green summaries
+- [x] `close-projex.md` executes `projex-tree` for its plan and `conclude-projex.md` executes it for the successor/sources during context gathering; both state that the result is advisory and not guaranteed exhaustive
+- [x] `SKILL.md` gains only a compact Authoring invariant; enforcement details live in scripts and tests
 
 ### Out of Scope
 

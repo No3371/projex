@@ -117,6 +117,7 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 | Script | Does |
 | --- | --- |
 | `new-projex` | Scaffold a projex file with the correct name and header |
+| `projex-tree` | Read-only complete current-corpus Parent lineage tree; requires Python 3 |
 | `stage-n-commit` | Stage explicit paths + commit as one atomic operation |
 | `stage-by-pattern` | Regex-filtered selective staging |
 | `move-n-stage` / `del-n-stage` | Batch `git mv` / `git rm` with rollback |

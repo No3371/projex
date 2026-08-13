@@ -12,6 +12,8 @@ projex/
 ├── _fluid_.md                  # Persistent agent memory across sessions
 ├── *-projex.md                 # Workflow spec files (one per type)
 ├── stage-n-commit.{sh,ps1}     # Atomic stage+commit with rollback
+├── new-projex.{sh,ps1}       # Parent-validated projex scaffold with repo-wide identity guard
+├── projex-tree.{sh,ps1}     # Read-only current-corpus Parent lineage tree
 ├── projex-squash-close.{sh,ps1}# Squash-merge ephemeral → base, delete branch
 ├── projex-merge-close.{sh,ps1} # Merge with full history → base, delete branch
 ├── projex-abandon.{sh,ps1}     # Force-delete ephemeral branch

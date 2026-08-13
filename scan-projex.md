@@ -75,7 +75,8 @@ Search systematically. Use whatever combination of tools finds everything:
 ### 3. WRITE THE SCAN DOCUMENT
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> scan "{scan-name}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> scan "{scan-name}" {parent} <projex-folder>
 ```
 
 **Template:**

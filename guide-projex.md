@@ -85,7 +85,8 @@ Order material into progressive phases:
 ### 4. DRAFT THE GUIDE
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> guide "{guide-name}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> guide "{guide-name}" {parent} <projex-folder>
 ```
 
 Use the template structure below, adapting sections based on guide type and depth needed.

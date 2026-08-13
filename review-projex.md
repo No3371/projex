@@ -104,7 +104,8 @@ For each target record: filename, type, `> **Status:**` value, created date (fro
 Scaffold **before examining anything**:
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{target-name-or-batch-theme}" <projex-folder>
+Resolve `{parent}` from the primary reviewed subject filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{target-name-or-batch-theme}" {parent} <projex-folder>
 ```
 
 Fill in header and target roster. Verdicts stay blank — the roster is the worklist. The document is the working artifact: findings go into it as each target is processed, not into context alone. An interrupted review still carries every completed target's verdict.

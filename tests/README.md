@@ -16,8 +16,7 @@ pwsh tests/run-all.ps1
 
 Each suite creates throwaway repositories under the system temp directory, exercises the scripts
 against them, and removes them afterwards. Nothing touches the repository you run them from, and no
-network or fixtures are needed — only `git` and the relevant shell. A suite exits non-zero if any
-assertion fails; the runners aggregate and do the same.
+network is needed — only `git` and the relevant shell. The new Parent/tree suites consume shared matrices and goldens under `tests/fixtures/`; both platforms compare the same fixture corpus. A suite exits non-zero if any assertion fails; the runners aggregate and do the same.
 
 ## Coverage
 
@@ -29,6 +28,8 @@ assertion fails; the runners aggregate and do the same.
 | `dirty-base.test.sh` | 139 | The dirty-base gate: tracked staged/unstaged changes in the integration checkout refused pre-mutation, dirty submodules and unrelated untracked content still allowed, a colliding untracked path refused with the ephemeral tip unmoved, `Base` required to be a local branch, `RepoRoot` required to still have `Base` checked out, nested utility/parent-Projex origins closing into their recorded parent, safe (non-`--hard`) squash rollback |
 | `close-precheck.test.sh` | 38 | Report-only close context: explicit/inferred plans, encoded schema/snapshots, worktree and checkout modes, inventory classification/location, gates, warnings, malformed context, and non-mutation |
 | `close-precheck.test.ps1` | 14 | Independent PowerShell contract: encoded context, worktree identity, child inventory/gates, no-argument inference, and malformed-header failure |
+| `new-projex.test.sh` / `.ps1` | 46 each | Shared Parent argument/header/collision/creator inventory matrix |
+| `projex-tree.test.sh` / `.ps1` | 46 each | Shared current-corpus tree goldens, target-component failures including reachable duplicate Parent and invalid UTF-8 discovery, BOM/CRLF, and parity |
 | `resolve-conflicts.test.ps1` | 33 | PowerShell parity for the core contract (checkout mode) |
 | `worktree.test.ps1` | 39 | PowerShell parity for worktree mode |
 | `dirty-base.test.ps1` | 139 | PowerShell parity for the dirty-base gate — same matrix, mechanically parallel names |

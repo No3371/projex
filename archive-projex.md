@@ -101,7 +101,8 @@ Two constraints only: no workflow type names (that is the `Type` field), and eve
 ### 4. DRAFT THE ARCHIVE DOCUMENT
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> archive "{scope}" <projex-folder>
+Resolve `{parent}` from an explicit causal source/nav/subject; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> archive "{scope}" {parent} <projex-folder>
 ```
 
 Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).

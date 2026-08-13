@@ -58,7 +58,8 @@ Classify what's being captured:
 ### 2. WRITE THE MEMO
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> memo "{memo-name}" <projex-folder>
+Resolve `{parent}` from an explicit captured source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> memo "{memo-name}" {parent} <projex-folder>
 ```
 
 **Template:**

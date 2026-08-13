@@ -1,0 +1,7 @@
+# case	parent	result
+sentinel-user	User	success
+sentinel-orchestrator	Orchestrator	success
+filename-parent	2608051553-feature-proposal.md	success
+missing-parent		failure
+invalid-parent	bad-parent	failure
+path-parent	foo/bar.md	failure

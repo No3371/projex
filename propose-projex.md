@@ -54,7 +54,8 @@ Questions to answer:
 ### 2. DRAFT THE PROPOSAL
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> propose "{proposal-name}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> propose "{proposal-name}" {parent} <projex-folder>
 ```
 
 **Template Structure:**

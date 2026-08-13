@@ -58,6 +58,7 @@ Subagents have isolated context. Each handoff must be self-contained, carrying:
 - **Prior findings — by pointer, not paraphrase** — earlier steps' analysis lives in its artifact; hand over filename + section (e.g. `2604151200-caching-proposal.md § Option B`), don't restate in the orchestrator's voice. Anything restated inline is labeled *prior finding — re-verify*, never asserted as ground truth
 - **Depth** — this subagent's nesting depth (§ Nesting Depth): dispatcher's own depth + 1. Top orchestrator hands off `1`, a nested orchestrator `2` — never more, since it dispatches no `orchestrate` of its own.
 - **Model** — per-step override from chain notation (§ Explicit Chain Notation) if assigned, else the current chain default. Override → pass as the subagent's `model` param; state it in the handoff either way — artifacts record authorship/model, and nested sub-subagents inherit the coordinator's effective model unless overridden
+- **Parent** — immediate causal artifact filename when one exists; otherwise exact `Orchestrator`. Nested and follow-up dispatches recompute this datum from their immediate cause rather than inheriting stale ancestry.
 
 Handoff is **context, not instruction**. Don't tell the subagent *what* or *how* — it reads `SKILL.md` + its workflow file and proceeds without further direction.
 

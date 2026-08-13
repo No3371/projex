@@ -27,7 +27,8 @@ No code changes, no file edits, no implementations. Only touch the interview doc
 
 Define what the interview covers, its goal, and create the interview file:
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> interview "{topic}" <projex-folder>
+Resolve `{parent}` from an explicit causal topic/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> interview "{topic}" {parent} <projex-folder>
 ```
 
 ### 2. INTERVIEW

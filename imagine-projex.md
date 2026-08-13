@@ -117,7 +117,8 @@ Frame challenges constructively: "This creates an interesting tension between X 
 ### 6. DRAFT THE IMAGINATION DOCUMENT
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> imagine "{imagination-name}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> imagine "{imagination-name}" {parent} <projex-folder>
 ```
 
 **Template Structure:**

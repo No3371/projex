@@ -84,7 +84,8 @@ Answer by reading actual code:
 ### 4. DRAFT THE PLAN
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> plan "{plan-name}" <projex-folder>
+Resolve `{parent}` from the explicit proposal/source/nav filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> plan "{plan-name}" {parent} <projex-folder>
 ```
 
 **Template Structure:**

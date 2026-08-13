@@ -67,6 +67,7 @@ Setup always starts a **fresh** sprint. Adopting an in-flight one is the user's 
 
 1. **Resolve repo root** — `git rev-parse --show-toplevel` from the goal's context (SKILL.md § Repo Resolution). Record `{base-branch}` via `git branch --show-current` — finalization needs it.
 2. **Create the sprint nav and commit it to base.** `{yymmddhhmm}-{sprint-name}-sprint.md` in the goal's `.projex/` folder. Commit on `{base-branch}` **before** the worktree exists — same principle as plan-before-execution: base must record the sprint while it runs.
+Resolve `{sprint-parent}` from an explicit causal nav/subject; else supplied orchestrator Parent; else `User`.
 
 ```markdown
 # Sprint: [Sprint Name]
@@ -77,6 +78,7 @@ Setup always starts a **fresh** sprint. Adopting an in-flight one is the user's 
 > **Sprint Branch:** projex/sprint/{yymmddhhmm}-{sprint-name}
 > **Worktree Path:** {repo-name}/.projexwt/{yymmddhhmm}-{sprint-name}
 > **Nav:** {external nav filename — only when the goal derives from one; omit otherwise}
+> **Parent:** {sprint-parent}
 > **Started:** YYYY-MM-DD HH:MM
 
 ## Vision

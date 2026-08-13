@@ -63,7 +63,8 @@ Then extract recommended next steps and set status to `Complete (Consensus)` or 
 ## DOCUMENT TEMPLATE
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> coach "{subject}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> coach "{subject}" {parent} <projex-folder>
 ```
 
 ```markdown

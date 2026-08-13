@@ -111,7 +111,8 @@ Act directly:
 ### 3. WRITE THE PATCH DOCUMENT
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> patch "{patch-name}" <projex-folder>
+Resolve `{parent}` from the explicit patched subject filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> patch "{patch-name}" {parent} <projex-folder>
 ```
 
 The patch document IS the walkthrough. One self-contained record.

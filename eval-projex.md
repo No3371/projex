@@ -140,7 +140,8 @@ Select lenses appropriate to the evaluation. Lens count scales with tier.
 ### 4. DRAFT THE EVALUATION
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> eval "{eval-name}" <projex-folder>
+Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> eval "{eval-name}" {parent} <projex-folder>
 ```
 
 #### Document Structure

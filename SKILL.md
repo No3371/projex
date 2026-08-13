@@ -56,6 +56,7 @@ File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
 - Front-load key info for quick assessment at a glance
 - **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `2602081430-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/2602081430-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
 - **Note nav derivation** — Projex created from a nav must record `> **Nav:** {nav-filename}` near the top. This is the only signal close/patch uses to update the nav back.
+- **Parent invariant** — every newly created projex has exactly one causal `> **Parent:**` header: `User`, `Orchestrator`, or a filename matching the projex naming grammar; legacy files may omit it. `new-projex` enforces creation.
 
 ### Dehydrate
 

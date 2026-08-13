@@ -166,7 +166,8 @@ Verify the worktree is removed, branch is deleted, and the base working director
 Create the sole surviving artifact on the base branch:
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> preplan "{preplan-name}" <projex-folder>
+Resolve `{parent}` from the explicit probe subject/source filename; else supplied orchestrator Parent; else `User`.
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> preplan "{preplan-name}" {parent} <projex-folder>
 ```
 
 ```markdown

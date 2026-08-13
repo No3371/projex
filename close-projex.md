@@ -56,6 +56,7 @@ Read the `Base Branch:` field from the execution log (`{yymmddhhmm}-{plan-name}-
 If the execution log is missing or lacks the field, determine the base branch by asking the user.
 
 ### 1. GATHER EXECUTION DATA
+Before mutating any document, run the host-matched `{projex-scripts}/projex-tree.{sh|ps1} <repo-root> <plan-filename>`. Treat successful tree context as advisory and not guaranteed exhaustive; retain existing close evidence and lifecycle judgment as authoritative.
 
 Collect all information from the execution:
 
@@ -135,6 +136,7 @@ Create a new file: `{yymmddhhmm}-{plan-name}-walkthrough.md`
 > **Execution Date:** YYYY-MM-DD
 > **Completed By:** [name or agent]
 > **Source Plan:** [link to plan document]
+> **Parent:** [plan filename]
 > **Duration:** [how long execution took]
 > **Result:** Success | Partial Success | Failed
 

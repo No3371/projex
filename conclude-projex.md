@@ -40,6 +40,7 @@ The successor is any document claimed to crystallize prior work — typically a 
 - Build the source candidate list:
   - Explicit arguments, if given — this list is **literal**: examine exactly these, add none
   - Otherwise: every projex the successor references by filename, plus documents the user names when asked
+Before eligibility or residue analysis, run the host-matched `{projex-scripts}/projex-tree.{sh|ps1}` for the successor and each selected source. Treat successful tree context as advisory and not guaranteed exhaustive; use it as additional context while retaining existing source, residue, and impact judgment.
 
 ### 2. ELIGIBILITY GATES
 
@@ -91,8 +92,10 @@ Every claim ends with exactly one verdict and every Residue with exactly one dis
 
 ### 5. DRAFT THE CONCLUDE REPORT
 
+Set `{parent}` to `{successor-filename}`: the successor is the report's causal artifact; sources remain listed as sources.
+
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> conclude "{successor-scope}" <projex-folder>
+{projex-scripts}/new-projex.{sh|ps1} <repo-root> conclude "{successor-scope}" {parent} <projex-folder>
 # born-closed: the script places the file in <projex-folder>/closed/ itself
 ```
 

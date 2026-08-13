@@ -342,6 +342,7 @@ This workflow produces:
 > **Started:** [yyyymmdd hh:mm]
 > **Repo Root:** [REPO_ROOT from precheck]
 > **Plan File:** [PLAN_REL from precheck]
+> **Parent:** {plan-filename}
 > **Base Branch:** [BRANCH from precheck — e.g. main, develop, feature/auth]
 > **Worktree Path:** [{repo-name}/.projexwt/{name} — omit line if checkout mode]
 

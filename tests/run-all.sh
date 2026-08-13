@@ -9,7 +9,7 @@ TOTAL_FAIL=0
 STATUS=0
 CLOSE_PRECHECK_RUNS=0
 
-for suite in resolve-conflicts.test.sh resume.test.sh worktree.test.sh dirty-base.test.sh close-precheck.test.sh; do
+for suite in new-projex.test.sh projex-tree.test.sh resolve-conflicts.test.sh resume.test.sh worktree.test.sh dirty-base.test.sh close-precheck.test.sh; do
   echo "=== $suite"
   [ "$suite" = close-precheck.test.sh ] && CLOSE_PRECHECK_RUNS=$((CLOSE_PRECHECK_RUNS + 1))
   # git writes CRLF/LF advisories to stderr on Windows checkouts; they are noise here
