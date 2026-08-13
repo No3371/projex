@@ -27,7 +27,7 @@ Replace positional `new-projex` interfaces with strict named parameters; migrate
 
 - [ ] Shell accepts only `new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <User|Orchestrator|filename.md> [--projex-dir <projex-dir>]`.
 - [ ] PowerShell accepts only `new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <User|Orchestrator|filename.md> [-ProjexDir <projex-dir>]`.
-- [ ] Both parsers reject unknown flags, duplicate flags, absent mandatory flags, flags without values, and every positional token before any filesystem write; legacy positional forms have no fallback.
+- [ ] Both parsers reject unknown flags, duplicate flags (case-folded for PowerShell), absent mandatory flags, flags without values, and every positional token before any filesystem write; every parser-negative case exits 2 with one stable stderr usage marker and no stdout-created path; legacy positional forms have no fallback.
 - [ ] Every one of the 20 scaffold workflow directives contains named Shell and PowerShell invocations while preserving its local Parent-selection precedence.
 - [ ] Shared fixtures and both focused suites prove semantic Parent behavior, strict parser rejection/no-write behavior, caller inventory, and absence of positional invocations.
 - [ ] `README.md`, `AGENTS.md`, and `tests/README.md` describe the named API and revised focused-test coverage; full test runners still execute the focused suites.
@@ -67,7 +67,7 @@ All 20 inventory-listed workflow specs invoke the dual-platform placeholder form
 
 - Mandatory named parameters occur exactly once; `--projex-dir` / `-ProjexDir` occurs zero or one time.
 - Shell flag names are lowercase kebab case; PowerShell parameter names are advertised PascalCase and bind case-insensitively.
-- A flag consumes exactly its next non-option token. Missing value, unknown option, duplicate option, omitted mandatory option, or non-option token is a usage error (exit 2, stderr, no file/directory write).
+- A flag consumes exactly its next non-option token. Missing value, unknown option, duplicate option, omitted mandatory option, or non-option token is a usage error: exit 2, exactly one stable stderr usage marker, no stdout-created path, and no file/directory write.
 - Keep current semantic validation diagnostics and exit classes after parsing: empty values, missing repo directory, unknown type, invalid Parent, empty slug, self Parent, collision, and write failures retain their current behavior.
 - Do not reframe any workflow's Parent precedence. Direct invocation remains `User`.
 
@@ -101,8 +101,8 @@ Make parsing strict before existing normalization and creation logic; preserve t
    new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]
    ```
 2. Parse left-to-right into the existing `repo_root`/`RepoRoot`, `type`/`Type`, `title`/`Title`, `parent`/`Parent`, and optional projex-dir variables. Track presence separately so empty supplied values still reach existing semantic validation rather than masquerading as omitted flags.
-3. Reject an unrecognized option, repeated accepted option, option missing a following non-option value, a bare positional token, or a finished parse missing any mandatory option. Emit one usage diagnostic to stderr and exit 2; perform this entire phase before path normalization, root discovery, `mkdir`, or write.
-4. In PowerShell, parse raw invocation tokens rather than relying on positional `param` binding, so duplicate and stray-token behavior is explicit and testable. Accept PowerShell parameter spelling case-insensitively, normalize it to the advertised parameter, and reject all other token forms.
+3. Reject an unrecognized option, repeated accepted option, option missing a following non-option value, a bare positional token, or a finished parse missing any mandatory option. Emit exactly one stable usage marker to stderr, emit no created path to stdout, and exit 2; perform this entire phase before path normalization, root discovery, `mkdir`, or write.
+4. In PowerShell, parse raw invocation tokens rather than relying on positional `param` binding, so duplicate and stray-token behavior is explicit and testable. Accept PowerShell parameter spelling case-insensitively, normalize it to the advertised parameter before cardinality checking, and reject all other token forms.
 5. Leave type mapping, Parent grammar/self check, born-closed routing, slug/time/collision logic, emitted header, and stdout hints unchanged after parser handoff.
 
 **Rationale:** One parser per platform guarantees exactly-once semantics that shell arity checks and PowerShell parameter binding cannot prove consistently. Reusing existing variables avoids a behavioral rewrite.
@@ -157,17 +157,17 @@ Make parsing strict before existing normalization and creation logic; preserve t
 
 1. Keep the shared Parent fixture authoritative for `User`, `Orchestrator`, valid filename, missing Parent, malformed Parent, and path Parent. Extend it only where needed to distinguish explicit optional projex dir from omitted default behavior.
 2. Convert every fixture-driven and direct positive call to its named platform syntax. Assert created path/header Parent exactly once as today; add default `.projex` placement coverage when optional dir is omitted.
-3. Add paired no-write negative cases for: every missing mandatory option; every duplicated mandatory option; duplicate optional dir; each option lacking its next value; an unknown option; a stray positional token; and legacy positional forms. Assert nonzero exit (usage errors exit 2 where directly inspected) and unchanged Markdown-file count.
-4. Replace legacy line-substring/`{parent}` arity checking with a closed caller proof: inventory must remain exactly 20 scaffold and 4 manual writers; every scaffold workflow must contain its platform-specific fully named command; scanning the controlled workflow corpus must reject any `new-projex.sh`/`.ps1` invocation that is positional or lacks one required named parameter.
-5. Keep manual Parent-template assertions and use shared fixture/inventory files from both suites; do not create separate platform matrices.
-
+3. Give every parser-negative case an ID, expected exit `2`, and expected stable usage marker. Cover every missing mandatory option; every duplicated mandatory option; a case-folded PowerShell duplicate (for example `-Type` plus `-type`); duplicate optional dir; each option lacking its next non-option value (including `--title --parent User` / `-Title -Parent User`); an unknown option; a stray positional token; and legacy positional forms. Capture stdout and stderr separately; assert exit exactly `2`, exactly one expected usage marker on stderr, and no stdout-created path. Before each malformed call, snapshot the complete temporary-repository filesystem state (entries, types, and contents); assert it is unchanged afterward, retaining unchanged Markdown-file count as the document-specific check.
+4. Add a complete mixed-case PowerShell success call using case variants of every advertised parameter, including `-ProjexDir`; assert its created path and exactly-one Parent header as for nominal positives. Keep the case-folded duplicate in the parser-negative matrix.
+5. Replace legacy line-substring/`{parent}` arity checking with a closed caller proof: inventory must remain exactly 20 scaffold and 4 manual writers; every scaffold workflow must contain its platform-specific fully named command; scanning the controlled workflow corpus must reject any `new-projex.sh`/`.ps1` invocation that is positional or lacks one required named parameter.
+6. Keep manual Parent-template assertions and use shared fixture/inventory files from both suites; do not create separate platform matrices.
 **Rationale:** Behavior tests cover parser and creation boundaries; a structural caller proof prevents future docs from reintroducing obsolete syntax.
 
 **Verification:**
 
 - `bash tests/new-projex.test.sh` emits `FAIL=0`.
 - `pwsh -NoProfile -File tests/new-projex.test.ps1` emits `FAIL=0`.
-- Failed calls leave the temporary repository's Markdown count unchanged.
+- Every parser-negative call exits 2, emits exactly one expected stderr usage marker, emits no stdout-created path, and leaves the full temporary-repository filesystem state and Markdown count unchanged.
 
 **If this fails:** Repair the parser or command fixture indicated by the failing case; do not weaken inventory or no-positional assertions.
 
@@ -182,9 +182,9 @@ Make parsing strict before existing normalization and creation logic; preserve t
 **Changes:**
 
 1. Update `README.md` and `AGENTS.md` utility descriptions to state that `new-projex` is a strict named-parameter scaffold and show/link the exact Shell and PowerShell forms where inventory prose supports usage detail.
-2. Update `tests/README.md` from the current 46-case legacy Parent/arity description to the observed final test count and named-parser/no-positional coverage. Do not guess the count before running both suites.
+2. Update `tests/README.md` from the current 46-case legacy Parent/arity description to the observed final test count and named-parser/no-positional coverage, including exact parser-negative usage/no-write assertions and PowerShell case-insensitivity coverage. Do not guess the count before running both suites.
 3. Confirm `tests/run-all.sh` and `tests/run-all.ps1` already select the focused suites; leave their suite lists unchanged unless a test filename changes (not planned).
-4. Run syntax, paired focused tests, then both aggregate runners. Stage only the 29 planned paths with `stage-n-commit` in one commit; do not stage pre-existing user changes or the excluded audit artifact.
+4. Run syntax, then both focused suites and confirm every parser-negative case proves exit `2`, one stderr usage marker, no stdout-created path, and unchanged full temporary-repository state; then run both aggregate runners. Stage only the 29 planned paths with `stage-n-commit` in one commit; do not stage pre-existing user changes or the excluded audit artifact.
 
 **Rationale:** The public utility description and test inventory must match executable behavior; an explicit-path atomic commit prevents mixed old/new caller states.
 
@@ -192,7 +192,7 @@ Make parsing strict before existing normalization and creation logic; preserve t
 
 - `bash tests/run-all.sh` finishes with every suite passing.
 - `pwsh -NoProfile -File tests/run-all.ps1` finishes with every suite passing.
-- Repository search limited to controlled workflow specs finds no positional scaffold command; staged commit contains only the planned paths.
+- Focused-suite results show every parser-negative case: exit `2`, exactly one expected stderr usage marker, no stdout-created path, unchanged full temporary-repository filesystem state, and unchanged Markdown count.
 
 **If this fails:** Restore untouched inventory prose or fix the named-contract failure; never broaden staging to absorb unrelated worktree changes.
 
@@ -209,8 +209,7 @@ Make parsing strict before existing normalization and creation logic; preserve t
 
 ### Manual Verification
 
-- [ ] In a disposable directory, create one shell scaffold with all named flags and one PowerShell scaffold with mandatory flags only; inspect one Parent header each.
-- [ ] Invoke each platform once with its former positional form; observe usage failure and no created document.
+- [ ] Invoke each platform's former positional form and a missing-value token case; observe exit 2, exactly one stderr usage marker, no stdout-created path, and an unchanged complete disposable-repository filesystem snapshot.
 - [ ] Inspect the 20 workflow specs: each preserves its existing Parent-resolution sentence and shows both platform-native named commands.
 
 ### Acceptance Validation
@@ -218,7 +217,7 @@ Make parsing strict before existing normalization and creation logic; preserve t
 | Criterion | Method | Expected |
 |---|---|---|
 | Named APIs | positive calls in paired suites | one scaffold per valid command |
-| Strict parsing | paired negative matrix | exit 2/no Markdown write |
+| Strict parsing | paired negative matrix | every case: exit 2, one stderr usage marker, no stdout-created path, unchanged full filesystem state and Markdown count |
 | Complete caller cutover | inventory/no-positional guard | 20 scaffold, 4 manual; zero positional |
 | Parent semantics | shared Parent rows and header count | accepted values copied once; invalid rejected |
 | Docs/inventories | focused + aggregate runners | descriptions and suite counts match passing tests |
@@ -227,6 +226,10 @@ Make parsing strict before existing normalization and creation logic; preserve t
 
 1. Before the atomic commit, discard only edits to the 29 named paths in the execution worktree.
 2. After commit but before close, abandon the ephemeral branch/worktree through the documented close workflow; base branch and unrelated dirty files remain unchanged.
+
+## Revision Log
+
+- **2026-08-13:** Strengthened Steps 1, 3–4 and verification contracts: every parser-negative case now proves exact exit/diagnostic/stdout/no-write behavior; PowerShell adds mixed-case success including `-ProjexDir` plus case-folded duplicate rejection — trigger: `2608130514-2608130511-named-new-projex-parameter-migration-plan-stress.md` Findings 1–3.
 
 ## Notes
 
