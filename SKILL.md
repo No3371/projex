@@ -6,7 +6,7 @@ description: When these mentioned:`close-projex``eval-projex``execute-projex``do
 Projex are self-contained unit markdown documents in folders named ".projex". Types:
 
 - **Proposal** — Directional: "what if we go this way?" with trade-offs, approaches, and impact. Draft → Review → Accepted/Rejected. WORKFLOW -> @./propose-projex.md
-- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md (may delegate to sub-workflows — § Sub-Workflows)
+- **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md
 - **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
 - **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
@@ -28,25 +28,8 @@ Projex are self-contained unit markdown documents in folders named ".projex". Ty
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
 - **Conclude** — Verified supersession: given a successor that crystallizes prior work (Definition, Nav, Plan, …), checks each source projex claim-by-claim (Captured / Overruled / Residue), stamps fully-consumed sources superseded and removes them (recoverable via git history; the report keeps filename + verdicts), and rewrites the successor's prior-artifact references into a do-not-consult ledger. Sources may be active or closed. Residue blocks retirement — no silent drops. Unlike Archive (mechanical compression), Conclude is judgment. Born closed. WORKFLOW -> @./conclude-projex.md
 - **Archive** — Compresses all files in `.projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
-- **Orchestration** — Agent-driven lifecycle: an orchestrating agent acts as the projex user, manages subagents through full workflow (Plan → Execute → Close or selected path) on behalf of a human. No standalone projex document — sub-workflows produce their own artifacts. Nestable one level: an orchestrator may hand a sub-chain to a nested orchestrator, which does not nest again. WORKFLOW -> @./orchestrate-projex.md
+- **Orchestration** — Agent-driven lifecycle: an orchestrating agent acts as the projex user, manages subagents through full workflow (Plan → Execute → Close or selected path) on behalf of a human. No standalone projex document — delegated workflow specs produce their own artifacts. Nestable one level: an orchestrator may hand a sub-chain to a nested orchestrator, which does not nest again. WORKFLOW -> @./orchestrate-projex.md
 
-## Sub-Workflows
-
-Not projex types — return-only worker contracts a parent workflow spawns mid-flight ("mini-projex"). Currently both parented by execute-projex; each spec names its parent.
-
-- `@./do-projex.md` — objective-scoped execution: delegates the **doing**. Mutates and commits on the parent's branch/log
-- `@./verify-projex.md` — independent pre-commit check of one executed step: delegates the **checking**. Strictly read-only
-
-A workflow is a sub-workflow iff all six hold:
-
-1. **Caller-only invocation** — never dispatched by a human or orchestrator
-2. **Keyed arguments** — all context caller-supplied (`plan=`, `repo=`, `branch=`, …)
-3. **Caller-guarantees preconditions** — never re-validated; look wrong → stop and report to the caller, don't fix
-4. **Return contract, no document** — results go back to the parent, who folds them into its log; nothing lands in `.projex/`
-5. **Ceremony-stripped** — branch creation, plan status, completion gates all stay with the parent
-6. **Never nests** — no spawning, regardless of remaining depth budget; the parent embeds a verbatim no-nesting clause in every spawn prompt (see the parent's spec)
-
-Consequence of rule 6, stated so it reads as design rather than accident: `Verify-Projex: Required` steps get independent verification only in self-execute mode. A delegated objective's do-projex agent self-verifies — it cannot spawn a verifier — accepted because it starts with fresh, undrifted context, which is the assumption build-up verify-projex exists to catch.
 
 ## Authoring
 
@@ -76,6 +59,7 @@ All projex output uses the densest form that fully preserves semantic and techni
 - **Inline lists** — for items under ~5 words each, use `|` separators instead of bullet lists
   - `"Affected: auth module | session store | token validator"`
 - **No transitions** — omit "Moving on to..." / "Now that we've covered X..."
+- **Artifact, not transcript** — delete self-talk, template residue, and repeated claims.
 - **Compressed headers** — strip filler from section titles
   - `"## Analysis of the Current Authentication State"` → `"## Auth Current State"`
 - **Abbreviate when unambiguous** — impl, config, auth, repo, fn, param, dep, req, res, spec, DB (define on first use if non-standard)
@@ -95,21 +79,6 @@ All projex output uses the densest form that fully preserves semantic and techni
 
 Resume dehydration once the clarity-critical section ends.
 
-**Relationship to De-slop:** Dehydrate governs how content is written. De-slop catches filler that slipped through anyway. Both apply — Dehydrate is the standing register, De-slop is the safety net.
-
-### De-slop (optional final pass)
-
-Before finalizing any generated projex document, re-read it as a reader — not as the agent that wrote it — and strip:
-
-- **Agent self-talk** — "I'll now...", "Let me analyze...", "As I mentioned...", "This step will..."
-- **Throat-clearing** — "Note that...", "It's worth mentioning...", "It's important to..."
-- **Redundant restatements** — content that repeats what the previous sentence or section already said
-- **Hollow hedging** — "may potentially", "could possibly", "in some cases might"
-- **Unfilled template artifacts** — leftover placeholder text, example labels, or structural scaffolding that wasn't replaced with real content
-
-The document is an artifact for humans and future agents to act on — not a transcript of the writing process. If a sentence adds no information a reader couldn't infer, cut it.
-
-This pass is **optional**: apply it when the draft reads like it was narrated rather than written, or when sections are padded. Skip it when the draft is already tight.
 
 ## Organizing
 
