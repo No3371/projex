@@ -59,7 +59,10 @@ Classify what's being captured:
 
 ```bash
 Resolve `{parent}` from an explicit captured source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> memo "{memo-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type memo --title "{memo-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type memo -Title "{memo-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Template:**

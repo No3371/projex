@@ -141,7 +141,10 @@ Select lenses appropriate to the evaluation. Lens count scales with tier.
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> eval "{eval-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type eval --title "{eval-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type eval -Title "{eval-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 #### Document Structure

@@ -72,7 +72,10 @@ Scaffold the file **before investigating anything**:
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> explore "{exploration-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type explore --title "{exploration-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type explore -Title "{exploration-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 Fill in what you know so far — the header, guiding questions, scope, context — then identify **investigation targets**: the specific areas, components, files, or concepts you intend to dive into. Each target becomes a section under Investigation with a brief rationale for why it matters. The rest of the document (findings, patterns, answers) stays empty — it gets filled during the dives.

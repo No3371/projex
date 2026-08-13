@@ -86,7 +86,10 @@ Order material into progressive phases:
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> guide "{guide-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type guide --title "{guide-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type guide -Title "{guide-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 Use the template structure below, adapting sections based on guide type and depth needed.

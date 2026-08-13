@@ -55,7 +55,10 @@ Questions to answer:
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> propose "{proposal-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type propose --title "{proposal-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type propose -Title "{proposal-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Template Structure:**

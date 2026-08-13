@@ -95,8 +95,11 @@ Every claim ends with exactly one verdict and every Residue with exactly one dis
 Set `{parent}` to `{successor-filename}`: the successor is the report's causal artifact; sources remain listed as sources.
 
 ```bash
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> conclude "{successor-scope}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type conclude --title "{successor-scope}" --parent {parent} --projex-dir <projex-folder>
 # born-closed: the script places the file in <projex-folder>/closed/ itself
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type conclude -Title "{successor-scope}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Template:**

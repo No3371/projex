@@ -77,7 +77,10 @@ Navigation documents represent shared understanding between agent and user. Befo
 
 ```bash
 Resolve `{parent}` from an explicit source/nav filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> navigate "{roadmap-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type navigate --title "{roadmap-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type navigate -Title "{roadmap-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 - Project-level → root `.projex/`

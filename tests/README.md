@@ -28,7 +28,7 @@ network is needed — only `git` and the relevant shell. The new Parent/tree sui
 | `dirty-base.test.sh` | 139 | The dirty-base gate: tracked staged/unstaged changes in the integration checkout refused pre-mutation, dirty submodules and unrelated untracked content still allowed, a colliding untracked path refused with the ephemeral tip unmoved, `Base` required to be a local branch, `RepoRoot` required to still have `Base` checked out, nested utility/parent-Projex origins closing into their recorded parent, safe (non-`--hard`) squash rollback |
 | `close-precheck.test.sh` | 38 | Report-only close context: explicit/inferred plans, encoded schema/snapshots, worktree and checkout modes, inventory classification/location, gates, warnings, malformed context, and non-mutation |
 | `close-precheck.test.ps1` | 14 | Independent PowerShell contract: encoded context, worktree identity, child inventory/gates, no-argument inference, and malformed-header failure |
-| `new-projex.test.sh` / `.ps1` | 46 each | Shared Parent argument/header/collision/creator inventory matrix |
+| `new-projex.test.sh` / `.ps1` | 178 / 181 | Shared Parent/header/collision matrix, strict named parser rejection (exit 2, one usage marker, no stdout path, full filesystem no-write snapshot), mixed-case PowerShell parameters, and closed 20-scaffold/4-manual caller inventory |
 | `projex-tree.test.sh` / `.ps1` | 46 each | Shared current-corpus tree goldens, target-component failures including reachable duplicate Parent and invalid UTF-8 discovery, BOM/CRLF, and parity |
 | `resolve-conflicts.test.ps1` | 33 | PowerShell parity for the core contract (checkout mode) |
 | `worktree.test.ps1` | 39 | PowerShell parity for worktree mode |

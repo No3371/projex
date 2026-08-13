@@ -85,7 +85,10 @@ Answer by reading actual code:
 
 ```bash
 Resolve `{parent}` from the explicit proposal/source/nav filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> plan "{plan-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type plan --title "{plan-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type plan -Title "{plan-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Template Structure:**

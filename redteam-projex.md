@@ -128,7 +128,10 @@ For each role: "Should X" → "What if we don't X from this role's view?"
 
 ```bash
 Resolve `{parent}` from the primary attacked subject filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> redteam "{subject}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type redteam --title "{subject}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type redteam -Title "{subject}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Scaffold the file at the start of wave 1, not after wave 3.** The report is the working artifact: append each wave's roles, attack surface, and findings as that wave closes. The next wave is derived from what is *written down*, not from memory — a wave whose findings never reached the document cannot spawn the wave after it.

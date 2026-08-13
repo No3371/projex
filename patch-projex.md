@@ -112,7 +112,10 @@ Act directly:
 
 ```bash
 Resolve `{parent}` from the explicit patched subject filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> patch "{patch-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type patch --title "{patch-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type patch -Title "{patch-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 The patch document IS the walkthrough. One self-contained record.

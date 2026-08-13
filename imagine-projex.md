@@ -118,9 +118,11 @@ Frame challenges constructively: "This creates an interesting tension between X 
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/nav/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> imagine "{imagination-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type imagine --title "{imagination-name}" --parent {parent} --projex-dir <projex-folder>
 ```
-
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type imagine -Title "{imagination-name}" -Parent {parent} -ProjexDir <projex-folder>
+```
 **Template Structure:**
 
 ```markdown

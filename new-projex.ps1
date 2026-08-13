@@ -1,17 +1,8 @@
 # new-projex.ps1 — Scaffold a new projex file with minimal common header
-# Usage: new-projex.ps1 <repo-root> <type> <title> <parent> [<projex-dir>]
+# Usage: new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]
 #   <parent>: User|Orchestrator|{yymmddhhmm}-{name}-{type}.md
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
-
-[CmdletBinding()]
-param(
-    [Parameter(Mandatory, Position = 0)][string]$RepoRoot,
-    [Parameter(Mandatory, Position = 1)][string]$Type,
-    [Parameter(Mandatory, Position = 2)][string]$Title,
-    [Parameter(Mandatory, Position = 3)][string]$Parent,
-    [Parameter(Position = 4)][string]$ProjexDir = ".projex"
-)
 
 $ErrorActionPreference = 'Stop'
 
@@ -19,6 +10,52 @@ function Fail([string]$Message, [int]$Code = 2) {
     [Console]::Error.WriteLine($Message)
     exit $Code
 }
+
+function Usage {
+    [Console]::Error.WriteLine('Usage: new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]')
+    exit 2
+}
+
+$RepoRoot = $null
+$Type = $null
+$Title = $null
+$Parent = $null
+$ProjexDir = '.projex'
+$RepoRootSet = $false
+$TypeSet = $false
+$TitleSet = $false
+$ParentSet = $false
+$ProjexDirSet = $false
+
+for ($i = 0; $i -lt $args.Count; $i++) {
+    $Token = [string]$args[$i]
+    switch ($Token.ToLowerInvariant()) {
+        '-reporoot' { $Name = 'RepoRoot' }
+        '-type' { $Name = 'Type' }
+        '-title' { $Name = 'Title' }
+        '-parent' { $Name = 'Parent' }
+        '-projexdir' { $Name = 'ProjexDir' }
+        default { Usage }
+    }
+    switch ($Name) {
+        'RepoRoot' { if ($RepoRootSet) { Usage } }
+        'Type' { if ($TypeSet) { Usage } }
+        'Title' { if ($TitleSet) { Usage } }
+        'Parent' { if ($ParentSet) { Usage } }
+        'ProjexDir' { if ($ProjexDirSet) { Usage } }
+    }
+    if (($i + 1) -ge $args.Count -or ([string]$args[$i + 1]).StartsWith('-')) { Usage }
+    $Value = [string]$args[++$i]
+    switch ($Name) {
+        'RepoRoot' { $RepoRoot = $Value; $RepoRootSet = $true }
+        'Type' { $Type = $Value; $TypeSet = $true }
+        'Title' { $Title = $Value; $TitleSet = $true }
+        'Parent' { $Parent = $Value; $ParentSet = $true }
+        'ProjexDir' { $ProjexDir = $Value; $ProjexDirSet = $true }
+    }
+}
+
+if (-not ($RepoRootSet -and $TypeSet -and $TitleSet -and $ParentSet)) { Usage }
 
 $Sep = [IO.Path]::DirectorySeparatorChar
 $RepoRoot = ($RepoRoot -replace '/', $Sep).TrimEnd($Sep)

@@ -116,7 +116,7 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 
 | Script | Does |
 | --- | --- |
-| `new-projex` | Scaffold a projex file with the correct name and header |
+| `new-projex` | Strict named-parameter scaffold with repo-root, type, title, Parent, and optional projex directory |
 | `projex-tree` | Read-only complete current-corpus Parent lineage tree; requires Python 3 |
 | `stage-n-commit` | Stage explicit paths + commit as one atomic operation |
 | `stage-by-pattern` | Regex-filtered selective staging |
@@ -126,6 +126,8 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 | `projex-worktree` | Isolated worktree under `{repo}/.projexwt/` |
 | `projex-squash-close` / `projex-merge-close` / `projex-rebase-close` | Finalize an ephemeral branch, three flavors |
 | `projex-abandon` | Force-delete an ephemeral branch |
+
+`new-projex.sh` accepts `--repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]`; `new-projex.ps1` accepts `-RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]`. Positional operands, unknown flags, and duplicates are rejected before any write.
 
 ## Setup
 

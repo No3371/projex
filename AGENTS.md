@@ -12,8 +12,8 @@ projex/
 ├── _fluid_.md                  # Persistent agent memory across sessions
 ├── *-projex.md                 # Workflow spec files (one per type)
 ├── stage-n-commit.{sh,ps1}     # Atomic stage+commit with rollback
-├── new-projex.{sh,ps1}       # Parent-validated projex scaffold with repo-wide identity guard
-├── projex-tree.{sh,ps1}     # Read-only current-corpus Parent lineage tree
+├── new-projex.{sh,ps1}         # Strict named-parameter scaffold with repo-wide identity guard
+├── projex-tree.{sh,ps1}        # Read-only current-corpus Parent lineage tree
 ├── projex-squash-close.{sh,ps1}# Squash-merge ephemeral → base, delete branch
 ├── projex-merge-close.{sh,ps1} # Merge with full history → base, delete branch
 ├── projex-abandon.{sh,ps1}     # Force-delete ephemeral branch
@@ -28,6 +28,7 @@ projex/
 ```
 
 Every script has both `.sh` and `.ps1` variants (except `read_file.ps1` which is PowerShell-only).
+`new-projex.sh` uses `--repo-root --type --title --parent [--projex-dir]`; `new-projex.ps1` uses `-RepoRoot -Type -Title -Parent [-ProjexDir]`. Both reject positional operands, unknown flags, and duplicates before writing.
 
 The close scripts rewrite history and delete branches, so they are covered by tests: `tests/run-all.sh`
 and `pwsh tests/run-all.ps1` (466 assertions, throwaway repos in temp, no fixtures). Run both after

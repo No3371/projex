@@ -105,7 +105,10 @@ Scaffold **before examining anything**:
 
 ```bash
 Resolve `{parent}` from the primary reviewed subject filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> review "{target-name-or-batch-theme}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type review --title "{target-name-or-batch-theme}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type review -Title "{target-name-or-batch-theme}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 Fill in header and target roster. Verdicts stay blank — the roster is the worklist. The document is the working artifact: findings go into it as each target is processed, not into context alone. An interrupted review still carries every completed target's verdict.

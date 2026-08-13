@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # new-projex.sh — Scaffold a new projex file with minimal common header
-# Usage: new-projex.sh <repo-root> <type> <title> <parent> [<projex-dir>]
+# Usage: new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]
 #   <type>: propose|plan|eval|review|redteam|stress|audit|interview|coach|log|memo|
 #           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|conclude|archive
 #   <parent>: User|Orchestrator|{yymmddhhmm}-{name}-{type}.md
@@ -9,16 +9,65 @@
 set -euo pipefail
 
 usage() {
-    echo "Usage: new-projex.sh <repo-root> <type> <title> <parent> [<projex-dir>]" >&2
+    echo "Usage: new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]" >&2
     exit 2
 }
 
-[ "$#" -ge 4 ] && [ "$#" -le 5 ] || usage
-repo_root=$1
-type=$2
-title=$3
-parent=$4
-projex_dir=${5:-.projex}
+repo_root=""
+type=""
+title=""
+parent=""
+projex_dir=".projex"
+repo_root_set=false
+type_set=false
+title_set=false
+parent_set=false
+projex_dir_set=false
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --repo-root)
+            $repo_root_set && usage
+            [ "$#" -ge 2 ] && [[ "$2" != -* ]] || usage
+            repo_root=$2
+            repo_root_set=true
+            shift 2
+            ;;
+        --type)
+            $type_set && usage
+            [ "$#" -ge 2 ] && [[ "$2" != -* ]] || usage
+            type=$2
+            type_set=true
+            shift 2
+            ;;
+        --title)
+            $title_set && usage
+            [ "$#" -ge 2 ] && [[ "$2" != -* ]] || usage
+            title=$2
+            title_set=true
+            shift 2
+            ;;
+        --parent)
+            $parent_set && usage
+            [ "$#" -ge 2 ] && [[ "$2" != -* ]] || usage
+            parent=$2
+            parent_set=true
+            shift 2
+            ;;
+        --projex-dir)
+            $projex_dir_set && usage
+            [ "$#" -ge 2 ] && [[ "$2" != -* ]] || usage
+            projex_dir=$2
+            projex_dir_set=true
+            shift 2
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+
+$repo_root_set && $type_set && $title_set && $parent_set || usage
 
 # Normalize separators agents may mix (/, \\) — collapse to /, strip edge slashes.
 repo_root=$(printf '%s' "$repo_root" | tr '\\' '/' | sed -E 's|/+$||')

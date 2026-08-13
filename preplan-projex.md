@@ -167,7 +167,10 @@ Create the sole surviving artifact on the base branch:
 
 ```bash
 Resolve `{parent}` from the explicit probe subject/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> preplan "{preplan-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type preplan --title "{preplan-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type preplan -Title "{preplan-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 ```markdown

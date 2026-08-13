@@ -117,10 +117,12 @@ Downstream effects, future work enabled/blocked, technical debt, risks introduce
 Actual user value? Could be better/simpler? Missed opportunities? What makes it excellent?
 
 ### 7. DRAFT AUDIT REPORT
-
 ```bash
 Resolve `{parent}` from the explicit audited subject filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> audit "{subject}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type audit --title "{subject}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type audit -Title "{subject}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 ```markdown

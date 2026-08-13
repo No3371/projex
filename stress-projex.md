@@ -46,7 +46,10 @@ Triage is a claim about the subject, not a budget decision — "Scale skipped: s
 
 ```bash
 Resolve `{parent}` from the primary attacked subject filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> stress "{subject}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type stress --title "{subject}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type stress -Title "{subject}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Scaffold the file before attacking.** The report is the working artifact: record the triage table first, then append findings as each angle closes. The implication pass (step 4) is derived from what is *written down*, not from memory.

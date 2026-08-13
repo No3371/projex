@@ -76,7 +76,10 @@ Search systematically. Use whatever combination of tools finds everything:
 
 ```bash
 Resolve `{parent}` from an explicit causal subject/source filename; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> scan "{scan-name}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type scan --title "{scan-name}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type scan -Title "{scan-name}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 **Template:**

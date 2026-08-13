@@ -102,7 +102,10 @@ Two constraints only: no workflow type names (that is the `Type` field), and eve
 
 ```bash
 Resolve `{parent}` from an explicit causal source/nav/subject; else supplied orchestrator Parent; else `User`.
-{projex-scripts}/new-projex.{sh|ps1} <repo-root> archive "{scope}" {parent} <projex-folder>
+{projex-scripts}/new-projex.sh --repo-root <repo-root> --type archive --title "{scope}" --parent {parent} --projex-dir <projex-folder>
+```
+```powershell
+{projex-scripts}\new-projex.ps1 -RepoRoot <repo-root> -Type archive -Title "{scope}" -Parent {parent} -ProjexDir <projex-folder>
 ```
 
 Use today's date for `{yymmddhhmm}`. Use the folder's scope name for `{scope}` (e.g. `projex-closed` for root `.projex/closed/`).

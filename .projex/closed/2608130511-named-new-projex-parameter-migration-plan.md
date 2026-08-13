@@ -1,11 +1,14 @@
 # Named-parameter `new-projex` API migration
 
-> **Status:** In Progress
+> **Status:** Complete (Scoped Success; Aggregate Baseline Failures)
 > **Author:** Agent
 > **Source:** Direct request
 > **Parent:** User
 > **Related Projex:** 2608130419-parent-lineage-and-projex-tree-addition-walkthrough.md
 > **Worktree:** Yes
+> **Log:** 2608130511-named-new-projex-parameter-migration-plan-log.md
+> **Completed:** 2026-08-13
+> **Walkthrough:** 2608130511-named-new-projex-parameter-migration-plan-walkthrough.md
 
 ---
 
@@ -23,14 +26,12 @@ Replace positional `new-projex` interfaces with strict named parameters; migrate
 
 `new-projex.sh` and `new-projex.ps1` bind ordered operands, so the five creation fields rely on position. All 20 scaffold workflows teach that obsolete transport. Existing suites prove Parent placement and an extra operand but not strict named-parameter parsing; their workflow guard merely looks for `{parent}` in legacy-shaped command lines.
 
-### Success Criteria
-
-- [ ] Shell accepts only `new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <User|Orchestrator|filename.md> [--projex-dir <projex-dir>]`.
-- [ ] PowerShell accepts only `new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <User|Orchestrator|filename.md> [-ProjexDir <projex-dir>]`.
-- [ ] Both parsers reject unknown flags, duplicate flags (case-folded for PowerShell), absent mandatory flags, flags without values, and every positional token before any filesystem write; every parser-negative case exits 2 with one stable stderr usage marker and no stdout-created path; legacy positional forms have no fallback.
-- [ ] Every one of the 20 scaffold workflow directives contains named Shell and PowerShell invocations while preserving its local Parent-selection precedence.
-- [ ] Shared fixtures and both focused suites prove semantic Parent behavior, strict parser rejection/no-write behavior, caller inventory, and absence of positional invocations.
-- [ ] `README.md`, `AGENTS.md`, and `tests/README.md` describe the named API and revised focused-test coverage; full test runners still execute the focused suites.
+- [x] Shell accepts only `new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <User|Orchestrator|filename.md> [--projex-dir <projex-dir>]`.
+- [x] PowerShell accepts only `new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <User|Orchestrator|filename.md> [-ProjexDir <projex-dir>]`.
+- [x] Both parsers reject unknown flags, duplicate flags (case-folded for PowerShell), absent mandatory flags, flags without values, and every positional token before any filesystem write; every parser-negative case exits 2 with one stable stderr usage marker and no stdout-created path; legacy positional forms have no fallback.
+- [x] Every one of the 20 scaffold workflow directives contains named Shell and PowerShell invocations while preserving its local Parent-selection precedence.
+- [x] Shared fixtures and both focused suites prove semantic Parent behavior, strict parser rejection/no-write behavior, caller inventory, and absence of positional invocations.
+- [x] `README.md`, `AGENTS.md`, and `tests/README.md` describe the named API and revised focused-test coverage; full test runners still execute the focused suites.
 
 ### Out of Scope
 
