@@ -118,6 +118,8 @@ Resolve `{sprint-parent}` from an explicit causal nav/subject; else supplied orc
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/sprint/{yymmddhhmm}-{sprint-name}
 ```
 
+Record `{repo-name}/.projexwt/{yymmddhhmm}-{sprint-name}` as `<work-root>` in the sprint nav; `<repo-root>` stays the base checkout (SKILL.md § Worktree Mode → *Two paths, two names*). Dispatched sub-workflows receive `<work-root>` as their repo argument — a sub-workflow handed `<repo-root>` would commit the sprint's work to base.
+
 All iteration work — plans, patches, audit documents, sprint nav revisions — commits to the sprint branch inside the worktree. Patch-projex's "commit to current branch" behavior lands on the sprint branch by construction.
 
 **Auxiliary-artifact commits inside the sprint:** the worktree must be clean at close, so auxiliary artifacts (audit docs, sprint nav revisions) are committed to the sprint branch as part of each iteration. This is sanctioned here — the human reviews the whole sprint at close, and nothing reaches base before that.

@@ -48,7 +48,7 @@ Sub-workflows (`do-projex`, `verify-projex` — `SKILL.md § Sub-Workflows`) are
 
 Subagents have isolated context. Each handoff must be self-contained, carrying:
 
-- **Target repo** — absolute path (subagent resolves git root from there)
+- **Target repo** — absolute path (subagent resolves git root from there). If the orchestration runs inside a worktree, this is `<work-root>`, the worktree path — handing over the base checkout puts the subagent's commits on base
 - **Original human prompt** — verbatim, unfiltered
 - **Subagent Responsibility** — role, objectives, expected deliveries, etc.
 - **Which workflow to invoke** — e.g. `/plan-projex.md`, `/execute-projex.md`

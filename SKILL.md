@@ -339,7 +339,7 @@ For operations not covered by the scripts above (read-only queries, `git checkou
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
-- **Always `git -C <root>`** — every raw git command names its target repository explicitly: `git -C <repo-root-or-worktree-path> <subcommand>`. Ambient cwd is never the target; it drifts between calls, differs across subagents, and silently points at the main checkout while execution belongs in a worktree. Resolve the root once (`git rev-parse --show-toplevel`, or the worktree path from `projex-worktree`) and pass it to every call thereafter. In worktree mode the root is the **worktree path**, not the main directory. Only `git clone` and `git init` are exempt — no repository exists yet. This governs commands you **run**; command strings quoted inside a projex document stay bare, since `<repo-root>` is an absolute path and § AVOID ABSOLUTE PATHS applies to document content.
+- **Always `git -C <root>`** — every raw git command names its target repository explicitly: `git -C <repo-root-or-worktree-path> <subcommand>`. Ambient cwd is never the target; it drifts between calls, differs across subagents, and silently points at the main checkout while execution belongs in a worktree. Resolve it once, then pass it to every call thereafter. **Which path** is decided by § Worktree Mode → *Two paths, two names*: `<work-root>` for anything touching this execution's files or commits, `<repo-root>` for branch and worktree lifecycle. In checkout mode they are the same string; in worktree mode they are not, and picking wrong is silent. Only `git clone` and `git init` are exempt — no repository exists yet. This governs commands you **run**; command strings quoted inside a projex document stay bare, since `<repo-root>` is an absolute path and § AVOID ABSOLUTE PATHS applies to document content.
 - **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine, but add and commit must never share a call.
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing
@@ -353,9 +353,24 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 
 **Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Preplans require worktree mode.
 
-- `projex-worktree` creates the worktree in `.projexwt/` inside the repo
-- All execution happens in the worktree directory (`{repo-name}/.projexwt/<name>/`)
-- `stage-n-commit` works unchanged (`-C` accepts worktree paths)
+**Two paths, two names.** Worktree mode splits what checkout mode conflates. Every spec and every `git -C` argument names one of these explicitly — never "the repo":
+
+| Name | What it is | Exists |
+|---|---|---|
+| `<repo-root>` | The checkout holding **base** — the main working directory (or another registered worktree already on base) | Always |
+| `<work-root>` | Where this execution's edits and commits land | Always — **equals `<repo-root>` in checkout mode**, the worktree path in worktree mode |
+
+Route by what the command touches, not by which is handier:
+
+- **`<work-root>`** — file edits, `stage-n-commit`, `git -C <work-root> diff|status|log|add|commit`. Everything producing the execution's changes.
+- **`<repo-root>`** — branch and worktree lifecycle: `projex-worktree`, the close/abandon scripts' first argument, `git -C <repo-root> worktree list|prune`. The close scripts **assert** this argument is on base, so passing the worktree path there fails rather than corrupting anything.
+
+In checkout mode the two are the same string and the distinction costs nothing. In worktree mode it is the difference between committing to the ephemeral branch and committing to base.
+
+Two supporting conventions: `close-projex` calls this same path `<worktree-path>` once execution is over, because there it is an object to inspect and delete rather than a place to work. And prefer **ref-to-ref** queries (`{base}..projex/{name}`) over anything resolving `HEAD` — a ref pair answers identically from either checkout, so it cannot be aimed at the wrong working tree.
+
+- `projex-worktree` creates the worktree in `.projexwt/` inside the repo and reports its path — record it as `<work-root>`
+- `stage-n-commit` works unchanged (its repo argument accepts worktree paths — pass `<work-root>`)
 - Finalization scripts receive `--worktree` flag to remove the worktree instead of checking out base
 - No stashing needed — the base branch working directory is never touched
 - **Bootstrap contract:** a fresh worktree shares `.git` but starts with only git-tracked files — gitignored artifacts (`node_modules`, `.env`, `venv/`, build output) are absent by design. Their absence is **expected, not a blocked precondition**: bootstrap them (run the project's install/build command) before execution rather than treating missing deps as a stop condition. What gets installed here is exactly what the Cleanup contract removes before close.

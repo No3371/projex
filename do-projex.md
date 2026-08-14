@@ -26,7 +26,7 @@ description: Objective-scoped execution within an active plan execution. Ceremon
 ## INVOCATION
 
 ```
-/do-projex.md plan=<plan-file> objective=<id-or-title> log=<log-file> repo=<repo-root> branch=<ephemeral-branch>
+/do-projex.md plan=<plan-file> objective=<id-or-title> log=<log-file> work=<work-root> branch=<ephemeral-branch>
 ```
 
 All five fields required — caller (the execute-projex coordinator) supplies them.
@@ -34,8 +34,10 @@ All five fields required — caller (the execute-projex coordinator) supplies th
 - `plan` — plan filename (e.g. `2607311430-database-service-refactor-plan.md`)
 - `objective` — exact objective identifier from the plan (step number, milestone heading, or objective title)
 - `log` — execution log filename to append to
-- `repo` — repo root absolute path (used for all script + git calls)
-- `branch` — ephemeral branch (already checked out, or worktree path equivalent)
+- `work` — absolute `<work-root>`: the checkout this objective's edits and commits land in. In worktree mode this is the **worktree path**, not the main directory (SKILL.md § Worktree Mode → *Two paths, two names*). Used for every script call and every `git -C`
+- `branch` — ephemeral branch, already checked out at `work`
+
+do-projex never performs branch or worktree lifecycle operations, so it is not given `<repo-root>` and must not go looking for one. Never derive a path from your CWD — a sub-subagent's CWD is unrelated to `work`.
 
 Caller must have already created branch, log file, and committed the plan's `In Progress` status.
 
@@ -45,7 +47,7 @@ Caller must have already created branch, log file, and committed the plan's `In 
 
 Do not re-validate. If any look wrong, **stop and report back to the caller**; do not "fix" them yourself.
 
-- [ ] Repo at `repo-root`, working on `branch` (checkout or worktree)
+- [ ] `work` is a valid checkout with `branch` already checked out (main directory in checkout mode, worktree in worktree mode)
 - [ ] Plan committed on base branch
 - [ ] Execution log file exists with header populated
 - [ ] Caller serializes do-projex sub-subagents — no concurrent writers on this log/branch
@@ -76,7 +78,7 @@ For each sub-step inside the objective:
 - Comments written into source obey § SOURCE HYGIENE below — a deliberate second copy of `SKILL.md § Source Hygiene`, kept here so the rules survive any context loss on the sub-subagent boundary
 
 #### C. LOG, VERIFY, COMMIT
-- Evidence: `git -C {repo} diff`, command output, test result, file re-read — not memory
+- Evidence: `git -C <work-root> diff`, command output, test result, file re-read — not memory
 - Confirm sub-step intent achieved; check side effects within the objective's scope
 - **Append a log entry** under the log's existing `## Steps` section:
 
@@ -90,7 +92,7 @@ For each sub-step inside the objective:
 - **Atomic commit** — sub-step file changes + log entry, one call:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(do): obj {id} step {n} - [brief]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed.ext .projex/{log-filename}
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(do): obj {id} step {n} - [brief]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed.ext .projex/{log-filename}
 ```
 
 Investigative sub-steps commit the log entry alone. Log-only commits drop the trailer.
@@ -111,7 +113,7 @@ When all sub-steps for this objective are done:
 2. Commit it:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex(do): obj {id} complete" .projex/{log-filename}
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(do): obj {id} complete" .projex/{log-filename}
 ```
 
 3. **Stop.** Do not advance to adjacent objectives. Do not update plan status. Do not run plan-wide verification or cleanup. Return control to the caller.

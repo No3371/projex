@@ -131,7 +131,7 @@ Without reading code yet, list 3–7 plausible causes ordered by likelihood from
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/debug/{yymmddhhmm}-{debug-name}
 ```
 
-Record `<worktree-root>` as `{repo-name}/.projexwt/{yymmddhhmm}-{debug-name}/` (inside the repo). All subsequent script calls use `<worktree-root>` as the working repo for `stage-n-commit` and other utilities.
+Record `<work-root>` as `{repo-name}/.projexwt/{yymmddhhmm}-{debug-name}/` (inside the repo). All subsequent script calls use `<work-root>` as the working repo for `stage-n-commit` and other utilities.
 
 #### B. Create the debug log file
 
@@ -176,7 +176,7 @@ ERROR/EVIDENCE: ...
 Commit the initial log:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): init - {debug-name}" .projex/{yymmddhhmm}-{debug-name}-debug-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(debug): init - {debug-name}" .projex/{yymmddhhmm}-{debug-name}-debug-log.md
 ```
 
 ### 2. BUILD TASK LIST
@@ -211,7 +211,7 @@ The verify-signal MUST fail as described. Capture the exact failure output verba
 If a new repro test was written:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): add failing repro test - {debug-name}" path/to/repro.test.ext .projex/{yymmddhhmm}-{debug-name}-debug-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(debug): add failing repro test - {debug-name}" path/to/repro.test.ext .projex/{yymmddhhmm}-{debug-name}-debug-log.md
 ```
 
 Otherwise commit the log update alone.
@@ -256,8 +256,8 @@ Make the smallest change that should eliminate the cause.
 
 **Per-attempt rollback within the worktree:**
 ```bash
-git -C <worktree-root> reset --hard HEAD~1     # Drop last attempt commit
-git -C <worktree-root> checkout -- path/file   # Drop unstaged changes for one file
+git -C <work-root> reset --hard HEAD~1     # Drop last attempt commit
+git -C <work-root> checkout -- path/file   # Drop unstaged changes for one file
 ```
 
 #### E. LOG, COMMIT
@@ -283,13 +283,13 @@ Append to `## Attempts` in the debug log:
 Commit the attempt and its log entry **atomically**:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): attempt N - {hypothesis short name}" path/to/changed-file.ext .projex/{yymmddhhmm}-{debug-name}-debug-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(debug): attempt N - {hypothesis short name}" path/to/changed-file.ext .projex/{yymmddhhmm}-{debug-name}-debug-log.md
 ```
 
 For reverted attempts, commit the log entry alone after the revert so the failed attempt is preserved as evidence:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): attempt N reverted - {hypothesis short name}" .projex/{yymmddhhmm}-{debug-name}-debug-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(debug): attempt N reverted - {hypothesis short name}" .projex/{yymmddhhmm}-{debug-name}-debug-log.md
 ```
 
 Mark the hypothesis's task complete only after this commit lands.
@@ -337,7 +337,7 @@ If any adjacent case fails, treat it as a new hypothesis and return to ITERATE s
 Remove debug logging, temporary asserts, scratch files. The final fix commit must be production-clean.
 
 ```bash
-git -C <worktree-root> diff {base-branch}..HEAD     # Review what's about to land
+git -C <work-root> diff {base-branch}..HEAD     # Review what's about to land
 ```
 
 Read the diff and confirm: only the fix and (optional) repro test remain. No `console.log`, no commented-out code, no scratch files.
@@ -347,9 +347,9 @@ Read the diff and confirm: only the fix and (optional) repro test remain. No `co
 The iteration history lives in the debug log; the git log on base should show the resolved fix, not the path to it.
 
 ```bash
-git -C <worktree-root> reset --soft {base-branch}                    # Unwind all attempt commits, keep changes staged
-git -C <worktree-root> reset HEAD .projex/{yymmddhhmm}-{debug-name}-debug-log.md   # Unstage log so it commits separately
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "fix({scope}): {one-line description}" "--trailer Projex: {yymmddhhmm}-{debug-name}" path/to/fixed-file.ext [more files...]
+git -C <work-root> reset --soft {base-branch}                    # Unwind all attempt commits, keep changes staged
+git -C <work-root> reset HEAD .projex/{yymmddhhmm}-{debug-name}-debug-log.md   # Unstage log so it commits separately
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "fix({scope}): {one-line description}" "--trailer Projex: {yymmddhhmm}-{debug-name}" path/to/fixed-file.ext [more files...]
 ```
 
 If a repro test was kept, include it in the fix commit (or as a separate test commit immediately before the fix).
@@ -359,8 +359,8 @@ If a repro test was kept, include it in the fix commit (or as a separate test co
 Run the verify-signal once more on the squashed state. Run the full regression suite. Run the build. All must pass.
 
 ```bash
-git -C <worktree-root> log --oneline {base-branch}..HEAD     # Confirm clean history: fix + log commits only
-git -C <worktree-root> status --porcelain                    # Confirm clean working tree
+git -C <work-root> log --oneline {base-branch}..HEAD     # Confirm clean history: fix + log commits only
+git -C <work-root> status --porcelain                    # Confirm clean working tree
 ```
 
 ### 7. WRITE THE DEBUG DOCUMENT
@@ -463,7 +463,7 @@ The debug document is the polished, reader-facing artifact derived from the log.
 Commit the debug document together with a final log update marking `Status: Complete (Resolved)` (or `Escalated (Exhausted)`):
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <worktree-root> "projex(debug): finalize - {debug-name}" .projex/closed/{yymmddhhmm}-{debug-name}-debug.md .projex/{yymmddhhmm}-{debug-name}-debug-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex(debug): finalize - {debug-name}" .projex/closed/{yymmddhhmm}-{debug-name}-debug.md .projex/{yymmddhhmm}-{debug-name}-debug-log.md
 ```
 
 ### 8. CLOSE THE WORKTREE
@@ -471,7 +471,7 @@ Commit the debug document together with a final log update marking `Status: Comp
 **GATE: Verify clean working tree before proceeding.** The finalization scripts abort on uncommitted changes.
 
 ```bash
-git -C <worktree-root> status --porcelain
+git -C <work-root> status --porcelain
 ```
 
 If output is non-empty, commit or discard the remaining changes before continuing.

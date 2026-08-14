@@ -87,12 +87,13 @@ Edit the plan file, then commit the status change on the base branch:
 git -C <repo-root> checkout -b projex/{yymmddhhmm}-{plan-name}
 git -C <repo-root> branch --show-current
 ```
+`<work-root>` is `<repo-root>` — the same string. Steps 4 onward use `<work-root>`.
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yymmddhhmm}-{plan-name}
 ```
-All subsequent script calls and git commands target `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` — pass it as the script's repo-root argument and as `git -C <worktree-path> …`, not by changing your CWD. The main directory stays on the base branch.
+Record `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as `<work-root>` and write it to the log's `Worktree Path` header. From here `<work-root>` ≠ `<repo-root>`: every step edit, `stage-n-commit`, and `git -C` for this execution takes `<work-root>`; only worktree and branch lifecycle (and the close scripts' first argument) takes `<repo-root>`, which stays on base. Pass paths explicitly — do not change your CWD.
 
 **Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected**. Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
 
@@ -140,7 +141,7 @@ Carry out the step (make changes / run commands / gather data), either by yourse
 
 If you choose do-projex:
 - Dispatch with a regular projex handoff, like any other workflow
-- Include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `repo`, `branch`) and this clause verbatim, `{depth}` filled with the sub-subagent's depth (coordinator's + 1): *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."*
+- Include all five `/do-projex.md` arguments (`plan`, `objective`, `log`, `work`, `branch`) — `work` is `<work-root>`, the worktree path in worktree mode and this clause verbatim, `{depth}` filled with the sub-subagent's depth (coordinator's + 1): *"You are a do-projex sub-subagent at depth {depth}. Do not spawn subagents under any circumstances. If you cannot complete the objective yourself, stop and return what you have with a clear description of what is blocking you."*
 - For each returned `do-projex`, read its report, mark the corresponding task complete, decide whether to dispatch the next or stop.
 - do-projex must be of the same model as the executor.
 - On any blocker / out-of-scope discovery returned by a do-projex: stop dispatching, fall back to self-execute or escalate
@@ -178,7 +179,7 @@ Max verification rounds per step: **2**. If a third would be needed, the step is
 Record the verdict and the verifier's key findings in this step's log entry. The report is ephemeral and dies with the sub-subagent.
 
 B. Verify by yourself:
-1. Produce reviewable evidence — `git -C <repo-root> diff`, read modified files, run tests, check command output
+1. Produce reviewable evidence — `git -C <work-root> diff`, read modified files, run tests, check command output
 2. Confirm the step objective is achieved; check for side effects; no significant issue
 3. Act on your own verdict: resolve until Success, or mark it Failed or Partial
 4. Update the step Status
@@ -188,7 +189,7 @@ B. Verify by yourself:
 Commit the log together with the step's file changes **in one atomic unit**. Investigative steps (running tests, gathering data) commit only the log entry.
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: step N - [brief description]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex: step N - [brief description]" "--trailer Projex: {yymmddhhmm}-{plan-name}" path/to/changed-file1.ext .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
 Investigative steps that commit only the log entry drop the trailer — it is required only on commits that change a file outside any .projex/ folder (§ Commit Message Convention).
@@ -239,7 +240,7 @@ Is the action different from the plan?
 8. **Commit the status updates and final log entry** — the branch must be clean before close-projex runs:
 
 ```bash
-{projex-scripts}/stage-n-commit.{sh|ps1} <repo-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
+{projex-scripts}/stage-n-commit.{sh|ps1} <work-root> "projex: complete {plan-name}" .projex/{yymmddhhmm}-{plan-name}-plan.md .projex/{yymmddhhmm}-{plan-name}-log.md
 ```
 
 Do not move the plan file — relocation to `.projex/closed/` happens during `/close-projex.md`

@@ -48,7 +48,9 @@ git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
 git -C <absolute-path-to-projex-file-directory> branch --show-current
 ```
 
-Record the `--show-toplevel` output as `<repo-root>`. All script calls and git commands below pass it as `git -C <repo-root> …` — never rely on your CWD. In worktree mode, `<repo-root>` for HEAD-relative queries is the **worktree path**.
+Record the `--show-toplevel` output as `<repo-root>`. All script calls and git commands below pass it as `git -C <repo-root> …` — never rely on your CWD.
+
+`<repo-root>` here is the **originating checkout that holds `{base-branch}`**, not the execution worktree (§ 7 states the matching rule the finalizers assert). In worktree mode the execution worktree is a separate path, referred to below as `<worktree-path>` and recorded in the log's `Worktree Path` header — it is an object to inspect and delete here, never the target of the close scripts.
 
 - [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
 
@@ -86,14 +88,16 @@ Collect all information from the execution:
 
 ```bash
 # List all commits in ephemeral branch
-git -C <repo-root> log --oneline {base-branch}..HEAD
+git -C <repo-root> log --oneline {base-branch}..projex/{yymmddhhmm}-{plan-name}
 
 # See all files changed
-git -C <repo-root> diff --stat {base-branch}..HEAD
+git -C <repo-root> diff --stat {base-branch}..projex/{yymmddhhmm}-{plan-name}
 
 # Get detailed diff
-git -C <repo-root> diff {base-branch}..HEAD
+git -C <repo-root> diff {base-branch}..projex/{yymmddhhmm}-{plan-name}
 ```
+
+> **Name the ephemeral branch, never `HEAD`.** These are ref-to-ref queries, so they return the same answer from either checkout and stay correct in both modes. `HEAD` resolves against whichever working tree the command lands in — the base checkout in worktree mode, where it yields an empty diff that reads as "nothing changed."
 
 2. **For each file changed, record:**
    - File path
@@ -198,7 +202,7 @@ Create a new file: `{yymmddhhmm}-{plan-name}-walkthrough.md`
 
 ## Complete Change Log
 
-> **Derived from:** `git diff --stat {base-branch}..HEAD` — This is the authoritative record of what changed.
+> **Derived from:** `git diff --stat {base-branch}..projex/{yymmddhhmm}-{plan-name}` — This is the authoritative record of what changed.
 
 ### Files Created
 | File | Purpose | Lines | In Plan? |

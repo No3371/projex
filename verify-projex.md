@@ -24,15 +24,15 @@ Mirror of `do-projex`: that workflow delegates the **doing**, this one delegates
 ## INVOCATION
 
 ```
-/verify-projex.md plan=<plan-file> step=<id-or-title> repo=<repo-root> branch=<ephemeral-branch>
+/verify-projex.md plan=<plan-file> step=<id-or-title> work=<work-root> branch=<ephemeral-branch>
 ```
 
 All four fields required — the executor supplies them.
 
 - `plan` — plan filename (e.g. `2607311430-database-service-refactor-plan.md`)
 - `step` — exact step identifier from the plan (step number or title)
-- `repo` — repo root absolute path, used for all read commands
-- `branch` — ephemeral branch currently checked out, or worktree path equivalent
+- `work` — absolute `<work-root>`: the checkout holding the changes under verification. In worktree mode this is the **worktree path** (SKILL.md § Worktree Mode → *Two paths, two names*). Used for every read command as `git -C <work-root> …`; never substitute your CWD
+- `branch` — ephemeral branch, already checked out at `work`
 
 **The handoff excludes the executor's account of its own work.** No summary of changes, no rationale, no file list, no self-assessed status. Receiving any of those defeats the purpose. If the caller supplies them, ignore them and derive everything from the plan and the repo.
 
@@ -74,7 +74,7 @@ Gather evidence. Never memory, never inference from the diff alone:
 
 - Read the step's target files as they now stand
 - Run the step's stated `**Verification:**` method
-- Use `git -C <repo-root> diff` / `git -C <repo-root> status` as **evidence**, not as the definition of scope
+- Use `git -C <work-root> diff` / `git -C <work-root> status` as **evidence**, not as the definition of scope
 - Check for collateral change: edits outside the step's stated targets
 
 **Scope is the step, not the diff.** A diff-scoped check sees only what changed; it cannot catch a step that required four edits and produced three. Work backwards from what the step demanded. Treat anything the diff shows beyond that as a separate finding.
