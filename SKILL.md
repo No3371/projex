@@ -3,32 +3,57 @@ name: projex-framework
 description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
-Projex are self-contained unit markdown documents in folders named ".projex". Types:
+Projex are self-contained unit markdown documents in folders named ".projex". Workflow specs are actions invoked in verb sense. Types:
 
 - **Proposal** — Directional: "what if we go this way?" with trade-offs, approaches, and impact. Draft → Review → Accepted/Rejected. WORKFLOW -> @./propose-projex.md
+  - `/propose-projex.md I want to add XXX feature.`
 - **Plan** — Actionable task spec: WHAT needs doing and HOW (exact file changes), with clear scope and acceptance criteria. WORKFLOW -> @./plan-projex.md | EXECUTION -> @./execute-projex.md
+  - `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
+  - `/execute-projex.md @2607311430-language-macro-syntax-change-plan.md`
 - **Evaluation** — Open-ended analysis of any question, idea, or solution. Broadest analytical tool — no fixed framing. Unlike Proposal (directional) or Exploration (status-quo-grounded). WORKFLOW -> @./eval-projex.md
+  - `/eval-projex.md Does current spec compatible with this proposal?` or `/eval-projex.md What can be improved in the current implementation?`
 - **Review** — Inspection of existing projex against current status quo: is it still valid, complete, accurate? Challenges the projex from a high-level, bigger-picture perspective. WORKFLOW -> @./review-projex.md
+  - `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
+  - `/redteam-projex.md @2607311430-auth-system-plan.md`
 - **Stress** — Adversarial analysis by attack angle: applies a fixed angle inventory (assumption, edge case, scale, time, …) directly to the subject's claims. No stakeholder modeling — suits algorithms, configs, single scripts, document arguments. WORKFLOW -> @./stress-projex.md
+  - `/stress-projex.md The retry logic in the sync script` or `/stress-projex.md @2607311430-parser-refactor-plan.md`
 - **Audit** — Rigorous validation of completed work: cross-references claims against actual artifacts/evidence. Discovers undocumented issues and gaps. WORKFLOW -> @./audit-projex.md
+  - `/audit-projex.md the database migration we just finished`
 - **Interview** — Interactive Q&A in rounds (3-5 questions each), asked one-by-one. Full transcript logging. READ-ONLY: only the interview document is written. WORKFLOW -> @./interview-projex.md
+  - `/interview-projex.md authentication system design`
 - **Coach** — Interactive judgment on any judgeable subject: collects via Q&A, states positions, hears pushback, converges to consensus or documented dissent. Unlike Interview (collects without judging), Red Team (unilateral), or Eval (agent alone). READ-ONLY: only the coach document is written. WORKFLOW -> @./coach-projex.md
+  - `/coach-projex.md Should we adopt trunk-based development?` or `/coach-projex.md @2607311430-cache-layer-proposal.md`
 - **Walkthrough** — Post-execution record authored after every Plan execution. Detailed changes (file-level), criteria checklist with proof. WORKFLOW -> @./close-projex.md
+  - `/close-projex.md` after user reviewed execution results
 - **Memo** — Lightweight capture of a raw source (user quote, idea, issue, deferred objective) with whatever context the agent already has. No research — just record. Active until consumed. WORKFLOW -> @./memo-projex.md
+  - `/memo-projex.md The retry backoff feels too aggressive on mobile — revisit after the sync rewrite`
 - **Patch** — Quick-action for small, well-understood changes. Skips Plan → Execute → Close — born closed. Can execute specific objectives from existing plans. Escalates if complexity exceeds threshold. WORKFLOW -> @./patch-projex.md
+  - `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
 - **Revise** (no doc type — edits any existing projex document) — Quick-action fix to a projex document's own content (Plan, Proposal, Definition, Nav, etc.) when new context makes part of it stale. Edits in place, logs the trigger. Unlike Patch (fixes code/implementation), Revise fixes the document's claims. Escalates to that document's own authoring workflow if the core content itself is wrong. WORKFLOW -> @./revise-projex.md
+  - `/revise-projex.md @2602011430-api-cleanup-plan.md Step 2 assumed Redis, it's actually Memcached`
 - **Preplan** — Fast disposable planning spike: hacks a representative path in an isolated worktree, observes decision-relevant evidence, discards all changes, and leaves a compact brief for Plan. Born closed. No irreversible actions. WORKFLOW -> @./preplan-projex.md
+  - `/preplan-projex.md Try the smallest raw-SQL replacement for one ORM query and map the real migration surface`
 - **Debug** — Issue-bound investigation: confirms a concrete bug, enumerates hypotheses, iterates fix attempts in an isolated worktree until Resolved (fix squash-merged) or Exhausted (all imaginable cases ruled out, document handed back). Unlike Patch (known fix) or Preplan (always discards and never productionizes). WORKFLOW -> @./debug-projex.md
+  - `/debug-projex.md Login button does nothing on Safari iOS — works on Chrome/Firefox`
 - **Definition** — Declarative specification of WHAT an entity is: identity, boundaries, properties, constraints, relationships. Living document — revisited to deepen. Never closed. WORKFLOW -> @./define-projex.md
+  - `/define-projex.md The authentication subsystem` or `/define-projex.md @2602151430-auth-subsystem-def.md expand session lifecycle`
 - **Navigation** — Living roadmap at any scale. Continuously revised each invocation. Nestable. Born open, revised across many invocations → Closed when its goal is reached or a new roadmap supersedes it. WORKFLOW -> @./navigate-projex.md
+  - `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
 - **Scan** — Exhaustive inventory of everything connected to a subject — precise `file:ln` lists with full coverage. No analysis, no recommendations. Born closed. WORKFLOW -> @./scan-projex.md
+  - `/scan-projex.md Every call site of the auth middleware`
 - **Exploration** — Status-quo-grounded investigation: map what exists, how it works, and why. Unlike Eval (open-ended) or Proposal (directional). WORKFLOW -> @./explore-projex.md
-- **Guide** — Curated reading path for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
+  - `/explore-projex.md How does the plugin loader resolve dependencies?`
+- **Guide** — Curated guide for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
+  - `/guide-projex.md Understand our authentication system end-to-end`
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
+  - `/imagine-projex.md What would a plugin system for this framework look like?`
 - **Conclude** — Verified supersession: given a successor that crystallizes prior work (Definition, Nav, Plan, …), checks each source projex claim-by-claim (Captured / Overruled / Residue), stamps fully-consumed sources superseded and removes them (recoverable via git history; the report keeps filename + verdicts), and rewrites the successor's prior-artifact references into a do-not-consult ledger. Sources may be active or closed. Residue blocks retirement — no silent drops. Unlike Archive (mechanical compression), Conclude is judgment. Born closed. WORKFLOW -> @./conclude-projex.md
+  - `/conclude-projex.md @2608041653-vertical-axis-model-def.md` or `/conclude-projex.md @{successor}.md @{source1}.md @{source2}.md`
 - **Archive** — Compresses all files in `.projex/closed/` into a single index document (summary + keywords per file), then removes the originals. Born closed. Parallelizes summarization with sub-agents. WORKFLOW -> @./archive-projex.md
+  - `/archive-projex.md` or `/archive-projex.md src/.projex/closed/`
 - **Orchestration** — Agent-driven lifecycle: an orchestrating agent acts as the projex user, manages subagents through full workflow (Plan → Execute → Close or selected path) on behalf of a human. No standalone projex document — delegated workflow specs produce their own artifacts. Nestable one level: an orchestrator may hand a sub-chain to a nested orchestrator, which does not nest again. WORKFLOW -> @./orchestrate-projex.md
+  - `/orchestrate-projex.md Add user authentication to the API` or `/orchestrate-projex.md Refactor the payment module per @2604031730-payment-cleanup-proposal.md`
 
 
 ## Authoring
@@ -38,7 +63,6 @@ File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
 - **Reference by filename, not path** — Projex files move between folders (active → closed → archived), so absolute/relative paths break. Use the filename alone whenever you try to reference any projex in projex files: `2602081430-virtual-checkpoint-token-impl-doc-plan.md`, not `../../../impl/.projex/2602081430-virtual-checkpoint-token-impl-doc-plan.md`. Filenames are unique by date-prefix convention.
-- **Note nav derivation** — Projex created from a nav must record `> **Nav:** {nav-filename}` near the top. This is the only signal close/patch uses to update the nav back.
 - **Parent invariant** — every newly created projex has exactly one causal `> **Parent:**` header: `User`, `Orchestrator`, or a filename matching the projex naming grammar; legacy files may omit it. `new-projex` enforces creation.
 
 ### Dehydrate
@@ -138,31 +162,6 @@ One regex parses it: `^> \*\*Status:\*\* ([\w ]+?)(?: \((.+)\))?\s*$` → group 
 - **Never-closed type (Definition):** may sit at `Complete` while staying in `.projex/` rather than moving to `.projex/closed/`. `Complete` here means "current stable state"; it drops back to `In Progress` on revision.
 - **Navigation:** holds `In Progress` for its entire open life — revisions are its work, and dormancy between revisions is not a state change. `Complete (Goal Reached)` / `Complete (Superseded)` are its only terminal states, set by its own closing workflow.
 - **Per-item statuses are out of scope.** Objective status (`Success / Partial / Failed`) and per-target / per-question status (`Pending / In Progress / Done / Dropped`) are not document lifecycle. They use plain bold (not the `> **Status:**` blockquote) and are left untouched.
-
-## Workflow
-
-Workflow specs are actions invoked in verb sense:
-
-- `/propose-projex.md I want to add XXX feature.`
-- `/eval-projex.md Does current spec compatible with this proposal?` or `/eval-projex.md What can be improved in the current implementation?`
-- `/plan-projex.md Update current impl to keep up with latest specs.` or `/plan-projex.md @2607311430-database-service-refactor-proposal.md`
-- `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
-- `/redteam-projex.md @2607311430-auth-system-plan.md`
-- `/stress-projex.md The retry logic in the sync script` or `/stress-projex.md @2607311430-parser-refactor-plan.md`
-- `/audit-projex.md the database migration we just finished`
-- `/interview-projex.md authentication system design`
-- `/patch-projex.md Fix the off-by-one error in the parser loop` or `/patch-projex.md Execute objective 2 of @2602011430-api-cleanup-plan.md`
-- `/revise-projex.md @2602011430-api-cleanup-plan.md Step 2 assumed Redis, it's actually Memcached` (Patch = fix code; Revise = fix what a projex document claims)
-- `/preplan-projex.md Try the smallest raw-SQL replacement for one ORM query and map the real migration surface`
-- `/debug-projex.md Login button does nothing on Safari iOS — works on Chrome/Firefox`
-- `/navigate-projex.md Game engine project roadmap` or `/navigate-projex.md @2602011430-engine-roadmap-nav.md`
-- `/define-projex.md The authentication subsystem` or `/define-projex.md @2602151430-auth-subsystem-def.md expand session lifecycle`
-- `/guide-projex.md Understand our authentication system end-to-end`
-- `/imagine-projex.md What would a plugin system for this framework look like?`
-- `/execute-projex.md @2607311430-language-macro-syntax-change-plan.md`
-- `/close-projex.md` after user reviewed execution results
-- `/conclude-projex.md @2608041653-vertical-axis-model-def.md` or `/conclude-projex.md @{successor}.md @{source1}.md @{source2}.md`
-- `/orchestrate-projex.md Add user authentication to the API` or `/orchestrate-projex.md Refactor the payment module per @2604031730-payment-cleanup-proposal.md`
 
 ## Auxiliary Artifact Commit Policy
 
@@ -353,8 +352,6 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 
 **Auto-determined by plan-projex:** The planning workflow checks for uncommitted changes, active `projex/*` execution branches, and scope of changes, setting `> **Worktree:** Yes` when dirty state, parallel execution, or large/many-file changes are detected. The user can override the auto-determined value in the plan draft. Preplans require worktree mode.
 
-**How it works:**
-
 - `projex-worktree` creates the worktree in `.projexwt/` inside the repo
 - All execution happens in the worktree directory (`{repo-name}/.projexwt/<name>/`)
 - `stage-n-commit` works unchanged (`-C` accepts worktree paths)
@@ -363,21 +360,7 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 - **Bootstrap contract:** a fresh worktree shares `.git` but starts with only git-tracked files — gitignored artifacts (`node_modules`, `.env`, `venv/`, build output) are absent by design. Their absence is **expected, not a blocked precondition**: bootstrap them (run the project's install/build command) before execution rather than treating missing deps as a stop condition. What gets installed here is exactly what the Cleanup contract removes before close.
 - **Cleanup contract:** anything created in the worktree that git does not track — symlinked/installed deps (`node_modules`), build output, scratch files — must be removed before close, and any tracked edits committed. Close scripts refuse to finalize over a non-clean worktree (untracked files or uncommitted tracked changes). Ignored content (deps/build output) does **not** block git-level removal, but can make removal fail mid-way in environment-dependent ways (seen with symlinked deps in a Linux docker sandbox, and with file locks/CWD-in-worktree on Windows) and leave a stray directory to clean up — so remove agent-created ignored tooling too.
 
-**Benefits over checkout mode:**
-
-- No clean-state requirement at execution start
-- No working directory disruption (editors/IDEs unaffected)
-- Parallel executions possible (multiple worktrees)
-- Crash-safe — main directory always on base branch
-
 **Worktrees live inside the repo** at `{repo-name}/.projexwt/`, so they stay in the editor workspace. `projex-worktree` registers `.projexwt/` in the repo's `.git/info/exclude` (local, uncommitted) so the checkout never shows up in the parent's git status — no tracked `.gitignore` entry is added.
-
-### Notes
-
-- Execute/Walkthrough and Preplan use ephemeral branches
-- Preplan branches (`projex/preplan/`) always discarded — only the concise planning brief is committed to base
-- Other workflows operate on current branch, committed normally
-- Walkthrough committed as final commit before merge
 
 ---
 
@@ -385,8 +368,8 @@ Worktree mode creates ephemeral branches as separate working directories in `{re
 
 ### AVOID ABSOLUTE PATHS
 
-Use file paths RELATIVE to project root. REDACT external paths.
+Use file paths RELATIVE to project root. Rewrite absolute path to internal files. REDACT external paths.
 
-### NO PARALLEL EXPLORATION WITH WORKFLOWS
+### NO PARALLEL EXPLORATION ON LAUNCHING WORKFLOWS
 
 Workflow files (ex: execute-projex) may have requirements before starting, fully comply before reading stuff into context.
