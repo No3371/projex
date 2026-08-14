@@ -76,7 +76,7 @@ For each sub-step inside the objective:
 - Comments written into source obey § SOURCE HYGIENE below — a deliberate second copy of `SKILL.md § Source Hygiene`, kept here so the rules survive any context loss on the sub-subagent boundary
 
 #### C. LOG, VERIFY, COMMIT
-- Evidence: `git diff`, command output, test result, file re-read — not memory
+- Evidence: `git -C {repo} diff`, command output, test result, file re-read — not memory
 - Confirm sub-step intent achieved; check side effects within the objective's scope
 - **Append a log entry** under the log's existing `## Steps` section:
 

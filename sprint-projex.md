@@ -65,7 +65,7 @@ The goal must be verifiable — "improve the code" is not a goal; "all callers m
 
 Setup always starts a **fresh** sprint. Adopting an in-flight one is the user's call, made at invocation by passing its sprint nav (§ Resume) — setup defines no discovery step. An orchestrator that nonetheless notices an active overlapping `projex/sprint/*` branch or `In Progress` sprint nav should surface it before branching rather than build beside it silently: a second sprint branch over the same scope squash-closes into base while the real history — tracked position, prior iterations — sits ignored on the original.
 
-1. **Resolve repo root** — `git rev-parse --show-toplevel` from the goal's context (SKILL.md § Repo Resolution). Record `{base-branch}` via `git branch --show-current` — finalization needs it.
+1. **Resolve repo root** — `git -C <goal-context-dir> rev-parse --show-toplevel` (SKILL.md § Repo Resolution). Record `{base-branch}` via `git -C <repo-root> branch --show-current` — finalization needs it.
 2. **Create the sprint nav and commit it to base.** `{yymmddhhmm}-{sprint-name}-sprint.md` in the goal's `.projex/` folder. Commit on `{base-branch}` **before** the worktree exists — same principle as plan-before-execution: base must record the sprint while it runs.
 Resolve `{sprint-parent}` from an explicit causal nav/subject; else supplied orchestrator Parent; else `User`.
 

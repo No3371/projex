@@ -71,7 +71,7 @@ git -C <repo-root> diff {base}..{head} -- . ':(exclude,glob)**/.projex/**'
 git -C <repo-root> log {base}..{head} --format='%h %s%n  trailer: %(trailers:key=Projex,valueonly)'
 ```
 
-**No range available?** After a squash close the ephemeral branch is gone and there is no `{base}..{head}`. The walkthrough names the landing commit — use `git show <squash-sha> -- . ':(exclude,glob)**/.projex/**'`. Never fall back to a repo-wide sweep to recover a range.
+**No range available?** After a squash close the ephemeral branch is gone and there is no `{base}..{head}`. The walkthrough names the landing commit — use `git -C <repo-root> show <squash-sha> -- . ':(exclude,glob)**/.projex/**'`. Never fall back to a repo-wide sweep to recover a range.
 
 **Retrofit mode — opt-in.** On explicit user request the sweep extends to whole files or the whole repo. Never the default — a repo-wide sweep buries the findings the audit was called for.
 

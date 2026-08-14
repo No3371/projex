@@ -71,7 +71,7 @@ Verify items requiring judgment:
 1. **Record the base branch and update plan status** to `In Progress`:
 
 ```bash
-git branch --show-current
+git -C <repo-root> branch --show-current
 ```
 
 Edit the plan file, then commit the status change on the base branch:
@@ -84,15 +84,15 @@ Edit the plan file, then commit the status change on the base branch:
 
 **Checkout mode (default):**
 ```bash
-git checkout -b projex/{yymmddhhmm}-{plan-name}
-git branch --show-current
+git -C <repo-root> checkout -b projex/{yymmddhhmm}-{plan-name}
+git -C <repo-root> branch --show-current
 ```
 
 **Worktree mode** (when plan header has `> **Worktree:** Yes` — see SKILL.md § Worktree Mode):
 ```bash
 {projex-scripts}/projex-worktree.{sh|ps1} <repo-root> projex/{yymmddhhmm}-{plan-name}
 ```
-All subsequent commands use `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` as the working directory. The main directory stays on the base branch.
+All subsequent script calls and git commands target `{repo-name}/.projexwt/{yymmddhhmm}-{plan-name}` — pass it as the script's repo-root argument and as `git -C <worktree-path> …`, not by changing your CWD. The main directory stays on the base branch.
 
 **Bootstrap the worktree before executing.** A fresh worktree contains only git-tracked files, so gitignored dependencies and build artifacts (`node_modules`, `.env`, `venv/`, compiled output) start absent. This is **expected**. Detect the project's install/build command from its manifest (`package.json` → `npm ci`/`pnpm i`; `requirements.txt`/`pyproject.toml` → venv + install; `go.mod` → `go mod download`; etc.), run it in the worktree, and log it before starting step 4. If deps survive relocation, symlinking them from the main checkout is a valid faster path (native/compiled modules may not — fall back to a clean install). Anything you create in the worktree that git does not track (deps, build output, scratch) must be removed before close — see SKILL.md § Worktree Mode cleanup contract.
 
@@ -178,7 +178,7 @@ Max verification rounds per step: **2**. If a third would be needed, the step is
 Record the verdict and the verifier's key findings in this step's log entry. The report is ephemeral and dies with the sub-subagent.
 
 B. Verify by yourself:
-1. Produce reviewable evidence — `git diff`, read modified files, run tests, check command output
+1. Produce reviewable evidence — `git -C <repo-root> diff`, read modified files, run tests, check command output
 2. Confirm the step objective is achieved; check for side effects; no significant issue
 3. Act on your own verdict: resolve until Success, or mark it Failed or Partial
 4. Update the step Status
@@ -297,7 +297,7 @@ Subjects carry the *type* of change; a `Projex:` trailer carries the link back t
 
 **Attaching it** — `stage-n-commit` forwards any `--`-prefixed argument to `git commit`; pass the trailer as one quoted string (template above). The close scripts take a single message argument — the landing trailer rides the message body (forms in `close-projex.md` § 7). `projex-rebase-close` takes no message and needs nothing extra: the step commits already carry the trailer.
 
-**Why a trailer** — delivery tooling rewrites subjects; bodies usually survive. Read back via `git log --grep 'Projex: '` or `git interpret-trailers --parse`.
+**Why a trailer** — delivery tooling rewrites subjects; bodies usually survive. Read back via `git -C <repo-root> log --grep 'Projex: '` or `git interpret-trailers --parse`.
 
 **Survival condition** — trailers reach base through a GitHub squash-merge only when the repo's `squash_merge_commit_message` setting is *commit messages*; `PR_BODY` and `BLANK` discard every body in the PR, and with rule 1 in force that leaves no code→doc link at all. Set it, or prefer merge/rebase close. `audit-projex.md` § Source Hygiene Pass samples base history for trailer survival — a rate of zero is a Critical finding, not a footnote.
 

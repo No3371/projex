@@ -36,7 +36,7 @@ Determine which `.projex/closed/` folder to archive:
 
 - If invoked without arguments, default to `.projex/closed/` relative to the current repo root
 - If a path is given, use that folder
-- Confirm the repo root first: `git rev-parse --show-toplevel`
+- Confirm the repo root first: `git -C <target-folder> rev-parse --show-toplevel`. Every raw git command below passes it as `git -C <repo-root> …`
 
 ### 2. SCAN CLOSED FOLDER
 
@@ -178,12 +178,12 @@ Verify the commit succeeded before proceeding to file removal.
 Delete each individual file that was archived (every `.md` file in the folder **except** the newly created archive):
 
 ```bash
-git rm .projex/closed/{filename1}.md
-git rm .projex/closed/{filename2}.md
+git -C <repo-root> rm .projex/closed/{filename1}.md
+git -C <repo-root> rm .projex/closed/{filename2}.md
 # ... one per file
 ```
 
-> **Never use `git rm .projex/closed/*.md`** — always list files explicitly. Only remove files from the list collected in step 2. Existing `-archive.md` files are never removed.
+> **Never use `git -C <repo-root> rm .projex/closed/*.md`** — always list files explicitly. Only remove files from the list collected in step 2. Existing `-archive.md` files are never removed.
 
 Commit the deletions:
 

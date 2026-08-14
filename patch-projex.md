@@ -72,9 +72,9 @@ Before acting:
 
 1. **Resolve the target repo** — If the directive references a projex file, find the exact git repo it belongs to. If no file is referenced, infer from context.
 ```bash
-cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
 ```
-Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value, and every raw git command passes it as `git -C <repo-root> …`.
 2. **Understand the directive** — What exactly needs to happen?
 3. **Locate relevant files** — Read them, understand current state
 4. **Check for related projex** — Part of an existing plan or proposal?

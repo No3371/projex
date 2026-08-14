@@ -110,7 +110,7 @@ Read enough current code to choose a representative path. Do not perform plan-gr
 Record the base branch:
 
 ```bash
-git branch --show-current
+git -C <repo-root> branch --show-current
 ```
 
 ### 2. CREATE DISPOSABLE WORKTREE

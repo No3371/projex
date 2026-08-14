@@ -26,10 +26,10 @@ Plans capture WHAT and HOW — specific enough any LLM/dev follows without clari
 
 ### 1. SOURCE ANALYSIS
 
-**Resolve target repo** — projex file referenced → its git repo; no reference → infer from context. Record output as `<repo-root>` (used by all scripts below).
+**Resolve target repo** — projex file referenced → its git repo; no reference → infer from context. Record output as `<repo-root>` (used by all scripts below and by every raw git command as `git -C <repo-root> …`).
 
 ```bash
-cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
 ```
 
 **Determine worktree mode** for `Worktree` header:

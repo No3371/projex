@@ -76,7 +76,8 @@ If reproducing the bug requires a forbidden action (e.g. a write against a share
 This is the first action. The directive may be invoked from any cwd — the projex file location (or the user's referenced file) is the source of truth.
 
 ```bash
-cd <absolute-path-to-related-projex-or-affected-file-directory> && git rev-parse --show-toplevel && git branch --show-current
+git -C <absolute-path-to-related-projex-or-affected-file-directory> rev-parse --show-toplevel
+git -C <absolute-path-to-related-projex-or-affected-file-directory> branch --show-current
 ```
 
 - Record `--show-toplevel` output as `<repo-root>`. **All script calls and git commands below use this value. Do not use your CWD.**
@@ -570,8 +571,8 @@ Before closing:
 - [ ] Attempt commits squashed into one clean `fix(scope):` commit
 - [ ] Debug log file kept alongside debug document — both in `.projex/`
 - [ ] Worktree closed (squash-merged via Option A if Resolved, abandoned via Option B if Exhausted)
-- [ ] Main repo working directory clean and on `{base-branch}` — verified with `git status --porcelain`
-- [ ] Ephemeral debug branch deleted — verified with `git branch --list`
+- [ ] Main repo working directory clean and on `{base-branch}` — verified with `git -C <repo-root> status --porcelain`
+- [ ] Ephemeral debug branch deleted — verified with `git -C <repo-root> branch --list`
 
 ---
 

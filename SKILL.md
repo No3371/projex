@@ -243,7 +243,7 @@ The **Execute → Walkthrough** cycle uses an ephemeral branch for isolation and
 
 ### Repo Resolution
 
-When a projex file is referenced (`@<file>`), **derive the target repo from that file's path** — `cd` to its directory and `git rev-parse --show-toplevel` from there. This is the first action, before any other git commands or file reads. The projex file's location is the source of truth; never rely on the session's initial cwd. **All git commands for the rest of the workflow must run from this repo root.**
+When a projex file is referenced (`@<file>`), **derive the target repo from that file's path** — `git -C <that-file's-directory> rev-parse --show-toplevel`. This is the first action, before any other git commands or file reads. The projex file's location is the source of truth; never rely on the session's initial cwd. **Record the result as `<repo-root>` and pass it explicitly to every subsequent git command as `git -C <repo-root> …`** — do not `cd` and rely on ambient cwd for the rest of the workflow.
 
 When no file reference is given, infer the target repo from context (cwd, recent mentions, project structure).
 
@@ -339,6 +339,7 @@ For operations not covered by the scripts above (read-only queries, `git checkou
 
 **CRITICAL: Different git operation types (add, commit, checkout, branch, merge, rebase, stash) must be separate tool calls. Never combine them — not with `&&`, not with `;`, not as parallel calls.**
 
+- **Always `git -C <root>`** — every raw git command names its target repository explicitly: `git -C <repo-root-or-worktree-path> <subcommand>`. Ambient cwd is never the target; it drifts between calls, differs across subagents, and silently points at the main checkout while execution belongs in a worktree. Resolve the root once (`git rev-parse --show-toplevel`, or the worktree path from `projex-worktree`) and pass it to every call thereafter. In worktree mode the root is the **worktree path**, not the main directory. Only `git clone` and `git init` are exempt — no repository exists yet. This governs commands you **run**; command strings quoted inside a projex document stay bare, since `<repo-root>` is an absolute path and § AVOID ABSOLUTE PATHS applies to document content.
 - **One operation type per call** — `git add` in one call, read its output, then `git commit` in the next call. A single `git add` with multiple file arguments is fine, but add and commit must never share a call.
 - **Read output before proceeding** — After each call, actually read its output and confirm it succeeded. Do not fire-and-forget.
 - **Stop on failure** — If any git operation fails, address it before continuing

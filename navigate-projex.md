@@ -54,7 +54,7 @@ Build comprehensive understanding of the target scope:
 
 1. **Survey the scope** — What exists within this area? What state is it in? What's working, what's not?
 2. **Collect existing projex** — Scan the relevant `.projex/` folder(s) for active proposals, plans, evals, explorations. For a module-level navigation, focus on that module's projex folder; for project-level, scan broadly
-3. **Identify momentum** — What has been worked on recently? What's stalled? What's blocking progress? Explore git history (`git log`, `git log --oneline --since=...`, `git log -- <path>`) to surface recent activity, contributors, and change patterns that projex documents alone may not capture
+3. **Identify momentum** — What has been worked on recently? What's stalled? What's blocking progress? Explore git history (`git -C <repo-root> log`, `… log --oneline --since=...`, `… log -- <path>`) to surface recent activity, contributors, and change patterns that projex documents alone may not capture
 4. **Understand goals** — What is this scope trying to achieve? What does success look like?
 5. **Spot gaps** — What areas within this scope have no projex activity? What's neglected?
 6. **Locate parent/sibling navigations** — Does a higher-level navigation exist that this one nests under? Are there peer navigations for adjacent scopes?
@@ -214,7 +214,7 @@ Navigation documents are revisited repeatedly.
    - Check `.projex/` for new active documents
    - Check `.projex/closed/` for completed walkthroughs and patches that may correspond to roadmap milestones
    - Match discovered execution artifacts (walkthroughs, patches, completed plans) to existing milestones
-4. **Assess the codebase** — Has the project changed in ways the roadmap doesn't reflect? Explore git history (`git log`, `git diff`, `git log -- <path>`) to discover changes since the last revision that may not be reflected in projex documents
+4. **Assess the codebase** — Has the project changed in ways the roadmap doesn't reflect? Explore git history (`git -C <repo-root> log`, `… diff`, `… log -- <path>`) to discover changes since the last revision that may not be reflected in projex documents
 5. **Check revision log** — When was this last updated? What's happened since?
 
 #### 2. ASSESS PROGRESS

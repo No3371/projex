@@ -44,10 +44,11 @@ Before closing:
 **Resolve the target repo**: we find the exact git repo the projex belongs to.
 
 ```bash
-cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel && git branch --show-current
+git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
+git -C <absolute-path-to-projex-file-directory> branch --show-current
 ```
 
-Record the `--show-toplevel` output as `<repo-root>`. All script calls below use this value.
+Record the `--show-toplevel` output as `<repo-root>`. All script calls and git commands below pass it as `git -C <repo-root> …` — never rely on your CWD. In worktree mode, `<repo-root>` for HEAD-relative queries is the **worktree path**.
 
 - [ ] **Correct repository** — `rev-parse --show-toplevel` matches the repo that owns the plan's `.projex/` folder
 
@@ -85,13 +86,13 @@ Collect all information from the execution:
 
 ```bash
 # List all commits in ephemeral branch
-git log --oneline {base-branch}..HEAD
+git -C <repo-root> log --oneline {base-branch}..HEAD
 
 # See all files changed
-git diff --stat {base-branch}..HEAD
+git -C <repo-root> diff --stat {base-branch}..HEAD
 
 # Get detailed diff
-git diff {base-branch}..HEAD
+git -C <repo-root> diff {base-branch}..HEAD
 ```
 
 2. **For each file changed, record:**
@@ -535,7 +536,7 @@ Replays commits onto base branch for linear history (fast-forward, no merge comm
 
 > **Note:** On a rebase conflict the script aborts cleanly and restores the original branch (checkout mode) or leaves the worktree intact (worktree mode), then exits non-zero — resolve manually, declare the paths via `--resolve-conflicts` (see above) to resolve them in place, or fall back to Option A/B. No merge-message argument is needed since `--ff-only` creates no merge commit. No trailer argument is needed either — the step commits being replayed already carry theirs.
 
-> **If a script warns it could not remove the worktree:** the close itself succeeded. Run `git -C <repo-root> worktree list` — if the worktree path is no longer listed, only a plain untracked directory remains; inspect it for anything user-created, then delete it manually (`rm -rf` / `Remove-Item -Recurse -Force`) and run `git worktree prune`. If it is still listed, remove the blocking files it reported, then `git -C <repo-root> worktree remove <path>`.
+> **If a script warns it could not remove the worktree:** the close itself succeeded. Run `git -C <repo-root> worktree list` — if the worktree path is no longer listed, only a plain untracked directory remains; inspect it for anything user-created, then delete it manually (`rm -rf` / `Remove-Item -Recurse -Force`) and run `git -C <repo-root> worktree prune`. If it is still listed, remove the blocking files it reported, then `git -C <repo-root> worktree remove <path>`.
 
 #### Option D: Abandon (Failed Execution)
 Discards the branch without merging.
@@ -575,8 +576,8 @@ Stashing is **caller-owned**: the finalization scripts never create or pop a sta
 If changes were stashed at the start of execution (check the execution log for stash entries):
 
 ```bash
-git stash list          # verify stash exists
-git stash pop           # restore stashed changes
+git -C <repo-root> stash list          # verify stash exists
+git -C <repo-root> stash pop <absolute-stash-reference>           # restore stashed changes
 ```
 
 If no stash was made, skip this step.

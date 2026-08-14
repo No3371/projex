@@ -35,7 +35,7 @@ The successor is any document claimed to crystallize prior work — typically a 
 
 ### 1. IDENTIFY SUCCESSOR AND SOURCES
 
-- Confirm repo root first: `git rev-parse --show-toplevel`
+- Confirm repo root first: `git -C <successor-file-directory> rev-parse --show-toplevel`. Every raw git command below passes it as `git -C <repo-root> …`
 - Resolve the successor file. Locate its projex folder — conclude operates within **one** `.projex/` scope; a source from a different scope is flagged and excluded
 - Build the source candidate list:
   - Explicit arguments, if given — this list is **literal**: examine exactly these, add none

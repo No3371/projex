@@ -74,7 +74,7 @@ Gather evidence. Never memory, never inference from the diff alone:
 
 - Read the step's target files as they now stand
 - Run the step's stated `**Verification:**` method
-- Use `git diff` / `git status` as **evidence**, not as the definition of scope
+- Use `git -C <repo-root> diff` / `git -C <repo-root> status` as **evidence**, not as the definition of scope
 - Check for collateral change: edits outside the step's stated targets
 
 **Scope is the step, not the diff.** A diff-scoped check sees only what changed; it cannot catch a step that required four edits and produced three. Work backwards from what the step demanded. Treat anything the diff shows beyond that as a separate finding.

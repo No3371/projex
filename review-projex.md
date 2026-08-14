@@ -85,10 +85,10 @@ In batch mode, triage with Spot Check first; escalate any document that smells s
 **Resolve the target repo** — reviews run in the repo owning the projex:
 
 ```bash
-cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
 ```
 
-Record output as `<repo-root>`. All script calls below use it.
+Record output as `<repo-root>`. All script calls below use it, and every raw git command passes it as `git -C <repo-root> …`.
 
 **Build the target roster:**
 - **Specific document** — locate file; note type, status, age

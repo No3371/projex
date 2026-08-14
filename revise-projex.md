@@ -67,9 +67,9 @@ Projex documents go stale mid-life. Plan assumption turns out false, Proposal tr
 
 1. **Resolve the target repo** — from the projex file's location:
 ```bash
-cd <absolute-path-to-projex-file-directory> && git rev-parse --show-toplevel
+git -C <absolute-path-to-projex-file-directory> rev-parse --show-toplevel
 ```
-Record as `<repo-root>`.
+Record as `<repo-root>`. Every raw git command below passes it as `git -C <repo-root> …`.
 2. **Read the target document** in full — its current claims, structure, status.
 3. **Understand the trigger** — what new fact/finding/requirement conflicts with what the document currently says? Cite it precisely (file:line if code-derived, quote if stakeholder-stated).
 4. **Locate every section the trigger touches** — a changed assumption often affects more than the one section named in the directive (e.g. in a Plan: Scope, one Step, and Success Criteria at once). Don't patch only what the directive names.
