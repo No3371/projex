@@ -70,6 +70,7 @@ $TypeInfo = @{
     propose   = @('Proposal', 'proposal');   plan      = @('Plan', 'plan')
     eval      = @('Evaluation', 'eval');      review    = @('Review', 'review')
     redteam   = @('Red Team', 'redteam');     stress    = @('Stress', 'stress')
+    blueteam  = @('Blue Team', 'blueteam')
     audit     = @('Audit', 'audit')
     interview = @('Interview', 'interview');  coach     = @('Coach', 'coach')
     log       = @('Log', 'log')

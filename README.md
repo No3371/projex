@@ -90,6 +90,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 | --- | --- |
 | `review-projex` | Existing documents checked against the status quo for staleness and correctness |
 | `redteam-projex` | Adversarial pass — challenged assumptions, weaknesses, exploited edge cases |
+| `blueteam-projex` | Defensive counter to a red team report — screens findings, dispositions each with you, lands a defense plan |
 | `stress-projex` | Adversarial pass by attack angle — no stakeholder modeling, for role-thin subjects |
 | `audit-projex` | Completed work validated claim-by-claim against actual artifacts |
 | `archive-projex` | Closed documents compressed into one searchable index |

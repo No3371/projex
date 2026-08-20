@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``blueteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named ".projex". Workflow specs are actions invoked in verb sense. Types:
@@ -16,6 +16,8 @@ Projex are self-contained unit markdown documents in folders named ".projex". Wo
   - `/review-projex.md @2607311430-language-macro-syntax-change-proposal.md`
 - **Red Team** — Adversarial analysis: challenges assumptions, finds weaknesses, exploits edge cases. Attacks from each stakeholder role's perspective. Assumes wrong until proven right. WORKFLOW -> @./redteam-projex.md
   - `/redteam-projex.md @2607311430-auth-system-plan.md`
+- **Blue Team** — Defensive counter to a red team report: screens each finding against current reality, then settles the ones that still hold with the user into a disposition and a defense plan. Unlike Red Team (attacks, never defends) or Interview (open topic tree), the tree is the source report's finding list. WORKFLOW -> @./blueteam-projex.md
+  - `/blueteam-projex.md @2607311430-auth-system-redteam.md`
 - **Stress** — Adversarial analysis by attack angle: applies a fixed angle inventory (assumption, edge case, scale, time, …) directly to the subject's claims. No stakeholder modeling — suits algorithms, configs, single scripts, document arguments. WORKFLOW -> @./stress-projex.md
   - `/stress-projex.md The retry logic in the sync script` or `/stress-projex.md @2607311430-parser-refactor-plan.md`
 - **Audit** — Rigorous validation of completed work: cross-references claims against actual artifacts/evidence. Discovers undocumented issues and gaps. WORKFLOW -> @./audit-projex.md
@@ -167,7 +169,7 @@ One regex parses it: `^> \*\*Status:\*\* ([\w ]+?)(?: \((.+)\))?\s*$` → group 
 
 **Auxiliary workflows** (all workflows except execute, close, patch, and preplan) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
-Auxiliary workflows: propose, plan, eval, review, redteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, conclude, archive.
+Auxiliary workflows: propose, plan, eval, review, redteam, blueteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, conclude, archive.
 
 Execute, close, patch, revise, and **preplan** are exempt — they commit as a structural requirement of their lifecycle. For preplan specifically: the disposable worktree is always discarded and the brief is the sole surviving artifact; committing it completes the preplan rather than being an incidental save.
 
