@@ -46,6 +46,83 @@ One line, full lifecycle: plan it, attack the plan, revise if the attack found s
 
 The workflows are thinking disciplines, not programming tools — evaluation lenses, adversarial stakeholder waves, claims-vs-evidence audits, living roadmaps. Anything file-based kept in a git repo (a manuscript, course material, legal drafts, research notes) gets the **full** framework, branches and all. Without git, every analytical workflow still runs — documents are created directly, commits skipped. For work that isn't files at all, the agent authors the plan, you execute it, and the record is kept the same way. Scope rules per substrate: `SKILL.md § Substrate`.
 
+## The loop
+
+The double line is the flow most work actually takes. Bracketed steps run only when they are needed — and the flow can be entered at any of them.
+
+```
+  the flow   ═══   everything else hangs off it
+  something needs fixing        ──▶   patch      straight to code, current branch, no cycle
+  ...it needs hunting first     ──▶   debug      one bug, own worktree, until resolved
+  something needs working out   ──▶   interview  Q&A with you, in rounds, transcript kept
+
+    eval       open-ended analysis of a question    ┐
+    explore    grounded in what the repo has        │
+    imagine    a seed idea grown into a vision      │
+    coach      judgment, argued to consensus        │  any of these can seed the flow —
+    memo       captured before it is lost           │  and any one can feed any other
+    scan       exhaustive file:ln inventory         │
+    guide      a reading path for a human           │
+    define     what a thing IS, and is not          │
+    navigate   the roadmap: what to do next         ┘
+              ┌──────────────────┬──────────────────┘
+              │                  ▼
+              │     ╔═════════════════════════╗
+              │     ║  [propose]              ║ a directional what-if: trade-offs,
+              │     ║  if the way is unclear  ║ impact, no steps yet
+              │     ╚════════════╤════════════╝
+              │                  │              preplan  a dirty spike in a throwaway worktree,
+              │                  │ ◀── evidence          kept only where it sharpens the plan
+              │                  ▼
+              │     ╔═════════════════════════╗
+              └────▶║  plan                   ║ what changes, in which files, in what order
+                    ║  the blueprint          ║ hand it the ask directly and propose is skipped
+                    ╚════════════╤════════════╝
+                                 ▼
+                    ╔═════════════════════════╗             ┌───────────────────────────────────────┐
+                    ║  redteam · stress       ║─ findings ─▶│ blueteam  screens findings with you,  │
+                    ║  attack the plan        ║             │           defends or concedes         │
+                    ╚════════════╤════════════╝             └───────────────────┬───────────────────┘
+                                 │                                              │
+                                 │ ◀────────────────────────────────────────────┘
+                                 ▼
+                    ╔═════════════════════════╗
+                    ║  [revise]               ║ edits the plan in place and logs why —
+                    ║  only if it is wrong    ║ it corrects ANY stale projex document
+                    ╚════════════╤════════════╝
+                                 ▼
+                    ╔═════════════════════════╗             ┌─ inside the run ──────────────────────┐
+                    ║  execute                ║─ spawns ───▶│ do      one objective, no ceremony    │
+                    ║  on an ephemeral        ║             │ verify  an independent check, per step│
+                    ║  branch or worktree     ║             └───────────────────────────────────────┘
+                    ╚════════════╤════════════╝             ┌─ beside it ───────────────────────────┐
+                                 │             ─ hands off ▶│ debug   one bug, its own worktree,    │
+                                 │                          │         until resolved or exhausted   │
+                                 │                          └───────────────────────────────────────┘
+                                 ├── your call · execute stops and reports; nothing closes on its own
+                                 ▼
+                    ╔═════════════════════════╗             ┌───────────────────────────────────────┐
+                    ║  audit                  ║─── gaps ───▶│ [patch]  a quick fix straight to code │
+                    ║  claims vs artifacts    ║             │          no plan, execute or close    │
+                    ╚════════════╤════════════╝             └───────────────────────────────────────┘
+                                 ▼
+                    ╔═════════════════════════╗
+                    ║  close                  ║ a walkthrough of what actually happened,
+                    ║  the record             ║ then squash-merge and clean up
+                    ╚════════════╤════════════╝
+                                 └──▶ next unit of work — back to navigate, and around again
+
+
+    review     a document re-checked against the status quo   ·  any time
+    conclude   sources verified as consumed, then retired     ·  any time
+    archive    many closed documents, one searchable index    ·  any time
+
+    orchestrate  plays the projex user: spawns subagents through whole workflows,
+                 reviews every return, reports back
+    sprint       orchestrate in a loop: smallest next objective, verify, absorb,
+                 again — until the goal is reached or a stop fires
+```
+
 ## Workflows
 
 Invoke any of these by name. Each produces (or acts on) a typed document with a defined lifecycle.
