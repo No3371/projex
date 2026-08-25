@@ -79,6 +79,7 @@ $TypeInfo = @{
     define    = @('Definition', 'def');       navigate  = @('Navigation', 'nav')
     map       = @('Map', 'map');              scan      = @('Scan', 'scan')
     explore   = @('Exploration', 'explore');  guide     = @('Guide', 'guide')
+    unpack    = @('Unpack', 'unpack')
     imagine   = @('Imagination', 'imagine');  archive   = @('Archive', 'archive')
     conclude  = @('Conclude', 'conclude')
 }

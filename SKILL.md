@@ -1,6 +1,6 @@
 ---
 name: projex-framework
-description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``blueteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
+description: When these mentioned:`close-projex``eval-projex``execute-projex``do-projex``verify-projex``plan-projex``preplan-projex``propose-projex``review-projex``explore-projex``redteam-projex``blueteam-projex``stress-projex``audit-projex``interview-projex``coach-projex``patch-projex``revise-projex``debug-projex``navigate-projex``guide-projex``unpack-projex``imagine-projex``define-projex``conclude-projex``archive-projex``scan-projex``memo-projex``orchestrate-projex``sprint-projex`, load both this skill and a file with that exact name (located besides this SKILL.md).
 ---
 
 Projex are self-contained unit markdown documents in folders named ".projex". Workflow specs are actions invoked in verb sense. Types:
@@ -48,6 +48,8 @@ Projex are self-contained unit markdown documents in folders named ".projex". Wo
   - `/explore-projex.md How does the plugin loader resolve dependencies?`
 - **Guide** — Curated guide for human learners. Phased steps with focus cues and takeaways. Sources span code, docs, specs, external pages. Closed by default. WORKFLOW -> @./guide-projex.md
   - `/guide-projex.md Understand our authentication system end-to-end`
+- **Unpack** — Takes one dense subject and restates it in successive layers, each thinner than the last, down descending audience floors. Passes run two at a time, then the user is asked whether two more are needed — the ladder has no declared end. Each sweep reads the layer the previous pass wrote; opacity found by fixed category inventory; residue always named. Unlike Guide (routes the reader to sources), Unpack rewrites the subject itself. WORKFLOW -> @./unpack-projex.md
+  - `/unpack-projex.md @2607311430-token-budget-model-def.md` or `/unpack-projex.md The Worktree Mode section of SKILL.md`
 - **Imagination** — Generative: takes a seed (idea, essence, principle) and grows it into rich, detailed vision. Expands possibility space, fills in texture, surfaces creative challenges. Unlike Eval (analytical) or Proposal (directional). WORKFLOW -> @./imagine-projex.md
   - `/imagine-projex.md What would a plugin system for this framework look like?`
 - **Conclude** — Verified supersession: given a successor that crystallizes prior work (Definition, Nav, Plan, …), checks each source projex claim-by-claim (Captured / Overruled / Residue), stamps fully-consumed sources superseded and removes them (recoverable via git history; the report keeps filename + verdicts), and rewrites the successor's prior-artifact references into a do-not-consult ledger. Sources may be active or closed. Residue blocks retirement — no silent drops. Unlike Archive (mechanical compression), Conclude is judgment. Born closed. WORKFLOW -> @./conclude-projex.md
@@ -169,7 +171,7 @@ One regex parses it: `^> \*\*Status:\*\* ([\w ]+?)(?: \((.+)\))?\s*$` → group 
 
 **Auxiliary workflows** (all workflows except execute, close, patch, and preplan) produce artifacts — documents, reports, definitions, maps, logs, memos, scans — but **do not commit them automatically**. The workflow creates and presents the artifact; committing happens only when the user explicitly requests it.
 
-Auxiliary workflows: propose, plan, eval, review, redteam, blueteam, stress, audit, interview, guide, explore, imagine, scan, memo, map, navigate, define, conclude, archive.
+Auxiliary workflows: propose, plan, eval, review, redteam, blueteam, stress, audit, interview, guide, unpack, explore, imagine, scan, memo, map, navigate, define, conclude, archive.
 
 Execute, close, patch, revise, and **preplan** are exempt — they commit as a structural requirement of their lifecycle. For preplan specifically: the disposable worktree is always discarded and the brief is the sole surviving artifact; committing it completes the preplan rather than being an incidental save.
 

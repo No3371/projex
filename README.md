@@ -140,6 +140,7 @@ Invoke any of these by name. Each produces (or acts on) a typed document with a 
 | `memo-projex` | Lightweight capture of an idea or issue before it's lost — no research, just record |
 | `scan-projex` | Exhaustive `file:ln` inventory of everything connected to a subject |
 | `guide-projex` | Curated reading path for a human learner |
+| `unpack-projex` | A dense subject restated in progressively thinner layers, two passes at a time |
 
 ### Orient
 

@@ -63,6 +63,7 @@ For work too small to deserve this ceremony, skip it: `patch-projex <directive>`
 | Jot down an idea/issue before it's lost | `memo-projex` |
 | List every occurrence of something, `file:ln` precise | `scan-projex` |
 | Get a reading path to learn a subsystem | `guide-projex` |
+| Make something dense readable, two thinning passes at a time | `unpack-projex` |
 | Pin down what an entity *is* | `define-projex` (living doc) |
 | Maintain a roadmap / decide what's next | `navigate-projex` (living doc) |
 | Collapse implementation uncertainty with a fast dirty disposable spike | `preplan-projex` |

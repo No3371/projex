@@ -2,7 +2,7 @@
 # new-projex.sh — Scaffold a new projex file with minimal common header
 # Usage: new-projex.sh --repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]
 #   <type>: propose|plan|eval|review|redteam|blueteam|stress|audit|interview|coach|log|memo|
-#           patch|preplan|debug|define|navigate|map|scan|explore|guide|imagine|conclude|archive
+#           patch|preplan|debug|define|navigate|map|scan|explore|guide|unpack|imagine|conclude|archive
 #   <parent>: User|Orchestrator|{yymmddhhmm}-{name}-{type}.md
 #   <projex-dir>: defaults to ".projex" (relative to repo-root)
 # Prints the created file's path on success.
@@ -102,10 +102,11 @@ case "$type" in
     scan)      suffix="scan" ;;
     explore)   suffix="explore" ;;
     guide)     suffix="guide" ;;
+    unpack)    suffix="unpack" ;;
     imagine)   suffix="imagine" ;;
     conclude)  suffix="conclude" ;;
     archive)   suffix="archive" ;;
-    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam blueteam stress audit interview coach log memo patch preplan debug define navigate map scan explore guide imagine conclude archive" >&2; exit 2 ;;
+    *) echo "Unknown type '$type'. Valid: propose plan eval review redteam blueteam stress audit interview coach log memo patch preplan debug define navigate map scan explore guide unpack imagine conclude archive" >&2; exit 2 ;;
 esac
 
 if [[ "$parent" != User && "$parent" != Orchestrator ]]; then
