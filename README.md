@@ -119,7 +119,7 @@ The double line is the flow most work actually takes. Bracketed steps run only w
 
     orchestrate  plays the projex user: spawns subagents through whole workflows,
                  reviews every return, reports back
-    sprint       orchestrate in a loop: smallest next objective, verify, absorb,
+    sprint       orchestrate in a loop: next objective, verify, absorb,
                  again — until the goal is reached or a stop fires
 ```
 
