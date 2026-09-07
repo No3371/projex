@@ -40,13 +40,17 @@ Loop:
 
 - Walk the topic tree. Research what needs to be discussed or answered.
 - Explore established facts/sources that are relevant and may answer the question.
-- Provide your recommended answer — show your thinking, then ask the user to confirm, correct, or expand.
+- Derive the next question. Then look ahead: if the questions that follow it are already clear and their framing does not change no matter how this one is answered, derive them now and ask the whole set together.
+- Stop extending the batch at the first question whose wording, options, or relevance depends on an answer still pending. That one waits for the next round.
+- Batch size follows the lookahead, not a target — usually 2–4; one question is the normal case when the tree branches on every answer.
+- Number a batch as one question with lettered parts (`Q3a`, `Q3b`, …) so the shared derivation stays visible in the transcript.
+- Provide your recommended answer for each question — show your thinking, then ask the user to confirm, correct, or expand.
 - Log as you go — Write the question first before asking, then record the answer and your interpretation in the document.
 - Each answer may branches the interview; follow them systematically.
 
 Keep going until reaching shared understanding on all branches. The user can stop at any time.
 
-Note: User facing conversation/Questions should be as rich/verbose as what is written into the question, if not more. It'd be inconvenience that the user mush look up the written question or referred document to understand what are you asking about.
+Note: User facing conversation/Questions should be as rich/verbose as what is written into the question, if not more. It'd be inconvenience that the user must research your questions or referenced subjects. Utilize ask tool from the environment when applicable.
 
 ### 3. CONCLUDE
 
@@ -98,6 +102,23 @@ When all branches are resolved or the user stops:
 
 ---
 
+### Q3: [Shared question framing — batched parts]
+
+[**Context: Why these are asked together — what made the later parts derivable in advance**]
+
+**Q3a: [Question]**
+**Recommended answer:** [Agent's recommendation with reasoning]
+
+**Q3b: [Question]**
+**Recommended answer:** [Agent's recommendation with reasoning]
+
+**User's answer:**
+> [Verbatim response]
+
+**Interpretation:** [Key points per part, actionable info, ambiguities]
+
+---
+
 [Continue for all questions — no artificial round limits]
 
 ---
@@ -128,7 +149,7 @@ When all branches are resolved or the user stops:
 ## PRINCIPLES
 
 - **Read-only** — NEVER edit code or take implementation actions
-- **One question at a time** — never batch questions
+- **Batch by lookahead** — ask together only the questions already derivable and unchanged by the pending answers; otherwise one at a time
 - **Recommend answers** — show your thinking, let the user confirm or correct
 - **Self-serve** — do your own research, ask right and good question
 - **Relentless** — keep going until shared understanding on all branches
