@@ -1,17 +1,15 @@
 # Sprint-Projex
 
-Sprint is orchestration in a loop: given a **goal**, the orchestrator repeatedly derives the next objective, runs it through a lightweight iteration body, verifies, absorbs the result, and goes again — until the goal is reached or a stop signal fires.
+Sprint is orchestration in a loop: given a **goal**, the orchestrator repeatedly derives the next objective, runs it through a workflow chain, verifies, absorbs the result, and goes again — until the goal is reached or a stop signal fires.
 
-Second orchestration-type workflow. Everything in `orchestrate-projex.md` — subagent handoff, nesting depth, review-after-return, patch-vs-revise disambiguation, human escalation, completion report, chain notation — applies unless overridden here. Unlike orchestrate, sprint produces its own document: the **sprint nav** (§ Sprint Nav) — a sprint-flavored Navigation serving as the sprint's backbone: goal, branches, worktree, position, iteration outcomes. Committed to base at start, so an in-flight sprint stays visible from base and a later session can be handed back into it (§ Resume). Sub-workflows still produce their own artifacts.
+ Everything in `orchestrate-projex.md` — subagent handoff, nesting depth, review-after-return, patch-vs-revise disambiguation, human escalation, completion report, chain notation — applies unless overridden here. Unlike orchestrate, sprint produces its own document: the **sprint nav** (§ Sprint Nav) — a sprint-flavored Navigation serving as the sprint's backbone: goal, branches, worktree, position, iteration outcomes. Committed to base at start, so an in-flight sprint stays visible from base and a later session can be handed back into it (§ Resume). Sub-workflows still produce their own artifacts.
 
 ## Core Contract
 
 Two invariants define sprint — **loop** and **piecemeal**. Everything else is configurable:
 
 1. **Loop until goal** — iterations continue while the goal is unmet and no stop signal has fired. No fixed iteration count.
-2. **Piecemeal steps** — each iteration takes **one** objective, sized to the active step size (§ Step Size). An objective too big for the body is decomposed at derive, never escalated into heavier ceremony (no full execute → close cycle inside an iteration).
-
-One objective per iteration and decompose-don't-escalate are the invariants; *how small* that objective is, is configuration.
+2. **Piecemeal steps** — each iteration takes **one** objective, sized to the active step size (§ Step Size). An objective too big for the body is decomposed at derive.
 
 **Loop skeleton.** Every iteration is `derive → body → absorb`. Derive and absorb are **structural** — present in every sprint, not body members, cannot be removed or retargeted by chain notation. Derive is dispatched to an independent subagent (§ Iteration Loop A); absorb is the orchestrator's own step. The body is the configurable middle: the work steps that turn one objective into verified change.
 
@@ -26,11 +24,11 @@ plan → patch! → audit → [patch]
 - **audit** — validate the executed work against the plan's success criteria
 - **[patch]** — optional fix for audit findings; orchestrator judges
 
-The human may supply a different body via chain notation (`orchestrate-projex.md § Explicit Chain Notation`). The body is configuration, not structure: sprint hardwires no step sequence — the orchestrator interprets whatever body is active and orchestrates it toward the derived objective (§ Iteration Loop B). A `navigate` step inside a supplied body is an ordinary navigate-projex dispatch on whatever scope roadmap the objective concerns — it is **never** read as targeting the sprint nav (§ Sprint Nav). The loop skeleton, stop signals, and worktree requirement hold regardless of body.
+The user may configure a different body via chain notation (`orchestrate-projex.md § Explicit Chain Notation`). The orchestrator interprets whatever body is active and orchestrates it toward the derived objective (§ Iteration Loop B). A `navigate` step inside a supplied body is an ordinary navigate-projex dispatch on whatever scope roadmap the objective concerns — it is **never** read as targeting the sprint nav (§ Sprint Nav). The loop skeleton, stop signals, and worktree requirement hold regardless of body.
 
 ## Step Size
 
-`step` sets how much one objective may cover. Default `minimal`.
+`step` is a derive-time constraint controlling how much one objective may cover. Default `minimal`.
 
 | `step` | Derive emits |
 |---|---|
@@ -38,7 +36,7 @@ The human may supply a different body via chain notation (`orchestrate-projex.md
 | `standard` | one coherent unit of work that a single body run can plan, execute, and check without splitting |
 | `extended` | several related changes as one objective; "too big" is judged against the body's actual capacity, not against minimality |
 
-**A derive-time constraint, not a body one.** `step` bounds what the derive subagent may emit and is the yardstick the orchestrator reviews the returned objective against (§ Iteration Loop A). No body step reads it; it is not chain notation and carries no chain operators. `body:` and `step:` are orthogonal — one sets what an iteration does, the other how much it bites off.
+`step` bounds what the derive subagent may emit and is the yardstick the orchestrator reviews the returned objective against (§ Iteration Loop A). No body step reads it; `body:` and `step:` are orthogonal — one sets what an iteration does, the other how much it bites off.
 
 Fixed at setup and recorded in the sprint nav header; a resumed sprint inherits it from there. Changing it mid-sprint is a human instruction, logged as a Revision Log entry.
 
