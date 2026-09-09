@@ -150,12 +150,13 @@ Nest when a step's shape isn't knowable in advance — sub-chain needs user-leve
 An explicit list may annotate each step:
 
 ```
-step, step!, step<model>, stepA+stepB, stepA & stepB, | group |*N, <<model>>, step<<model>>, [step<model>], orchestrate unit
+step, step!, step<model>, step<modelA|modelB>, stepA+stepB, stepA & stepB, | group |*N, <<model>>, step<<model>>, [step<model>], orchestrate unit
 ```
 
 - **`step`** — bare workflow name (`plan`, `execute`, `redteam`). Runs the model currently in effect — orchestrator default, or the last `<<model>>` switch.
 - **`step!`** — **required-success**. Ultimately fails (normal review latitude still applies — a second attempt is fine) → orchestrator **halts the orchestration and escalates** instead of running any later step. Guards a step everything downstream depends on — typically `execute!` (auditing/closing a failed execution is pointless). Attaches after `<model>` (`execute<opus>!`); optional `[steps]` can't take it.
-- **`step<model>`** — **per-step model override** (`sonnet` | `opus` | `haiku` | `fable`). This step only; doesn't change the default. Strict, escalate when the picked model/agent is not available.
+- **`step<model>`** — **per-step model override**. This step only; doesn't change the default. Strict, escalate when the picked model/agent is not available.
+- **`step<modelA|modelB>`** — **judged model override**. Same latitude as `[step]`, applied to the model rather than the step: the orchestrator picks one of the listed models at dispatch, from what that step actually faces, and records the pick and its reason in the Completion Report. A condition may ride inside a member (`execute<opus when the objective is debug work|sonnet>`); with none stated, the orchestrator judges freely. Doesn't change the default. Availability is strict as elsewhere — a listed model that is unavailable is dropped from the choice, all of them unavailable escalates.
 - **`stepA+stepB`** — **parallel group**. `+`-joined steps dispatch as concurrent subagents; chain waits for all before continuing, orchestrator reviews them together. Members keep own annotations — `audit<sonnet>+redteam<opus>`, `[audit]+redteam`.
 - **`stepA & stepB`** — **glue**. Couples steps into one unit where the later gates the earlier — a producer/checker pair (`execute & audit`). Unlike `,` (independent, run-and-move-on), glued members are judged together — the natural body of a `*` loop.
 - **`| … |`** — **grouping**. Brackets a run of steps into one unit so a suffix operator applies to the whole run, not just the last step.
