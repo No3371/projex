@@ -17,7 +17,8 @@ Patches are the fast path for small, well-understood changes. When Plan → Exec
 | Use Patch | Use Plan-Execute |
 |-----------|------------------|
 | Fix is obvious and well-understood | Problem needs investigation first |
-| Scope is 1-3 files, focused change | Scope spans many files or components |
+| Scope is focused and clear | Scope spans extensively |
+| What to change are specified | What to change are not decided |
 | No architectural decisions needed | Trade-offs or approach options exist |
 | Can verify immediately | Requires multi-step verification plan |
 | Partial execution of existing plan | Full plan execution |
@@ -33,7 +34,7 @@ Patches are the fast path for small, well-understood changes. When Plan → Exec
 
 **Examples:**
 - `/patch-projex Fix the off-by-one error in the parser loop`
-- `/patch-projex Execute objective 2 of @2602011430-api-cleanup-plan.md`
+- `/patch-projex @2602011430-api-cleanup-plan.md`
 - `/patch-projex Update config to use new endpoint URL`
 - `/patch-projex Add missing null check in handleSubmit`
 
@@ -49,7 +50,7 @@ The directive can be:
 
 ### Qualifies as Patch
 - [ ] Change is well-understood — no exploration or design needed
-- [ ] Scope is bounded and focused (file count is a signal, not a rule — a 4-file rename can be a patch, a 1-file architectural change shouldn't be)
+- [ ] Scope is bounded and focused (file count is just a signal, a 1-file architectural change without clear implementation planned still does not qualify as patch)
 - [ ] No branching decisions — single clear approach
 - [ ] Verifiable immediately — can confirm correctness on the spot
 
@@ -134,7 +135,7 @@ The patch document IS the walkthrough. One self-contained record.
 
 ## Summary
 
-[2-3 sentences: What was done and why]
+[What was done and why]
 
 ---
 
@@ -296,6 +297,5 @@ Before considering the patch complete:
 - The patch document is the walkthrough. No separate walkthrough
 - If a patch fails verification, fix it or abandon it — don't leave broken state
 - If the patch grows bigger than expected mid-execution, stop and escalate to `/plan-projex`
-- Patches are still first-class projex documents — searchable, linkable, referenceable
 - Use relative paths when referencing repository files
 - A patch's *code* commit uses a conventional-type subject like any landing commit; its `Projex: {yymmddhhmm}-{patch-name}` trailer is what identifies it in history (`git log --grep 'Projex: '`). The patch *document* commit keeps the `projex(patch):` prefix
