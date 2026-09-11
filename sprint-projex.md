@@ -168,7 +168,7 @@ Each iteration, in order:
 
 Derive subagent contract:
 
-- Reads the sprint nav, then the repo's current state on the sprint branch (iteration artifacts as needed)
+- Reads the sprint nav and current repository state, including retained work and the preceding iteration’s failure evidence. After a failure, determines whether the next objective should remove a blocker, complete retained work, or take another goal-relevant approach. An unblocking objective is ordinary sprint work; it requires neither human authorization nor restarting the implementation.
 - Revises `## Current Position` and appends a Revision Log row — a sprint-flavored nav revision, minus user discussion (the orchestrator stands in as user at review)
 - Returns exactly one outcome: `objective` — one step toward the goal, sized to the sprint's `step` (§ Step Size) — | `goal reached` (with evidence) | `nothing to do`
 - Commits the nav revision to the sprint branch: `projex(sprint): derive iteration N`
@@ -187,8 +187,8 @@ Strategy-wide rules, whatever the chain:
 - **"Too big" aborts to derive** — any step signaling the objective exceeds it (split heuristics, scope guards, blast-radius findings, a step's own escalation) ends the strategy; return to A with decomposition feedback. Never upgrade ceremony mid-iteration — no full execute → close cycle appears because a step balked.
 - **Outcome is the orchestrator's judgment** from the whole strategy run:
   - **success** — the objective is achieved and verified: the strategy's checker steps are satisfied, or, in a checkerless strategy, the orchestrator's own review confirms observable progress
-  - **failure** — a required-success (`!`) step ultimately fails, a checker stays dissatisfied after its allowed rounds, or the strategy completes without advancing the goal
-
+  - **failure** — a required-success step exhausts its attempts, a checker remains dissatisfied after its allowed rounds, or the body finishes without advancing the objective. End this iteration; retain coherent work and evidence, then absorb the failure. Exhausting a body step’s review allowance does not itself halt the sprint or require human approval.
+  
 Default strategy walk-through: plan specs the objective → `patch!` executes it (ultimate failure here fails the iteration) → audit checks the result — verified → success; fixable findings → run `[patch]`, re-audit once; still rejected → failure.
 
 **C. Absorb** *(structural)* — the strategy's own epilogues have closed its artifacts. The orchestrator appends the iteration's row to the sprint nav's `## Iterations` table and commits it to the sprint branch — the deep reassessment belongs to the next derive. Update counters, check stop signals, loop.
@@ -234,7 +234,7 @@ Merge-close is acceptable when per-iteration history matters. A Stalled sprint n
 
 ## Inherited From Orchestrate
 
-Subagent handoff contract, nesting depth (orchestrator depth 0, gate at 3), review after each return, patch-vs-revise disambiguation, human escalation triggers, completion report format, chain notation for custom strategies — all per `orchestrate-projex.md`, not re-specified here. Sprint adds only: the goal loop with its derive/absorb skeleton, the dispatched derive subagent, the strategy-wide rules (sprint-branch commits, too-big abort, outcome judgment), the stop signals, the mandatory worktree, the sprint nav and its uid, the step size, and the step rules.
+Inherit subagent handoff, nesting, per-step review allowances, chain notation, and human escalation for decisions requiring human judgment or authority. Sprint overrides orchestration’s automatic halt after exhausted reviews or required-success failure: those produce a failed iteration and return through absorb to derive. Halt only under Sprint Stop Signals or when a genuine human decision is required (picking trade-off, design change, etc.)
 
 ## Output
 
