@@ -8,7 +8,7 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 
 **Key characteristics:**
 - **Declarative, not procedural** — describes WHAT the entity is, not HOW, WHY, WHEN, WHERE. Information only matters when it supports the WHATs.
-- **Exhaustive by intent** — the document strives to leave nothing ambiguous or assumed. Unknown areas are tracked explicitly until resolved
+- **Exhaustive by intent, incremental by practice** — the document strives to leave nothing ambiguous or assumed, but it reaches that state over many rounds. Exhaustive means *no unknown is hidden*, not *every section is filled on the first pass*. Unknown areas are tracked explicitly until resolved
 - Living document — revisited and deepened over time as understanding grows; never "closed"
 - **Collaborative** — each invocation is a conversation: the agent explores the domain, surfaces questions, and works with the user to sharpen the definition
 - Scope-flexible — can define anything from a single class to an entire product
@@ -43,27 +43,44 @@ Definition documents answer "what is this thing, exactly?" They are declarative 
 
 Before drafting, understand the entity from available sources:
 
-1. **Gather existing information** — read code, docs, specs, related projex, READMEs, comments, tests — anything that already describes or implies what this entity is
-2. **Identify the entity's nature** — is it a runtime component, a data structure, a user-facing feature, an abstract concept, a protocol, a service boundary?
-3. **Note what's clear vs. what's vague** — separate what you can state with confidence from what needs user input
+1. **Classify the subject** — this decides where answers come from:
+   - **Discovery** — the entity already exists (code, product, running process, written material). Facts are recoverable from evidence. Read first, then ask the user only what no artifact can settle
+   - **Origination** — the entity is an idea. Nothing exists to read; every fact is a user decision. Ask; never supply the fact yourself
+   - Mixed subjects are normal — an existing component with a planned extension. Track which mode each area belongs to. An Origination area must never inherit the confidence of a Discovery area
+2. **Gather existing information** — read code, docs, specs, related projex, READMEs, comments, tests — anything that already describes or implies what this entity is
+3. **Identify the entity's nature** — is it a runtime component, a data structure, a user-facing feature, an abstract concept, a protocol, a service boundary?
+4. **Build the gap ledger** — before asking anything, list the entity's facets against the four layers in step 2 and mark each one:
+   - **Established** — stated by the user, or grounded in evidence you can cite
+   - **Assumed** — inferred by you; needs confirmation before it can enter the document
+   - **Unknown** — no evidence, no user input
+
+   The ledger drives the conversation: questions come from the Unknown and Assumed entries, shallowest layer first. A minimal objective produces a mostly-Unknown ledger. That is the expected starting state, not a deficiency for you to fill in alone.
 
 > **Do not assume.** If information isn't available, mark it as an open question — don't fill gaps with plausible-sounding guesses.
 
-#### 2. DISCUSS WITH USER
+#### 2. DISCUSS WITH USER — LAYER BY LAYER
 
-This is the core of the workflow. Surface what you've found and probe for clarity:
+This is the core of the workflow. Resolve the definition in layers, from directional to detailed. **Do not enter a layer until the layer above it is settled or the user defers it explicitly.**
 
-- **Identity:** "In one sentence, what is [entity] responsible for?"
-- **Boundaries:** "What is explicitly NOT part of [entity]? What's adjacent but separate?"
-- **Properties:** "What attributes/fields/capabilities does it have? Are any optional?"
-- **Constraints:** "What must always be true about [entity]? What invariants does it maintain?"
-- **Relationships:** "What does it depend on? What depends on it?"
-- **States:** "What states can it be in? What transitions are valid?"
-- **Edge cases:** "What happens when [unusual condition]?"
+| Layer | Asks | Feeds sections |
+|-------|------|----------------|
+| **L1 — Direction** | "In one sentence, what is [entity] and what is it responsible for?" "Who or what uses it?" "What makes it worth defining?" | Identity, Scope |
+| **L2 — Boundaries** | "What is explicitly NOT part of it?" "What is adjacent but separate?" "How big is the subject — one class, one subsystem, the whole product?" | Boundaries |
+| **L3 — Structure** | "What parts / properties / capabilities does it have?" "What does it depend on, and what depends on it?" "What states can it be in?" | Properties, Relationships, States |
+| **L4 — Detail** | "What must ALWAYS be true? What must NEVER happen?" "What happens when [unusual condition]?" "Exact types, limits, valid transitions?" | Constraints & Invariants, Behaviors, edge cases |
 
-Adapt questions to the entity's nature. A class definition needs different questions than a product definition.
+**Protocol:**
 
-Don't rush to document — keep discussing until you and the user feel the major facets are surfaced. It's fine to draft incrementally: capture what's clear, mark what isn't, revisit.
+- **One layer per round** — 3-5 questions per round, maximum. Ask, wait for answers, re-mark the gap ledger, then decide the next round
+- **Restate before you descend** — at the end of a layer, give the settled statements of that layer back to the user in a few lines and get explicit agreement. A wrong L1 makes every L4 answer worthless
+- **The user sets the floor** — when the user says "enough", names the scope as final, or stops answering a layer, stop there. The unentered layers become Open Questions, not agent-authored content
+- **Depth is earned, not assumed** — a one-line objective authorizes L1 questions only. It does not authorize an L4 document
+- **Adapt to the entity's nature** — a class definition needs different questions than a product definition. The layers stay; the questions change
+
+**By mode:**
+
+- **Discovery** — read first, then convert findings into confirmations instead of open questions: "The code shows X. Is X intended, or incidental?" Reserve real questions for what no artifact can answer — intent, boundary decisions, invariants that are honored but never written down. Never present an inference as an established fact
+- **Origination** — the user owns every fact. Options are allowed to speed a decision ("A or B?"), but an option the user did not pick is an Open Question, never a default. A property the user never mentioned is an invention: put it in Open Questions or drop it
 
 #### 3. DRAFT THE DEFINITION
 
@@ -173,6 +190,8 @@ Resolve `{parent}` from an explicit causal subject/nav/source filename; else sup
 ```
 
 **Drafting guidelines:**
+- **Depth ceiling — the document stops where the conversation stopped** — write nothing below the deepest resolved layer. Name the unresolved layers in Open Questions instead. A definition produced after a single L1 round is an Identity paragraph plus a list of open questions. That is a correct output, not a thin one
+- **Size follows the facts, not the template** — the template is a menu of what *could* be captured, never a form to complete. A minimal objective yields a minimal document
 - **Sections are opt-in** — use what fits the entity. A class needs Properties, States, Behaviors. A product feature might only need Identity, Boundaries, and Constraints. Omit sections that don't apply rather than forcing empty content
 - **Be precise, not verbose** — "Accepts UTF-8 strings up to 255 bytes" beats "Accepts strings of reasonable length"
 - **State confidence levels** — if a property is inferred rather than confirmed, mark it: *(inferred from usage in X — confirm with user)*
@@ -208,13 +227,15 @@ When the user requests a commit:
 
 #### 2. DISCUSS WITH USER
 
+Same layer protocol as a new definition: resume at the **shallowest unresolved layer**, one layer per round, 3-5 questions per round. A revision that answers L4 edge cases while L2 boundaries are still open is building on sand.
+
 Revisit with targeted questions:
 
 - "Last time we left [X] open — has that been decided?"
 - "The codebase now shows [Y] — does this change the boundary we defined?"
 - "I noticed [Z] isn't captured yet — should we add it?"
 
-For user-directed expansions ("expand the lifecycle section"), dive deep into that area with domain-specific questions.
+For user-directed expansions ("expand the lifecycle section"), the named area sets the focus; within it, still go direction → boundary → structure → detail.
 
 #### 3. UPDATE THE DEFINITION
 
@@ -243,6 +264,7 @@ When the user requests a commit:
 ## DEFINITION PRINCIPLES
 
 - **WHAT, not HOW** — the definition describes the entity's nature, not its implementation, nor its history or origin. "Sessions expire after the configured TTL" belongs here; "We use a Redis TTL to expire sessions" belongs in a plan or exploration
+- **Layered, not one-shot** — direction before boundaries, boundaries before structure, structure before detail. Each layer is a round of questions and an explicit agreement. The document may never be deeper than the layer the user has confirmed
 - **Exhaust the vagueness** — the ultimate goal is zero unacknowledged unknowns. Every open question is tracked. Every "it depends" is followed up with "on what, exactly?"
 - **Honest about gaps** — a definition with explicit open questions is trustworthy. One that looks complete but hides assumptions is dangerous. Mark uncertainty visibly
 - **Living, not archived** — definitions stay in `.projex/` for their active lifetime. They move to `.projex/archived/` only when the entity itself is deprecated or superseded
