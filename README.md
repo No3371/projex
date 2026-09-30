@@ -198,6 +198,7 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 | --- | --- |
 | `new-projex` | Strict named-parameter scaffold with repo-root, type, title, Parent, and optional projex directory |
 | `projex-tree` | Read-only complete current-corpus Parent lineage tree; requires Python 3 |
+| `projex-list` | Read-only listing of every projex, newest first, one block per doc (path, state, type, created, Status); `?` where a field is missing; active only unless `--closed`/`--archived`/`--abandoned`/`--all` |
 | `stage-n-commit` | Stage explicit paths + commit as one atomic operation |
 | `stage-by-pattern` | Regex-filtered selective staging |
 | `move-n-stage` / `del-n-stage` | Batch `git mv` / `git rm` with rollback |

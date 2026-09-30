@@ -1,0 +1,53 @@
+.projex/2609050000-theta-audit.md
+state: active
+type: audit
+created: 2026-09-05 00:00
+status: ?
+
+sub/.projex/2609040000-eta-explore.md
+state: active
+type: explore
+created: 2026-09-04 00:00
+status: Accepted — implemented via 2609000000-some-long-patch.md
+
+.projex/closed/2609030000-gamma-plan.md
+state: closed
+type: plan
+created: 2026-09-03 00:00
+status: Complete (Success)
+
+.projex/2609020000-beta-memo.md
+state: active
+type: memo
+created: 2026-09-02 00:00
+status: ?
+
+.projex/2609010000-alpha-plan.md
+state: active
+type: plan
+created: 2026-09-01 00:00
+status: Ready
+
+.projex/deferred/2608030000-zeta-plan.md
+state: deferred
+type: plan
+created: 2026-08-03 00:00
+status: Draft
+
+.projex/abandoned/2608020000-eps-plan.md
+state: abandoned
+type: plan
+created: 2026-08-02 00:00
+status: Abandoned
+
+.projex/archived/2608010000-delta-proposal.md
+state: archived
+type: proposal
+created: 2026-08-01 00:00
+status: Draft
+
+.projex/notes.md
+state: active
+type: ?
+created: ?
+status: ?

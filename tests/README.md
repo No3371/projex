@@ -30,6 +30,7 @@ network is needed — only `git` and the relevant shell. The new Parent/tree sui
 | `close-precheck.test.ps1` | 14 | Independent PowerShell contract: encoded context, worktree identity, child inventory/gates, no-argument inference, and malformed-header failure |
 | `new-projex.test.sh` / `.ps1` | 178 / 181 | Shared Parent/header/collision matrix, strict named parser rejection (exit 2, one usage marker, no stdout path, full filesystem no-write snapshot), mixed-case PowerShell parameters, and closed 20-scaffold/4-manual caller inventory |
 | `projex-tree.test.sh` / `.ps1` | 46 each | Shared current-corpus tree goldens, target-component failures including reachable duplicate Parent and invalid UTF-8 discovery, BOM/CRLF, and parity |
+| `projex-list.test.sh` / `.ps1` | 34 / 33 | Shared block-format goldens for default active-only, folder toggles (order-independent), and `--all`; `?` for missing status/type/date; header-only Status (body `Status:` ignored); nested repo and `.projexwt` skipping; BOM/CRLF; usage and missing-root errors |
 | `resolve-conflicts.test.ps1` | 33 | PowerShell parity for the core contract (checkout mode) |
 | `worktree.test.ps1` | 39 | PowerShell parity for worktree mode |
 | `dirty-base.test.ps1` | 139 | PowerShell parity for the dirty-base gate — same matrix, mechanically parallel names |
