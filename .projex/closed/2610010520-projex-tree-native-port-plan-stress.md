@@ -1,6 +1,6 @@
 # Stress: projex-tree Native Port Plan
 
-> **Status:** Draft
+> **Status:** Complete (Remediated)
 > **Lead:** Opus 5.5 (stress subagent)
 > **Parent:** 2610010506-projex-tree-native-port-plan.md
 > **Remediated in:** 2610010506-projex-tree-native-port-plan.md § Revision Log 2026-10-01 — Findings 1–10 + Compound 1 applied (Finding 4a matched to Python instead of a delta; 4b/4c → D7/D8); target-claim quotes below describe the pre-revision plan.

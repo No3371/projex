@@ -1,11 +1,14 @@
 # projex-tree Native Port (bash + PowerShell, no Python)
 
-> **Status:** In Progress
+> **Status:** Complete
 > **Author:** Opus 5.5 (Plan subagent)
 > **Parent:** Orchestrator
 > **Source:** Direct request — make `projex-tree` a pure bash + PowerShell utility (human-approved after the `projex-list` native rewrite)
-> **Related Projex:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md | 2608121756-parent-lineage-and-projex-tree-addition-plan.md | 2608130419-parent-lineage-and-projex-tree-addition-walkthrough.md | 2608121919-parent-lineage-audit-remediation-patch.md | 2610010520-projex-tree-native-port-plan-stress.md
+> **Related Projex:** 2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md | 2608121756-parent-lineage-and-projex-tree-addition-plan.md | 2608130419-parent-lineage-and-projex-tree-addition-walkthrough.md | 2608121919-parent-lineage-audit-remediation-patch.md | 2610010520-projex-tree-native-port-plan-stress.md | 2610011956-projex-tree-native-port-audit.md | 2610012008-projex-tree-relative-repo-root-patch.md
 > **Worktree:** Yes
+> **Completed:** 2026-10-01
+> **Walkthrough:** 2610010506-projex-tree-native-port-walkthrough.md
+> **Log:** 2610010506-projex-tree-native-port-log.md
 
 ---
 
@@ -31,14 +34,14 @@ Replace `.projex-tree.py` engine with two self-contained native engines — `pro
 
 ### Success Criteria
 
-- [ ] `.projex-tree.py` deleted; `grep -n -i python projex-tree.sh projex-tree.ps1 README.md` (tree row) → no hits.
-- [ ] `bash tests/projex-tree.test.sh` and `pwsh tests/projex-tree.test.ps1` → `FAIL=0`, identical assertion counts, summary line matches `^PASS=[0-9]+ FAIL=[0-9]+$`.
-- [ ] `tests/run-all.sh` / `tests/run-all.ps1` report the projex-tree suite without the "did not emit exactly one PASS=N FAIL=M summary" line.
-- [ ] All stdout/stderr bytes LF-terminated UTF-8 without BOM on Windows, both engines (goldens compared with `cmp` / `Get-FileHash`).
-- [ ] Differential run (Step 5): sh, ps1, and Python (CRLF→LF normalized) byte-identical on every parity case and on every document of this repo's own corpus as target; differences only in the enumerated deltas D1–D9; corpus run yields ≥1 exit-0 tree per engine (non-vacuous).
-- [ ] No committed fixture byte makes `projex-tree` fail on this repo: after Step 2, tree on any real doc of `<work-root>` exits 0.
-- [ ] `projex-tree.{sh,ps1}` agree on C1 for 0/1/3 args, `-`-prefixed extras, and empty-string args (suite-covered).
-- [ ] Fresh scratch clone of the ephemeral branch (autocrlf=true) passes both suites.
+- [x] `.projex-tree.py` deleted; `grep -n -i python projex-tree.sh projex-tree.ps1 README.md` (tree row) → no hits.
+- [x] `bash tests/projex-tree.test.sh` and `pwsh tests/projex-tree.test.ps1` → `FAIL=0`, identical assertion counts, summary line matches `^PASS=[0-9]+ FAIL=[0-9]+$`.
+- [x] `tests/run-all.sh` / `tests/run-all.ps1` report the projex-tree suite without the "did not emit exactly one PASS=N FAIL=M summary" line.
+- [x] All stdout/stderr bytes LF-terminated UTF-8 without BOM on Windows, both engines (goldens compared with `cmp` / `Get-FileHash`).
+- [x] Differential run (Step 5): sh, ps1, and Python (CRLF→LF normalized) byte-identical on every parity case and on every document of this repo's own corpus as target; differences only in the enumerated deltas D1–D9; corpus run yields ≥1 exit-0 tree per engine (non-vacuous).
+- [x] No committed fixture byte makes `projex-tree` fail on this repo: after Step 2, tree on any real doc of `<work-root>` exits 0. (Close correction: 62 of 64 real docs exit 0; the other 2 exit 3 with `E_PARENT_DANGLING` — a pre-existing content error, not fixture-caused; criterion intent, no fixture-induced failure or `E_IO`, met.)
+- [x] `projex-tree.{sh,ps1}` agree on C1 for 0/1/3 args, `-`-prefixed extras, and empty-string args (suite-covered).
+- [x] Fresh scratch clone of the ephemeral branch (autocrlf=true) passes both suites.
 
 ### Out of Scope
 
@@ -449,16 +452,16 @@ Then CRLF-materialization check: `git clone -b <ephemeral-branch> <repo-root> <s
 ## Verification Plan
 
 ### Automated Checks
-- [ ] `bash tests/projex-tree.test.sh` → `PASS=N FAIL=0`
-- [ ] `pwsh -NoProfile -File tests/projex-tree.test.ps1` → `PASS=N FAIL=0` (same N)
-- [ ] `bash tests/run-all.sh` / `pwsh tests/run-all.ps1` → projex-tree suite summarized, no failure note
-- [ ] Step 5 harness: 0 unexplained mismatches, 0 sh↔ps1 mismatches, corpus exit-0 count ≥1
-- [ ] Fresh-clone suite run → `FAIL=0`
-- [ ] Step 2 corpus-poison check → exit 0; Step 3 continuation grep empty + CRLF-copy run `FAIL=0`
+- [x] `bash tests/projex-tree.test.sh` → `PASS=N FAIL=0`
+- [x] `pwsh -NoProfile -File tests/projex-tree.test.ps1` → `PASS=N FAIL=0` (same N)
+- [x] `bash tests/run-all.sh` / `pwsh tests/run-all.ps1` → projex-tree suite summarized, no failure note
+- [x] Step 5 harness: 0 unexplained mismatches, 0 sh↔ps1 mismatches, corpus exit-0 count ≥1
+- [x] Fresh-clone suite run → `FAIL=0`
+- [x] Step 2 corpus-poison check → exit 0; Step 3 continuation grep empty + CRLF-copy run `FAIL=0`
 
 ### Manual Verification
-- [ ] Run `projex-tree.{sh,ps1}` on `2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md` in the real repo; output matches Python (`tr -d '\r'`) captured before Step 6.
-- [ ] `PATH` without Python: `env PATH=/usr/bin:/bin bash projex-tree.sh . <doc>` (Git Bash; pyenv shims absent) → exit 0.
+- [x] Run `projex-tree.{sh,ps1}` on `2608120933-parent-lineage-header-and-projex-tree-utility-proposal.md` in the real repo; output matches Python (`tr -d '\r'`) captured before Step 6.
+- [x] `PATH` without Python: `env PATH=/usr/bin:/bin bash projex-tree.sh . <doc>` (Git Bash; pyenv shims absent) → exit 0.
 
 ### Acceptance Criteria Validation
 

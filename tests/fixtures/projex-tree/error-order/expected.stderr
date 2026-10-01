@@ -1,0 +1,3 @@
+projex-tree: E_IDENTITY_DUPLICATE: 2609140003-twin-plan.md: child identity resolves to multiple documents
+projex-tree: E_PARENT_DUPLICATE: .projex/2609140001-dup-plan.md: multiple Parent headers
+projex-tree: E_PARENT_DUPLICATE: .projex/2609140001-dup-plan.md-old/2609140002-dup-plan.md: multiple Parent headers

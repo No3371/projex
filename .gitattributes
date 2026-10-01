@@ -1,2 +1,3 @@
 # Fixture inputs and goldens are compared byte for byte; core.autocrlf would rewrite them to CRLF on checkout
 tests/fixtures/projex-list/** -text
+tests/fixtures/projex-tree/** -text
