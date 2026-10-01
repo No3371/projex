@@ -1,6 +1,6 @@
 # projex-tree Native Port (bash + PowerShell, no Python)
 
-> **Status:** Ready
+> **Status:** In Progress
 > **Author:** Opus 5.5 (Plan subagent)
 > **Parent:** Orchestrator
 > **Source:** Direct request — make `projex-tree` a pure bash + PowerShell utility (human-approved after the `projex-list` native rewrite)
