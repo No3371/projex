@@ -62,7 +62,7 @@ Projex are self-contained unit markdown documents in folders named ".projex". Wo
 
 ## Authoring
 
-File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md`
+File naming: `{yymmddhhmm}-{projex-name}-{projex-type}.md` — name and type use only `a-z`, `0-9`, `-`. Never `:`, which NTFS reserves.
 
 - Cross-reference related projex in all involved documents
 - Front-load key info for quick assessment at a glance
