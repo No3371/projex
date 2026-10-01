@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Read-only Parent lineage tree for one projex document: follows the target's Parent chain to its
-# root, then prints every current-corpus descendant of that root as a box-drawing tree.
+# root, then prints every current-corpus descendant of that root as a box-drawing tree. A well-formed
+# Parent naming no discovered document (deleted by archive or conclude) ends the chain: that filename
+# becomes the root, printed as "<filename> (missing)", and the tree renders beneath it.
 # Usage: projex-tree.sh <repo-root> <filename>
 # Exit: 0 tree on stdout | 2 usage, repo, or target error | 3 lineage errors | 4 unreadable or non-UTF-8 document.
 # Error lines on stderr: "projex-tree: <code>: <locator>: <detail>". All output is UTF-8 with LF line ends.
@@ -145,7 +147,7 @@ END {
         if (p == "User" || p == "Orchestrator") break
         if (p !~ NAME) { err("E_PARENT_MALFORMED", rel[cur], "Parent is not a projex filename: " p); break }
         if (p == nm) { err("E_PARENT_SELF", rel[cur], "Parent names the document itself"); break }
-        if (!(p in cnt)) { err("E_PARENT_DANGLING", rel[cur], "Parent not discovered: " p); break }
+        if (!(p in cnt)) { missing = p; break }
         if (cnt[p] != 1) { err("E_IDENTITY_DUPLICATE", p, "Parent identity resolves to multiple documents"); break }
         cur = first[p]
     }
@@ -156,7 +158,10 @@ END {
     # loop could never fire, so neither exists.
     for (i = 1; i <= nc; i++) member[name[chain[i]]] = 1
     for (i = 1; i < nc; i++) { pn = name[chain[i + 1]]; kids[pn, ++nk[pn]] = name[chain[i]] }
+    root = name[chain[nc]]
+    if (missing != "") { kids[missing, ++nk[missing]] = root; root = missing }
     qt = 0
+    if (missing != "") queue[++qt] = missing
     for (i = nc; i >= 1; i--) queue[++qt] = name[chain[i]]
     for (qh = 1; qh <= qt; qh++) {
         pn = queue[qh]
@@ -177,8 +182,7 @@ END {
     }
     if (nerr) exit 3
 
-    root = name[chain[nc]]
-    print root
+    print root (missing != "" ? " (missing)" : "")
     render(root, "")
 }'
 

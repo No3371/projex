@@ -197,7 +197,7 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 | Script | Does |
 | --- | --- |
 | `new-projex` | Strict named-parameter scaffold with repo-root, type, title, Parent, and optional projex directory |
-| `projex-tree` | Read-only complete current-corpus Parent lineage tree |
+| `projex-tree` | Read-only complete current-corpus Parent lineage tree; a Parent naming an undiscovered doc becomes the root, shown as `<filename> (missing)` |
 | `projex-list` | Read-only listing of every projex, newest first, one block per doc (path, state, type, created, Status); `?` where a field is missing; active only unless `--closed`/`--archived`/`--abandoned`/`--all` |
 | `stage-n-commit` | Stage explicit paths + commit as one atomic operation |
 | `stage-by-pattern` | Regex-filtered selective staging |

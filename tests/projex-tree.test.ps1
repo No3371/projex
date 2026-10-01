@@ -52,8 +52,6 @@ try {
     Set-Content -LiteralPath (Join-Path $Repo '.projex/2609000000-malformed-plan.md') -Value "# malformed`n> **Parent:** bad/path.md`n---`n" -NoNewline
     RunBasic '2608051553-feature-proposal.md'
     RunError '2609000000-malformed-plan.md' 'E_PARENT_MALFORMED' 'bad/path.md'
-    Set-Content -LiteralPath (Join-Path $Repo '.projex/2609000001-dangling-plan.md') -Value "# dangling`n> **Parent:** 2609000009-missing-plan.md`n---`n" -NoNewline
-    RunError '2609000001-dangling-plan.md' 'E_PARENT_DANGLING' 'missing-plan.md'
     Set-Content -LiteralPath (Join-Path $Repo '.projex/2609000002-self-plan.md') -Value "# self`n> **Parent:** 2609000002-self-plan.md`n---`n" -NoNewline
     RunError '2609000002-self-plan.md' 'E_PARENT_SELF' 'names the document itself'
     Set-Content -LiteralPath (Join-Path $Repo '.projex/2609000003-cycle-a-plan.md') -Value "# a`n> **Parent:** 2609000004-cycle-b-plan.md`n---`n" -NoNewline
@@ -138,6 +136,12 @@ try {
     [IO.File]::Delete($VendorGit)
     [IO.Directory]::CreateDirectory((Join-Path $Fx 'vendor/.GIT')) | Out-Null
     Expect 'nested-repo-upper' 0 (FileBytes "$Fixtures/nested-repo/expected.stdout") $None @($Fx, '2609110000-host-proposal.md')
+
+    # an undiscovered Parent becomes the "(missing)" root; documents naming it are its children
+    $Fx = CopyFixture 'dangling-parent'
+    Expect 'dangling-chain' 0 (FileBytes "$Fixtures/dangling-parent/expected.stdout") $None @($Fx, '2609200002-orphan-log.md')
+    Expect 'dangling-sibling' 0 (FileBytes "$Fixtures/dangling-parent/expected.stdout") $None @($Fx, '2609200001-sibling-patch.md')
+    Expect 'dangling-other' 0 (FileBytes "$Fixtures/dangling-parent/expected-stray.stdout") $None @($Fx, '2609200003-stray-patch.md')
 
     # code-point child order, case-sensitive identity
     $Fx = CopyFixture 'sort-order'

@@ -1,5 +1,7 @@
 # Read-only Parent lineage tree for one projex document: follows the target's Parent chain to its
-# root, then prints every current-corpus descendant of that root as a box-drawing tree.
+# root, then prints every current-corpus descendant of that root as a box-drawing tree. A well-formed
+# Parent naming no discovered document (deleted by archive or conclude) ends the chain: that filename
+# becomes the root, printed as "<filename> (missing)", and the tree renders beneath it.
 # Usage: projex-tree.ps1 <repo-root> <filename>
 # Exit: 0 tree on stdout | 2 usage, repo, or target error | 3 lineage errors | 4 unreadable or non-UTF-8 document.
 # Error lines on stderr: "projex-tree: <code>: <locator>: <detail>". All output is UTF-8 with LF line ends.
@@ -153,6 +155,7 @@ function IsName([string]$Parent) { return [regex]::IsMatch($Parent, $NamePattern
 
 $Chain = [Collections.Generic.List[object]]::new()
 $Seen = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+$Missing = $null
 $Current = $ByName[$Filename][0]
 while ($true) {
     $Name = $Current.Name
@@ -164,7 +167,7 @@ while ($true) {
     if (IsRootParent $Parent) { break }
     if (-not (IsName $Parent)) { AddError 'E_PARENT_MALFORMED' $Current.Rel "Parent is not a projex filename: $Parent"; break }
     if (Same $Parent $Name) { AddError 'E_PARENT_SELF' $Current.Rel 'Parent names the document itself'; break }
-    if (-not $ByName.ContainsKey($Parent)) { AddError 'E_PARENT_DANGLING' $Current.Rel "Parent not discovered: $Parent"; break }
+    if (-not $ByName.ContainsKey($Parent)) { $Missing = $Parent; break }
     if ($ByName[$Parent].Count -ne 1) { AddError 'E_IDENTITY_DUPLICATE' $Parent 'Parent identity resolves to multiple documents'; break }
     $Current = $ByName[$Parent][0]
 }
@@ -181,7 +184,10 @@ function AddChild([string]$Holder, [string]$Child) {
 }
 foreach ($Doc in $Chain) { $null = $Members.Add($Doc.Name) }
 for ($I = 0; $I -lt $Chain.Count - 1; $I++) { AddChild $Chain[$I + 1].Name $Chain[$I].Name }
+$RootDoc = $Chain[$Chain.Count - 1].Name
+if ($null -ne $Missing) { AddChild $Missing $RootDoc; $RootDoc = $Missing }
 $Queue = [Collections.Generic.Queue[string]]::new()
+if ($null -ne $Missing) { $Queue.Enqueue($Missing) }
 for ($I = $Chain.Count - 1; $I -ge 0; $I--) { $Queue.Enqueue($Chain[$I].Name) }
 while ($Queue.Count -gt 0) {
     $Holder = $Queue.Dequeue()
@@ -215,7 +221,6 @@ function Render([string]$Holder, [string]$Prefix) {
         Render $Kids[$I] ($Prefix + $(if ($Last) { '    ' } else { $Pipe }))
     }
 }
-$RootDoc = $Chain[$Chain.Count - 1].Name
-$null = $Out.Append($RootDoc + "`n")
+$null = $Out.Append($RootDoc + $(if ($null -ne $Missing) { ' (missing)' } else { '' }) + "`n")
 Render $RootDoc ''
 Emit $Out.ToString() 0 $false

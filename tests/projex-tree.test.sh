@@ -35,12 +35,6 @@ run_error() {
     check grep -q "$detail" "$err"
 }
 run_error 2609000000-malformed-plan.md E_PARENT_MALFORMED 'bad/path.md'
-cat > "$repo/.projex/2609000001-dangling-plan.md" <<'EOF'
-# dangling
-> **Parent:** 2609000009-missing-plan.md
----
-EOF
-run_error 2609000001-dangling-plan.md E_PARENT_DANGLING 'missing-plan.md'
 cat > "$repo/.projex/2609000002-self-plan.md" <<'EOF'
 # self
 > **Parent:** 2609000002-self-plan.md
@@ -125,6 +119,12 @@ expect nested-repo-file-target 2 /dev/null "$fixtures/nested-repo/expected-vendo
 rm "$tmp/fx/vendor/.git"
 mkdir "$tmp/fx/vendor/.GIT"
 expect nested-repo-upper 0 "$fixtures/nested-repo/expected.stdout" /dev/null "$tmp/fx" 2609110000-host-proposal.md
+
+# an undiscovered Parent becomes the "(missing)" root; documents naming it are its children
+copy_fixture dangling-parent
+expect dangling-chain 0 "$fixtures/dangling-parent/expected.stdout" /dev/null "$tmp/fx" 2609200002-orphan-log.md
+expect dangling-sibling 0 "$fixtures/dangling-parent/expected.stdout" /dev/null "$tmp/fx" 2609200001-sibling-patch.md
+expect dangling-other 0 "$fixtures/dangling-parent/expected-stray.stdout" /dev/null "$tmp/fx" 2609200003-stray-patch.md
 
 # code-point child order, case-sensitive identity
 copy_fixture sort-order
