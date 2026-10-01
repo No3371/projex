@@ -4,7 +4,7 @@
 #   <type>: propose|plan|eval|review|redteam|blueteam|stress|audit|interview|coach|log|memo|
 #           patch|preplan|debug|define|navigate|map|scan|explore|guide|unpack|imagine|conclude|archive
 #   <parent>: User|Orchestrator|{yymmddhhmm}-{name}-{type}.md
-#   <projex-dir>: defaults to ".projex" (relative to repo-root)
+#   <projex-dir>: defaults to ".projex"; relative to repo-root (absolute paths rejected)
 # Prints the created file's path on success.
 set -euo pipefail
 
@@ -69,9 +69,14 @@ done
 
 $repo_root_set && $type_set && $title_set && $parent_set || usage
 
-# Normalize separators agents may mix (/, \\) — collapse to /, strip edge slashes.
+# projex-dir is joined onto repo-root; absolute forms (/x, \x, \\host, C:\x, C:/x, C:x) are rejected.
+case "$projex_dir" in
+    /*|\\*|[A-Za-z]:*) echo "Absolute projex-dir not supported: $projex_dir (pass a path relative to repo-root, e.g. .projex)" >&2; exit 2 ;;
+esac
+
+# Normalize separators agents may mix (/, \\) — collapse to /, strip trailing slashes.
 repo_root=$(printf '%s' "$repo_root" | tr '\\' '/' | sed -E 's|/+$||')
-projex_dir=$(printf '%s' "$projex_dir" | tr '\\' '/' | sed -E 's|^/+||; s|/+$||; s|/+|/|g')
+projex_dir=$(printf '%s' "$projex_dir" | tr '\\' '/' | sed -E 's|/+$||; s|/+|/|g')
 [ -n "$repo_root" ] || { echo "repo-root required" >&2; exit 2; }
 [ -n "$title" ] || { echo "title required" >&2; exit 2; }
 [ -n "$parent" ] || { echo "parent required" >&2; exit 2; }

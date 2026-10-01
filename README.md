@@ -208,7 +208,7 @@ Utility scripts (each in `.sh` and `.ps1`) make the risky parts atomic, with bui
 | `projex-squash-close` / `projex-merge-close` / `projex-rebase-close` | Finalize an ephemeral branch, three flavors |
 | `projex-abandon` | Force-delete an ephemeral branch |
 
-`new-projex.sh` accepts `--repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]`; `new-projex.ps1` accepts `-RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]`. Positional operands, unknown flags, and duplicates are rejected before any write.
+`new-projex.sh` accepts `--repo-root <repo-root> --type <type> --title <title> --parent <parent> [--projex-dir <projex-dir>]`; `new-projex.ps1` accepts `-RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]`. The projex directory is relative to the repo root (default `.projex`); an absolute value (`/x`, `\x`, `C:\x`, `C:/x`) exits 2. Positional operands, unknown flags, and duplicates are rejected before any write.
 
 ## Setup
 

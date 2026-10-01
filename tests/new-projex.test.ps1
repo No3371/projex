@@ -95,7 +95,26 @@ try {
     AssertParserReject stray-positional @($Repo,'-Type','plan','-Title','bad','-Parent','User')
     AssertParserReject legacy-positional @($Repo,'plan','bad','User','.projex/legacy')
 
-    $MixedOutput = & pwsh -NoProfile -File $Scaffold -rEpOrOoT $Repo -tYpE memo -tItLe mixed-case -pArEnT User -pRoJeXdIr .projex/mixed
+    function AssertAbsoluteReject([string]$Id, [string]$Dir) {
+        $Before = Snapshot
+        $ErrPath = Join-Path $Temp "abs-$Id.err"
+        $Output = & pwsh -NoProfile -File $Scaffold -RepoRoot $Repo -Type plan -Title "abs-$Id" -Parent User -ProjexDir $Dir 2> $ErrPath
+        $Rc = $LASTEXITCODE
+        $Stderr = Get-Content -LiteralPath $ErrPath -Raw
+        CheckEq '2' ([string]$Rc)
+        Check { ([string]$Stderr).Contains("Absolute projex-dir not supported: $Dir") } "absolute stderr $Id"
+        Check { @($Output).Count -eq 0 } "absolute stdout $Id"
+        CheckEq $Before (Snapshot)
+    }
+    AssertAbsoluteReject native (Join-Path $Repo '.projex')
+    AssertAbsoluteReject posix '/abs/.projex'
+    AssertAbsoluteReject root-backslash '\abs\.projex'
+    AssertAbsoluteReject unc '\\host\share\.projex'
+    AssertAbsoluteReject drive-backslash 'C:\abs\.projex'
+    AssertAbsoluteReject drive-slash 'C:/abs/.projex'
+    AssertAbsoluteReject drive-relative 'c:abs'
+
+    $MixedOutput =& pwsh -NoProfile -File $Scaffold -rEpOrOoT $Repo -tYpE memo -tItLe mixed-case -pArEnT User -pRoJeXdIr .projex/mixed
     $MixedPath = [string]$MixedOutput[0]
     Check { Test-Path -LiteralPath $MixedPath -PathType Leaf } 'mixed case created'
     $MixedContent = Get-Content -LiteralPath $MixedPath -Raw

@@ -99,6 +99,28 @@ assert_parser_reject unknown-option --repo-root "$repo" --type plan --title bad 
 assert_parser_reject stray-positional "$repo" --type plan --title bad --parent User
 assert_parser_reject legacy-positional "$repo" plan bad User .projex/legacy
 
+# Absolute --projex-dir is rejected (exit 2, named error, no stdout, no write) in every form.
+assert_absolute_reject() {
+    local id=$1 dir=$2
+    local before stdout stderr rc
+    before=$(snapshot)
+    set +e
+    stdout=$(bash "$scaffold" --repo-root "$repo" --type plan --title "abs-$id" --parent User --projex-dir "$dir" 2>"$tmp/abs-$id.err")
+    rc=$?
+    set -e
+    stderr=$(<"$tmp/abs-$id.err")
+    check_eq 2 "$rc"
+    check contains "$stderr" "Absolute projex-dir not supported: $dir"
+    check test -z "$stdout"
+    check_eq "$before" "$(snapshot)"
+}
+assert_absolute_reject posix "$repo/.projex"
+assert_absolute_reject root-backslash '\abs\.projex'
+assert_absolute_reject unc '\\host\share\.projex'
+assert_absolute_reject drive-backslash 'C:\abs\.projex'
+assert_absolute_reject drive-slash 'C:/abs/.projex'
+assert_absolute_reject drive-relative 'c:abs'
+
 stamp=$(date +%y%m%d%H%M)
 self_name="${stamp}-self-check-plan.md"
 before=$(snapshot)

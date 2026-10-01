@@ -1,7 +1,7 @@
 # new-projex.ps1 — Scaffold a new projex file with minimal common header
 # Usage: new-projex.ps1 -RepoRoot <repo-root> -Type <type> -Title <title> -Parent <parent> [-ProjexDir <projex-dir>]
 #   <parent>: User|Orchestrator|{yymmddhhmm}-{name}-{type}.md
-#   <projex-dir>: defaults to ".projex" (relative to repo-root)
+#   <projex-dir>: defaults to ".projex"; relative to repo-root (absolute paths rejected)
 # Prints the created file's path on success.
 
 $ErrorActionPreference = 'Stop'
@@ -57,9 +57,12 @@ for ($i = 0; $i -lt $args.Count; $i++) {
 
 if (-not ($RepoRootSet -and $TypeSet -and $TitleSet -and $ParentSet)) { Usage }
 
+# ProjexDir is joined onto RepoRoot; absolute forms (/x, \x, \\host, C:\x, C:/x, C:x) are rejected.
+if ($ProjexDir -match '^([/\\]|[A-Za-z]:)') { Fail "Absolute projex-dir not supported: $ProjexDir (pass a path relative to repo-root, e.g. .projex)" }
+
 $Sep = [IO.Path]::DirectorySeparatorChar
 $RepoRoot = ($RepoRoot -replace '/', $Sep).TrimEnd($Sep)
-$ProjexDir = (($ProjexDir -replace '\\', '/') -replace '/+', '/').Trim('/')
+$ProjexDir = (($ProjexDir -replace '\\', '/') -replace '/+', '/').TrimEnd('/')
 if (-not $RepoRoot) { Fail 'repo-root required' }
 if (-not $Title) { Fail 'title required' }
 if (-not $Parent) { Fail 'parent required' }

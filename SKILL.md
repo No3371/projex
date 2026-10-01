@@ -221,6 +221,8 @@ Git provides all four. Substrate determines available workflows:
 
 `.projex/` folder not inside a git repo: skip repo resolution and every commit/stage step; create and edit files directly (`new-projex` works without git — its printed commit hint does not apply). Naming, statuses, folder states (`closed/`, `archived/`, `abandoned/`) unchanged. Locators adapt to the medium — `doc § heading`, `page:para`, `URL#anchor` in place of `file:ln`.
 
+- **`<repo-root>` without git** — the folder that contains `.projex/`; `new-projex --projex-dir` stays relative to it.
+
 ### Field Mode
 
 For plans whose actions the agent cannot perform (book the venue, file the application, run the negotiation): author the Plan normally → the human executes → the agent debriefs the human interview-style and writes the execution log from their account (entries marked human-reported) → Close records evidence from that log. Analytical workflows are unaffected — they never required the agent to act.
