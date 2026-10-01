@@ -49,7 +49,7 @@ Before drafting, understand the entity from available sources:
    - Mixed subjects are normal — an existing component with a planned extension. Track which mode each area belongs to. An Origination area must never inherit the confidence of a Discovery area
 2. **Gather existing information** — read code, docs, specs, related projex, READMEs, comments, tests — anything that already describes or implies what this entity is
 3. **Identify the entity's nature** — is it a runtime component, a data structure, a user-facing feature, an abstract concept, a protocol, a service boundary?
-4. **Build the gap ledger** — before asking anything, list the entity's facets against the four layers in step 2 and mark each one:
+4. **Build the gap ledger** — before asking anything, list the entity's facets against the four layers in the DISCUSS step below and mark each one:
    - **Established** — stated by the user, or grounded in evidence you can cite
    - **Assumed** — inferred by you; needs confirmation before it can enter the document
    - **Unknown** — no evidence, no user input
@@ -64,10 +64,10 @@ This is the core of the workflow. Resolve the definition in layers, from directi
 
 | Layer | Asks | Feeds sections |
 |-------|------|----------------|
-| **L1 — Direction** | "In one sentence, what is [entity] and what is it responsible for?" "Who or what uses it?" "What makes it worth defining?" | Identity, Scope |
+| **L1 — Direction** | "In one sentence, what is [entity] and what is it responsible for?" "Who or what uses it?" "What makes it worth defining?" | Identity (and the `Scope` header field) |
 | **L2 — Boundaries** | "What is explicitly NOT part of it?" "What is adjacent but separate?" "How big is the subject — one class, one subsystem, the whole product?" | Boundaries |
-| **L3 — Structure** | "What parts / properties / capabilities does it have?" "What does it depend on, and what depends on it?" "What states can it be in?" | Properties, Relationships, States |
-| **L4 — Detail** | "What must ALWAYS be true? What must NEVER happen?" "What happens when [unusual condition]?" "Exact types, limits, valid transitions?" | Constraints & Invariants, Behaviors, edge cases |
+| **L3 — Structure** | "What parts / properties / capabilities does it have?" "What does it depend on, and what depends on it?" "What states can it be in?" | Properties, Relationships, States & Lifecycle |
+| **L4 — Detail** | "What must ALWAYS be true? What must NEVER happen?" "What happens when [unusual condition]?" "Exact types, limits, valid transitions?" | Constraints & Invariants, Behaviors |
 
 **Protocol:**
 
