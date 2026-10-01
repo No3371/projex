@@ -67,6 +67,15 @@ try {
     $DefaultPath = [string]$DefaultOutput[0]
     Check { $DefaultPath.StartsWith((Join-Path $Repo '.projex')) } 'default directory'
     Check { Test-Path -LiteralPath $DefaultPath -PathType Leaf } 'default created'
+    $DefaultStatus = @((Get-Content -LiteralPath $DefaultPath) | Where-Object { $_ -ceq '> **Status:** Draft' }).Count
+    CheckEq '1' ([string]$DefaultStatus)
+
+    $ClosedOutput = & pwsh -NoProfile -File $Scaffold -RepoRoot $Repo -Type patch -Title born-closed -Parent User -ProjexDir .projex
+    $ClosedPath = [string]$ClosedOutput[0]
+    Check { $ClosedPath.StartsWith((Join-Path $Repo '.projex/closed')) -or $ClosedPath.StartsWith((Join-Path $Repo '.projex\closed')) } 'born-closed directory'
+    Check { Test-Path -LiteralPath $ClosedPath -PathType Leaf } 'born-closed created'
+    $ClosedStatus = @((Get-Content -LiteralPath $ClosedPath) | Where-Object { $_ -ceq '> **Status:** Complete' }).Count
+    CheckEq '1' ([string]$ClosedStatus)
 
     AssertParserReject missing-repo @('-Type','plan','-Title','bad','-Parent','User')
     AssertParserReject missing-type @('-RepoRoot',$Repo,'-Title','bad','-Parent','User')

@@ -122,7 +122,7 @@ for t in $born_closed; do
     [ "$type" = "$t" ] && is_born_closed=true && break
 done
 if $is_born_closed; then
-    status="Closed"
+    status="Complete"
     rel_dir="$projex_dir/closed"
 else
     status="Draft"

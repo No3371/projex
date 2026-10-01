@@ -109,7 +109,7 @@ function Get-ProjexRoots([string]$Root) {
 
 $BornClosed = @('log', 'archive', 'patch', 'preplan', 'scan', 'guide', 'conclude')
 $IsBornClosed = $BornClosed -contains $Type
-$Status = if ($IsBornClosed) { 'Closed' } else { 'Draft' }
+$Status = if ($IsBornClosed) { 'Complete' } else { 'Draft' }
 $RelDir = if ($IsBornClosed) { "$ProjexDir/closed" } else { $ProjexDir }
 $Dir = Join-Path $RepoRoot ($RelDir -replace '/', $Sep)
 

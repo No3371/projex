@@ -53,6 +53,14 @@ default_output=$(bash "$scaffold" --repo-root "$repo" --type memo --title defaul
 default_path=$(printf '%s\n' "$default_output" | sed -n '1p')
 check contains "$default_path" "$repo/.projex/"
 check test -f "$default_path"
+check_eq 1 "$(grep -cx '> \*\*Status:\*\* Draft' "$default_path")"
+
+# Born-closed types land in closed/ with the canonical terminal status.
+closed_output=$(bash "$scaffold" --repo-root "$repo" --type patch --title born-closed --parent User --projex-dir .projex 2>/dev/null)
+closed_path=$(printf '%s\n' "$closed_output" | sed -n '1p')
+check contains "$closed_path" "$repo/.projex/closed/"
+check test -f "$closed_path"
+check_eq 1 "$(grep -cx '> \*\*Status:\*\* Complete' "$closed_path")"
 
 assert_parser_reject() {
     local id=$1
