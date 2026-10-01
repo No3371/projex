@@ -57,9 +57,18 @@ function Is-Under {
         $childFull.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)
 }
 
+# Exclusion filters (.git, .projexwt) apply below the scan root only; matching the absolute
+# path would drop every file when the scan root itself is a worktree under .projexwt.
+function Scan-Relative {
+    param([string]$Path, [string]$Root)
+    $rootFull = Strip-TrailingSeparators $Root
+    $rest = if ($Path.Length -gt $rootFull.Length) { $Path.Substring($rootFull.Length) } else { '' }
+    '/' + $rest.Replace('\', '/').TrimStart('/')
+}
+
 function Canonical-Path {
     param([string]$Path, [switch]$Directory)
-    $item = Get-Item -LiteralPath $Path -ErrorAction Stop
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
     if ($Directory -and -not $item.PSIsContainer) { throw 'expected directory path' }
     if (-not $Directory -and $item.PSIsContainer) { throw 'expected file path' }
     Strip-TrailingSeparators $item.FullName
@@ -161,7 +170,7 @@ function Add-Inventory-Candidates {
     $files = @(Get-ChildItem -LiteralPath $Root -Recurse -File -Filter '*.md' -ErrorAction Stop)
     foreach ($item in $files) {
         $full = $item.FullName
-        $normalized = $full.Replace('\', '/')
+        $normalized = Scan-Relative -Path $full -Root $Root
         if ($normalized -match '/\.git/' -or $normalized -match '/\.projexwt/') { continue }
         if ($normalized -notmatch '/\.projex/') { continue }
         $canonical = Canonical-Path -Path $full
@@ -187,19 +196,19 @@ try {
         $callerRoot = Canonical-Path -Path (Git-One -Directory (Get-Location).Path -Arguments @('rev-parse', '--show-toplevel')) -Directory
         $currentBranch = Git-One -Directory $callerRoot -Arguments @('branch', '--show-current')
         if (-not $currentBranch.StartsWith('projex/', [StringComparison]::Ordinal)) { throw 'no-argument inference requires a projex/* branch' }
-        $branchSuffix = $currentBranch.Substring(6)
+        $branchSuffix = $currentBranch.Substring(7)
         if ($branchSuffix -match '^\d{10}-(.*)$') { $branchName = $Matches[1] } else { $branchName = $branchSuffix }
-        $matches = @(Get-ChildItem -LiteralPath $callerRoot -Recurse -File -Filter '*-plan.md' -ErrorAction Stop | Where-Object {
-            $p = $_.FullName.Replace('\', '/')
+        $candidates = @(Get-ChildItem -LiteralPath $callerRoot -Recurse -File -Filter '*-plan.md' -ErrorAction Stop | Where-Object {
+            $p = Scan-Relative -Path $_.FullName -Root $callerRoot
             $p -notmatch '/\.git/' -and $p -notmatch '/\.projexwt/' -and
             $p -match '/\.projex/' -and $_.Name -match '^\d{10}-(.*-plan)\.md$' -and $Matches[1] -eq $branchName
         })
-        if ($matches.Count -ne 1) { throw 'no-argument plan inference is missing or ambiguous' }
-        $planPath = Canonical-Path -Path $matches[0].FullName
+        if ($candidates.Count -ne 1) { throw 'no-argument plan inference is missing or ambiguous' }
+        $planPath = Canonical-Path -Path $candidates[0].FullName
     }
 
-    $planDir = Split-Path -LiteralPath $planPath -Parent
-    $planBase = Split-Path -LiteralPath $planPath -Leaf
+    $planDir = [IO.Path]::GetDirectoryName($planPath)
+    $planBase = [IO.Path]::GetFileName($planPath)
     $planRepo = Canonical-Path -Path (Git-One -Directory $planDir -Arguments @('rev-parse', '--show-toplevel')) -Directory
     $planCommon = Git-CommonDir -Directory $planDir
     $planLines = @(Get-Content -LiteralPath $planPath)
@@ -210,7 +219,7 @@ try {
     } else {
         $logPath = Canonical-Path -Path ([IO.Path]::Combine($planDir, ($planBase.Substring(0, $planBase.Length - 3) + '-log.md')))
     }
-    $logCommon = Git-CommonDir -Directory (Split-Path -LiteralPath $logPath -Parent)
+    $logCommon = Git-CommonDir -Directory ([IO.Path]::GetDirectoryName($logPath))
     if ($logCommon -ne $planCommon) { throw 'plan and execution log are not in the same repository' }
 
     $logLines = @(Get-Content -LiteralPath $logPath)

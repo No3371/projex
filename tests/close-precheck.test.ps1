@@ -159,7 +159,7 @@ $planName
     Assert-Equal 'duplicate plan log fails' $bad.Code 1
     Write-Fixture $planPath "# Plan`n`n> **Status:** In Progress`n> **Log:** $logName`n`n$planName`n"
     Set-WorktreeLog
-    Add-Content -LiteralPath $logPath -Value '> **Base Branch:** refs/remotes/origin/main'
+    (Get-Content -LiteralPath $logPath -Raw).Replace('> **Base Branch:** main', '> **Base Branch:** refs/remotes/origin/main') | Set-Content -LiteralPath $logPath -NoNewline
     $bad = Invoke-Precheck $Child ('.projex/' + $planName)
     Assert-Equal 'remote base branch fails' $bad.Code 1
     Set-WorktreeLog
