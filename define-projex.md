@@ -199,11 +199,12 @@ Resolve `{parent}` from an explicit causal subject/nav/source filename; else sup
 
 #### 4. VALIDATE AND PRESENT
 
-**Check:**
-- [ ] The document is clear enough for someone unfamiliar to understand the entity
-- [ ] Boundaries are explicit — "is not" is populated, not just "is"
+**Check** — the checks apply to the layers that were resolved; an unresolved layer is checked for being *declared open*, not for being filled:
+- [ ] The document is clear enough for someone unfamiliar to understand the entity at the depth reached
+- [ ] **Depth matches the conversation** — no section sits below the deepest resolved layer, and no layer stops short of what the user actually settled
+- [ ] Boundaries: if L2 was resolved, "is not" is populated, not just "is". If L2 was not reached, the Boundaries section is absent and boundaries appear in Open Questions
 - [ ] No properties are fabricated — everything stated is grounded in evidence or confirmed by user
-- [ ] Open Questions captures everything still unresolved (not silently omitted)
+- [ ] Open Questions captures everything still unresolved — the unentered layers included (not silently omitted)
 - [ ] Status field reflects actual state (Draft if open questions remain)
 
 Surface a summary of the entity's identity and open questions to the user. **Do not commit.** Wait — commit only when the user explicitly requests it.
