@@ -1,5 +1,6 @@
 scaffold:archive-projex.md
 scaffold:audit-projex.md
+scaffold:blueteam-projex.md
 scaffold:coach-projex.md
 scaffold:conclude-projex.md
 scaffold:define-projex.md
@@ -18,6 +19,7 @@ scaffold:redteam-projex.md
 scaffold:review-projex.md
 scaffold:scan-projex.md
 scaffold:stress-projex.md
+scaffold:unpack-projex.md
 manual:execute-projex.md
 manual:close-projex.md
 manual:debug-projex.md
